@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>《二进制漏洞利用入门》课程总结 - Lab on Mercury</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Lab on Mercury"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Lab on Mercury"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta description="其实我也刚学。"><meta property="og:type" content="blog"><meta property="og:title" content="《二进制漏洞利用入门》课程总结"><meta property="og:url" content="https://signormercurio.me/post/BinaryExp/"><meta property="og:site_name" content="Lab on Mercury"><meta property="og:description" content="其实我也刚学。"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://s2.ax1x.com/2019/12/05/QGaAKg.png"><meta property="article:published_time" content="2019-12-05T14:37:20.000Z"><meta property="article:author" content="Mercury"><meta property="article:tag" content="fsb"><meta property="article:tag" content="整数溢出"><meta property="article:tag" content="ROP"><meta property="article:tag" content="总结"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://s2.ax1x.com/2019/12/05/QGaAKg.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://signormercurio.me/post/BinaryExp/"},"headline":"Lab on Mercury","image":["https://s2.ax1x.com/2019/12/05/QGaAKg.png"],"datePublished":"2019-12-05T14:37:20.000Z","author":{"@type":"Person","name":"Mercury"},"description":"其实我也刚学。"}</script><link rel="canonical" href="https://signormercurio.me/post/BinaryExp/"><link rel="alternate" href="/atom.xml" title="Lab on Mercury" type="application/atom+xml"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css"><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="https://s2.ax1x.com/2019/12/05/QGaAKg.png" alt="《二进制漏洞利用入门》课程总结"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2019-12-05T14:37:20.000Z" title="2019-12-05T14:37:20.000Z">2019-12-05</time></span><span class="level-item"><a class="link-muted" href="/categories/%E5%AE%89%E5%85%A8/">安全</a><span> / </span><a class="link-muted" href="/categories/%E5%AE%89%E5%85%A8/Pwn/">Pwn</a></span><span class="level-item">an hour read (About 7095 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">《二进制漏洞利用入门》课程总结</h1><div class="content"><p>其实我也刚学。</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>《二进制漏洞利用入门》课程总结 - Lab on Mercury</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Lab on Mercury"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Lab on Mercury"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta description="其实我也刚学。"><meta property="og:type" content="blog"><meta property="og:title" content="《二进制漏洞利用入门》课程总结"><meta property="og:url" content="https://signormercurio.me/post/BinaryExp/"><meta property="og:site_name" content="Lab on Mercury"><meta property="og:description" content="其实我也刚学。"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://s2.ax1x.com/2019/12/05/QGaAKg.png"><meta property="article:published_time" content="2019-12-05T22:37:20.000Z"><meta property="article:author" content="Mercury"><meta property="article:tag" content="fsb"><meta property="article:tag" content="整数溢出"><meta property="article:tag" content="ROP"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://s2.ax1x.com/2019/12/05/QGaAKg.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://signormercurio.me/post/BinaryExp/"},"headline":"Lab on Mercury","image":["https://s2.ax1x.com/2019/12/05/QGaAKg.png"],"datePublished":"2019-12-05T22:37:20.000Z","author":{"@type":"Person","name":"Mercury"},"description":"其实我也刚学。"}</script><link rel="canonical" href="https://signormercurio.me/post/BinaryExp/"><link rel="alternate" href="/atom.xml" title="Lab on Mercury" type="application/atom+xml"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css"><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="https://s2.ax1x.com/2019/12/05/QGaAKg.png" alt="《二进制漏洞利用入门》课程总结"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2019-12-05T22:37:20.000Z" title="2019-12-05T22:37:20.000Z">2019-12-05</time></span><span class="level-item"><a class="link-muted" href="/categories/%E5%AE%89%E5%85%A8/">安全</a><span> / </span><a class="link-muted" href="/categories/%E5%AE%89%E5%85%A8/Pwn/">Pwn</a></span><span class="level-item">an hour read (About 7095 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">《二进制漏洞利用入门》课程总结</h1><div class="content"><p>其实我也刚学。</p>
 <a id="more"></a>
 
-<p>本课程主要介绍对于远程服务进行二进制层面的漏洞利用（也称<code>Pwn</code>）的基础技巧，使用的编程语言主要包括 C 语言、汇编语言和 Python 语言，涉及的平台包括 32 位与 64 位 Linux 操作系统。内容包含：</p>
+<p>本课程主要介绍对于远程服务进行二进制层面的漏洞利用（也称 <code>Pwn</code>）的基础技巧，使用的编程语言主要包括 C 语言、汇编语言和 Python 语言，涉及的平台包括 32 位与 64 位 Linux 操作系统。内容包含：</p>
 <ul>
 <li>Pwn 简介</li>
 <li>整型溢出漏洞</li>
@@ -45,7 +45,7 @@
 </ul>
 </li>
 <li>CVE-2019-11707<ul>
-<li>64 位火狐浏览器任意读写+代码执行</li>
+<li>64 位火狐浏览器任意读写 + 代码执行</li>
 </ul>
 </li>
 <li>CVE-2018-5767<ul>
@@ -57,38 +57,38 @@
 <h2 id="整型溢出"><a href="#整型溢出" class="headerlink" title="整型溢出"></a>整型溢出</h2><p>例：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">unsigned</span> <span class="keyword">char</span> x = <span class="number">0xff</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, ++x);</span><br></pre></td></tr></table></figure>
 
-<p>考虑这里的<code>++x</code>，二进制表示实际就是：</p>
+<p>考虑这里的 <code>++x</code>，二进制表示实际就是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1111 1111 + 1 &#x3D; 1 0000 0000</span><br></pre></td></tr></table></figure>
 
-<p>然而，<code>unsigned char</code>是 1 字节即 8 比特的，上面的结果却是 9 比特，那么对于最高位的<code>1</code>只能舍弃，因此有：</p>
+<p>然而，<code>unsigned char</code> 是 1 字节即 8 比特的，上面的结果却是 9 比特，那么对于最高位的 <code>1</code> 只能舍弃，因此有：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(0xff+1) mod 256 &#x3D; 0</span><br></pre></td></tr></table></figure>
 
-<p>也就是说，程序的执行结果为 0。<code>0xff</code>这样的大数加 1 后变成了 0，显然不是我们预期的结果。类似地，对于：</p>
+<p>也就是说，程序的执行结果为 0。<code>0xff</code> 这样的大数加 1 后变成了 0，显然不是我们预期的结果。类似地，对于：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">signed</span> <span class="keyword">char</span> x = <span class="number">0x7f</span>;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, ++x);</span><br></pre></td></tr></table></figure>
 
-<p>这里的<code>++x</code>就是：</p>
+<p>这里的 <code>++x</code> 就是：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0111 1111 + 1 &#x3D; 1000 0000</span><br></pre></td></tr></table></figure>
 
-<p>幸运的是，这次没有出现多出一比特的情况。然而对于<code>signed char</code>，我们知道其最高位是符号位，换而言之我们的结果是一个负数。</p>
+<p>幸运的是，这次没有出现多出一比特的情况。然而对于 <code>signed char</code>，我们知道其最高位是符号位，换而言之我们的结果是一个负数。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x7f+1 &#x3D; 0x80 &#x3D; -(unsigned char) 1000 0000 &#x3D; -128</span><br></pre></td></tr></table></figure>
 
 <p>注意这里的补码运算。</p>
 <p>整型溢出漏洞原理非常简单，其造成的危害却是十分隐蔽的，例如，我们有时会这样倒序遍历字符串：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="built_in">strlen</span>(s)<span class="number">-1</span>; i &gt;= <span class="number">0</span>; --i)</span><br></pre></td></tr></table></figure>
 
-<p>这样写会引起编译器 warning，因为将无符号类型转换到了有符号类型。为什么会这样？我们来看一下<code>strlen</code>函数的定义：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">size_t strlen ( const char * str )</span><br></pre></td></tr></table></figure>
+<p>这样写会引起编译器 warning，因为将无符号类型转换到了有符号类型。为什么会这样？我们来看一下 <code>strlen</code> 函数的定义：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">size_t strlen (const char * str)</span><br></pre></td></tr></table></figure>
 
-<p>返回值是<code>size_t</code>类型，我们可以将它等效为<code>unsigned int</code>类型。</p>
-<p>现在考虑<code>s</code>是一个空串时的情况，这时<code>i</code>的初始值是什么？</p>
-<p>你可能会认为是-1。实际上，由于<code>strlen</code>的返回值是无符号的，那么它减 1 的结果同样会被认为是无符号的，那么<code>i</code>被赋值的实际上是<code>(size_t)(-1)</code>，也就是一个很大的正数。此时必然会发生数组越界。</p>
+<p>返回值是 <code>size_t</code> 类型，我们可以将它等效为 <code>unsigned int</code> 类型。</p>
+<p>现在考虑 <code>s</code> 是一个空串时的情况，这时 <code>i</code> 的初始值是什么？</p>
+<p>你可能会认为是 - 1。实际上，由于 <code>strlen</code> 的返回值是无符号的，那么它减 1 的结果同样会被认为是无符号的，那么 <code>i</code> 被赋值的实际上是 <code>(size_t)(-1)</code>，也就是一个很大的正数。此时必然会发生数组越界。</p>
 <p>一个更常见的错误是这样的：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binary_search</span><span class="params">(<span class="keyword">int</span> a[], <span class="keyword">int</span> len, <span class="keyword">int</span> key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> low = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> high = len - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> ( low&lt;=high ) &#123;</span><br><span class="line">        <span class="keyword">int</span> mid = (low + high)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (a[mid] == key) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (key &lt; a[mid]) &#123;</span><br><span class="line">            high = mid - <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            low = mid + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">binary_search</span><span class="params">(<span class="keyword">int</span> a[], <span class="keyword">int</span> len, <span class="keyword">int</span> key)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> low = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> high = len - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (low&lt;=high) &#123;</span><br><span class="line">        <span class="keyword">int</span> mid = (low + high)/<span class="number">2</span>;</span><br><span class="line">        <span class="keyword">if</span> (a[mid] == key) &#123;</span><br><span class="line">            <span class="keyword">return</span> mid;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (key &lt; a[mid]) &#123;</span><br><span class="line">            high = mid - <span class="number">1</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            low = mid + <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这不就是最普通的二分查找写法吗？的确，但是即使我们确保<code>low</code>和<code>high</code>不溢出，<code>low+high</code>的结果依然可能溢出，而此时<code>mid</code>会变成一个负数，造成越界。</p>
-<p>而且，整型溢出不仅在 C 语言中存在。在最近的一次<a href="https://signormercurio.me/post/Hackergame2019/">中科大比赛</a>中我们就遇到了对 js 整型溢出的利用。</p>
-<h2 id="Linux-基础"><a href="#Linux-基础" class="headerlink" title="Linux 基础"></a>Linux 基础</h2><p>课程的第二部分介绍了一些 Linux 相关基础。Linux 是一个开源的 OS 内核，基于 C 和汇编编写，可执行文件格式是 ELF 格式，这也是我们后面要主要研究的。这里附上一个非常有趣的<a target="_blank" rel="noopener" href="http://overthewire.org/wargames/bandit/">Linux 练习网站</a>。</p>
-<p>安装与配置请自行搜索，推荐使用虚拟机安装。课程使用的发行版是<code>Ubuntu 16.04LTS</code>，不过最近发现哈佛的<a target="_blank" rel="noopener" href="https://ide.cs50.io/">CS50 IDE</a>也非常好用。</p>
+<p>这不就是最普通的二分查找写法吗？的确，但是即使我们确保 <code>low</code> 和 <code>high</code> 不溢出，<code>low+high</code> 的结果依然可能溢出，而此时 <code>mid</code> 会变成一个负数，造成越界。</p>
+<p>而且，整型溢出不仅在 C 语言中存在。在最近的一次 <a href="https://signormercurio.me/post/Hackergame2019/">中科大比赛</a> 中我们就遇到了对 js 整型溢出的利用。</p>
+<h2 id="Linux-基础"><a href="#Linux-基础" class="headerlink" title="Linux 基础"></a>Linux 基础</h2><p>课程的第二部分介绍了一些 Linux 相关基础。Linux 是一个开源的 OS 内核，基于 C 和汇编编写，可执行文件格式是 ELF 格式，这也是我们后面要主要研究的。这里附上一个非常有趣的 <a target="_blank" rel="noopener" href="http://overthewire.org/wargames/bandit/">Linux 练习网站</a>。</p>
+<p>安装与配置请自行搜索，推荐使用虚拟机安装。课程使用的发行版是 <code>Ubuntu 16.04LTS</code>，不过最近发现哈佛的 <a target="_blank" rel="noopener" href="https://ide.cs50.io/">CS50 IDE</a> 也非常好用。</p>
 <p>下面是一些基础 Linux 命令：</p>
 <h3 id="目录管理"><a href="#目录管理" class="headerlink" title="目录管理"></a>目录管理</h3><ul>
 <li><code>ls</code><ul>
@@ -98,9 +98,9 @@
 </ul>
 </li>
 <li><code>cd [path]</code><ul>
-<li>改变目录到<code>path</code></li>
+<li>改变目录到 <code>path</code></li>
 <li><code>.</code> 当前目录</li>
-<li><code>..</code>上级目录</li>
+<li><code>..</code> 上级目录</li>
 </ul>
 </li>
 <li><code>pwd</code><ul>
@@ -110,35 +110,35 @@
 </ul>
 <h3 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h3><ul>
 <li><code>cat [file]</code><ul>
-<li>显示文件<code>file</code>的内容</li>
+<li>显示文件 <code>file</code> 的内容</li>
 </ul>
 </li>
 <li><code>more [file]</code><ul>
-<li>类似<code>cat</code>，但对于长文件可以分页显示</li>
+<li>类似 <code>cat</code>，但对于长文件可以分页显示</li>
 </ul>
 </li>
 <li><code>mv [file1] [file2]</code><ul>
-<li>把<code>file1</code>移动到<code>file2</code>，如果后者已存在则覆盖</li>
+<li>把 <code>file1</code> 移动到 <code>file2</code>，如果后者已存在则覆盖</li>
 </ul>
 </li>
 <li><code>cp [file1] [file2]</code><ul>
-<li>将<code>file1</code>复制到<code>file2</code>，如果后者已存在则覆盖</li>
+<li>将 <code>file1</code> 复制到 <code>file2</code>，如果后者已存在则覆盖</li>
 </ul>
 </li>
 <li><code>rm [file]</code><ul>
-<li>删除文件<code>file</code></li>
+<li>删除文件 <code>file</code></li>
 </ul>
 </li>
 <li><code>touch [file]</code><ul>
-<li>创建文件<code>file</code>，或更新文件<code>file</code>的修改时间</li>
+<li>创建文件 <code>file</code>，或更新文件 <code>file</code> 的修改时间</li>
 </ul>
 </li>
 <li><code>mkdir [directory]</code><ul>
-<li>创建目录<code>directory</code></li>
+<li>创建目录 <code>directory</code></li>
 </ul>
 </li>
 <li><code>chmod [file]</code><ul>
-<li>改变文件<code>file</code> 的权限</li>
+<li>改变文件 <code>file</code> 的权限</li>
 </ul>
 </li>
 </ul>
@@ -148,7 +148,7 @@
 </ul>
 </li>
 <li><code>su [user]</code><ul>
-<li>切换到用户<code>user</code></li>
+<li>切换到用户 <code>user</code></li>
 </ul>
 </li>
 <li><code>whoami</code><ul>
@@ -178,12 +178,12 @@
 </ul>
 </li>
 <li><code>echo &quot;hello&quot;</code><ul>
-<li>在终端中显示<code>hello</code></li>
+<li>在终端中显示 <code>hello</code></li>
 <li><code>echo $((0xDEADBEEF))</code></li>
 </ul>
 </li>
 <li><code>grep &quot;hello&quot;</code><ul>
-<li>查找含有<code>hello</code>的行并显示</li>
+<li>查找含有 <code>hello</code> 的行并显示</li>
 </ul>
 </li>
 </ul>
@@ -193,21 +193,21 @@
 <li><code>echo &quot;hello&quot; | /usr/games/cowsay | grep &quot;hello&quot;</code></li>
 </ul>
 </li>
-<li>重定向：指定输入输出的来源，而不是直接读<code>stdin</code>写<code>stdout</code><ul>
+<li>重定向：指定输入输出的来源，而不是直接读 <code>stdin</code> 写 <code>stdout</code><ul>
 <li><code>echo &quot;hello&quot; | /usr/games/cowsay &gt; cowsay</code></li>
 <li><code>echo &quot;hello&quot; &gt; cowsay</code></li>
 <li><code>echo &quot;hello&quot; &gt;&gt; cowsay</code></li>
 </ul>
 </li>
 <li><code>man [command]</code><ul>
-<li>显示命令<code>command</code>的说明</li>
+<li>显示命令 <code>command</code> 的说明</li>
 </ul>
 </li>
 <li>方向 ↑ 键：上一条命令</li>
 <li>Tab 键：自动补全命令</li>
 </ul>
-<p>这里通过 pwnable.kr 上的<code>cmd1</code>，<code>cmd2</code>和<code>blukat</code>三题，演示了 Linux 下的一些小把戏。</p>
-<h2 id="C-程序运行机制"><a href="#C-程序运行机制" class="headerlink" title="C 程序运行机制"></a>C 程序运行机制</h2><p>以<code>Hello World</code>程序为例：</p>
+<p>这里通过 pwnable.kr 上的 <code>cmd1</code>，<code>cmd2</code> 和 <code>blukat</code> 三题，演示了 Linux 下的一些小把戏。</p>
+<h2 id="C-程序运行机制"><a href="#C-程序运行机制" class="headerlink" title="C 程序运行机制"></a>C 程序运行机制</h2><p>以 <code>Hello World</code> 程序为例：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;Hello World!\n&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这个程序到底是怎么运行起来的？我们分三步介绍：</p>
@@ -217,9 +217,9 @@
 <li>可执行文件载入内存并运行</li>
 </ol>
 <p><img src="https://s2.ax1x.com/2019/12/05/QG1ca8.png" alt="QG1ca8.png"></p>
-<p>编译一个程序非常简单，如果你的源代码是<code>1.c</code>，那么只需要<code>gcc 1.c</code>就能生成一个叫做<code>a.out</code>的 ELF 文件，你也可以用<code>-o</code>选项来设置 ELF 文件的名字。</p>
-<p>我们所要研究的就是 ELF 文件中究竟有什么。首先是 ELF 文件头，包含了 ELF 文件的许多元数据，我们可以用<code>readelf -h a.out</code>来查看：<br><img src="https://s2.ax1x.com/2019/12/05/QG8l0x.png" alt="QG8l0x.png"></p>
-<p>ELF 文件的内容则是由一个个段(segment)组成的，如：</p>
+<p>编译一个程序非常简单，如果你的源代码是 <code>1.c</code>，那么只需要 <code>gcc 1.c</code> 就能生成一个叫做 <code>a.out</code> 的 ELF 文件，你也可以用 <code>-o</code> 选项来设置 ELF 文件的名字。</p>
+<p>我们所要研究的就是 ELF 文件中究竟有什么。首先是 ELF 文件头，包含了 ELF 文件的许多元数据，我们可以用 <code>readelf -h a.out</code> 来查看：<br><img src="https://s2.ax1x.com/2019/12/05/QG8l0x.png" alt="QG8l0x.png"></p>
+<p>ELF 文件的内容则是由一个个段 (segment) 组成的，如：</p>
 <ul>
 <li>文本段 text segment<ul>
 <li>程序的代码就在这里</li>
@@ -242,29 +242,29 @@
 </ul>
 </li>
 </ul>
-<p><code>objdump -s a.out</code>可以帮助我们查看这些段的信息：<br><img src="https://s2.ax1x.com/2019/12/05/QGGCCD.png" alt="QGGCCD.png"></p>
-<p>而如果要查看其中的汇编代码，就需要靠<code>objdump -d a.out</code>了：<br><img src="https://s2.ax1x.com/2019/12/05/QGGrrR.png" alt="QGGrrR.png"></p>
-<p>我们注意到，上图中<code>put@plt</code>的地址是<code>ff ff</code>，这是因为程序还没有进行第二步——链接。现在的 C 程序默认采用动态链接的方式，是因为传统静态链接容易造成重复链接比较浪费，同时也十分难维护。而动态链接会在运行时才进行链接。</p>
-<p>最后，当我们<code>./a.out</code>运行程序时，可执行文件会被载入内存，不同的段将被分配不同的虚拟地址，并映射到对应的物理地址。当程序计数器指向了代码段的起始位置之后，我们的程序也就准备好开始运行了。<br><img src="https://s2.ax1x.com/2019/12/05/QGJue1.png" alt="QGJue1.png"></p>
-<p>上图展示了虚拟地址是如何映射到物理地址的，同时也展示出 ELF 文件中的两个特殊的段：<code>heap</code>段与<code>stack</code>段的生长方式。可以看到，堆是从低地址向高地址生长的，而栈是从高地址向低地址生长。但是，数据的存储却是从低地址向高地址存储，这也是我们能够实施栈溢出攻击的基础。</p>
-<h2 id="C-语言函数调用栈"><a href="#C-语言函数调用栈" class="headerlink" title="C 语言函数调用栈"></a>C 语言函数调用栈</h2><p>C 程序运行过程中，会持续地维护这个<code>stack</code>段也就是栈，用来控制函数调用的流程。当发生函数调用时，栈的主要任务是保存调用者函数 caller 的状态，并创建被调用函数 callee 的状态，这里的“状态”在栈上被称为栈帧，每个栈帧之间是相互独立的。</p>
+<p><code>objdump -s a.out</code> 可以帮助我们查看这些段的信息：<br><img src="https://s2.ax1x.com/2019/12/05/QGGCCD.png" alt="QGGCCD.png"></p>
+<p>而如果要查看其中的汇编代码，就需要靠 <code>objdump -d a.out</code> 了：<br><img src="https://s2.ax1x.com/2019/12/05/QGGrrR.png" alt="QGGrrR.png"></p>
+<p>我们注意到，上图中 <code>put@plt</code> 的地址是 <code>ff ff</code>，这是因为程序还没有进行第二步——链接。现在的 C 程序默认采用动态链接的方式，是因为传统静态链接容易造成重复链接比较浪费，同时也十分难维护。而动态链接会在运行时才进行链接。</p>
+<p>最后，当我们 <code>./a.out</code> 运行程序时，可执行文件会被载入内存，不同的段将被分配不同的虚拟地址，并映射到对应的物理地址。当程序计数器指向了代码段的起始位置之后，我们的程序也就准备好开始运行了。<br><img src="https://s2.ax1x.com/2019/12/05/QGJue1.png" alt="QGJue1.png"></p>
+<p>上图展示了虚拟地址是如何映射到物理地址的，同时也展示出 ELF 文件中的两个特殊的段：<code>heap</code> 段与 <code>stack</code> 段的生长方式。可以看到，堆是从低地址向高地址生长的，而栈是从高地址向低地址生长。但是，数据的存储却是从低地址向高地址存储，这也是我们能够实施栈溢出攻击的基础。</p>
+<h2 id="C-语言函数调用栈"><a href="#C-语言函数调用栈" class="headerlink" title="C 语言函数调用栈"></a>C 语言函数调用栈</h2><p>C 程序运行过程中，会持续地维护这个 <code>stack</code> 段也就是栈，用来控制函数调用的流程。当发生函数调用时，栈的主要任务是保存调用者函数 caller 的状态，并创建被调用函数 callee 的状态，这里的 “状态” 在栈上被称为栈帧，每个栈帧之间是相互独立的。</p>
 <p><img src="https://s2.ax1x.com/2019/12/05/QGtbIx.png" alt="QGtbIx.png"></p>
-<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><p>在调用一个函数时，首先会将函数的参数<strong>按倒序</strong>压入栈中：<br><img src="https://s2.ax1x.com/2019/12/05/QGNBY6.png" alt="QGNBY6.png"><br>注意图中栈是向下生长的，下面的<code>esp</code>寄存器指向<strong>栈顶</strong>，而上面的<code>ebp</code>寄存器指向当前运行函数的栈帧的<strong>底部</strong>，也就是栈帧开始的地方。</p>
+<h3 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h3><p>在调用一个函数时，首先会将函数的参数<strong>按倒序</strong>压入栈中：<br><img src="https://s2.ax1x.com/2019/12/05/QGNBY6.png" alt="QGNBY6.png"><br>注意图中栈是向下生长的，下面的 <code>esp</code> 寄存器指向<strong>栈顶</strong>，而上面的 <code>ebp</code> 寄存器指向当前运行函数的栈帧的<strong>底部</strong>，也就是栈帧开始的地方。</p>
 <p>接下来压入函数返回地址。当函数调用结束后，函数必定需要返回到调用它的语句的下一句处，但是它怎么知道它要返回到哪里？这只能由我们告诉他，方式就是存储到栈上。<br><img src="https://s2.ax1x.com/2019/12/05/QGUucD.png" alt="QGUucD.png"></p>
-<p>这里存储到栈上的值实际上就是 caller 的<code>eip</code>。<code>eip</code>寄存器保存了 CPU 当前执行的指令的<strong>下一条指令</strong>的地址。</p>
-<p>随后，我们压入 caller 的<code>ebp</code>，并更新<code>ebp</code>的值。后者很好理解，因为我们现在进入到了 callee 这个函数了，栈帧基址当然也要跟着变化，那么前者是为什么呢？我们会在函数返回时发现这样做的原因。</p>
+<p>这里存储到栈上的值实际上就是 caller 的 <code>eip</code>。<code>eip</code> 寄存器保存了 CPU 当前执行的指令的<strong>下一条指令</strong>的地址。</p>
+<p>随后，我们压入 caller 的 <code>ebp</code>，并更新 <code>ebp</code> 的值。后者很好理解，因为我们现在进入到了 callee 这个函数了，栈帧基址当然也要跟着变化，那么前者是为什么呢？我们会在函数返回时发现这样做的原因。</p>
 <p>最后就是压入局部变量了，这一步没有太多可以解释的。<br><img src="https://s2.ax1x.com/2019/12/05/QGaAKg.png" alt="QGaAKg.png"></p>
 <h3 id="返回"><a href="#返回" class="headerlink" title="返回"></a>返回</h3><p>函数返回的第一步就是弹出局部变量，依然很简单：</p>
 <p><img src="https://s2.ax1x.com/2019/12/05/QGaeVs.png" alt="QGaeVs.png"></p>
-<p>第二步，我们要取出 caller 的<code>ebp</code>值并赋值给<code>ebp</code>：<br><img src="https://s2.ax1x.com/2019/12/05/QGaGqJ.png" alt="QGaGqJ.png"><br>这里就可以很清晰地看到，我们在调用时为何要保存这个值了，如果不保存，那么返回的时候<code>ebp</code>不知道应该返回到哪里。而保存了 caller 的<code>ebp</code>实际上就是保存了<code>caller</code>栈帧的基址。</p>
+<p>第二步，我们要取出 caller 的 <code>ebp</code> 值并赋值给 <code>ebp</code>：<br><img src="https://s2.ax1x.com/2019/12/05/QGaGqJ.png" alt="QGaGqJ.png"><br>这里就可以很清晰地看到，我们在调用时为何要保存这个值了，如果不保存，那么返回的时候 <code>ebp</code> 不知道应该返回到哪里。而保存了 caller 的 <code>ebp</code> 实际上就是保存了 <code>caller</code> 栈帧的基址。</p>
 <p>第三步弹出返回地址，第四步依次弹出参数。</p>
-<p>为了让大家能对函数调用栈有一个更直观的认识，我演示了 pwnable.kr 上的<code>random</code>这题的解法，而为了解决这题，就不得不用到调试工具 gdb。</p>
+<p>为了让大家能对函数调用栈有一个更直观的认识，我演示了 pwnable.kr 上的 <code>random</code> 这题的解法，而为了解决这题，就不得不用到调试工具 gdb。</p>
 <h2 id="gdb-简介"><a href="#gdb-简介" class="headerlink" title="gdb 简介"></a>gdb 简介</h2><p>这里仅仅列出了一些最常用的 gdb 命令：</p>
 <ul>
 <li><code>b 12</code> 在第 12 行下断点</li>
-<li><code>b 1.c:12</code> 在<code>1.c</code>的 12 行下断点</li>
-<li><code>b main</code> 在<code>main</code>函数下断点</li>
-<li><code>b *0x8048abc</code>在<code>0x8048abc</code>地址处下断点</li>
+<li><code>b 1.c:12</code> 在 <code>1.c</code> 的 12 行下断点</li>
+<li><code>b main</code> 在 <code>main</code> 函数下断点</li>
+<li><code>b *0x8048abc</code> 在 <code>0x8048abc</code> 地址处下断点</li>
 <li><code>r</code> 执行程序</li>
 <li><code>c</code> 执行到下一个断点</li>
 <li><code>s</code> 单步调试，遇到函数则进入</li>
@@ -274,10 +274,10 @@
 <li><code>q</code> 退出</li>
 <li><code>info b</code> 查看所有断点</li>
 <li><code>info func</code> 查看所有函数</li>
-<li><code>p var</code> 打印出 C 语言变量<code>var</code>的值</li>
+<li><code>p var</code> 打印出 C 语言变量 <code>var</code> 的值</li>
 <li><code>bt</code> 查看函数调用栈</li>
-<li><code>x/8xw 0x8048abc</code> 以 16 进制显示<code>0x8048abc</code>地址后 8 个内存单元的值，每个内存单元大小 4 字节</li>
-<li><code>x/4ch 0x8048abc</code> 以字符格式显示<code>0x8048abc</code>地址后 4 个内存单元的值，每个内存单元大小 2 字节</li>
+<li><code>x/8xw 0x8048abc</code> 以 16 进制显示 <code>0x8048abc</code> 地址后 8 个内存单元的值，每个内存单元大小 4 字节</li>
+<li><code>x/4ch 0x8048abc</code> 以字符格式显示 <code>0x8048abc</code> 地址后 4 个内存单元的值，每个内存单元大小 2 字节</li>
 <li><code>help x</code> 查看关于命令 x 的帮助</li>
 </ul>
 <h2 id="缓冲区溢出漏洞——栈溢出"><a href="#缓冲区溢出漏洞——栈溢出" class="headerlink" title="缓冲区溢出漏洞——栈溢出"></a>缓冲区溢出漏洞——栈溢出</h2><p>至此，可以介绍栈溢出了。栈溢出即通过覆盖栈上的数据，控制程序执行流程的一种攻击手段。攻击成功至少需要两个前提：</p>
@@ -285,7 +285,7 @@
 <li>程序必须向栈上写数据</li>
 <li>写入的数据大小没有被良好地控制</li>
 </ol>
-<p>关于栈溢出，有这样一些“危险函数”是我们可以利用的：</p>
+<p>关于栈溢出，有这样一些 “危险函数” 是我们可以利用的：</p>
 <ul>
 <li><code>gets</code></li>
 <li><code>scanf</code></li>
@@ -307,7 +307,7 @@
 <li>(netcat) 连接到远程主机上开放的服务的命令行工具</li>
 <li>(ssh) 登录远程主机的命令行工具</li>
 </ul>
-<p>介绍完了这些，我演示了对于 pwnable.kr 的<code>bof</code>这题的攻击，通过溢出局部变量来覆盖函数参数的值。</p>
+<p>介绍完了这些，我演示了对于 pwnable.kr 的 <code>bof</code> 这题的攻击，通过溢出局部变量来覆盖函数参数的值。</p>
 <h2 id="花式栈溢出"><a href="#花式栈溢出" class="headerlink" title="花式栈溢出"></a>花式栈溢出</h2><p>栈溢出之所以值得开一门课来讲授，正是因为这种攻击有很多玩法，例如：</p>
 <ul>
 <li>Basic<ul>
@@ -336,21 +336,21 @@
 </li>
 </ul>
 <p>本课程只介绍 Basic 部分。</p>
-<h3 id="ret2text"><a href="#ret2text" class="headerlink" title="ret2text"></a>ret2text</h3><p>首先介绍了<code>ret2text</code>，即通过栈溢出覆盖函数的返回地址，以控制程序的控制流。在例题 bugku 的<code>pwn2</code>中，就是利用<code>ret2text</code>返回到了<code>text</code>段已经存在的一个后门函数来获取 shell。</p>
-<h3 id="ret2shellcode"><a href="#ret2shellcode" class="headerlink" title="ret2shellcode"></a>ret2shellcode</h3><p>但不是什么时候程序中都会有一个现成的后门函数，因此有时我们需要自己创造条件。<code>ret2shellcode</code>就是这样的攻击方法。我们向栈上写入一段恶意的汇编代码，随后利用程序中的漏洞执行栈上的这段代码即可完成攻击。Hackergame 的<code>ShellHacker</code>这道题就是一个很好的例子。</p>
+<h3 id="ret2text"><a href="#ret2text" class="headerlink" title="ret2text"></a>ret2text</h3><p>首先介绍了 <code>ret2text</code>，即通过栈溢出覆盖函数的返回地址，以控制程序的控制流。在例题 bugku 的 <code>pwn2</code> 中，就是利用 <code>ret2text</code> 返回到了 <code>text</code> 段已经存在的一个后门函数来获取 shell。</p>
+<h3 id="ret2shellcode"><a href="#ret2shellcode" class="headerlink" title="ret2shellcode"></a>ret2shellcode</h3><p>但不是什么时候程序中都会有一个现成的后门函数，因此有时我们需要自己创造条件。<code>ret2shellcode</code> 就是这样的攻击方法。我们向栈上写入一段恶意的汇编代码，随后利用程序中的漏洞执行栈上的这段代码即可完成攻击。Hackergame 的 <code>ShellHacker</code> 这道题就是一个很好的例子。</p>
 <p>然而上面的两种攻击依然太过理想化了，现实中的程序往往不会那么容易被栈溢出攻击，因为开启了各种保护措施。</p>
 <h2 id="栈溢出保护"><a href="#栈溢出保护" class="headerlink" title="栈溢出保护"></a>栈溢出保护</h2><p>课程介绍了 4 种常见的栈溢出保护。其中，NX 使栈上的数据不可被执行；Canary 在局部变量和 caller’s ebp 之间插入了一个随机值，并在函数返回时检查随机值是否被修改；PIE 将使整个进程中的数据地址变得随机，每次运行时都不相同；RELRO 使重定向段不可写。</p>
 <ul>
 <li>NX (No eXecution) 默认开启<ul>
 <li>Windows: DEP (Data Execution Prevention)</li>
-<li>gcc –z execstack 禁用 NX</li>
-<li>gcc –z noexecstack 启用 NX</li>
+<li><code>gcc –z execstack</code> 禁用 NX</li>
+<li><code>gcc –z noexecstack</code> 启用 NX</li>
 </ul>
 </li>
 <li>Canary 默认不开启<ul>
-<li>gcc –fno-stack-protector 禁用 canary</li>
-<li>gcc –fstack-protector 只为局部变量中含有 char 数组的函数插入 canary</li>
-<li>gcc –fstack-protector-all 为所有函数插入 canary</li>
+<li><code>gcc –fno-stack-protector</code> 禁用 canary</li>
+<li><code>gcc –fstack-protector</code> 只为局部变量中含有 char 数组的函数插入 canary</li>
+<li><code>gcc –fstack-protector-all</code> 为所有函数插入 canary</li>
 </ul>
 </li>
 <li>PIE (Position-Independent Executables) 默认不开启<ul>
@@ -358,14 +358,14 @@
 <li>Level 0 - 表示关闭进程地址空间随机化</li>
 <li>Level 1 - 表示将 mmap 的基址、栈和 VDSO 页面随机化</li>
 <li>Level 2 - 表示在 1 的基础上增加堆的随机化</li>
-<li>gcc –fpie –pie 开启 1 级 PIE</li>
-<li>gcc –fPIE –pie 开启 2 级 PIE</li>
+<li><code>gcc –fpie –pie</code> 开启 1 级 PIE</li>
+<li><code>gcc –fPIE –pie</code> 开启 2 级 PIE</li>
 </ul>
 </li>
 <li>RELRO (RELocation Read Only) 默认 Partial<ul>
-<li>gcc –z norelro 关闭 RELRO</li>
-<li>gcc –z lazy 部分开启 RELRO，GOT 表可写</li>
-<li>gcc –z now 全部开启 RELRO</li>
+<li><code>gcc –z norelro</code> 关闭 RELRO</li>
+<li><code>gcc –z lazy</code> 部分开启 RELRO，GOT 表可写</li>
+<li><code>gcc –z now</code> 全部开启 RELRO</li>
 </ul>
 </li>
 </ul>
@@ -402,7 +402,7 @@
 <p>写成类似的 C 伪代码即：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">ebx = eax;</span><br><span class="line">eax = <span class="number">0xDEADBEEF</span>;</span><br><span class="line">edx = *<span class="number">0x41424344</span>;</span><br><span class="line">ecx = *edx;</span><br><span class="line">eax = *(ecx+esi*<span class="number">8</span>);</span><br><span class="line"></span><br><span class="line">edx -= <span class="number">0x11</span>;</span><br><span class="line">eax += ebx;</span><br><span class="line">edx++;</span><br><span class="line">ebx--;</span><br><span class="line">eax ^= eax;</span><br><span class="line">edx |= <span class="number">0x1337</span>;</span><br></pre></td></tr></table></figure>
 
-<p>这里的<code>DWORD PTR</code>指 4 字节指针，相应的有<code>BYTE PTR/WORD PTR/QWORD PTR</code>表示 1/2/8 字节指针。注意<code>[0x41424344]</code>表示取地址<code>0x41424344</code>位置的值，如果里面是寄存器同理。</p>
+<p>这里的 <code>DWORD PTR</code> 指 4 字节指针，相应的有 <code>BYTE PTR/WORD PTR/QWORD PTR</code> 表示 1/2/8 字节指针。注意 <code>[0x41424344]</code> 表示取地址 <code>0x41424344</code> 位置的值，如果里面是寄存器同理。</p>
 <h3 id="条件跳转"><a href="#条件跳转" class="headerlink" title="条件跳转"></a>条件跳转</h3><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">jz</span> $LOC</span><br><span class="line"><span class="keyword">jnz</span> $LOC</span><br><span class="line"><span class="keyword">jg</span> $LOC</span><br><span class="line"><span class="keyword">jle</span> $LOC</span><br></pre></td></tr></table></figure>
 
 <p>分别表示，当上一条语句执行结果为：</p>
@@ -410,7 +410,7 @@
 <li>0</li>
 <li>非 0</li>
 <li>目标操作数大于源操作数</li>
-<li>目标操作数小于等于源操作数<br>时，跳转到<code>$LOC</code>的位置。</li>
+<li>目标操作数小于等于源操作数<br>时，跳转到 <code>$LOC</code> 的位置。</li>
 </ul>
 <h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">push</span> <span class="built_in">ebx</span> <span class="comment">; is equal to:</span></span><br><span class="line"><span class="keyword">sub</span> <span class="built_in">esp</span>, <span class="number">4</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">DWORD</span> <span class="built_in">PTR</span> [<span class="built_in">esp</span>], <span class="built_in">ebx</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">pop</span> <span class="built_in">ebx</span> <span class="comment">; is equal to:</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">ebx</span>, <span class="built_in">DWORD</span> <span class="built_in">PTR</span> [<span class="built_in">esp</span>]</span><br><span class="line"><span class="keyword">add</span> <span class="built_in">esp</span>, <span class="number">4</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">call</span> some_function <span class="comment">; is equal to:</span></span><br><span class="line"><span class="keyword">push</span> <span class="built_in">eip</span></span><br><span class="line"><span class="keyword">mov</span> <span class="built_in">eip</span>, some_function <span class="comment">; actually invalid</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ret</span> <span class="comment">; is equal to:</span></span><br><span class="line"><span class="keyword">pop</span> <span class="built_in">eip</span> <span class="comment">; actually invalid</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">nop</span> <span class="comment">; do nothing</span></span><br></pre></td></tr></table></figure>
 
@@ -420,51 +420,51 @@
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *name = <span class="string">&quot;MERCURY&quot;</span>;</span><br><span class="line"><span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> (*name != <span class="number">0</span>) &#123;</span><br><span class="line">  len++;</span><br><span class="line">  name++;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> len;</span><br></pre></td></tr></table></figure>
 
 <h2 id="x86-64-汇编"><a href="#x86-64-汇编" class="headerlink" title="x86-64 汇编"></a>x86-64 汇编</h2><p>再放一次这张图。<br><img src="https://s2.ax1x.com/2019/12/05/QGDn3t.png" alt="QGDn3t.png"></p>
-<p>64 位架构下，新增了寄存器<code>r8-r15</code>，用<code>xmm0-xmm7</code>存储浮点参数，同时原来的<code>eax</code>变成了<code>rax</code>等。但最重要的，还是传参方式的变化：函数前 6 个参数会被依次存储在寄存器 rdi, rsi, rdx, rcx, r8, r9 中，之后的参数才遵循栈上约定。</p>
+<p>64 位架构下，新增了寄存器 <code>r8-r15</code>，用 <code>xmm0-xmm7</code> 存储浮点参数，同时原来的 <code>eax</code> 变成了 <code>rax</code> 等。但最重要的，还是传参方式的变化：函数前 6 个参数会被依次存储在寄存器 rdi, rsi, rdx, rcx, r8, r9 中，之后的参数才遵循栈上约定。</p>
 <h2 id="花式栈溢出：续"><a href="#花式栈溢出：续" class="headerlink" title="花式栈溢出：续"></a>花式栈溢出：续</h2><h3 id="泄露-canary"><a href="#泄露-canary" class="headerlink" title="泄露 canary"></a>泄露 canary</h3><p>介绍了这么多，终于可以演示一些保护机制的绕过方法了，首先是绕过 canary，这里采用了泄露 canary 的方式，实际上还有很多其他方式。前面提到过，canary 在栈上大概在这个位置：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">| args       |</span><br><span class="line"> ------------</span><br><span class="line">| ret addr   |</span><br><span class="line"> ------------  &lt;- ebp</span><br><span class="line">| saved ebp  |</span><br><span class="line"> ------------</span><br><span class="line">| padding    |</span><br><span class="line"> ------------  &lt;- ebp-0x??</span><br><span class="line">| canary     |</span><br><span class="line"> ------------</span><br><span class="line">| local vars |</span><br></pre></td></tr></table></figure>
 
 <p>那么我们栈溢出时，从局部变量出发向上走，必定要经过 canary 并覆盖其值，那么函数返回时就会检测到，并终止程序。</p>
-<p>然而，canary 在设计时规定末尾的字节必为<code>00</code>，也就是 C 语言中的<code>\0</code>，这是因为当我们打印栈信息时（从低地址向高地址打印），遇到<code>00</code>字节就会认为是字符串结束符，因此停止打印，这样 canary 的值就不会泄露。然而这同时也是我们可以利用的点。如果我们覆盖掉 canary 的最后一个字节为<code>0a</code>或者别的什么值，那么打印栈时就不会在 canary 处停下来，从而打印出 canary 的值。这是我们再将<code>0a</code>恢复为<code>00</code>便得到了完整的 canary 值。</p>
+<p>然而，canary 在设计时规定末尾的字节必为 <code>00</code>，也就是 C 语言中的 <code>\0</code>，这是因为当我们打印栈信息时（从低地址向高地址打印），遇到 <code>00</code> 字节就会认为是字符串结束符，因此停止打印，这样 canary 的值就不会泄露。然而这同时也是我们可以利用的点。如果我们覆盖掉 canary 的最后一个字节为 <code>0a</code> 或者别的什么值，那么打印栈时就不会在 canary 处停下来，从而打印出 canary 的值。这是我们再将 <code>0a</code> 恢复为 <code>00</code> 便得到了完整的 canary 值。</p>
 <p>得到 canary 后，我们只需要在栈溢出时注意，溢出到 canary 的位置的时候插入刚才得到的 canary 值，随后继续正常溢出，那么函数返回时就会认为 canary 未被修改，绕过了检查。</p>
-<h3 id="GOT-amp-PLT"><a href="#GOT-amp-PLT" class="headerlink" title="GOT &amp; PLT"></a>GOT &amp; PLT</h3><p>为了更好地理解接下来的攻击技术，这里主要介绍了 Linux 中函数调用时的延迟绑定规则，这就涉及到 ELF 文件中的两个段：<code>.plt</code>段与<code>.got.plt</code>段（实际上，GOT 表被分成<code>.got</code>与<code>.got.plt</code>两个段，前者与函数无关），分别对应我们的 Procedure Linkage Table 和 Global Offset Table。所谓延迟绑定，即一个函数的真实地址直到其第一次被调用时才会确定。</p>
-<p>我们以 Hello World 程序的<code>puts</code>函数调用为例，调用语句是<code>call &lt;puts@plt&gt;</code>。我们假设<code>.plt</code>结构如下：</p>
+<h3 id="GOT-amp-PLT"><a href="#GOT-amp-PLT" class="headerlink" title="GOT &amp; PLT"></a>GOT &amp; PLT</h3><p>为了更好地理解接下来的攻击技术，这里主要介绍了 Linux 中函数调用时的延迟绑定规则，这就涉及到 ELF 文件中的两个段：<code>.plt</code> 段与 <code>.got.plt</code> 段（实际上，GOT 表被分成 <code>.got</code> 与 <code>.got.plt</code> 两个段，前者与函数无关），分别对应我们的 Procedure Linkage Table 和 Global Offset Table。所谓延迟绑定，即一个函数的真实地址直到其第一次被调用时才会确定。</p>
+<p>我们以 Hello World 程序的 <code>puts</code> 函数调用为例，调用语句是 <code>call &lt;puts@plt&gt;</code>。我们假设 <code>.plt</code> 结构如下：</p>
 <p><img src="https://s2.ax1x.com/2019/12/05/QGW9gJ.png" alt="QGW9gJ.png"></p>
-<p>称<code>.plt</code>开头的三条指令为<code>.plt[0]</code>，<code>puts</code>的 PLT 表是<code>.plt[1]</code>，那么第一次调用<code>puts</code>时会访问<code>puts@plt</code>也就是<code>.plt[1]</code>。<code>.plt[1]</code>会跳转到<code>puts</code>对应的 GOT 表条目<code>.got.plt[3]</code>。为什么下标是 3？这是因为<code>.got.plt</code>段是长这样的：<br><img src="https://s2.ax1x.com/2019/12/05/QGW1bt.png" alt="QGW1bt.png"></p>
-<p>可以看到，<code>.got.plt</code>的前三条指令不属于任何函数，他们分别存储着：</p>
+<p>称 <code>.plt</code> 开头的三条指令为 <code>.plt[0]</code>，<code>puts</code> 的 PLT 表是 <code>.plt[1]</code>，那么第一次调用 <code>puts</code> 时会访问 <code>puts@plt</code> 也就是 <code>.plt[1]</code>。<code>.plt[1]</code> 会跳转到 <code>puts</code> 对应的 GOT 表条目 <code>.got.plt[3]</code>。为什么下标是 3？这是因为 <code>.got.plt</code> 段是长这样的：<br><img src="https://s2.ax1x.com/2019/12/05/QGW1bt.png" alt="QGW1bt.png"></p>
+<p>可以看到，<code>.got.plt</code> 的前三条指令不属于任何函数，他们分别存储着：</p>
 <ul>
-<li><code>.dynamic</code>动态链接信息</li>
+<li><code>.dynamic</code> 动态链接信息</li>
 <li>模块 ID</li>
-<li>动态链接器中的<code>dl_runtime_resolve_avx()</code>函数地址</li>
+<li>动态链接器中的 <code>dl_runtime_resolve_avx()</code> 函数地址</li>
 </ul>
-<p>于是<code>puts</code>的 GOT 表项就被挤到下标为 3 的地方去了。</p>
-<p>在第一次调用前，<code>.got.plt[3]</code>指向<code>.plt[1]</code>的下一条指令的地址，也就是说直接让<code>.plt[1]</code>继续执行下去，就好像它没有访问过<code>.got.plt[3]</code>一样。</p>
-<p>随后，我们的<code>.plt[1]</code>的第二条指令会跳转到<code>.plt[0]</code>，后者再跳转到<code>.got.plt[2]</code>，也就是<code>dl_runtime_resolve_avx()</code>函数的地址去调用该函数，该函数从<code>libc.so</code>中拿到<code>puts</code>的真实地址，并写入<code>.got.plt[3]</code>中。至此，<code>puts</code>函数的延迟绑定工作完成了。</p>
-<p>接下来，在第<code>n&gt;=1</code>次调用中，当我们再次访问<code>.plt[1]</code>时，又会去取<code>.got.plt[3]</code>中的地址，注意此时这里已经存好了<code>puts</code>的真实地址，那么我们就调用成功了。</p>
-<h3 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h3><p>这样以后就能介绍<code>ret2libc</code>了，这是在没有诸如<code>system</code>和<code>/bin/sh</code>字符串的情况下，通过返回到<code>libc</code>动态链接库中查找<code>system</code>函数地址和<code>/bin/sh</code>字符串地址，来执行<code>system(&quot;/bin/sh&quot;)</code>的攻击。为此，我们需要通过栈溢出泄露出<code>libc</code>中某个函数的真实地址，例如<code>__libc_start_main</code>等，随后使用<code>LibcSearcher</code>搜索出程序使用的<code>libc</code>版本，从而获得<code>libc</code>基址，以及<code>system</code>和<code>/bin/sh</code>的偏移量。将基址和偏移相加就可以得到两者的真实地址。这种攻击不仅可以绕过 NX 保护，同时由于 PIE 不会随机化函数地址的低 12 位，而泄露出<code>__libc_start_main</code>的低 12 位就可以确定<code>libc</code>版本，<code>ret2libc</code>攻击在 PIE 保护下也不会失效。</p>
-<h3 id="ROP-amp-ret2syscall"><a href="#ROP-amp-ret2syscall" class="headerlink" title="ROP &amp; ret2syscall"></a>ROP &amp; ret2syscall</h3><p>同样我们还可以<code>ret2syscall</code>。我们想做的就是构造系统调用<code>execve(&quot;/bin/sh&quot;,NULL,NULL)</code>。为此，我们需要：</p>
+<p>于是 <code>puts</code> 的 GOT 表项就被挤到下标为 3 的地方去了。</p>
+<p>在第一次调用前，<code>.got.plt[3]</code> 指向 <code>.plt[1]</code> 的下一条指令的地址，也就是说直接让 <code>.plt[1]</code> 继续执行下去，就好像它没有访问过 <code>.got.plt[3]</code> 一样。</p>
+<p>随后，我们的 <code>.plt[1]</code> 的第二条指令会跳转到 <code>.plt[0]</code>，后者再跳转到 <code>.got.plt[2]</code>，也就是 <code>dl_runtime_resolve_avx()</code> 函数的地址去调用该函数，该函数从 <code>libc.so</code> 中拿到 <code>puts</code> 的真实地址，并写入 <code>.got.plt[3]</code> 中。至此，<code>puts</code> 函数的延迟绑定工作完成了。</p>
+<p>接下来，在第 <code>n&gt;=1</code> 次调用中，当我们再次访问 <code>.plt[1]</code> 时，又会去取 <code>.got.plt[3]</code> 中的地址，注意此时这里已经存好了 <code>puts</code> 的真实地址，那么我们就调用成功了。</p>
+<h3 id="ret2libc"><a href="#ret2libc" class="headerlink" title="ret2libc"></a>ret2libc</h3><p>这样以后就能介绍 <code>ret2libc</code> 了，这是在没有诸如 <code>system</code> 和 <code>/bin/sh</code> 字符串的情况下，通过返回到 <code>libc</code> 动态链接库中查找 <code>system</code> 函数地址和 <code>/bin/sh</code> 字符串地址，来执行 <code>system(&quot;/bin/sh&quot;)</code> 的攻击。为此，我们需要通过栈溢出泄露出 <code>libc</code> 中某个函数的真实地址，例如 <code>__libc_start_main</code> 等，随后使用 <code>LibcSearcher</code> 搜索出程序使用的 <code>libc</code> 版本，从而获得 <code>libc</code> 基址，以及 <code>system</code> 和 <code>/bin/sh</code> 的偏移量。将基址和偏移相加就可以得到两者的真实地址。这种攻击不仅可以绕过 NX 保护，同时由于 PIE 不会随机化函数地址的低 12 位，而泄露出 <code>__libc_start_main</code> 的低 12 位就可以确定 <code>libc</code> 版本，<code>ret2libc</code> 攻击在 PIE 保护下也不会失效。</p>
+<h3 id="ROP-amp-ret2syscall"><a href="#ROP-amp-ret2syscall" class="headerlink" title="ROP &amp; ret2syscall"></a>ROP &amp; ret2syscall</h3><p>同样我们还可以 <code>ret2syscall</code>。我们想做的就是构造系统调用 <code>execve(&quot;/bin/sh&quot;,NULL,NULL)</code>。为此，我们需要：</p>
 <ol>
-<li>让<code>eax</code>等于<code>0xb</code>（<code>execve</code>的系统调用号）</li>
-<li>找到<code>/bin/sh</code>字符串的地址</li>
-<li>让<code>ebx</code>等于<code>/bin/sh</code>字符串的地址</li>
-<li>让<code>ecx</code>和<code>edx</code>等于 0</li>
-<li>找到<code>int 0x80</code>语句的地址，并返回到这句语句上</li>
+<li>让 <code>eax</code> 等于 <code>0xb</code>（<code>execve</code> 的系统调用号）</li>
+<li>找到 <code>/bin/sh</code> 字符串的地址</li>
+<li>让 <code>ebx</code> 等于 <code>/bin/sh</code> 字符串的地址</li>
+<li>让 <code>ecx</code> 和 <code>edx</code> 等于 0</li>
+<li>找到 <code>int 0x80</code> 语句的地址，并返回到这句语句上</li>
 </ol>
-<p>可以发现，这里我们需要控制寄存器的值，但是我们是无法直接控制的，而是需要通过一些<code>gadgets</code>来控制。</p>
-<p>回顾 x86 汇编部分，我们介绍了<code>push</code>和<code>pop</code>两种对称的操作。然而，没有人规定这两个操作必须成对出现。如果我们先布置好栈顶的值，然后跳转到<code>pop eax</code>指令所在的地址并执行，那么栈顶的值就会被赋值给<code>eax</code>，这样，我们相当于控制了寄存器的值。</p>
-<p>但是，跳转到<code>pop eax</code>后，我们还需要控制<code>ebx</code>等寄存器，还需要跳转到别的地方，此时的跳转我们同样要通过修改返回地址实现，因此我们必须要有返回语句，也就是<code>ret</code>。因此<code>pop eax; ret</code>这样的语句我们就称之为一个<code>gadget</code>。</p>
-<p>我们可以通过栈溢出先在栈上布置好我们想<code>pop</code>出去的值，通过<code>ROPgadget</code>工具寻找一些这样的<code>gadgets</code>（还可以找<code>/bin/sh</code>地址和<code>int 0x80</code>地址）也依次放到栈上，那么我们就构造了一条 ROP(Return Oriented Programming) 链：</p>
+<p>可以发现，这里我们需要控制寄存器的值，但是我们是无法直接控制的，而是需要通过一些 <code>gadgets</code> 来控制。</p>
+<p>回顾 x86 汇编部分，我们介绍了 <code>push</code> 和 <code>pop</code> 两种对称的操作。然而，没有人规定这两个操作必须成对出现。如果我们先布置好栈顶的值，然后跳转到 <code>pop eax</code> 指令所在的地址并执行，那么栈顶的值就会被赋值给 <code>eax</code>，这样，我们相当于控制了寄存器的值。</p>
+<p>但是，跳转到 <code>pop eax</code> 后，我们还需要控制 <code>ebx</code> 等寄存器，还需要跳转到别的地方，此时的跳转我们同样要通过修改返回地址实现，因此我们必须要有返回语句，也就是 <code>ret</code>。因此 <code>pop eax; ret</code> 这样的语句我们就称之为一个 <code>gadget</code>。</p>
+<p>我们可以通过栈溢出先在栈上布置好我们想 <code>pop</code> 出去的值，通过 <code>ROPgadget</code> 工具寻找一些这样的 <code>gadgets</code>（还可以找 <code>/bin/sh</code> 地址和 <code>int 0x80</code> 地址）也依次放到栈上，那么我们就构造了一条 ROP(Return Oriented Programming) 链：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">| int 0x80                       |</span><br><span class="line"> --------------------------------</span><br><span class="line">| addr of &#x2F;bin&#x2F;sh                |</span><br><span class="line"> --------------------------------</span><br><span class="line">| 0                              |</span><br><span class="line"> --------------------------------</span><br><span class="line">| 0                              |</span><br><span class="line"> --------------------------------</span><br><span class="line">| pop edx; pop ecx; pop ebx; ret |</span><br><span class="line"> --------------------------------</span><br><span class="line">| 0xb                            |</span><br><span class="line"> --------------------------------</span><br><span class="line">| pop eax; ret                   |</span><br></pre></td></tr></table></figure>
 
-<h3 id="GOT-Hijacking"><a href="#GOT-Hijacking" class="headerlink" title="GOT Hijacking"></a>GOT Hijacking</h3><p>栈溢出部分最后介绍的是 GOT Hijacking，也就是 GOT 表劫持。当程序开启<code>Partial RELRO</code>时，GOT 表是可写的，那么我们就可以将一个现有的普通函数例如<code>fflush</code>的 GOT 表地址放在栈上，随后利用程序漏洞（如<code>scanf</code>不加<code>&amp;</code>等）向该地址写入另一个地址，如<code>system(&quot;/bin/sh&quot;)</code>的地址，那么当我们执行<code>fflush()</code>时，由于其 GOT 表已经被劫持到了<code>system(&quot;/bin/sh&quot;)</code>，实际执行的是后者。</p>
+<h3 id="GOT-Hijacking"><a href="#GOT-Hijacking" class="headerlink" title="GOT Hijacking"></a>GOT Hijacking</h3><p>栈溢出部分最后介绍的是 GOT Hijacking，也就是 GOT 表劫持。当程序开启 <code>Partial RELRO</code> 时，GOT 表是可写的，那么我们就可以将一个现有的普通函数例如 <code>fflush</code> 的 GOT 表地址放在栈上，随后利用程序漏洞（如 <code>scanf</code> 不加 <code>&amp;</code> 等）向该地址写入另一个地址，如 <code>system(&quot;/bin/sh&quot;)</code> 的地址，那么当我们执行 <code>fflush()</code> 时，由于其 GOT 表已经被劫持到了 <code>system(&quot;/bin/sh&quot;)</code>，实际执行的是后者。</p>
 <h2 id="格式化字符串漏洞"><a href="#格式化字符串漏洞" class="headerlink" title="格式化字符串漏洞"></a>格式化字符串漏洞</h2><p>课程最后介绍的是格式化字符串漏洞，大家都比较熟悉格式化字符串。其完整格式形如：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%[parameter][flags][field width][.precision][length]type</span><br></pre></td></tr></table></figure>
 
-<p>这里我们主要关注<code>parameter</code>和<code>type</code>。<code>parameter</code>处一个广为人知的攻击点是<code>n$</code>，例如：</p>
+<p>这里我们主要关注 <code>parameter</code> 和 <code>type</code>。<code>parameter</code> 处一个广为人知的攻击点是 <code>n$</code>，例如：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%2$d %2$#x; %1$d %1$#x&quot;</span>,<span class="number">16</span>,<span class="number">17</span>)</span><br></pre></td></tr></table></figure>
 
-<p>这句语句中，<code>2$</code>就是值格式化字符串后的第 2 个参数。</p>
-<p>类似地，<code>type</code>中的攻击点在于<code>%n</code>这个类型，指定为该类型时，不输出，而是将已成功输出的字符数写入对应的整型指针参数所指的变量。这可以用来写内存，不过课程并没有涉及这一点。</p>
+<p>这句语句中，<code>2$</code> 就是值格式化字符串后的第 2 个参数。</p>
+<p>类似地，<code>type</code> 中的攻击点在于 <code>%n</code> 这个类型，指定为该类型时，不输出，而是将已成功输出的字符数写入对应的整型指针参数所指的变量。这可以用来写内存，不过课程并没有涉及这一点。</p>
 <p>为了利用该漏洞，首先要理解格式化字符串的工作原理。对于语句；</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Color %s, Number %d, Float %4.2f&quot;</span>, <span class="string">&quot;red&quot;</span>, <span class="number">123456</span>, <span class="number">3.1416</span>);</span><br></pre></td></tr></table></figure>
 
@@ -474,17 +474,17 @@
 <p>栈上布局为：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">| 3.1416                  |</span><br><span class="line"> -------------------------</span><br><span class="line">| 123456                  |</span><br><span class="line"> -------------------------</span><br><span class="line">| addr of &quot;red&quot;           |</span><br><span class="line"> -------------------------</span><br><span class="line">| addr of &quot;Color %s, ...&quot; |</span><br></pre></td></tr></table></figure>
 
-<p><code>printf</code>函数在读格式化字符串时，如果遇到<code>%</code>，那么就会去读取对应位置的参数并解析，这个参数位于栈上。那么，如果我的语句是：</p>
+<p><code>printf</code> 函数在读格式化字符串时，如果遇到 <code>%</code>，那么就会去读取对应位置的参数并解析，这个参数位于栈上。那么，如果我的语句是：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;Color %s, Number %d, Float %4.2f&quot;</span>);</span><br></pre></td></tr></table></figure>
 
 <p>即参数个数不匹配，会怎么样呢？</p>
-<p>答案是<code>printf</code>照常解析，此时栈上原本应该放参数的那个位置上的内容就会被读取并打印出来。利用这个漏洞，我们就可以泄露栈内存。实际上，可以泄露任意地址内存。</p>
-<p>举个例子，当程序运行时我们发现用户输入的参数被存储在了栈上，并且栈上还有<code>__libc_start_main</code>的地址。那么我们可以计算两者在栈上的偏移量<code>offset</code>，随后：</p>
+<p>答案是 <code>printf</code> 照常解析，此时栈上原本应该放参数的那个位置上的内容就会被读取并打印出来。利用这个漏洞，我们就可以泄露栈内存。实际上，可以泄露任意地址内存。</p>
+<p>举个例子，当程序运行时我们发现用户输入的参数被存储在了栈上，并且栈上还有 <code>__libc_start_main</code> 的地址。那么我们可以计算两者在栈上的偏移量 <code>offset</code>，随后：</p>
 <ul>
 <li>除以 4（32 位）</li>
 <li>除以 8 后加 6（64 位，别忘了 6 个存参数的寄存器）</li>
 </ul>
-<p>得到的就是，<code>__libc_start_main</code>可以被认为是<code>printf</code>的第几个参数。假如是第 11 个参数，那么我们只要构造语句<code>printf(&quot;%11$p&quot;);</code>即可泄露<code>__libc_start_main</code>的地址，从而实施<code>ret2libc</code>攻击。</p>
+<p>得到的就是，<code>__libc_start_main</code> 可以被认为是 <code>printf</code> 的第几个参数。假如是第 11 个参数，那么我们只要构造语句 <code>printf(&quot;%11$p&quot;);</code> 即可泄露 <code>__libc_start_main</code> 的地址，从而实施 <code>ret2libc</code> 攻击。</p>
 <blockquote>
 <p>参考资料：</p>
 <ul>
@@ -498,7 +498,7 @@
 <li>《深入理解计算机系统》（CSAPP）</li>
 </ul>
 </blockquote>
-</div><div class="article-licensing box"><div class="licensing-title"><p>《二进制漏洞利用入门》课程总结</p><p><a href="https://signormercurio.me/post/BinaryExp/">https://signormercurio.me/post/BinaryExp/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Mercury</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-12-05</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a class="" rel="noopener" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/fsb/">fsb</a><a class="link-muted mr-2" rel="tag" href="/tags/%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA/">整数溢出</a><a class="link-muted mr-2" rel="tag" href="/tags/ROP/">ROP</a><a class="link-muted mr-2" rel="tag" href="/tags/%E6%80%BB%E7%BB%93/">总结</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/post/GLibcHeap/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">GLibc 堆内存管理机制简介</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/post/BUUWeb/"><span class="level-item">BUUCTF Web 练习</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script>new Valine({
+</div><div class="article-licensing box"><div class="licensing-title"><p>《二进制漏洞利用入门》课程总结</p><p><a href="https://signormercurio.me/post/BinaryExp/">https://signormercurio.me/post/BinaryExp/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Mercury</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2019-12-05</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a class="" rel="noopener" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/fsb/">fsb</a><a class="link-muted mr-2" rel="tag" href="/tags/%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA/">整数溢出</a><a class="link-muted mr-2" rel="tag" href="/tags/ROP/">ROP</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/post/GLibcHeap/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">GLibc 堆内存管理机制简介</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/post/BUUWeb/"><span class="level-item">BUUCTF Web 练习</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script>new Valine({
             el: '#valine-thread' ,
             appId: "RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",
             appKey: "sw2sEPOl4haCAXKUFYiBFMrR",
@@ -516,7 +516,7 @@
             
             
             requiredFields: ["nick","mail"],
-        });</script></div></div></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Pwn-简介"><span class="level-left"><span class="level-item">1</span><span class="level-item">Pwn 简介</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#什么是-Pwn？"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">什么是 Pwn？</span></span></a></li><li><a class="level is-mobile" href="#Pwn-概览"><span class="level-left"><span class="level-item">1.2</span><span class="level-item">Pwn 概览</span></span></a></li><li><a class="level is-mobile" href="#Pwn-实例"><span class="level-left"><span class="level-item">1.3</span><span class="level-item">Pwn 实例</span></span></a></li></ul></li><li><a class="level is-mobile" href="#整型溢出"><span class="level-left"><span class="level-item">2</span><span class="level-item">整型溢出</span></span></a></li><li><a class="level is-mobile" href="#Linux-基础"><span class="level-left"><span class="level-item">3</span><span class="level-item">Linux 基础</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#目录管理"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">目录管理</span></span></a></li><li><a class="level is-mobile" href="#文件操作"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">文件操作</span></span></a></li><li><a class="level is-mobile" href="#用户管理"><span class="level-left"><span class="level-item">3.3</span><span class="level-item">用户管理</span></span></a></li><li><a class="level is-mobile" href="#工作命令"><span class="level-left"><span class="level-item">3.4</span><span class="level-item">工作命令</span></span></a></li><li><a class="level is-mobile" href="#特性"><span class="level-left"><span class="level-item">3.5</span><span class="level-item">特性</span></span></a></li></ul></li><li><a class="level is-mobile" href="#C-程序运行机制"><span class="level-left"><span class="level-item">4</span><span class="level-item">C 程序运行机制</span></span></a></li><li><a class="level is-mobile" href="#C-语言函数调用栈"><span class="level-left"><span class="level-item">5</span><span class="level-item">C 语言函数调用栈</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#调用"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">调用</span></span></a></li><li><a class="level is-mobile" href="#返回"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">返回</span></span></a></li></ul></li><li><a class="level is-mobile" href="#gdb-简介"><span class="level-left"><span class="level-item">6</span><span class="level-item">gdb 简介</span></span></a></li><li><a class="level is-mobile" href="#缓冲区溢出漏洞——栈溢出"><span class="level-left"><span class="level-item">7</span><span class="level-item">缓冲区溢出漏洞——栈溢出</span></span></a></li><li><a class="level is-mobile" href="#Pwn-相关工具"><span class="level-left"><span class="level-item">8</span><span class="level-item">Pwn 相关工具</span></span></a></li><li><a class="level is-mobile" href="#花式栈溢出"><span class="level-left"><span class="level-item">9</span><span class="level-item">花式栈溢出</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#ret2text"><span class="level-left"><span class="level-item">9.1</span><span class="level-item">ret2text</span></span></a></li><li><a class="level is-mobile" href="#ret2shellcode"><span class="level-left"><span class="level-item">9.2</span><span class="level-item">ret2shellcode</span></span></a></li></ul></li><li><a class="level is-mobile" href="#栈溢出保护"><span class="level-left"><span class="level-item">10</span><span class="level-item">栈溢出保护</span></span></a></li><li><a class="level is-mobile" href="#x86-汇编"><span class="level-left"><span class="level-item">11</span><span class="level-item">x86 汇编</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#重要寄存器"><span class="level-left"><span class="level-item">11.1</span><span class="level-item">重要寄存器</span></span></a></li><li><a class="level is-mobile" href="#数据操作"><span class="level-left"><span class="level-item">11.2</span><span class="level-item">数据操作</span></span></a></li><li><a class="level is-mobile" href="#条件跳转"><span class="level-left"><span class="level-item">11.3</span><span class="level-item">条件跳转</span></span></a></li><li><a class="level is-mobile" href="#函数调用"><span class="level-left"><span class="level-item">11.4</span><span class="level-item">函数调用</span></span></a></li><li><a class="level is-mobile" href="#例：计算字符串长度"><span class="level-left"><span class="level-item">11.5</span><span class="level-item">例：计算字符串长度</span></span></a></li></ul></li><li><a class="level is-mobile" href="#x86-64-汇编"><span class="level-left"><span class="level-item">12</span><span class="level-item">x86-64 汇编</span></span></a></li><li><a class="level is-mobile" href="#花式栈溢出：续"><span class="level-left"><span class="level-item">13</span><span class="level-item">花式栈溢出：续</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#泄露-canary"><span class="level-left"><span class="level-item">13.1</span><span class="level-item">泄露 canary</span></span></a></li><li><a class="level is-mobile" href="#GOT-amp-PLT"><span class="level-left"><span class="level-item">13.2</span><span class="level-item">GOT &amp; PLT</span></span></a></li><li><a class="level is-mobile" href="#ret2libc"><span class="level-left"><span class="level-item">13.3</span><span class="level-item">ret2libc</span></span></a></li><li><a class="level is-mobile" href="#ROP-amp-ret2syscall"><span class="level-left"><span class="level-item">13.4</span><span class="level-item">ROP &amp; ret2syscall</span></span></a></li><li><a class="level is-mobile" href="#GOT-Hijacking"><span class="level-left"><span class="level-item">13.5</span><span class="level-item">GOT Hijacking</span></span></a></li></ul></li><li><a class="level is-mobile" href="#格式化字符串漏洞"><span class="level-left"><span class="level-item">14</span><span class="level-item">格式化字符串漏洞</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-10T15:31:41.000Z">2021-10-10</time></p><p class="title"><a href="/post/Kubernetes/">Kubernetes 笔记</a></p><p class="categories"><a href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-05T14:24:56.000Z">2021-10-05</time></p><p class="title"><a href="/post/Intro2Crypto/">密码学笔记</a></p><p class="categories"><a href="/categories/%E5%AE%89%E5%85%A8/">安全</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-25T17:44:35.000Z">2021-09-25</time></p><p class="title"><a href="/post/Dockerfile2GKE/">从 Dockerfile 到 GKE：再探 GitHub Actions</a></p><p class="categories"><a href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-23T09:03:42.000Z">2021-09-23</time></p><p class="title"><a href="/post/GCP/">Google Cloud Platform 基础</a></p><p class="categories"><a href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-10T08:27:59.000Z">2021-09-10</time></p><p class="title"><a href="/post/Container/">云原生技术原理</a></p><p class="categories"><a href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a><p class="is-size-7"><span>&copy; 2021 Mercury</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" async></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+        });</script></div></div></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#Pwn-简介"><span class="level-left"><span class="level-item">1</span><span class="level-item">Pwn 简介</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#什么是-Pwn？"><span class="level-left"><span class="level-item">1.1</span><span class="level-item">什么是 Pwn？</span></span></a></li><li><a class="level is-mobile" href="#Pwn-概览"><span class="level-left"><span class="level-item">1.2</span><span class="level-item">Pwn 概览</span></span></a></li><li><a class="level is-mobile" href="#Pwn-实例"><span class="level-left"><span class="level-item">1.3</span><span class="level-item">Pwn 实例</span></span></a></li></ul></li><li><a class="level is-mobile" href="#整型溢出"><span class="level-left"><span class="level-item">2</span><span class="level-item">整型溢出</span></span></a></li><li><a class="level is-mobile" href="#Linux-基础"><span class="level-left"><span class="level-item">3</span><span class="level-item">Linux 基础</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#目录管理"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">目录管理</span></span></a></li><li><a class="level is-mobile" href="#文件操作"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">文件操作</span></span></a></li><li><a class="level is-mobile" href="#用户管理"><span class="level-left"><span class="level-item">3.3</span><span class="level-item">用户管理</span></span></a></li><li><a class="level is-mobile" href="#工作命令"><span class="level-left"><span class="level-item">3.4</span><span class="level-item">工作命令</span></span></a></li><li><a class="level is-mobile" href="#特性"><span class="level-left"><span class="level-item">3.5</span><span class="level-item">特性</span></span></a></li></ul></li><li><a class="level is-mobile" href="#C-程序运行机制"><span class="level-left"><span class="level-item">4</span><span class="level-item">C 程序运行机制</span></span></a></li><li><a class="level is-mobile" href="#C-语言函数调用栈"><span class="level-left"><span class="level-item">5</span><span class="level-item">C 语言函数调用栈</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#调用"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">调用</span></span></a></li><li><a class="level is-mobile" href="#返回"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">返回</span></span></a></li></ul></li><li><a class="level is-mobile" href="#gdb-简介"><span class="level-left"><span class="level-item">6</span><span class="level-item">gdb 简介</span></span></a></li><li><a class="level is-mobile" href="#缓冲区溢出漏洞——栈溢出"><span class="level-left"><span class="level-item">7</span><span class="level-item">缓冲区溢出漏洞——栈溢出</span></span></a></li><li><a class="level is-mobile" href="#Pwn-相关工具"><span class="level-left"><span class="level-item">8</span><span class="level-item">Pwn 相关工具</span></span></a></li><li><a class="level is-mobile" href="#花式栈溢出"><span class="level-left"><span class="level-item">9</span><span class="level-item">花式栈溢出</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#ret2text"><span class="level-left"><span class="level-item">9.1</span><span class="level-item">ret2text</span></span></a></li><li><a class="level is-mobile" href="#ret2shellcode"><span class="level-left"><span class="level-item">9.2</span><span class="level-item">ret2shellcode</span></span></a></li></ul></li><li><a class="level is-mobile" href="#栈溢出保护"><span class="level-left"><span class="level-item">10</span><span class="level-item">栈溢出保护</span></span></a></li><li><a class="level is-mobile" href="#x86-汇编"><span class="level-left"><span class="level-item">11</span><span class="level-item">x86 汇编</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#重要寄存器"><span class="level-left"><span class="level-item">11.1</span><span class="level-item">重要寄存器</span></span></a></li><li><a class="level is-mobile" href="#数据操作"><span class="level-left"><span class="level-item">11.2</span><span class="level-item">数据操作</span></span></a></li><li><a class="level is-mobile" href="#条件跳转"><span class="level-left"><span class="level-item">11.3</span><span class="level-item">条件跳转</span></span></a></li><li><a class="level is-mobile" href="#函数调用"><span class="level-left"><span class="level-item">11.4</span><span class="level-item">函数调用</span></span></a></li><li><a class="level is-mobile" href="#例：计算字符串长度"><span class="level-left"><span class="level-item">11.5</span><span class="level-item">例：计算字符串长度</span></span></a></li></ul></li><li><a class="level is-mobile" href="#x86-64-汇编"><span class="level-left"><span class="level-item">12</span><span class="level-item">x86-64 汇编</span></span></a></li><li><a class="level is-mobile" href="#花式栈溢出：续"><span class="level-left"><span class="level-item">13</span><span class="level-item">花式栈溢出：续</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#泄露-canary"><span class="level-left"><span class="level-item">13.1</span><span class="level-item">泄露 canary</span></span></a></li><li><a class="level is-mobile" href="#GOT-amp-PLT"><span class="level-left"><span class="level-item">13.2</span><span class="level-item">GOT &amp; PLT</span></span></a></li><li><a class="level is-mobile" href="#ret2libc"><span class="level-left"><span class="level-item">13.3</span><span class="level-item">ret2libc</span></span></a></li><li><a class="level is-mobile" href="#ROP-amp-ret2syscall"><span class="level-left"><span class="level-item">13.4</span><span class="level-item">ROP &amp; ret2syscall</span></span></a></li><li><a class="level is-mobile" href="#GOT-Hijacking"><span class="level-left"><span class="level-item">13.5</span><span class="level-item">GOT Hijacking</span></span></a></li></ul></li><li><a class="level is-mobile" href="#格式化字符串漏洞"><span class="level-left"><span class="level-item">14</span><span class="level-item">格式化字符串漏洞</span></span></a></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-10T15:31:41.000Z">2021-10-10</time></p><p class="title"><a href="/post/Kubernetes/">Kubernetes 笔记</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-25T17:44:35.000Z">2021-09-25</time></p><p class="title"><a href="/post/Dockerfile2GKE/">从 Dockerfile 到 GKE：再探 GitHub Actions</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-23T09:03:42.000Z">2021-09-23</time></p><p class="title"><a href="/post/GCP/">Google Cloud Platform 基础</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-10T08:27:59.000Z">2021-09-10</time></p><p class="title"><a href="/post/CloudNative/">云原生技术原理</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-08T07:50:13.000Z">2021-09-08</time></p><p class="title"><a href="/post/GoError/">Go Error 处理</a></p><p class="categories"><a href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a><p class="is-size-7"><span>&copy; 2021 Mercury</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" async></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
             article: {
                 highlight: {
                     clipboard: true,
