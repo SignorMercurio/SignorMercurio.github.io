@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>星罗棋布：《分布式系统与安全》课程笔记 - Lab on Mercury</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Lab on Mercury"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Lab on Mercury"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta description="《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。"><meta property="og:type" content="blog"><meta property="og:title" content="星罗棋布：《分布式系统与安全》课程笔记"><meta property="og:url" content="https://signormercurio.me/post/DistributedSystems/"><meta property="og:site_name" content="Lab on Mercury"><meta property="og:description" content="《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://signormercurio.me/img/og_image.png"><meta property="article:published_time" content="2021-10-18T10:04:07.000Z"><meta property="article:author" content="Mercury"><meta property="article:tag" content="Linux"><meta property="article:tag" content="NFS"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://signormercurio.me/post/DistributedSystems/"},"headline":"Lab on Mercury","image":["https://signormercurio.me/img/og_image.png"],"datePublished":"2021-10-18T10:04:07.000Z","author":{"@type":"Person","name":"Mercury"},"description":"《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。"}</script><link rel="canonical" href="https://signormercurio.me/post/DistributedSystems/"><link rel="alternate" href="/atom.xml" title="Lab on Mercury" type="application/atom+xml"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css"><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-18T10:04:07.000Z" title="2021-10-18T10:04:07.000Z">2021-10-18</time></span><span class="level-item"><a class="link-muted" href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></span><span class="level-item">16 minutes read (About 2442 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">星罗棋布：《分布式系统与安全》课程笔记</h1><div class="content"><p>《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。</p>
+<a id="more"></a>
+
+<h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>我最初因为选了《恶意软件》这门课，没敢选同一学期同样硬核的《分布式系统与安全》。后来一方面是因为《恶意软件》过于形式化、一方面是因为接触了分布式系统的生态，我选择了换课。第一节课开始没多久，我便确信自己做出了明智的（或许还是影响深远的）决定。</p>
+<p>Brad Karp 老师讲解清晰又不失风趣，硬是把线上课上出了线下课的体验。尽管才上了两周的课，我相信这门课会让我受益匪浅。</p>
+<blockquote>
+<p>一开始给我留下比较好的印象的就是老师摒弃了学校的课程平台 Moodle，转而使用 GitHub Classroom 和 Piazza。众所周知，所谓学校的课程平台并不会给师生带来什么好的体验。</p>
+</blockquote>
+<p>这门课是没有教材的，这实际上对老师的水平提出了很高的要求：他必须自己四处收集资源备课、讲述自己的理解，而非将教材上的内容略作修改、照本宣科。取而代之的阅读材料是一系列经典论文。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="中心化系统面临的问题"><a href="#中心化系统面临的问题" class="headerlink" title="中心化系统面临的问题"></a>中心化系统面临的问题</h3><ul>
+<li>单节点故障</li>
+<li>难以支撑流量较大的应用</li>
+<li>易受攻击，且受到攻击后损失较大（这其实也应该算到单节点故障里？可能不能算故障）</li>
+<li>难以伸缩以提高资源利用率</li>
+<li>升级与维护时必须中止服务</li>
+<li>地理距离带来的网络延迟</li>
+</ul>
+<h3 id="分布式系统引入的问题"><a href="#分布式系统引入的问题" class="headerlink" title="分布式系统引入的问题"></a>分布式系统引入的问题</h3><ul>
+<li>数据一致性</li>
+<li>节点间的网络延迟、网络错误</li>
+<li>Heterogeneity 异质性，不同节点可能使用不同语言、接口、API 等</li>
+<li>节点间并发问题</li>
+<li>Partition resilience，不知道怎么翻译，弹性划分问题？</li>
+</ul>
+<blockquote>
+<p>关于 Partition resilience 问题：假设两个用户在两个不同的服务节点上同时购买了最后一张机票，这张机票就会被卖出两次。有点像数据一致性问题。</p>
+</blockquote>
+<h3 id="OS-相关"><a href="#OS-相关" class="headerlink" title="OS 相关"></a>OS 相关</h3><p>这个部分基本是本科《操作系统》课和 Pwn 的内容，记录时顺便复习下。</p>
+<h4 id="Syscall"><a href="#Syscall" class="headerlink" title="Syscall"></a>Syscall</h4><p>例如，应用通过 <code>close(3)</code> 关闭文件。而在 C 函数库中是这样调用 syscall 的：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">close(x) &#123;</span><br><span class="line">  R0 &lt;- <span class="number">73</span></span><br><span class="line">  R1 &lt;- x</span><br><span class="line">  TRAP</span><br><span class="line">  RET</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>TRAP 实际上做的是：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">XP &lt;- PC</span><br><span class="line"><span class="comment">// switch to kernel address space</span></span><br><span class="line"><span class="comment">// set privileged flag (to enter high privlege mode)</span></span><br><span class="line">PC &lt;- address of kernel trap handler</span><br></pre></td></tr></table></figure>
+
+<p>这里的 XP 是某个用来暂时存放 PC 的寄存器。我们容易想到，之后就要在内核中运行代码了，这其实是十分危险的操作。怎么保证应用不会在内核里乱搞呢？答案是 Protected Transfer 机制。</p>
+<p>为了避免用户在内核里随便运行代码，只有通过 kernel entrypoint 进入内核才能运行代码，而这个 entrypoint 就是 trap handler。至于具体跳到内核的什么位置则由硬件决定，而不能由应用来指定。这个具体位置则只能通过在启动时运行的内核态代码来决定，确保了用户态程序无法随意跳转到内核任意位置。</p>
+<p>接着，在内核的 trap handler 中：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// save regs to this process&#x27; PCB</span></span><br><span class="line">SP &lt;- kernel <span class="built_in">stack</span></span><br><span class="line">sys_close()</span><br><span class="line"><span class="comment">// executing in &quot;kernel half&quot; of process</span></span><br><span class="line"><span class="comment">// restore regs from PCB</span></span><br><span class="line">TRAPRET</span><br></pre></td></tr></table></figure>
+
+<p>最后的 TRAPRET 的流程就比较简单了：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PC &lt;- XP</span><br><span class="line"><span class="comment">// clear privileged flag</span></span><br><span class="line"><span class="comment">// switch to process address space</span></span><br><span class="line"><span class="comment">// continue execution</span></span><br></pre></td></tr></table></figure>
+
+<p>可以看到，TRAP 和 TRAPRET 要保存 / 恢复 PC、切换地址空间、切换用户态 / 内核态，而 trap handler 要保存 / 恢复寄存器，这些过程是必需的但又并没有产生实际的价值，还相对比较耗时。</p>
+<h3 id="并发-IO"><a href="#并发-IO" class="headerlink" title="并发 IO"></a>并发 IO</h3><p>而且，Syscall 常常涉及阻塞 IO 操作，很大程度上降低了资源利用率。一般来说有如下三种解决方法：</p>
+<ul>
+<li>多进程</li>
+<li>单进程、多线程</li>
+<li>事件驱动 IO</li>
+</ul>
+<p>但首先，OS 本身对单进程单线程也提供了一定程度的并发 IO，比如：</p>
+<ul>
+<li>在文件系统中，会进行 read-ahead 和 write-behind 预读写磁盘数据</li>
+<li>类似地，<code>read()</code> 接收网络包时也会拷贝到 kernel socket buffer，<code>write()</code> 发送数据包时也会拷贝到 kernel socket buffer</li>
+</ul>
+<h4 id="多进程"><a href="#多进程" class="headerlink" title="多进程"></a>多进程</h4><p>多进程很容易理解：当一个进程阻塞后，切换到另一个进程运行。优点在于：</p>
+<ul>
+<li>进程间本身就相互隔离，不会互相影响</li>
+<li>（如果有多个 CPU）同时还自动获得了 CPU 并发</li>
+</ul>
+<p>不过 CPU 并发没有 IO 并发那么重要，相对 IO 并发而言更难实现，两者对速度的提升也是 2 倍和 100 倍的数量级。此时，氪金多买几台机器显然是更好的选择。</p>
+<p>然而，多进程也有缺点：</p>
+<ul>
+<li><code>fork()</code> 调用本身比较耗时、耗内存，300 微秒左右的耗时并不能通过提升机器配置来缩短</li>
+<li>隔离性同时也是缺点，不共享内存意味着构建缓存或是记录统计数据比较麻烦</li>
+</ul>
+<h4 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h4><p>另一种方法是使用更轻量级的线程，此时线程们共享内存且分别拥有自己的栈，维持了一定的独立性。这一好处带来的是非常棘手的问题，那就是线程之间本身会互相影响、线程对数据的读写同样如此，使得我们不得不引入锁的机制来避免这些问题。但是引入新机制又会带来新问题，比如饥饿、死锁等。</p>
+<blockquote>
+<p>这很像之前看到的火箭工程：要让火箭飞起来就需要带足够的燃料，但这些燃料本身也有重量，于是需要更多的燃料让整个火箭飞起来……<del>（坎巴拉太空计划核心玩法）</del></p>
+</blockquote>
+<p>几乎所有现代操作系统都对多线程有原生支持，这一般是通过内核线程实现的。这种实现下，内核清楚地知道每个线程的状态，也可以亲自调度线程到 CPU 上，非常灵活且同时支持 CPU 并发和 IO 并发。对于线程来说，每个线程不仅需要原有的用户态栈，还需要维护自己的内核栈和寄存器表。</p>
+<p>这么做的代价就是：</p>
+<ul>
+<li>创建线程要内核干涉</li>
+<li>线程上下文切换要内核干涉</li>
+<li>加锁解锁也要内核干涉</li>
+<li>实现起来很大程度上依赖于 OS，难以移植</li>
+</ul>
+<p>至于用户线程，对内核来说就是不可见的，内核只负责调度进程。此时，进程内部就需要一个线程调度器，清晰地知道每个线程的状态如何并及时调度。这样我们就可以进行非阻塞式 Syscall 了：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">read() &#123;</span><br><span class="line">  <span class="comment">// tell kernel to start read</span></span><br><span class="line">  <span class="comment">// mark thread waiting for read</span></span><br><span class="line">  sched();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">sched() &#123;</span><br><span class="line">  <span class="comment">// ask kernel for IO completion events</span></span><br><span class="line">  <span class="comment">// mark corresponding threads runnable</span></span><br><span class="line">  <span class="comment">// find runnable thread</span></span><br><span class="line">  <span class="comment">// restore regs and return</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看起来很不错，但是仔细想想，这中间涉及的事件通知机制，需要我们的调度器具备相当强大的能力。它需要让内核通知它：</p>
+<ul>
+<li>创建网络连接事件</li>
+<li>数据到达 socket 事件</li>
+<li>磁盘读取完成事件</li>
+<li>socket 能够继续被 <code>write()</code> 事件</li>
+</ul>
+<p>……这基本上就是在组装一个小型 OS 了。更不用说，事件通知机制在 OS 里一般也没有完整的支持，比如在 Unix 中就没有文件系统操作完成事件的通知机制。Syscall 也并不总是能完全不进行阻塞等待，比如 <code>open()</code> 和 <code>stat()</code> 等。</p>
+<p>最后，非阻塞式 Syscall 还很难实现。例如可以看下 <code>sys_read()</code> 的大致实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">sys_read(fd, user_buffer, n) &#123;</span><br><span class="line">  <span class="comment">// read the file&#x27;s i-node from disk</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">inode</span> *<span class="title">i</span> =</span> alloc_inode();</span><br><span class="line">  start_disk(..., i);</span><br><span class="line">  wait_for_disk(i);</span><br><span class="line">  <span class="comment">// the i-node tells us where the data are; read it</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">buf</span> *<span class="title">b</span> =</span> alloc_buf(i-&gt;...);</span><br><span class="line">  start_disk(..., b);</span><br><span class="line">  wait_for_disk(b);</span><br><span class="line">  copy_to_user(b, user_buffer);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个函数分为两步，先获取 inode，再写入 buffer，期间都需要 <code>wait_for_disk()</code>，使得程序在内核中被挂起。这种情况下，非阻塞式的 Syscall 此时需要从内核中返回防止阻塞，但这样内核就无从知晓 <code>sys_read()</code> 刚才执行到哪里了，<code>sys_read()</code> 也没法继续执行下去了。</p>
+<p>因此，如果要使用用户线程，我们要么只能使用一个支持不那么完整的实现，要么就是重写底层的 Syscall 使得一个 Syscall 内部执行一个非阻塞的过程。这会导致一个 <code>open()</code> 的系统调用可能会被拆成几十个小系统调用，比如通过 <code>lookup_one_path_component()</code> 查找<strong>一层</strong>目录。毫无疑问，这会导致代码极其繁琐。</p>
+<p>总的来说，可能只有对性能有苛刻要求的情况下才会使用用户线程，以节省掉用户态 / 内核态切换的开销。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>星罗棋布：《分布式系统与安全》课程笔记</p><p><a href="https://signormercurio.me/post/DistributedSystems/">https://signormercurio.me/post/DistributedSystems/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Mercury</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-10-18</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a class="" rel="noopener" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Linux/">Linux</a><a class="link-muted mr-2" rel="tag" href="/tags/NFS/">NFS</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/post/Kubernetes/"><span class="level-item">乘风破浪：Kubernetes 笔记</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script>new Valine({
+            el: '#valine-thread' ,
+            appId: "RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",
+            appKey: "sw2sEPOl4haCAXKUFYiBFMrR",
+            placeholder: "Leave comments here...",
+            avatar: "mm",
+            
+            meta: ["nick","mail","link"],
+            pageSize: 10,
+            lang: "en",
+            visitor: true,
+            highlight: true,
+            
+            
+            
+            
+            
+            requiredFields: ["nick","mail"],
+        });</script></div></div></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#序"><span class="level-left"><span class="level-item">1</span><span class="level-item">序</span></span></a></li><li><a class="level is-mobile" href="#背景"><span class="level-left"><span class="level-item">2</span><span class="level-item">背景</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#中心化系统面临的问题"><span class="level-left"><span class="level-item">2.1</span><span class="level-item">中心化系统面临的问题</span></span></a></li><li><a class="level is-mobile" href="#分布式系统引入的问题"><span class="level-left"><span class="level-item">2.2</span><span class="level-item">分布式系统引入的问题</span></span></a></li><li><a class="level is-mobile" href="#OS-相关"><span class="level-left"><span class="level-item">2.3</span><span class="level-item">OS 相关</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Syscall"><span class="level-left"><span class="level-item">2.3.1</span><span class="level-item">Syscall</span></span></a></li></ul></li><li><a class="level is-mobile" href="#并发-IO"><span class="level-left"><span class="level-item">2.4</span><span class="level-item">并发 IO</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#多进程"><span class="level-left"><span class="level-item">2.4.1</span><span class="level-item">多进程</span></span></a></li><li><a class="level is-mobile" href="#多线程"><span class="level-left"><span class="level-item">2.4.2</span><span class="level-item">多线程</span></span></a></li></ul></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-18T10:04:07.000Z">2021-10-18</time></p><p class="title"><a href="/post/DistributedSystems/">星罗棋布：《分布式系统与安全》课程笔记</a></p><p class="categories"><a href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-10T15:31:41.000Z">2021-10-10</time></p><p class="title"><a href="/post/Kubernetes/">乘风破浪：Kubernetes 笔记</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-25T17:44:35.000Z">2021-09-25</time></p><p class="title"><a href="/post/Dockerfile2GKE/">再探 GitHub Actions：从 Dockerfile 到 GKE</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-23T09:03:42.000Z">2021-09-23</time></p><p class="title"><a href="/post/GCP/">高枕无忧：Google Cloud Platform 基础</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-10T08:27:59.000Z">2021-09-10</time></p><p class="title"><a href="/post/CloudNative/">风谲云诡：云原生技术原理</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a><p class="is-size-7"><span>&copy; 2021 Mercury</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" async></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><div id="outdated"><h6>Your browser is out-of-date!</h6><p>Update your browser to view this website correctly.&amp;npsb;<a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p><p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">×</a></p></div><script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script><script>window.addEventListener("load", function () {
+            outdatedBrowser({
+                bgColor: '#f25648',
+                color: '#ffffff',
+                lowerThan: 'object-fit' // display on IE11 or below
+            });
+        });</script><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
