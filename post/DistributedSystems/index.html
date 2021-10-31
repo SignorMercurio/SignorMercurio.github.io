@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>星罗棋布：《分布式系统与安全》课程笔记 - Lab on Mercury</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Lab on Mercury"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Lab on Mercury"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。"><meta property="og:type" content="blog"><meta property="og:title" content="星罗棋布：《分布式系统与安全》课程笔记"><meta property="og:url" content="https://signormercurio.me/post/DistributedSystems/"><meta property="og:site_name" content="Lab on Mercury"><meta property="og:description" content="《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://i.loli.net/2021/10/19/DakrnwAs1lCIpxL.png"><meta property="article:published_time" content="2021-10-18T10:04:07.000Z"><meta property="article:author" content="Mercury"><meta property="article:tag" content="Linux"><meta property="article:tag" content="NFS"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2021/10/19/DakrnwAs1lCIpxL.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://signormercurio.me/post/DistributedSystems/"},"headline":"星罗棋布：《分布式系统与安全》课程笔记","image":["https://i.loli.net/2021/10/19/DakrnwAs1lCIpxL.png"],"datePublished":"2021-10-18T10:04:07.000Z","author":{"@type":"Person","name":"Mercury"},"publisher":{"@type":"Organization","name":"Lab on Mercury","logo":{"@type":"ImageObject","url":"https://signormercurio.me/img/favicon.png"}},"description":"《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。"}</script><link rel="canonical" href="https://signormercurio.me/post/DistributedSystems/"><link rel="alternate" href="/atom.xml" title="Lab on Mercury" type="application/atom+xml"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css"><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="https://i.loli.net/2021/10/19/DakrnwAs1lCIpxL.png" alt="星罗棋布：《分布式系统与安全》课程笔记"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-18T10:04:07.000Z" title="2021/10/18 上午11:04:07">2021-10-18</time></span><span class="level-item"><a class="link-muted" href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></span><span class="level-item">26 minutes read (About 3965 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">星罗棋布：《分布式系统与安全》课程笔记</h1><div class="content"><p>《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>星罗棋布：《分布式系统与安全》课程笔记 - Lab on Mercury</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Lab on Mercury"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Lab on Mercury"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。"><meta property="og:type" content="blog"><meta property="og:title" content="星罗棋布：《分布式系统与安全》课程笔记"><meta property="og:url" content="https://signormercurio.me/post/DistributedSystems/"><meta property="og:site_name" content="Lab on Mercury"><meta property="og:description" content="《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://i.loli.net/2021/10/19/DakrnwAs1lCIpxL.png"><meta property="article:published_time" content="2021-10-18T10:04:07.000Z"><meta property="article:author" content="Mercury"><meta property="article:tag" content="Linux"><meta property="article:tag" content="NFS"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2021/10/19/DakrnwAs1lCIpxL.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://signormercurio.me/post/DistributedSystems/"},"headline":"星罗棋布：《分布式系统与安全》课程笔记","image":["https://i.loli.net/2021/10/19/DakrnwAs1lCIpxL.png"],"datePublished":"2021-10-18T10:04:07.000Z","author":{"@type":"Person","name":"Mercury"},"publisher":{"@type":"Organization","name":"Lab on Mercury","logo":{"@type":"ImageObject","url":"https://signormercurio.me/img/favicon.png"}},"description":"《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。"}</script><link rel="canonical" href="https://signormercurio.me/post/DistributedSystems/"><link rel="alternate" href="/atom.xml" title="Lab on Mercury" type="application/atom+xml"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css"><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="https://i.loli.net/2021/10/19/DakrnwAs1lCIpxL.png" alt="星罗棋布：《分布式系统与安全》课程笔记"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2021-10-18T10:04:07.000Z" title="2021/10/18 上午11:04:07">2021-10-18</time></span><span class="level-item"><a class="link-muted" href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></span><span class="level-item">44 minutes read (About 6585 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">星罗棋布：《分布式系统与安全》课程笔记</h1><div class="content"><p>《分布式系统与安全》这门课，说不定会成为我从本科到硕士期间最有价值的课。</p>
 <a id="more"></a>
 
 <h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>我最初因为选了《恶意软件》这门课，没敢选同一学期同样硬核的《分布式系统与安全》。后来一方面是因为《恶意软件》过于形式化、一方面是因为接触了分布式系统的生态，我选择了换课。第一节课开始没多久，我便确信自己做出了明智的（或许还是影响深远的）决定。</p>
 <p>Brad Karp 老师讲解清晰又不失风趣，硬是把线上课上出了线下课的体验。尽管才上了两周的课，我相信这门课会让我受益匪浅。</p>
 <blockquote>
 <p>一开始给我留下比较好的印象的就是老师摒弃了学校的课程平台 Moodle，转而使用 GitHub Classroom 和 Piazza。众所周知，所谓学校的课程平台并不会给师生带来什么好的体验。</p>
+<p>此外，GitHub Classroom 还能自动测试和批改作业，很有意思，使用体验也很好。</p>
 </blockquote>
 <p>这门课是没有教材的，这实际上对老师的水平提出了很高的要求：他必须自己四处收集资源备课、讲述自己的理解，而非将教材上的内容略作修改、照本宣科。取而代之的阅读材料是一系列经典论文。</p>
 <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="中心化系统面临的问题"><a href="#中心化系统面临的问题" class="headerlink" title="中心化系统面临的问题"></a>中心化系统面临的问题</h3><ul>
@@ -144,6 +145,506 @@
 <li>read-write consistency：如果 <code>OPEN</code> 了同一文件，则 <code>READ</code> 读到的数据一定是 <code>WRITE</code> 操作之后的，显然这样更能保证一致性但开销更大</li>
 </ul>
 <p>close-to-open consistency 的具体原理，是每次应用 <code>OPEN</code> 文件时，都会检查本地缓存中文件的修改时间和 <code>GETATTR</code> RPC 请求所获得的 vnode 修改时间，如果不一致，则删除缓存重新获取文件。而 <code>WRITE</code> 则只会写到本地缓存，直到 <code>CLOSE</code> 后改动才会写到 Server 中。</p>
+<h3 id="局限性"><a href="#局限性" class="headerlink" title="局限性"></a>局限性</h3><ul>
+<li>安全性：NFS 并没有把安全性放在一个重要的地位，未授权访问、中间人攻击都是可行的</li>
+<li>可伸缩性：NFS Server 承受的流量压力较大，无法支持过多 NFS Client</li>
+<li>因为性能、丢包处理等原因，难以在大规模复杂网络中使用</li>
+</ul>
+<blockquote>
+<p>为什么 NFS 安全措施极弱，但却没有受到严重的攻击？主要原因可能是 file handle 难以猜解。</p>
+</blockquote>
+<h2 id="RPC-透明性"><a href="#RPC-透明性" class="headerlink" title="RPC 透明性"></a>RPC 透明性</h2><h3 id="设计目标-1"><a href="#设计目标-1" class="headerlink" title="设计目标"></a>设计目标</h3><p>编写分布式系统代码时，尽可能减少对客户端和服务端的代码和行为上的改动，并使得开发者无需关心网络带来的问题。也就是说，RPC 希望能让分布式编程写起来就像在单点系统中一样，提供“透明性”。</p>
+<h3 id="抽象"><a href="#抽象" class="headerlink" title="抽象"></a>抽象</h3><p>首先面临的问题就是，在不同机器上对数据的表示不同，例如 32 位 / 64 位、小端法 / 大端法等等。因此，在数据传递时，必须使用一种和机器无关的数据表示方式，即 Interface Description Language。</p>
+<p>IDL 所做的事不外乎两件：</p>
+<ul>
+<li>将不同编程语言原生的数据类型，序列化为机器无关的字节流以在网络上传递（反之同理）</li>
+<li>在客户端上使用 stub 将请求发送至服务端</li>
+</ul>
+<p>例如，对于 Sun RPC 来说，IDL 就是 XDR，也是在 CW1 中使用的 IDL。首先在 <code>proto.x</code> 中编写 API 定义，随后 <code>rpcgen proto.x</code> 自动生成代码。</p>
+<h3 id="🌰：NFS"><a href="#🌰：NFS" class="headerlink" title="🌰：NFS"></a>🌰：NFS</h3><p>在 NFS 中，Client 本质上就是针对文件 syscall 的一个 RPC stub。此时，syscall 的参数、返回值都没有受到影响，提供了一定程度的透明性。</p>
+<p>然而，这种透明性仅仅是形式上的。如果只有形式上的透明性而没有语义上的透明性，现有的代码尽管能够运行，却会产生错误的结果。所谓语义透明性，即同样的调用是否在 NFS 和 Unix 本地文件系统上表现一致。显然，NFS 没能提供这种语义透明性：</p>
+<ul>
+<li>在 Unix 上，只有文件不存在时 <code>open()</code> 才会失败；在 NFS 上，如果服务器宕机，<code>open()</code> 也会失败，甚至可能一直挂起</li>
+<li>在 Unix 上，<code>close()</code> 不可能失败；在 NFS 上，调用 <code>close()</code> 时会触发批量写操作（也就是含有隐性的 <code>write()</code> ），在 Server 空间不足时可能失败</li>
+<li>在 NFS 上，假如 Client 发送重命名请求，Server 完成了重命名但未能发送响应就宕机了，那么在 Server 恢复后 Client 的重传会得到“文件不存在”的响应，这在 Unix 上不可能发生</li>
+<li>在 Unix 上，如果 A 打开文件后该文件被 B 删除，A 依然能继续读文件；在 NFS 上，A 则无法再读该文件</li>
+</ul>
+<p>第一个问题并不是 NFS 特有的，而是分布式系统均面临的问题；而后三个问题虽然可以修复以提升语义透明性，但都需要付出性能的代价。同理，提升性能也常常需要牺牲一部分一致性，例如上文提及的 close-to-open consistency，并不是什么时候都能提供足够强的一致性。</p>
+<h3 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h3><p>RPC 需要处理类似服务端宕机、网络丢包等单点系统中不存在的异常，并采用 At-most-once 的执行策略。这是因为，如果响应丢包了，客户端会重传已经执行过的请求，此时如果操作具有幂等性则不会出问题，但如果是类似于充值 / 收费等请求，再次执行显然会带来大麻烦。因此，服务端可以维护 replay cache，使得收到重复请求时直接返回 cache 中的值，而不是再执行一次。</p>
+<h2 id="Ivy"><a href="#Ivy" class="headerlink" title="Ivy"></a>Ivy</h2><p>RPC 对于提升透明性的尝试基本失败了，它显式的通信方式需要开发者小心地定义节点间的通信接口，没能提升太多透明性。我们转而思考，能不能使用一种隐式的通信方式来达到这一目的呢？分布式共享内存提供了这样一种可能性。</p>
+<p>Ivy 创建了一种所有节点共享同一块内存的幻象，隐藏了在访问其他节点内存时底层的网络传输，从而实现隐式的通信。当然，既然用到网络，就要面临网络带来的性能、正确性、一致性等问题……</p>
+<p>因为 Ivy 让分布式系统的节点“共享”同一内存，我们不妨将各节点具象为 CPU。首先需要解决的问题就是怎么把程序的不同部分交给不同 CPU 去执行，并确保正确性。</p>
+<blockquote>
+<p>现代 CPU 并不会按指令顺序来逐条执行指令。所谓正确性，即执行结果看起来就像是指令逐条执行后产生的结果一样。</p>
+</blockquote>
+<p>如果我们让每个 CPU 都持有一份全部共享内存的复制，那么读内存会非常快。然而，写内存则需要将写操作引入的改变传播到其他 CPU，而网络延迟在这里是不可忽视的。本地读和异地写的时间差，以及节点间网络延迟的差异，都会使得变量值的变化在时间上不一致，从而破坏正确性。因此，这种方案不可行，每个 CPU 必须持有共享内存的一部分而不是全部。</p>
+<p>这就引出了如何划分内存给 CPU 的问题。容易想到，固定的划分方法无法顾及局部性，势必会效率低下。而动态的划分方法——比如 CPU 对某个页进行读写时将其移动到 CPU 上——不能处理多个 CPU 读同一个页的情况。</p>
+<p>因此，我们可以考虑仅仅在写时移动页。而当 CPU 需要读异地内存时，只需要找到最后写该页的 CPU 并复制一份只读的拷贝。</p>
+<h3 id="机制简介-中心化-Manager"><a href="#机制简介-中心化-Manager" class="headerlink" title="机制简介 - 中心化 Manager"></a>机制简介 - 中心化 Manager</h3><p>Ivy 就采用了类似的思想，用中心化的 Manager 管理页的分配，下面用例子阐释其中的机制。假设存在三个 CPU，其中第三个 CPU 同时还是 Manager。每个 CPU 维护自己的 page table，Manager 则额外维护一个 info table。</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><code>lock</code> 列用来锁定表的编辑权限，<code>access</code> 可以为 <code>R</code> / <code>W</code> / <code>nil</code> 表示 CPU 对该页有读 / 读写 / 无权限，<code>owner</code> 则标志当前 CPU 是否为最后写该页的 CPU。最后，info 表中 <code>copy_set</code> 维护了该页的所有只读拷贝，<code>owner</code> 保存了最后写该页的 CPU 名称。</p>
+<p>注意这里每个 CPU 的 ptable 和 Manager 的 info table 都被简化到了一行，即对应某一特定的页。</p>
+<h4 id="CPU1-读-CPU0-的页"><a href="#CPU1-读-CPU0-的页" class="headerlink" title="CPU1 读 CPU0 的页"></a>CPU1 读 CPU0 的页</h4><p>假设初始状态如下，页为 CPU0 所拥有：</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td>❎</td>
+<td>W</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td>❎</td>
+<td>{}</td>
+<td>CPU0</td>
+</tr>
+</tbody></table>
+<p>现在，CPU1 想要读取该页。于是它首先 lock 了自己 ptable 中对应的行，向 Manager 发送 read query。Manager 接收后，lock 自己 info 中对应的行，将 CPU1 加入 <code>copy_set</code>。</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td>❎</td>
+<td>W</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td>✅</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td>✅</td>
+<td>{CPU1}</td>
+<td>CPU0</td>
+</tr>
+</tbody></table>
+<p>随后，Manager 向 Owner 也就是 CPU0 发送 read forward。CPU0 接收后，lock ptable，将 <code>access</code> 改为 <code>R</code>。</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td>✅</td>
+<td>R</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td>✅</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td>✅</td>
+<td>{CPU1}</td>
+<td>CPU0</td>
+</tr>
+</tbody></table>
+<p>随后，CPU0 向 CPU1 发送 read data 后 unlock ptable。CPU1 接收后，向 Manager 发送 read confirm，并将 <code>access</code> 改为 <code>R</code>，最后 unlock ptable。Manager 收到后，也 unlock info。</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td>❎</td>
+<td>R</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td>❎</td>
+<td>R</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td>❎</td>
+<td>{CPU1}</td>
+<td>CPU0</td>
+</tr>
+</tbody></table>
+<h4 id="CPU2-写-CPU0-的页"><a href="#CPU2-写-CPU0-的页" class="headerlink" title="CPU2 写 CPU0 的页"></a>CPU2 写 CPU0 的页</h4><p>书接上回，此时 CPU2 想写 CPU0 的页，那么它会 lock ptable，向 Manager 发送 write query。Manager 接收后，lock info，并向 <code>copy_set</code> 中的 CPU1 发送 invalidate，以撤销 CPU1 的读权限。CPU1 接收后，lock ptable 并将 <code>access</code> 改为 <code>nil</code>。</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td>❎</td>
+<td>R</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td>✅</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td>✅</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td>✅</td>
+<td>{CPU1}</td>
+<td>CPU0</td>
+</tr>
+</tbody></table>
+<p>随后，CPU1 向 Manager 发送 invalidate confirm 并 unlock ptable。Manager 接收后，从 <code>copy_set</code> 中移除 CPU1，向 Owner 即 CPU0 发送 write forward。</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td>❎</td>
+<td>R</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td>✅</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td>✅</td>
+<td>{}</td>
+<td>CPU0</td>
+</tr>
+</tbody></table>
+<p>CPU0 接收后，lock ptable，将 <code>access</code> 设为 <code>nil</code> 并放弃 Owner 身份，最后向 CPU2 发送 write data。</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td>✅</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td>✅</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td>✅</td>
+<td>{}</td>
+<td>CPU0</td>
+</tr>
+</tbody></table>
+<p>随后，CPU0 unlock ptable。CPU2 接收后，将 <code>access</code> 设为 <code>W</code> 并成为新的 Owner，最后向 Manager 发送 write confirm 并 unlock ptable。</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td>❎</td>
+<td>W</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td>✅</td>
+<td>{}</td>
+<td>CPU0</td>
+</tr>
+</tbody></table>
+<p>Manager 接收后，将 <code>owner</code> 设为 CPU2，最后 unlock info。</p>
+<table>
+<thead>
+<tr>
+<th>ptable</th>
+<th>lock</th>
+<th>access</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU0</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU1</td>
+<td>❎</td>
+<td>nil</td>
+<td>❎</td>
+</tr>
+<tr>
+<td>CPU2</td>
+<td>❎</td>
+<td>W</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>info</th>
+<th>lock</th>
+<th>copy_set</th>
+<th>owner</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Manager</td>
+<td>❎</td>
+<td>{}</td>
+<td>CPU2</td>
+</tr>
+</tbody></table>
+<p>可以注意到，ptable 的锁的存在本质上防止了并发写的发生，使得写操作必须是原子的。</p>
+<h3 id="与-RPC-对比"><a href="#与-RPC-对比" class="headerlink" title="与 RPC 对比"></a>与 RPC 对比</h3><p>相比 RPC，分布式共享内存的优点在于：</p>
+<ul>
+<li>提供了更强的透明性</li>
+<li>使得分布式系统编程更为容易</li>
+</ul>
+<p>然而，RPC 同样具备分布式共享内存欠缺的优点：</p>
+<ul>
+<li>更好的隔离性</li>
+<li>对通信更可控</li>
+<li>对网络延迟容忍度更高</li>
+<li>更容易移植到不同平台</li>
+</ul>
 </div><div class="article-licensing box"><div class="licensing-title"><p>星罗棋布：《分布式系统与安全》课程笔记</p><p><a href="https://signormercurio.me/post/DistributedSystems/">https://signormercurio.me/post/DistributedSystems/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>Mercury</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2021-10-18</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="" rel="noopener" target="_blank" title="CC BY-NC-SA 4.0" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/Linux/">Linux</a><a class="link-muted mr-2" rel="tag" href="/tags/NFS/">NFS</a></div><!--!--></article></div><!--!--><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/post/Kubernetes/"><span class="level-item">乘风破浪：Kubernetes 笔记</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="content" id="valine-thread"></div><script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script><script>new Valine({
             el: '#valine-thread',
             appId: "RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",
@@ -162,7 +663,7 @@
             
             enableQQ: false,
             requiredFields: ["nick","mail"],
-        });</script></div></div></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#序"><span class="level-left"><span class="level-item">1</span><span class="level-item">序</span></span></a></li><li><a class="level is-mobile" href="#背景"><span class="level-left"><span class="level-item">2</span><span class="level-item">背景</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#中心化系统面临的问题"><span class="level-left"><span class="level-item">2.1</span><span class="level-item">中心化系统面临的问题</span></span></a></li><li><a class="level is-mobile" href="#分布式系统引入的问题"><span class="level-left"><span class="level-item">2.2</span><span class="level-item">分布式系统引入的问题</span></span></a></li><li><a class="level is-mobile" href="#OS-相关"><span class="level-left"><span class="level-item">2.3</span><span class="level-item">OS 相关</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Syscall"><span class="level-left"><span class="level-item">2.3.1</span><span class="level-item">Syscall</span></span></a></li></ul></li><li><a class="level is-mobile" href="#并发-IO"><span class="level-left"><span class="level-item">2.4</span><span class="level-item">并发 IO</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#多进程"><span class="level-left"><span class="level-item">2.4.1</span><span class="level-item">多进程</span></span></a></li><li><a class="level is-mobile" href="#多线程"><span class="level-left"><span class="level-item">2.4.2</span><span class="level-item">多线程</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#NFS"><span class="level-left"><span class="level-item">3</span><span class="level-item">NFS</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#设计目标"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">设计目标</span></span></a></li><li><a class="level is-mobile" href="#远程文件与目录的命名"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">远程文件与目录的命名</span></span></a></li><li><a class="level is-mobile" href="#RPC"><span class="level-left"><span class="level-item">3.3</span><span class="level-item">RPC</span></span></a></li><li><a class="level is-mobile" href="#扩展-Unix-文件系统"><span class="level-left"><span class="level-item">3.4</span><span class="level-item">扩展 Unix 文件系统</span></span></a></li><li><a class="level is-mobile" href="#缓存一致性"><span class="level-left"><span class="level-item">3.5</span><span class="level-item">缓存一致性</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-18T10:04:07.000Z">2021-10-18</time></p><p class="title"><a href="/post/DistributedSystems/">星罗棋布：《分布式系统与安全》课程笔记</a></p><p class="categories"><a href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-10T15:31:41.000Z">2021-10-10</time></p><p class="title"><a href="/post/Kubernetes/">乘风破浪：Kubernetes 笔记</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-25T17:44:35.000Z">2021-09-25</time></p><p class="title"><a href="/post/Dockerfile2GKE/">再探 GitHub Actions：从 Dockerfile 到 GKE</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-23T09:03:42.000Z">2021-09-23</time></p><p class="title"><a href="/post/GCP/">高枕无忧：Google Cloud Platform 基础</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-10T08:27:59.000Z">2021-09-10</time></p><p class="title"><a href="/post/CloudNative/">风谲云诡：云原生技术原理</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a><p class="is-size-7"><span>&copy; 2021 Mercury</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+        });</script></div></div></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">Catalogue</h3><ul class="menu-list"><li><a class="level is-mobile" href="#序"><span class="level-left"><span class="level-item">1</span><span class="level-item">序</span></span></a></li><li><a class="level is-mobile" href="#背景"><span class="level-left"><span class="level-item">2</span><span class="level-item">背景</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#中心化系统面临的问题"><span class="level-left"><span class="level-item">2.1</span><span class="level-item">中心化系统面临的问题</span></span></a></li><li><a class="level is-mobile" href="#分布式系统引入的问题"><span class="level-left"><span class="level-item">2.2</span><span class="level-item">分布式系统引入的问题</span></span></a></li><li><a class="level is-mobile" href="#OS-相关"><span class="level-left"><span class="level-item">2.3</span><span class="level-item">OS 相关</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#Syscall"><span class="level-left"><span class="level-item">2.3.1</span><span class="level-item">Syscall</span></span></a></li></ul></li><li><a class="level is-mobile" href="#并发-IO"><span class="level-left"><span class="level-item">2.4</span><span class="level-item">并发 IO</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#多进程"><span class="level-left"><span class="level-item">2.4.1</span><span class="level-item">多进程</span></span></a></li><li><a class="level is-mobile" href="#多线程"><span class="level-left"><span class="level-item">2.4.2</span><span class="level-item">多线程</span></span></a></li></ul></li></ul></li><li><a class="level is-mobile" href="#NFS"><span class="level-left"><span class="level-item">3</span><span class="level-item">NFS</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#设计目标"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">设计目标</span></span></a></li><li><a class="level is-mobile" href="#远程文件与目录的命名"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">远程文件与目录的命名</span></span></a></li><li><a class="level is-mobile" href="#RPC"><span class="level-left"><span class="level-item">3.3</span><span class="level-item">RPC</span></span></a></li><li><a class="level is-mobile" href="#扩展-Unix-文件系统"><span class="level-left"><span class="level-item">3.4</span><span class="level-item">扩展 Unix 文件系统</span></span></a></li><li><a class="level is-mobile" href="#缓存一致性"><span class="level-left"><span class="level-item">3.5</span><span class="level-item">缓存一致性</span></span></a></li><li><a class="level is-mobile" href="#局限性"><span class="level-left"><span class="level-item">3.6</span><span class="level-item">局限性</span></span></a></li></ul></li><li><a class="level is-mobile" href="#RPC-透明性"><span class="level-left"><span class="level-item">4</span><span class="level-item">RPC 透明性</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#设计目标-1"><span class="level-left"><span class="level-item">4.1</span><span class="level-item">设计目标</span></span></a></li><li><a class="level is-mobile" href="#抽象"><span class="level-left"><span class="level-item">4.2</span><span class="level-item">抽象</span></span></a></li><li><a class="level is-mobile" href="#🌰：NFS"><span class="level-left"><span class="level-item">4.3</span><span class="level-item">🌰：NFS</span></span></a></li><li><a class="level is-mobile" href="#异常处理"><span class="level-left"><span class="level-item">4.4</span><span class="level-item">异常处理</span></span></a></li></ul></li><li><a class="level is-mobile" href="#Ivy"><span class="level-left"><span class="level-item">5</span><span class="level-item">Ivy</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#机制简介-中心化-Manager"><span class="level-left"><span class="level-item">5.1</span><span class="level-item">机制简介 - 中心化 Manager</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#CPU1-读-CPU0-的页"><span class="level-left"><span class="level-item">5.1.1</span><span class="level-item">CPU1 读 CPU0 的页</span></span></a></li><li><a class="level is-mobile" href="#CPU2-写-CPU0-的页"><span class="level-left"><span class="level-item">5.1.2</span><span class="level-item">CPU2 写 CPU0 的页</span></span></a></li></ul></li><li><a class="level is-mobile" href="#与-RPC-对比"><span class="level-left"><span class="level-item">5.2</span><span class="level-item">与 RPC 对比</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-18T10:04:07.000Z">2021-10-18</time></p><p class="title"><a href="/post/DistributedSystems/">星罗棋布：《分布式系统与安全》课程笔记</a></p><p class="categories"><a href="/categories/%E6%8E%A2%E7%B4%A2/">探索</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-10-10T15:31:41.000Z">2021-10-10</time></p><p class="title"><a href="/post/Kubernetes/">乘风破浪：Kubernetes 笔记</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-25T17:44:35.000Z">2021-09-25</time></p><p class="title"><a href="/post/Dockerfile2GKE/">再探 GitHub Actions：从 Dockerfile 到 GKE</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-23T09:03:42.000Z">2021-09-23</time></p><p class="title"><a href="/post/GCP/">高枕无忧：Google Cloud Platform 基础</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2021-09-10T08:27:59.000Z">2021-09-10</time></p><p class="title"><a href="/post/CloudNative/">风谲云诡：云原生技术原理</a></p><p class="categories"><a href="/categories/%E4%BA%91/">云</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a><p class="is-size-7"><span>&copy; 2021 Mercury</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
             article: {
                 highlight: {
                     clipboard: true,
