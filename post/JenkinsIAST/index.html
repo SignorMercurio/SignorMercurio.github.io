@@ -1,26 +1,26 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Jenkins 集成 IAST 全流程 - Lab on Mercury</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Lab on Mercury"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Lab on Mercury"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="工作中写的一份指南文档。由于用的是测试环境，并没有需要脱敏的地方。"><meta property="og:type" content="blog"><meta property="og:title" content="Jenkins 集成 IAST 全流程"><meta property="og:url" content="https://signormercurio.me/post/JenkinsIAST/"><meta property="og:site_name" content="Lab on Mercury"><meta property="og:description" content="工作中写的一份指南文档。由于用的是测试环境，并没有需要脱敏的地方。"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://i.loli.net/2020/08/19/jnswqprN17FkVyb.png"><meta property="article:published_time" content="2020-07-28T14:28:05.000Z"><meta property="article:author" content="Mercury"><meta property="article:tag" content="Jenkins"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://i.loli.net/2020/08/19/jnswqprN17FkVyb.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://signormercurio.me/post/JenkinsIAST/"},"headline":"Jenkins 集成 IAST 全流程","image":["https://i.loli.net/2020/08/19/jnswqprN17FkVyb.png"],"datePublished":"2020-07-28T14:28:05.000Z","author":{"@type":"Person","name":"Mercury"},"publisher":{"@type":"Organization","name":"Lab on Mercury","logo":{"@type":"ImageObject","url":"https://signormercurio.me/img/favicon.png"}},"description":"工作中写的一份指南文档。由于用的是测试环境，并没有需要脱敏的地方。"}</script><link rel="canonical" href="https://signormercurio.me/post/JenkinsIAST/"><link rel="alternate" href="/atom.xml" title="Lab on Mercury" type="application/atom+xml"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css"><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="https://i.loli.net/2020/08/19/jnswqprN17FkVyb.png" alt="Jenkins 集成 IAST 全流程"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2020-07-28T14:28:05.000Z" title="2020/7/28 下午3:28:05">2020-07-28</time></span><span class="level-item"><a class="link-muted" href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a></span><span class="level-item">12 minutes read (About 1805 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Jenkins 集成 IAST 全流程</h1><div class="content"><p>工作中写的一份指南文档。由于用的是测试环境，并没有需要脱敏的地方。</p>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Jenkins 集成 IAST 全流程 - Lab on Mercury</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Lab on Mercury"><meta name="msapplication-TileImage" content="/img/favicon.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Lab on Mercury"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="工作中写的一份指南文档。由于用的是测试环境，并没有需要脱敏的地方。"><meta property="og:type" content="blog"><meta property="og:title" content="Jenkins 集成 IAST 全流程"><meta property="og:url" content="https://signormercurio.me/post/JenkinsIAST/"><meta property="og:site_name" content="Lab on Mercury"><meta property="og:description" content="工作中写的一份指南文档。由于用的是测试环境，并没有需要脱敏的地方。"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/0.png"><meta property="article:published_time" content="2020-07-28T14:28:05.000Z"><meta property="article:author" content="Mercury"><meta property="article:tag" content="Jenkins"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/0.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://signormercurio.me/post/JenkinsIAST/"},"headline":"Jenkins 集成 IAST 全流程","image":["https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/0.png"],"datePublished":"2020-07-28T14:28:05.000Z","author":{"@type":"Person","name":"Mercury"},"publisher":{"@type":"Organization","name":"Lab on Mercury","logo":{"@type":"ImageObject","url":"https://signormercurio.me/img/favicon.png"}},"description":"工作中写的一份指南文档。由于用的是测试环境，并没有需要脱敏的地方。"}</script><link rel="canonical" href="https://signormercurio.me/post/JenkinsIAST/"><link rel="alternate" href="/atom.xml" title="Lab on Mercury" type="application/atom+xml"><link rel="icon" href="/img/favicon.png"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css"><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><meta name="generator" content="Hexo 5.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/favicon.png" alt="Lab on Mercury" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a></div><div class="navbar-end"><a class="navbar-item is-hidden-tablet catalogue" title="Catalogue" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/0.png" alt="Jenkins 集成 IAST 全流程"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2020-07-28T14:28:05.000Z" title="2020/7/28 下午3:28:05">2020-07-28</time></span><span class="level-item"><a class="link-muted" href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a></span><span class="level-item">12 minutes read (About 1840 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Jenkins 集成 IAST 全流程</h1><div class="content"><p>工作中写的一份指南文档。由于用的是测试环境，并没有需要脱敏的地方。</p>
 <a id="more"></a>
 
 <h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><p>之前 XXX（同事名）已经按照 <a target="_blank" rel="noopener" href="https://github.com/hysnsec/DevSecOps-Studio">DevSecOps Studio</a> 中的说明搭建好了 DevSecOps 的基本环境，可以从他那里拷贝一份。由于我们演示时只需要用到 GitLab 和 Jenkins 两个虚拟机，其它的可以不用拷贝。大小在 11G 左右。</p>
 <p>拷贝完成后，目录结构大致如下：</p>
-<p><img src="https://i.loli.net/2020/07/29/Hua32Apq1bEvQ9L.png" alt="image-20200726153912676"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/1.png" alt="图 1"></p>
 <p>这里的 <code>2200</code> , <code>2201</code> 是配置端口转发后，两个虚拟机的 ssh 服务在本机上的对应端口，可以不用更改。</p>
 <h3 id="创建虚拟机"><a href="#创建虚拟机" class="headerlink" title="创建虚拟机"></a>创建虚拟机</h3><blockquote>
 <p>这一部分的操作对 GitLab 和 Jenkins 都需要做。</p>
 </blockquote>
 <p>在创建虚拟机前需要先修改 <code>.vbox</code> 文件的配置，用文本编辑器打开 <code>.vbox</code> 文件，搜索 <code>\Users\neoo\gitool\</code>，替换为你电脑上存放 <code>DevSecOps-Studio</code> 的目录（绝对路径）。例如我的电脑上是：</p>
-<p><img src="https://i.loli.net/2020/07/29/Uh1cT7fHQuAGXy9.png" alt="image-20200726155146567"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/2.png" alt="图 2"></p>
 <blockquote>
 <p>实际上，只需要保证文件 <code>ubuntu-xenial-16.04-cloudimg-console.log</code> 和 <code>gitlab-2201</code> 文件夹处于同一目录下。</p>
 </blockquote>
 <p>随后打开 VirtualBox ，点击 <code>工具 -&gt; 注册</code> 并选择对应的 <code>.vbox</code> 文件，即可导入两个虚拟机：</p>
-<p><img src="https://i.loli.net/2020/07/29/2xBpL8Tfs7DO6u1.png" alt="image-20200726154513471"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/3.png" alt="图 3"></p>
 <h3 id="配置虚拟机-ssh（可选）"><a href="#配置虚拟机-ssh（可选）" class="headerlink" title="配置虚拟机 ssh（可选）"></a>配置虚拟机 ssh（可选）</h3><blockquote>
 <p>这一部分的操作不是必需的。</p>
 </blockquote>
 <p>进入虚拟机设置界面，点击 <code>网络 -&gt; 高级 -&gt; 端口转发</code> ，就可以将虚拟机的 ssh 端口映射到本机。正常情况下，此时已经映射到了 <code>2200/2201</code> 端口。</p>
-<p><img src="https://i.loli.net/2020/07/29/BHC1QfuAzt47gKP.png" alt="image-20200726160259293"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/4.png" alt="图 4"></p>
 <p>接下来，需要启动虚拟机，用 <code>vagrant/vagrant</code> 登录，并运行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
 
@@ -31,19 +31,19 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service sshd restart</span><br></pre></td></tr></table></figure>
 
 <p>这样就可以通过本机的 ssh 客户端连接虚拟机了：</p>
-<p><img src="https://i.loli.net/2020/07/29/boHrGMBt8fZqD1U.png" alt="image-20200726160552365"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/5.png" alt="图 5"></p>
 <h3 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h3><p>默认情况下，Jenkins 和 GitLab 都采用 NAT 模式，此时我们本机是无法 ping 通虚拟机的。为了后续操作方便，我们可以将 GitLab 设置为桥接模式，即在 <code>网络 -&gt; 连接方式</code> 中选择桥接网卡。</p>
 <p>此时再启动 GitLab，用 <code>vagrant/vagrant</code> 登录，并运行 <code>ifconfig | more</code> ，可以看到桥接模式下的 IP 地址，这个地址对我们本机而言是可达的。</p>
-<p><img src="https://i.loli.net/2020/07/29/dQX73DrchkfAUgI.png" alt="image-20200726162615404"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/6.png" alt="图 6"></p>
 <p>如图所示，GitLab 虚拟机的 IP 为 192.168.0.109。</p>
 <blockquote>
 <p>桥接模式下就不需要端口转发了。此时 ssh 连接的目标也变成 <code>192.168.0.109:22</code>。</p>
 </blockquote>
 <p>由于 GitLab 的服务运行在 443 端口，此时直接访问 <a target="_blank" rel="noopener" href="https://192.168.0.109/">https://192.168.0.109</a> 是可以看到 GitLab 界面的。当然，也有可能是如下界面：</p>
-<p><img src="https://i.loli.net/2020/07/29/Dwxd1HvnIyrmaCp.png" alt="image-20200726162842689"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/7.png" alt="图 7"></p>
 <p>这种情况下一般只需要多等待一会儿就好了。</p>
 <p>之所以采用桥接模式，是为了配合解析 GitLab 内置的域名 <code>gitlab.local</code>。现在只需要修改本机 hosts 文件，让 <code>gitlab.local</code> 解析到 <code>192.168.0.109</code> 即可。</p>
-<p><img src="https://i.loli.net/2020/07/29/oOEt4cFqTJLI5ve.png" alt="image-20200726163255400"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/8.png" alt="图 8"></p>
 <p>访问 <code>https://gitlab.local</code>，应该能得到正常的 GitLab 登录页面了。</p>
 <blockquote>
 <p>默认情况下 Jenkins 虚拟机应该能够解析 <code>gitlab.local</code> 域名，如果后面设置 Jenkins 时遇到域名解析问题，请检查 Jenkins 虚拟机的 <code>/etc/hosts</code> 文件。</p>
@@ -53,14 +53,14 @@
 </blockquote>
 <h2 id="GitLab-配置"><a href="#GitLab-配置" class="headerlink" title="GitLab 配置"></a>GitLab 配置</h2><p>注册账号、登录、创建新的公开 repo。在本地准备一个 Java Web 应用，我使用的是 <a target="_blank" rel="noopener" href="https://github.com/JoyChou93/java-sec-code">java-sec-code</a> 这个项目。</p>
 <blockquote>
-<p>如果使用其它项目，请确保可以在 Java 6/7/8 中的至少一个运行环境上运行。原因：<br><img src="https://i.loli.net/2020/07/29/8yBGzA9TfwilogJ.png" alt="image-20200726165054494"></p>
+<p>如果使用其它项目，请确保可以在 Java 6/7/8 中的至少一个运行环境上运行。原因：<br><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/9.png" alt="图 9"></p>
 </blockquote>
 <p>随后删除原项目目录下 <code>.git</code> 目录（如果你对 git 比较熟悉也可以不删除），运行（项目名需自行替换）：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> java-sec-code</span><br><span class="line">git init</span><br><span class="line">git remote add origin https://GitLab.local/merc/java-sec-code.git</span><br><span class="line">git add .</span><br><span class="line">git commit -m <span class="string">&quot;Initial commit&quot;</span></span><br><span class="line">git push -u origin master</span><br></pre></td></tr></table></figure>
 
 <p>即可将项目推送到 GitLab 上。期间遇到的问题请参考 <a target="_blank" rel="noopener" href="https://git-scm.com/doc">Git 文档</a>。</p>
 <h2 id="Jenkins-配置"><a href="#Jenkins-配置" class="headerlink" title="Jenkins 配置"></a>Jenkins 配置</h2><p>首先配置端口转发，将虚拟机 8080 端口映射到本机的任意未占用端口，如 8008：</p>
-<p><img src="https://i.loli.net/2020/07/29/BHC1QfuAzt47gKP.png" alt="image-20200726160259293"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/10.png" alt="图 10"></p>
 <p>然后访问 <a target="_blank" rel="noopener" href="http://localhost:8008/">http://localhost:8008/</a> ，即可看到 Jenkins 页面。</p>
 <p>接下来，按照 <strong>雳鉴 IAST 第三方插件帮助文档</strong> 一步步配置 Jenkins。需要注意的几点：</p>
 <ol>
@@ -69,7 +69,7 @@
 <li><p>第二步中 <code>IAST 服务器地址 </code> 请填写公网雳鉴地址，即 <code>http://47.100.14.22:81/</code>。</p>
 </li>
 <li><p>第三步结束后，先如图配置好 repo 地址（项目名需自行替换）：</p>
-<p><img src="https://i.loli.net/2020/07/29/S78IDoKyClGeXEm.png" alt="image-20200726171236090"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/11.png" alt="图 11"></p>
 </li>
 <li><p>第四步中 <code>被测站点地址</code> 即部署 Java Web 应用的服务器地址，形式一般是 <code>ip:port</code>。</p>
 </li>
@@ -77,21 +77,21 @@
 </li>
 </ol>
 <p>在构建完成后，预期结果是在雳鉴中创建了新的项目。但是扫描结果中是没有漏洞的，因为还没有进行插桩：</p>
-<p><img src="https://i.loli.net/2020/07/29/HSP7k4pvwKrYdAF.png" alt="image-20200726181314558"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/12.png" alt="图 12"></p>
 <h2 id="进行插桩扫描"><a href="#进行插桩扫描" class="headerlink" title="进行插桩扫描"></a>进行插桩扫描</h2><p>进入新创建的项目详情页面下载 agent，然后 SFTP 传到服务器上。根据 <strong>雳鉴 IAST 插桩 agent 帮助文档</strong>来部署 agent。例如对于我的 Springboot 应用，只需要运行：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -javaagent:./iast_agent.jar -jar java-sec-code-1.0.0.jar</span><br></pre></td></tr></table></figure>
 
 <p>待项目启动后，通过浏览器访问 Java Web 应用，即可在项目详情页面看到已经启动的 agent 了。</p>
-<p><img src="https://i.loli.net/2020/07/29/B4xYSisK67lbckE.png" alt="image-20200726180848257"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/13.png" alt="图 13"></p>
 <blockquote>
 <p>插桩扫描是基于流量的，因此只有发送请求后才能检测到 agent。</p>
 </blockquote>
 <p>接下来对要测试的功能点发送请求即可进行扫描。例如对于存在 SSRF 漏洞的功能点发起请求：</p>
-<p><img src="https://i.loli.net/2020/07/29/BVvrpS5XysDuZiJ.png" alt="image-20200726181015324"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/14.png" alt="图 14"></p>
 <p>在雳鉴界面中可以看到：</p>
-<p><img src="https://i.loli.net/2020/07/29/VCcTkqA15EaeINr.png" alt="image-20200726181057140"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/15.png" alt="图 15"></p>
 <p>这时回到 Jenkins 再次进行构建，就可以得到正确的扫描结果了：</p>
-<p><img src="https://i.loli.net/2020/07/29/z4LZfoODg5T8cEK.png" alt="image-20200726181342473"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JenkinsIAST/16.png" alt="图 16"></p>
 <h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><ul>
 <li>内网（仅主机网络下） IP：<ul>
 <li>Jenkins：<code>10.0.1.11</code></li>
