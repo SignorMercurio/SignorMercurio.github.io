@@ -1,0 +1,360 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>通过 JDBC 连接 MySQL - Lab on Mercury</title><meta name=Description content="Lab on Mercury"><meta property="og:title" content="通过 JDBC 连接 MySQL"><meta property="og:description" content="大概是第二次被 MySQL 玩了，也可能是第三次。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.sigmerc.top/jdbc-mysql/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-03-25T23:11:05+00:00"><meta property="article:modified_time" content="2019-03-25T23:11:05+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="通过 JDBC 连接 MySQL"><meta name=twitter:description content="大概是第二次被 MySQL 玩了，也可能是第三次。"><meta name=application-name content="Lab on Mercury"><meta name=apple-mobile-web-app-title content="Lab on Mercury"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.sigmerc.top/jdbc-mysql/><link rel=prev href=https://blog.sigmerc.top/adminder/><link rel=next href=https://blog.sigmerc.top/ecnuctf2019/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"通过 JDBC 连接 MySQL","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.sigmerc.top\/jdbc-mysql\/"},"genre":"posts","keywords":"Java, MySQL","wordcount":1791,"url":"https:\/\/blog.sigmerc.top\/jdbc-mysql\/","datePublished":"2019-03-25T23:11:05+00:00","dateModified":"2019-03-25T23:11:05+00:00","publisher":{"@type":"Organization","name":"Mercury","logo":{"@type":"ImageObject","url":"https:\/\/blog.sigmerc.top\/my_avatar.png","width":400,"height":400}},"author":{"@type":"Person","name":"Mercury"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-archive fa-fw"></i> 文章 </a><a class=menu-item href=/tags/><i class="fas fa-tags fa-fw"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-th fa-fw"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title><i class="fas fa-archive fa-fw"></i>文章</a><a class=menu-item href=/tags/ title><i class="fas fa-tags fa-fw"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-th fa-fw"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">通过 JDBC 连接 MySQL</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>Mercury</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2/><i class="far fa-folder fa-fw"></i>探索</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2019-03-25>2019-03-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1791 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;<span id=/jdbc-mysql/ class=leancloud_visitors data-flag-title="通过 JDBC 连接 MySQL">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JDBCMySQL/0.jpg data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JDBCMySQL/0.jpg, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JDBCMySQL/0.jpg 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JDBCMySQL/0.jpg 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JDBCMySQL/0.jpg title=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JDBCMySQL/0.jpg></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#使用环境>使用环境</a></li><li><a href=#流程>流程</a></li><li><a href=#idea-导入-mysql-驱动>Idea 导入 MySQL 驱动</a></li><li><a href=#坑点>坑点</a></li><li><a href=#吐槽>吐槽</a></li><li><a href=#201941-更新>2019.4.1 更新</a></li></ul></nav></div></div><div class=content id=content><p>大概是第二次被 MySQL 玩了，也可能是第三次。</p><h2 id=使用环境>使用环境</h2><ul><li>Java 开发环境：Win10 + JDK1.8 + Idea</li><li>MySQL 版本：8.x（其实用的是 MariaDB，不过差不多）</li><li>MySQL 的 JDBC 驱动版本：8.x（事实证明，这个和 MySQL 版本号至少最高位必须是一样的）</li><li>MySQL 运行环境：VMware WorkStation 15 Player + Kali Linux 2.0</li></ul><h2 id=流程>流程</h2><ol><li>在 MySQL 中新建数据库，例如叫 test，可以新建一些数据表并插入一些数据，使得在 Java 中可以操作它们并看到结果。</li><li>在 Idea 中新建项目，导入 MySQL 驱动并编写程序。</li><li>打包成 jar 包，放到虚拟机里用 <code>java -jar xxx.jar</code> 运行。</li></ol><p>就这么简单。然而如此简单的三步中居然还能有那么多的坑点。</p><h2 id=idea-导入-mysql-驱动>Idea 导入 MySQL 驱动</h2><p>这里并不坑。Idea 还是很友好的。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>File -&gt; Project Structure -&gt; Modules -&gt; Dependencies -&gt; Module Source -&gt; 绿色加号
+</span></span><span class=line><span class=cl>-&gt; JARs or Directories -&gt; 后面应该不用说了
+</span></span></code></pre></td></tr></table></div></div><p>搞定。</p><h2 id=坑点>坑点</h2><p>其实在我把 jar 包放到服务器上运行后，自始至终只遇到了这种错误：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=n>java</span><span class=o>.</span><span class=na>sql</span><span class=o>.</span><span class=na>SQLNonTransientConnectionException</span><span class=o>:</span> <span class=n>Could</span> <span class=n>not</span> <span class=n>create</span> <span class=n>connection</span> <span class=n>to</span> <span class=n>database</span> <span class=n>server</span><span class=o>.</span>
+</span></span><span class=line><span class=cl><span class=n>Attempted</span> <span class=n>reconnect</span> <span class=n>3</span> <span class=n>times</span><span class=o>.</span> <span class=n>Giving</span> <span class=n>up</span><span class=o>.</span>
+</span></span></code></pre></td></tr></table></div></div><p>这个错误似乎非常常见，因为能引起这个错误的因素太多了。<a href=https://stackoverflow.com/questions/6865538/solving-a-communications-link-failure-with-jdbc-and-mysql target=_blank rel="noopener noreffer">StackOverflow 中的一个超有料的问题</a> 里的一些回答给出了非常多的解决方法。我强烈建议读者点进链接看一下尤其是第一个回答，感受一下 MySQL 的坑点之多、之恐怖。其中很多原因是来源于 MySQL 8.x 与 5.x 的巨大差异。</p><p>我据此对程序进行了许多修改，包含的坑点有（粗体为可能导致<strong>这次</strong>错误的原因）：</p><ul><li>Java 可能将 <code>localhost</code> 解析为 IPv6 地址 <code>::1</code>，而不是 IPv4 的 <code>127.0.0.1</code>，然而 MySQL 只认后者；解决方法是把 <code>localhost</code> 换成 <code>127.0.0.1</code>。</li><li>确保连接时的用户名与密码正确，为此我重设了下密码。</li><li>在 url 中设置参数 <code>autoReconnect=true</code> 防止意外断连。</li><li>在 url 中设置参数 <code>useUnicode=true</code>。</li><li>在 url 中设置参数 <code>characterEncoding=utf-8</code>。</li><li><strong>在 url 中设置参数 <code>useSSL=false</code>。</strong> 不使用 SSL。（似乎是 8.x 新要求）</li><li><strong>在 url 中设置参数 <code>serverTimezone=GMT%2B8</code>。</strong> 设置时区为东 8 区，当然服务器也要设置 <code>set global time_zone='+8:00'</code>。（似乎是 8.x 新要求）</li><li><strong><code>Class.forName("com.mysql.cj.jdbc.Driver");</code> 而不是 <code>Class.forName("com.mysql.jdbc.Driver");</code></strong>（8.x 新特性，很重要）</li><li>注释掉配置文件中的 <code>bind-address</code> 一行，放行来自所有 IP 的连接。</li><li><strong>在 MySQL 中运行命令 <code>GRANT ALL PRIVILEGES ON *.* TO 'user'@'%' IDENTIFIED BY 'password';</code></strong>。</li><li>别忘了重启 MySQL 服务。</li></ul><h2 id=吐槽>吐槽</h2><p>没花太多时间解决这个问题，不过中间一度想在虚拟机上搭个 LAMP 当服务器用（等等，IP 地址怎么办？），以为那样就可以不用踩这些坑了。有机会试试用 Maven 项目连数据库。</p><p>另外，我记得上次被 MySQL 玩是因为 5.x 和 8.x 版本对密码的哈希方式不一样吧？</p><h2 id=201941-更新>2019.4.1 更新</h2><p>对于上面 “虚拟机 IP 地址” 的回答：内网 IP。是我当时蠢了。把 IP 地址换成内网 IP（如下方代码）可以直接在 Idea 下调试，方便多了。</p><p>顺手贴个代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kn>import</span> <span class=nn>java.sql.*</span><span class=o>;</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>java.util.ArrayList</span><span class=o>;</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>java.util.Scanner</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>public</span> <span class=kd>class</span> <span class=nc>Main</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=kd>public</span> <span class=kd>static</span> <span class=kt>void</span> <span class=nf>main</span><span class=o>(</span><span class=n>String</span><span class=o>[]</span> <span class=n>args</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>String</span> <span class=n>url</span> <span class=o>=</span> <span class=s>&#34;jdbc:mysql://192.168.30.128:3306/test?&#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                <span class=s>&#34;autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;&#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                <span class=s>&#34;useSSL=false&amp;serverTimezone=GMT%2B8&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>String</span> <span class=n>userName</span> <span class=o>=</span> <span class=s>&#34;root&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>String</span> <span class=n>password</span> <span class=o>=</span> <span class=s>&#34;celine&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>Connection</span> <span class=n>conn</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>PreparedStatement</span> <span class=n>stmt</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>ResultSet</span> <span class=n>rs</span> <span class=o>=</span> <span class=kc>null</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>String</span> <span class=n>sql</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>Scanner</span> <span class=n>sc</span> <span class=o>=</span> <span class=k>new</span> <span class=n>Scanner</span><span class=o>(</span><span class=n>System</span><span class=o>.</span><span class=na>in</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>try</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>Class</span><span class=o>.</span><span class=na>forName</span><span class=o>(</span><span class=s>&#34;com.mysql.cj.jdbc.Driver&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>conn</span> <span class=o>=</span> <span class=n>DriverManager</span><span class=o>.</span><span class=na>getConnection</span><span class=o>(</span><span class=n>url</span><span class=o>,</span> <span class=n>userName</span><span class=o>,</span> <span class=n>password</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;Connected to MySQL via JDBC.\n&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;Enter: [0] to get metadata, [1-9] to perform 9 tasks on the Movie database, [-1] to quit.&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=kt>int</span> <span class=n>op</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>while</span><span class=o>((</span><span class=n>op</span> <span class=o>=</span> <span class=n>sc</span><span class=o>.</span><span class=na>nextInt</span><span class=o>())</span> <span class=o>!=</span> <span class=o>-</span><span class=n>1</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>switch</span> <span class=o>(</span><span class=n>op</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>0</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                        <span class=c1>//display metadata
+</span></span></span><span class=line><span class=cl><span class=c1></span>                        <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;show tables&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>ArrayList</span><span class=o>&lt;</span><span class=n>String</span><span class=o>&gt;</span> <span class=n>tables</span> <span class=o>=</span> <span class=k>new</span> <span class=n>ArrayList</span><span class=o>&lt;&gt;();</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>tables</span><span class=o>.</span><span class=na>add</span><span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=n>1</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>for</span><span class=o>(</span><span class=n>String</span> <span class=n>table</span><span class=o>:</span> <span class=n>tables</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;select * from&#34;</span> <span class=o>+</span> <span class=n>table</span> <span class=o>+</span> <span class=s>&#34;limit 1;&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                            <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                            <span class=n>ResultSetMetaData</span> <span class=n>metaData</span> <span class=o>=</span> <span class=n>rs</span><span class=o>.</span><span class=na>getMetaData</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;table name:&#34;</span> <span class=o>+</span> <span class=n>table</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;columns:\n&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                            <span class=k>for</span><span class=o>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>1</span><span class=o>;</span> <span class=n>i</span> <span class=o>&lt;=</span> <span class=n>metaData</span><span class=o>.</span><span class=na>getColumnCount</span><span class=o>();</span> <span class=o>++</span><span class=n>i</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                                <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;\t&#34;</span> <span class=o>+</span> <span class=n>metaData</span><span class=o>.</span><span class=na>getColumnName</span><span class=o>(</span><span class=n>i</span><span class=o>)</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                        <span class=s>&#34;\t&#34;</span> <span class=o>+</span> <span class=n>metaData</span><span class=o>.</span><span class=na>getColumnTypeName</span><span class=o>(</span><span class=n>i</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                            <span class=o>}</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>1</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;select count(*) from Movies;&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;1. Number of movies:&#34;</span> <span class=o>+</span> <span class=n>rs</span><span class=o>.</span><span class=na>getInt</span><span class=o>(</span><span class=s>&#34;count(*)&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>2</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;select title from Movies;&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;2. All titles:&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;title&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>3</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;select min(year) from Movies;&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;3. Min year:&#34;</span> <span class=o>+</span> <span class=n>rs</span><span class=o>.</span><span class=na>getInt</span><span class=o>(</span><span class=s>&#34;min(year)&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>4</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;select count(*) from Actors;&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;4. Number of actors:&#34;</span> <span class=o>+</span> <span class=n>rs</span><span class=o>.</span><span class=na>getInt</span><span class=o>(</span><span class=s>&#34;count(*)&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>5</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;select givenNames, familyName from Actors where familyName=&#39;Zeta-Jones&#39;;&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;5. Who&#39;s Zeta-Jones:&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;givenNames&#34;</span><span class=o>)</span> <span class=o>+</span><span class=s>&#34; &#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                    <span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;familyName&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>6</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;select distinct(genre) from BelongsTo;&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;6. Genres:&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;genre&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>7</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;select m.title, m.year from Movies m&#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                <span class=s>&#34;join Directs s on (s.movie = m.id) &#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                <span class=s>&#34;join Directors d on (s.director = d.id) &#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                <span class=s>&#34;where d.familyName =&#39;Spielberg&#39;;&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;7. Spielberg has directed:&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;Title:&#34;</span> <span class=o>+</span> <span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;title&#34;</span><span class=o>)</span> <span class=o>+</span> <span class=s>&#34;|&#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                    <span class=s>&#34;Year:&#34;</span> <span class=o>+</span> <span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;year&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>8</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                        <span class=n>sql</span> <span class=o>=</span> <span class=s>&#34;select a.givenNames, a.familyName from Actors a&#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                <span class=s>&#34;where not exists (select id from Movies&#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                <span class=s>&#34;except (select movie as id from AppearsIn where actor = a.id));&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;8. Super actor:&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;givenNames&#34;</span><span class=o>)</span> <span class=o>+</span><span class=s>&#34; &#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                    <span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;familyName&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                    <span class=k>case</span> <span class=n>9</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>                    <span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm>                    sql = &#34;create view nDirected as&#34; +
+</span></span></span><span class=line><span class=cl><span class=cm>                    &#34;select d.id as director, count(s.movie) as ntimes &#34; +
+</span></span></span><span class=line><span class=cl><span class=cm>                    &#34;from Directors d left outer join Directs s on (d.id = s.director) &#34; +
+</span></span></span><span class=line><span class=cl><span class=cm>                    &#34;group by d.id;&#34;;
+</span></span></span><span class=line><span class=cl><span class=cm>            stmt.execute(sql);
+</span></span></span><span class=line><span class=cl><span class=cm>                    */</span>
+</span></span><span class=line><span class=cl>                        <span class=n>sql</span><span class=o>=</span> <span class=s>&#34;select d.givenNames, d.familyName as name&#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                <span class=s>&#34;from nDirected nd join Directors d on (nd.director = d.id) &#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                <span class=s>&#34;where ntimes = 0;&#34;</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                        <span class=n>stmt</span> <span class=o>=</span> <span class=n>conn</span><span class=o>.</span><span class=na>prepareStatement</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>rs</span> <span class=o>=</span> <span class=n>stmt</span><span class=o>.</span><span class=na>executeQuery</span><span class=o>(</span><span class=n>sql</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=s>&#34;9. Lazy Director:&#34;</span><span class=o>);</span>
+</span></span><span class=line><span class=cl>                        <span class=k>while</span> <span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>next</span><span class=o>())</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                            <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>(</span><span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;givenNames&#34;</span><span class=o>)</span> <span class=o>+</span><span class=s>&#34; &#34;</span> <span class=o>+</span>
+</span></span><span class=line><span class=cl>                                    <span class=n>rs</span><span class=o>.</span><span class=na>getString</span><span class=o>(</span><span class=s>&#34;familyName&#34;</span><span class=o>));</span>
+</span></span><span class=line><span class=cl>                        <span class=o>}</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=o>;</span>
+</span></span><span class=line><span class=cl>                <span class=o>}</span>
+</span></span><span class=line><span class=cl>                <span class=n>System</span><span class=o>.</span><span class=na>out</span><span class=o>.</span><span class=na>println</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>            <span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=n>rs</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>            <span class=n>stmt</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>            <span class=n>conn</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>Exception</span> <span class=n>e</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>e</span><span class=o>.</span><span class=na>printStackTrace</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span> <span class=k>finally</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=o>(</span><span class=n>rs</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>try</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                    <span class=n>rs</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>                <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>SQLException</span> <span class=n>sqlEx</span><span class=o>)</span> <span class=o>{</span> <span class=o>}</span> <span class=c1>// ignore
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=o>(</span><span class=n>stmt</span> <span class=o>!=</span> <span class=kc>null</span><span class=o>)</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>try</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>                    <span class=n>stmt</span><span class=o>.</span><span class=na>close</span><span class=o>();</span>
+</span></span><span class=line><span class=cl>                <span class=o>}</span> <span class=k>catch</span> <span class=o>(</span><span class=n>SQLException</span> <span class=n>sqlEx</span><span class=o>)</span> <span class=o>{</span> <span class=o>}</span> <span class=c1>// ignore
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=o>}</span>
+</span></span><span class=line><span class=cl>        <span class=o>}</span>
+</span></span><span class=line><span class=cl>    <span class=o>}</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2019-03-25</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/java/>Java</a>,&nbsp;<a href=/tags/mysql/>MySQL</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/adminder/ class=prev rel=prev title="“老有所得” 项目实践心得"><i class="fas fa-angle-left fa-fw"></i>“老有所得” 项目实践心得</a>
+<a href=/ecnuctf2019/ class=next rel=next title="ECNUCTF2019 初赛 writeup">ECNUCTF2019 初赛 writeup<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.94.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2017 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Mercury</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/katex/katex.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:30},comment:{valine:{appId:"RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",appKey:"sw2sEPOl4haCAXKUFYiBFMrR",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"你的评论 ...",recordIP:!1,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{algoliaAppID:"P149SBLX5U",algoliaIndex:"blog",algoliaSearchKey:"cbd5db1f3910ee11bc18688f21b64bd4",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

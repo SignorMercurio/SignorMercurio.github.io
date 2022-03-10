@@ -1,0 +1,536 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>《Python 编程技术》期末作业 - Lab on Mercury</title><meta name=Description content="Lab on Mercury"><meta property="og:title" content="《Python 编程技术》期末作业"><meta property="og:description" content="期末作业居然是写综述。。有点无聊啊。这不是 Python 教程。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.sigmerc.top/python-summary/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-01-06T16:08:24+00:00"><meta property="article:modified_time" content="2019-01-06T16:08:24+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="《Python 编程技术》期末作业"><meta name=twitter:description content="期末作业居然是写综述。。有点无聊啊。这不是 Python 教程。"><meta name=application-name content="Lab on Mercury"><meta name=apple-mobile-web-app-title content="Lab on Mercury"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.sigmerc.top/python-summary/><link rel=prev href=https://blog.sigmerc.top/probability-report/><link rel=next href=https://blog.sigmerc.top/hexo/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"《Python 编程技术》期末作业","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.sigmerc.top\/python-summary\/"},"genre":"posts","keywords":"项目, Python","wordcount":5540,"url":"https:\/\/blog.sigmerc.top\/python-summary\/","datePublished":"2019-01-06T16:08:24+00:00","dateModified":"2019-01-06T16:08:24+00:00","publisher":{"@type":"Organization","name":"Mercury","logo":{"@type":"ImageObject","url":"https:\/\/blog.sigmerc.top\/my_avatar.png","width":400,"height":400}},"author":{"@type":"Person","name":"Mercury"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-archive fa-fw"></i> 文章 </a><a class=menu-item href=/tags/><i class="fas fa-tags fa-fw"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-th fa-fw"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title><i class="fas fa-archive fa-fw"></i>文章</a><a class=menu-item href=/tags/ title><i class="fas fa-tags fa-fw"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-th fa-fw"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">《Python 编程技术》期末作业</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>Mercury</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/><i class="far fa-folder fa-fw"></i>编程语言</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2019-01-06>2019-01-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5540 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;<span id=/python-summary/ class=leancloud_visitors data-flag-title="《Python 编程技术》期末作业">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png title=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#入门>入门</a></li><li><a href=#基础特性与语法规则>基础特性与语法规则</a></li><li><a href=#高级特性与-oop>高级特性与 OOP</a></li><li><a href=#图形化编程>图形化编程</a></li><li><a href=#参考资料>参考资料</a></li></ul></nav></div></div><div class=content id=content><p>期末作业居然是写综述。。有点无聊啊。<strong>这不是 Python 教程。</strong></p><h2 id=入门>入门</h2><p>本学期学习了 Python 语言。由于之前已经学习过 C, C++, Java（以及 VB, Pascal, 前端三件套）等较难的编程语言，Python 语言的学习没有太多挑战性。容易注意到，Python 语言最大的特点是<strong>现成的可方便调用的库很丰富</strong>，语言本身对于一些底层操作的封装也做得很好，因此常常可以看到效果相同的程序，用 Python 编写比用 C/C++（不用提 Java）要短很多。</p><p>然而，代价是<strong>性能的大幅降低</strong>。好在常用 Python 实现的程序体量都不会太大，因此速度的问题并不突出。此外，Python 语言作为解释型语言，一旦发布程序即<strong>开源</strong>。不过如今，这恐怕并不是什么缺点了。</p><p>首先我们学习了 Python3 的安装与配置。过程非常简单：从官网下载安装包，配好环境变量后在命令行验证即可。编写和运行 Python 程序也极其简单：课上的第一个例子便是输出 Hello World 语句。为此，老师提供了两种方法，一是 Python 交互模式下直接输入 <code>print(‘Hello World’)</code> 并回车；二是在一个形如 <code>1.py</code> 文件中输入上述语句，并在命令行中输入 <code>python 1.py</code> 来执行。</p><p><figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png title="图 1" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png data-sub-html="<h2> </h2><p>图 1</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png></a><figcaption class=image-caption>图 1</figcaption></figure><figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/1.png title="图 2" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/1.png data-sub-html="<h2> </h2><p>图 2</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/1.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/1.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/1.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/1.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/1.png></a><figcaption class=image-caption>图 2</figcaption></figure></p><p>一般来说，后一种方法使用较多。因此，我们需要称手的代码编辑器。老师推荐我们使用 Sublime Text 和 VS Code。实际操作中，我发现对于体积稍大一点的程序（例如上百行），使用 IDE 是更为明智的选择。因此，对于短小的代码我是用 VS Code 来编辑，而较长的代码我选择了用 PyCharm 编辑。</p><p>在刚开始学习编程时，我曾使用记事本编辑代码——众所周知，记事本保存的文件会<strong>莫名其妙地在开头加上特殊字符</strong>，这曾使得作为初学者的我十分困惑。因此，使用记事本（甚至 Word）写代码绝对是错误的选择。</p><p>接下来我们进入了正式的 Python 语法的学习。</p><h2 id=基础特性与语法规则>基础特性与语法规则</h2><p>首先是带我们入门的老朋友 <code>print()</code> 函数。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=s1>&#39;11&#39;</span><span class=p>,</span> <span class=s1>&#39;22&#39;</span><span class=p>)</span> <span class=c1># 11 22</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=mi>1</span> <span class=o>+</span> <span class=mi>2</span><span class=p>)</span> <span class=c1># 3</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=s1>&#39;11&#39;</span><span class=p>,</span> <span class=n>end</span> <span class=o>=</span> <span class=s1>&#39;&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=s1>&#39;22&#39;</span><span class=p>,</span> <span class=n>end</span> <span class=o>=</span> <span class=s1>&#39;&#39;</span><span class=p>)</span> <span class=c1># 1122</span>
+</span></span></code></pre></td></tr></table></div></div><ol><li>可以接收用逗号隔开的字符串，这些字符串输出时中间会加上 <strong>1 个空格</strong>；</li><li>可以接收数学表达式；</li><li>可以用参数 <code>end</code> 指定其结尾字符，默认为换行符；</li></ol><p>与输出对应的是输入函数 <code>input()</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>name</span> <span class=o>=</span> <span class=nb>input</span><span class=p>(</span><span class=s1>&#39;Enter your name:&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=s1>&#39;Hello,&#39;</span><span class=p>,</span> <span class=n>name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1># Enter your name:</span>
+</span></span><span class=line><span class=cl><span class=c1># &gt; Mercury</span>
+</span></span><span class=line><span class=cl><span class=c1># Hello, Mercury</span>
+</span></span></code></pre></td></tr></table></div></div><ol><li>整行读取，返回读取到的字符串；</li><li>可以拥有一个字符串作为参数，表示提示信息。</li></ol><p>这两个函数十分简单。随后老师介绍了一些<strong>语法</strong>，与 C/C++ 重复的语法规则将不再赘述：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>PI</span> <span class=o>=</span>  <span class=mf>3.14</span>
+</span></span><span class=line><span class=cl> <span class=nb>print</span><span class=p>(</span><span class=sa>r</span><span class=s1>&#39;\n\n\n&#39;</span><span class=p>)</span> <span class=c1># (indent error)</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=sa>r</span><span class=s1>&#39;\n\n\n&#39;</span><span class=p>)</span> <span class=c1># \n\n\n</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=s1>&#39;&#39;&#39;
+</span></span></span><span class=line><span class=cl><span class=s1>line1
+</span></span></span><span class=line><span class=cl><span class=s1>line2
+</span></span></span><span class=line><span class=cl><span class=s1>line3
+</span></span></span><span class=line><span class=cl><span class=s1>&#39;&#39;&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><ol><li>注释以 <code>#</code> 开头；</li><li>强制要求代码块缩进；</li><li>数据类型有整数、浮点数、字符串、布尔、空等等；</li><li>字符串：既可以用单引号又可以用双引号括起来；</li><li>字符串：引号前加 <code>r</code> 表示 raw，既取消转义；</li><li>字符串：<code>'''…'''</code> 可以表示多行字符串；</li><li><strong>字符串是不可变类型</strong>；</li><li>布尔：只有 <code>True/False</code> 两个值，逻辑运算 <code>and,or,not</code>；</li><li>空值：<code>None</code>，并不是 <code>0</code>；</li><li>变量使用前不需要声明，变量类型不固定（动态语言）；</li><li>没有机制保证常量不被修改；</li><li><code>/</code> 是浮点除法、<code>//</code> 是整除；</li><li><code>**</code> 表示乘方；</li><li>整数、浮点数没有范围限制，浮点数超出一定范围会显示 <code>inf</code>。</li></ol><p>然后是一些<strong>常用函数</strong>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=nb>ord</span><span class=p>(</span><span class=s1>&#39;A&#39;</span><span class=p>)</span> <span class=c1># 65</span>
+</span></span><span class=line><span class=cl><span class=nb>chr</span><span class=p>(</span><span class=mi>66</span><span class=p>)</span> <span class=c1># B</span>
+</span></span><span class=line><span class=cl><span class=n>s</span> <span class=o>=</span> <span class=s1>&#39;H e l l o&#39;</span>
+</span></span><span class=line><span class=cl><span class=nb>len</span><span class=p>(</span><span class=n>s</span><span class=p>)</span> <span class=c1># 5</span>
+</span></span><span class=line><span class=cl><span class=n>s</span><span class=o>.</span><span class=n>encode</span><span class=p>(</span><span class=s1>&#39;utf-8&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>lst</span> <span class=o>=</span> <span class=n>s</span><span class=o>.</span><span class=n>split</span><span class=p>(</span><span class=s1>&#39;&#39;</span><span class=p>)</span> <span class=c1># [&#39;H&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;]</span>
+</span></span><span class=line><span class=cl><span class=s1>&#39;,&#39;</span><span class=o>.</span><span class=n>join</span><span class=p>(</span><span class=n>lst</span><span class=p>)</span> <span class=c1># &#39;H,e,l,l,o&#39;</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=s1>&#39;</span><span class=si>{name}</span><span class=s1> does </span><span class=si>{thing}</span><span class=s1>&#39;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>name</span><span class=o>=</span><span class=s1>&#39;s.b.&#39;</span><span class=p>,</span> <span class=n>thing</span><span class=o>=</span><span class=s1>&#39;s.th.&#39;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=c1># s.b does s.th.</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=s1>&#39;</span><span class=si>%s</span><span class=s1> does it </span><span class=si>%d</span><span class=s1> times&#39;</span> <span class=o>%</span> <span class=p>(</span><span class=s1>&#39;s.b.&#39;</span><span class=p>,</span> <span class=mi>6</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=c1># s.b. does it 6 times</span>
+</span></span></code></pre></td></tr></table></div></div><ol><li><code>ord()</code> 字符变整数编码，<code>chr()</code> 整数编码变字符；</li><li>bytes 类型在引号前加 b，str 转 bytes 用 <code>encode()</code> 方法，如 <code>s.encode('utf-8')</code>，<code>decode()</code> 反之。</li><li><code>len()</code> 接收一个序列（列表、元组、字符串等）参数，返回其长度；</li><li>格式化字符串：字符串内和 C 语言一样，后接 <code>% (值 0, 值 1, 值 2…)</code>；或用 <code>'{0}：{1:.2f}'.format('abc', 0.254)</code>，输出为 <code>abc：0.25</code>。大括号中的数字并不是必须的；</li><li><code>字符串. split(' ')</code> 用空格分割字符串形成列表；<code>','.join(列表)</code> 用逗号连接列表形成字符串；</li></ol><p>关于<strong>控制流</strong>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>5</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=nb>print</span><span class=p>(</span><span class=n>i</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>	<span class=nb>print</span><span class=p>(</span><span class=s1>&#39;Done&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1># 0</span>
+</span></span><span class=line><span class=cl><span class=c1># 1</span>
+</span></span><span class=line><span class=cl><span class=c1># 2</span>
+</span></span><span class=line><span class=cl><span class=c1># 3</span>
+</span></span><span class=line><span class=cl><span class=c1># 4</span>
+</span></span><span class=line><span class=cl><span class=c1># Done</span>
+</span></span><span class=line><span class=cl><span class=k>while</span> <span class=kc>True</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>	<span class=nb>print</span><span class=p>(</span><span class=s1>&#39;Reached&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=k>break</span>
+</span></span><span class=line><span class=cl><span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>	<span class=nb>print</span><span class=p>(</span><span class=s1>&#39;Not reached&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=s1>&#39;Done&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1># Reached</span>
+</span></span><span class=line><span class=cl><span class=c1># Done</span>
+</span></span></code></pre></td></tr></table></div></div><ol><li>条件两边都不用括号，但右边要冒号，下面的语句块需要缩进；</li><li><code>if->elif->else</code>；</li><li><code>while->else</code>（<code>else</code> 有必要吗？）；</li><li><code>for->else</code>；</li><li><code>for i in range(a, b)</code>，左闭右开，<code>range</code> 第三个参数表示步长；</li><li><code>break</code> 会跳过循环的 <code>else</code>；</li></ol><p><strong>函数与模块</strong>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>func</span><span class=p>(</span><span class=n>a</span><span class=p>,</span> <span class=n>b</span><span class=o>=</span><span class=mi>5</span><span class=p>,</span> <span class=n>c</span><span class=o>=</span><span class=mi>10</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=nb>print</span><span class=p>(</span><span class=s1>&#39;a is&#39;</span><span class=p>,</span> <span class=n>a</span><span class=p>,</span> <span class=s1>&#39;and b is&#39;</span><span class=p>,</span> <span class=n>b</span><span class=p>,</span> <span class=s1>&#39;and c is&#39;</span><span class=p>,</span> <span class=n>c</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>func</span><span class=p>(</span><span class=mi>3</span><span class=p>,</span> <span class=mi>7</span><span class=p>)</span> <span class=c1># a is 3 and b is 7 and c is 10</span>
+</span></span><span class=line><span class=cl><span class=n>func</span><span class=p>(</span><span class=mi>25</span><span class=p>,</span> <span class=n>c</span><span class=o>=</span><span class=mi>24</span><span class=p>)</span> <span class=c1># a is 25 and b is 5 and c is 24</span>
+</span></span><span class=line><span class=cl><span class=n>func</span><span class=p>(</span><span class=n>c</span><span class=o>=</span><span class=mi>50</span><span class=p>,</span> <span class=n>a</span><span class=o>=</span><span class=mi>100</span><span class=p>)</span> <span class=c1># a is 100 and b is 5 and c is 50</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>add_end</span><span class=p>(</span><span class=n>L</span><span class=o>=</span><span class=p>[]):</span>
+</span></span><span class=line><span class=cl>	<span class=n>L</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=s1>&#39;END&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=n>L</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>add_end</span><span class=p>([</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>])</span> <span class=c1># [1, 2, 3,&#39;END&#39;]</span>
+</span></span><span class=line><span class=cl><span class=n>add_end</span><span class=p>()</span> <span class=c1># [&#39;END&#39;]</span>
+</span></span><span class=line><span class=cl><span class=n>add_end</span><span class=p>()</span> <span class=c1># [&#39;END&#39;,&#39;END&#39;]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>calc</span><span class=p>(</span><span class=o>*</span><span class=n>numbers</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=nb>sum</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=n>n</span> <span class=ow>in</span> <span class=n>numbers</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=nb>sum</span> <span class=o>=</span> <span class=nb>sum</span> <span class=o>+</span> <span class=n>n</span> <span class=o>*</span> <span class=n>n</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=nb>sum</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>calc</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>)</span> <span class=c1># 14</span>
+</span></span><span class=line><span class=cl><span class=n>calc</span><span class=p>()</span> <span class=c1># 0</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>math</span> <span class=kn>import</span> <span class=n>sqrt</span>
+</span></span><span class=line><span class=cl><span class=n>sqrt</span><span class=p>(</span><span class=mi>9</span><span class=p>)</span> <span class=c1># 3</span>
+</span></span></code></pre></td></tr></table></div></div><ol><li><code>def</code> 定义函数；</li><li><code>global</code> 声明全局变量；</li><li><strong>默认参数必须指向不可变对象</strong>；</li><li>关键字参数：调用函数时，参数列表中用参数名 = 值的方式指定部分参数的值；</li><li>可变参数：<code>*arg</code> 表示元组，<code>**arg</code> 表示字典，可直接传参；</li><li>可以返回多个返回值，<strong>实际上是返回元组</strong>；</li><li>代码重用：<code>import 库；from 库 import …</code>；</li><li><code>dir()</code> 返回当前模块的名称列表，或给定参数模块的名称列表；</li><li>独立运行模块时，<code>__name__==’__main__’</code>；</li></ol><p><strong>数据结构</strong>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>lst</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;a&#39;</span><span class=p>,</span> <span class=s1>&#39;b&#39;</span><span class=p>,</span> <span class=s1>&#39;c&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=nb>len</span><span class=p>(</span><span class=n>lst</span><span class=p>)</span> <span class=c1># 3</span>
+</span></span><span class=line><span class=cl><span class=n>lst</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=s1>&#39;d&#39;</span><span class=p>)</span> <span class=c1># [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+</span></span><span class=line><span class=cl><span class=n>lst</span><span class=o>.</span><span class=n>insert</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span><span class=s1>&#39;e&#39;</span><span class=p>)</span> <span class=c1># [&#39;a&#39;,&#39;e&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;]</span>
+</span></span><span class=line><span class=cl><span class=n>lst</span><span class=o>.</span><span class=n>sort</span><span class=p>()</span> <span class=c1># [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;]</span>
+</span></span><span class=line><span class=cl><span class=n>lst</span><span class=o>.</span><span class=n>pop</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span> <span class=c1># [&#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;d&#39;]</span>
+</span></span><span class=line><span class=cl><span class=n>lst</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span> <span class=o>=</span> <span class=mi>11</span> <span class=c1># [11,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>tup</span> <span class=o>=</span> <span class=p>(</span><span class=mi>2</span><span class=p>)</span> <span class=c1># 2</span>
+</span></span><span class=line><span class=cl><span class=n>tup</span> <span class=o>=</span> <span class=p>(</span><span class=mi>2</span><span class=p>,)</span> <span class=c1># (2,)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>d</span> <span class=o>=</span> <span class=p>{</span><span class=s1>&#39;a&#39;</span><span class=p>:</span> <span class=mi>97</span><span class=p>,</span> <span class=s1>&#39;b&#39;</span><span class=p>:</span> <span class=mi>98</span><span class=p>,</span> <span class=s1>&#39;c&#39;</span><span class=p>:</span> <span class=mi>99</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=n>d</span><span class=p>[</span><span class=s1>&#39;b&#39;</span><span class=p>]</span> <span class=o>==</span> <span class=mi>98</span> <span class=c1># True</span>
+</span></span><span class=line><span class=cl><span class=n>d</span><span class=p>[</span><span class=s1>&#39;c&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=mi>100</span> <span class=c1># {&#39;a&#39;: 97, &#39;b&#39;: 98, &#39;c&#39;: 100}</span>
+</span></span><span class=line><span class=cl><span class=s1>&#39;cc&#39;</span> <span class=ow>in</span> <span class=n>d</span> <span class=c1># False</span>
+</span></span><span class=line><span class=cl><span class=n>d</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;bb&#39;</span><span class=p>,</span> <span class=o>-</span><span class=mi>1</span><span class=p>)</span> <span class=c1># -1</span>
+</span></span><span class=line><span class=cl><span class=n>d</span><span class=o>.</span><span class=n>pop</span><span class=p>(</span><span class=s1>&#39;c&#39;</span><span class=p>)</span> <span class=c1># {&#39;a&#39;: 97, &#39;b&#39;: 98}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>s</span> <span class=o>=</span> <span class=nb>set</span><span class=p>([</span><span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>,</span> <span class=mi>3</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=n>s</span><span class=o>.</span><span class=n>add</span><span class=p>(</span><span class=mi>4</span><span class=p>)</span> <span class=c1># {1, 2, 3, 4}</span>
+</span></span><span class=line><span class=cl><span class=n>s1</span> <span class=o>=</span> <span class=nb>set</span><span class=p>([</span><span class=mi>1</span><span class=p>,</span> <span class=mi>2</span><span class=p>,</span> <span class=mi>3</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=n>s1</span><span class=o>.</span><span class=n>remove</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span> <span class=c1># {2, 3}</span>
+</span></span><span class=line><span class=cl><span class=n>s</span> <span class=o>&amp;</span> <span class=n>s1</span> <span class=c1># {2, 3}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=s1>&#39;abcdefg&#39;</span><span class=p>[::</span><span class=mi>2</span><span class=p>]</span> <span class=c1># &#39;aceg&#39;</span>
+</span></span><span class=line><span class=cl><span class=s1>&#39;abcdefg&#39;</span><span class=p>[</span><span class=mi>1</span><span class=p>:</span><span class=o>-</span><span class=mi>1</span><span class=p>]</span> <span class=c1># &#39;bcdef&#39;</span>
+</span></span></code></pre></td></tr></table></div></div><ol><li>列表：<code>[]</code> 括起来，可变，可以索引，可以用 <code>len()</code> 取长度;</li><li>列表：<code>append()</code> 追加元素（来自参数）；</li><li>列表：<code>insert(i, s)</code> 在索引 <code>i</code> 处插入元素 <code>s</code>；</li><li>列表：<code>pop()</code> 删除末尾元素，或接收参数 <code>i</code> 删除索引为 <code>i</code> 的元素；</li><li>列表：元素类型可以互不相同；</li><li>元组：<code>( )</code> 括起来，不可变，可以索引；</li><li>元组：只有一个元素 <code>1</code> 的元组：<code>(1,)</code> 而不是 <code>(1)</code>；</li><li>字典：<code>{}</code> 括起来，<code>{key0: value0, key1: value1}</code> 形式，<strong>键值必须是不可变对象</strong>；</li><li>字典：<code> 字典变量 [键]</code> 来得到对应的值，或用 <code>字典变量. get(键)</code> 得到，<code>get()</code> 的第二个参数是没找到时的返回值，默认为 <code>None</code>；</li><li>字典：删除键值对：<code> 字典变量. pop(键)</code>；</li><li>集合：用一个列表初始化，无重复元素，<code>add()</code> 添加元素，<code>remove()</code> 删除元素；</li><li>集合：元素必须是不可变对象；</li><li>序列：如列表、元组、字符串，主要功能是 <code>in</code> 判断和切片；</li><li>切片：<code>[-2]</code> 倒数第 2 个；<code>[2:]</code> 第 2 个到最后；有冒号时左闭右开；第 2 个冒号后是步长。</li></ol><p>随后的课程内容包括了一部分 Python 高级特性，包括迭代器、生成器、异常处理、面向对象编程、匿名函数等等。</p><h2 id=高级特性与-oop>高级特性与 OOP</h2><p>首先，我们需要理解<strong>迭代</strong>的概念：所谓迭代，即用循环来遍历<strong>可迭代对象</strong>。判断对象是否可迭代：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>collections</span> <span class=kn>import</span> <span class=n>Iterable</span>
+</span></span><span class=line><span class=cl><span class=nb>isinstance</span><span class=p>(</span><span class=s1>&#39;123&#39;</span><span class=p>,</span> <span class=n>Iterable</span><span class=p>)</span> <span class=c1># True</span>
+</span></span><span class=line><span class=cl><span class=nb>isinstance</span><span class=p>(</span><span class=mi>123</span><span class=p>,</span> <span class=n>Iterable</span><span class=p>)</span> <span class=c1># False</span>
+</span></span></code></pre></td></tr></table></div></div><p>迭代的一般形式是 <code>for 变量 in 可迭代对象:</code>，例如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>d</span> <span class=o>=</span> <span class=p>{</span><span class=s1>&#39;a&#39;</span><span class=p>:</span> <span class=mi>97</span><span class=p>,</span> <span class=s1>&#39;b&#39;</span><span class=p>:</span> <span class=mi>98</span><span class=p>,</span> <span class=s1>&#39;c&#39;</span><span class=p>:</span> <span class=mi>99</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>key</span><span class=p>,</span> <span class=n>val</span> <span class=ow>in</span> <span class=n>d</span><span class=o>.</span><span class=n>items</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>	<span class=nb>print</span><span class=p>(</span><span class=n>key</span> <span class=o>+</span><span class=s1>&#39;=&#39;</span><span class=o>+</span> <span class=n>val</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1># b = 98</span>
+</span></span><span class=line><span class=cl><span class=c1># a = 97</span>
+</span></span><span class=line><span class=cl><span class=c1># c = 99 (unordered)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Or instead:</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=n>key</span> <span class=o>+</span><span class=s1>&#39;=&#39;</span><span class=o>+</span> <span class=n>val</span> <span class=k>for</span> <span class=n>key</span><span class=p>,</span> <span class=n>val</span> <span class=ow>in</span> <span class=n>d</span><span class=o>.</span><span class=n>items</span><span class=p>()]</span>
+</span></span><span class=line><span class=cl><span class=c1># [&#39;b=98&#39;, &#39;a=97&#39;, &#39;c=99&#39;]</span>
+</span></span></code></pre></td></tr></table></div></div><p>上面的第二种方法用到了<strong>列表生成式</strong>，它还可以这样用，来把列表中的字符串全部变成小写：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>L</span> <span class=o>=</span> <span class=p>[</span><span class=s1>&#39;RESTful&#39;</span><span class=p>,</span> <span class=s1>&#39;LaTeX&#39;</span><span class=p>,</span> <span class=s1>&#39;GitHub&#39;</span><span class=p>,</span> <span class=s1>&#39;iPhone&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=n>s</span><span class=o>.</span><span class=n>lower</span><span class=p>()</span> <span class=k>for</span> <span class=n>s</span> <span class=ow>in</span> <span class=n>L</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=c1># [&#39;restful&#39;, &#39;latex&#39;, &#39;github&#39;, &#39;iphone&#39;]</span>
+</span></span></code></pre></td></tr></table></div></div><p>可以想到，在生成方法已知的情况下，直接求出整个列表常常是没有必要的。为了边循环边计算，Python 提供了生成器对象：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>g</span> <span class=o>=</span> <span class=p>(</span><span class=n>s</span><span class=o>.</span><span class=n>lower</span><span class=p>()</span> <span class=k>for</span> <span class=n>s</span> <span class=ow>in</span> <span class=n>L</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nb>next</span><span class=p>(</span><span class=n>g</span><span class=p>)</span> <span class=c1># &#39;restful&#39;</span>
+</span></span><span class=line><span class=cl><span class=nb>next</span><span class=p>(</span><span class=n>g</span><span class=p>)</span> <span class=c1># &#39;latex&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Generate Fibonacci sequence(less than 2000)</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>fib</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=n>prev</span><span class=p>,</span> <span class=n>curr</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=kc>True</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>yield</span> <span class=n>curr</span>
+</span></span><span class=line><span class=cl>        <span class=n>prev</span><span class=p>,</span> <span class=n>curr</span> <span class=o>=</span> <span class=n>curr</span><span class=p>,</span> <span class=n>curr</span> <span class=o>+</span> <span class=n>prev</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>f</span> <span class=o>=</span> <span class=n>fib</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=n>f</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>i</span> <span class=o>&gt;</span> <span class=mi>2000</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>break</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=n>i</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>生成器对象可以用 <code>next()</code> 来生成下一个元素，但由于它是<strong>可迭代</strong>的，我们通常习惯用循环来遍历其元素。此外，在上面的例子中，<code>fib()</code> <strong>并不是一个函数</strong>，而是一个生成器，因为其定义中带有 <code>yield</code> 关键字。</p><p>那么，为什么 <code>next()</code> 可以返回生成器生成的下一个元素呢？通过查阅文档发现，<code>next()</code> 的参数需要是一个<strong>迭代器</strong>对象。因此我们知道，生成器是一种迭代器。</p><p>然而，<code>isinstance([], Iterator)</code> 语句的结果却是 <code>False</code>，意味着列表（字典、字符串）并不是迭代器对象，尽管可以用 <code>iter()</code> 进行强制转换。这揭示了迭代器对象作为流对象的最大优点，即<strong>惰性计算</strong>。</p><p>同时，迭代器迭代完毕后，我们注意到 Python 解释器会抛出 <code>StopIteration</code> 的错误。这是一个典型的<strong>异常</strong>，而接下来我们要做的就是处理这一异常。异常处理语法有点类似 Java，这里我们用一个常规的文件处理（这里没有介绍，因为比较简单，而且和 C++ 太相似了）的例子来说明：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>sys</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>time</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>f</span> <span class=o>=</span> <span class=kc>None</span>
+</span></span><span class=line><span class=cl><span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>f</span> <span class=o>=</span> <span class=nb>open</span><span class=p>(</span><span class=s2>&#34;poem.txt&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>while</span> <span class=kc>True</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>line</span> <span class=o>=</span> <span class=n>f</span><span class=o>.</span><span class=n>readline</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=nb>len</span><span class=p>(</span><span class=n>line</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>break</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=n>line</span><span class=p>,</span> <span class=n>end</span><span class=o>=</span><span class=s1>&#39;&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>sys</span><span class=o>.</span><span class=n>stdout</span><span class=o>.</span><span class=n>flush</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Press ctrl+c now&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>time</span><span class=o>.</span><span class=n>sleep</span><span class=p>(</span><span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>except</span> <span class=ne>IOError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Could not find file poem.txt&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>except</span> <span class=ne>KeyboardInterrupt</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;!! You cancelled the reading from the file.&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>finally</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>f</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>f</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;(Cleaning up: Closed the file)&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Or use instead:</span>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=nb>open</span><span class=p>(</span><span class=s2>&#34;poem.txt&#34;</span><span class=p>)</span> <span class=k>as</span> <span class=n>f</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>line</span> <span class=ow>in</span> <span class=n>f</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=n>line</span><span class=p>,</span> <span class=n>end</span><span class=o>=</span><span class=s1>&#39;&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里将可能产生异常的代码块放在了 <code>try:</code> 后面，并在 <code>except:</code> 后捕获并处理异常，<code>finally:</code> 进行善后工作。另一种方案是用 <code>with...as...</code> 语句来简化资源的获取与释放。</p><p>我们也可以自己定义一种异常，并在 <code>try:</code> 语句块中用 <code>raise 异常名</code> 抛出异常。这里就需要我们定义一种异常类，并产生一个异常对象。于是我们接下来学习了<strong>面向对象编程</strong>。</p><p>对于面向对象程序设计，经过 C++ 与 Java 两门语言的学习，我再熟悉不过了，因此许多 OOP 中重要的概念，如封装、继承、多态等这里不会再赘述。</p><ol><li>在任何类的对象方法的参数列表开头都会有一个 <code>self</code> 参数，引用对象本身，作用相当于 <code>this</code> 指针；</li><li>类的构造函数名称为 <code>__init__</code>；</li><li>私有变量以 <code>__</code> 开头（<strong>但是不能以 <code>__</code> 结尾！</strong>），从外部访问这一变量只会新增一个同名变量；本质：Name-mangling</li><li>继承：<code>class 派生类 (基类):</code>；<strong>继承元组</strong>中也可以有多个基类，即多重继承；</li><li>所有方法都是<strong>虚拟的</strong>（C++ <code>virtual</code> 关键字）；</li><li><code>type(对象)</code> 返回对象类型；<code>isinstance()</code> 对于继承的类更方便；<code>dir()</code> 获取一个对象的所有属性和方法；</li><li>可以定义<strong>类属性</strong>和<strong>类方法</strong>，后者需要装饰器（不在课程范围内）<code>@classmethod</code></li></ol><p>最后以一个简单的例子结束 OOP 部分：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>class</span> <span class=nc>Fib</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>prev</span> <span class=o>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>curr</span> <span class=o>=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__iter__</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=bp>self</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__next__</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>val</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>curr</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>curr</span> <span class=o>+=</span> <span class=bp>self</span><span class=o>.</span><span class=n>prev</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>prev</span> <span class=o>=</span> <span class=n>val</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=bp>self</span><span class=o>.</span><span class=n>prev</span> <span class=o>&gt;</span> <span class=mi>2000</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>raise</span> <span class=ne>StopIteration</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>val</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>f</span> <span class=o>=</span> <span class=n>Fib</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=n>f</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=n>i</span><span class=p>,</span> <span class=n>end</span><span class=o>=</span><span class=s1>&#39; &#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>最后一点额外的内容是<strong>匿名函数</strong>，简单来说就是 <code>lambda 参数: 表达式</code> 的形式，其中 “参数” 可选，“表达式”即返回值。另外，lambda 表达式本身也可以作为函数的返回值。</p><h2 id=图形化编程>图形化编程</h2><p>在课程最后我们学习了基于 tkinter 的图形化编程, 为此我们需要 import tkinter 模块。从一个简单的例子开始：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>showPosEvent</span><span class=p>(</span><span class=n>event</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;Widget=</span><span class=si>%s</span><span class=s1> X=</span><span class=si>%s</span><span class=s1> Y=</span><span class=si>%s</span><span class=s1>&#39;</span> <span class=o>%</span> <span class=p>(</span><span class=n>event</span><span class=o>.</span><span class=n>widget</span><span class=p>,</span> <span class=n>event</span><span class=o>.</span><span class=n>x</span><span class=p>,</span> <span class=n>event</span><span class=o>.</span><span class=n>y</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>onLeftClick</span><span class=p>(</span><span class=n>event</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s1>&#39;Got left mouse button click:&#39;</span><span class=p>,</span> <span class=n>end</span><span class=o>=</span><span class=s1>&#39;&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>showPosEvent</span><span class=p>(</span><span class=n>event</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>tkroot</span> <span class=o>=</span> <span class=n>Tk</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>labelfont</span> <span class=o>=</span> <span class=p>(</span><span class=s1>&#39;courier&#39;</span><span class=p>,</span> <span class=mi>20</span><span class=p>,</span> <span class=s1>&#39;bold&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>widget</span> <span class=o>=</span> <span class=n>Label</span><span class=p>(</span><span class=n>tkroot</span><span class=p>,</span> <span class=n>text</span><span class=o>=</span><span class=s1>&#39;Hello bind world&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>widget</span><span class=o>.</span><span class=n>config</span><span class=p>(</span><span class=n>bg</span><span class=o>=</span><span class=s1>&#39;red&#39;</span><span class=p>,</span> <span class=n>font</span><span class=o>=</span><span class=n>labelfont</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>widget</span><span class=o>.</span><span class=n>config</span><span class=p>(</span><span class=n>height</span><span class=o>=</span><span class=mi>5</span><span class=p>,</span> <span class=n>width</span><span class=o>=</span><span class=mi>20</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>widget</span><span class=o>.</span><span class=n>pack</span><span class=p>(</span><span class=n>expand</span><span class=o>=</span><span class=n>YES</span><span class=p>,</span> <span class=n>fill</span><span class=o>=</span><span class=n>BOTH</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>widget</span><span class=o>.</span><span class=n>bind</span><span class=p>(</span><span class=s1>&#39;&lt;Button-1&gt;&#39;</span><span class=p>,</span>  <span class=n>onLeftClick</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>widget</span><span class=o>.</span><span class=n>focus</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>tkroot</span><span class=o>.</span><span class=n>title</span><span class=p>(</span><span class=s1>&#39;Click Me&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>tkroot</span><span class=o>.</span><span class=n>mainloop</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>我们用 <code>Tk</code> 创建主窗体，<code>Label</code> 创建一个标签，通过其 <code>config</code> 方法设置各种属性后，用 <code>pack</code> 方法装入主窗体中。</p><p>为了让控件能响应事件，使用 bind 方法，第一个参数表示事件类型，可以有 <code>&lt;Button-1>(鼠标左键), &lt;Button-2>(鼠标中键), &lt;Button-3>(鼠标右键), &lt;Double-1>(左键双击), &lt;B1-Motion>(左键拖动), &lt;Key-Press>, &lt;Up>, &lt;Return></code> 等等; 第二个参数是检测到事件发生时的行为，用一个函数名表示（类似 Java 的 EventListener）。该函数的参数是一个 <code>event</code> 对象，其属性 <code>widget</code> 表示事件作用的控件，<code>x</code> 和 <code>y</code> 表示坐标（如果有的话）。</p><p>最后，这里用 <code>focus</code> 方法设置焦点，<code>mainloop</code> 使窗体开始循环等待，也就是真正运行起来。运行效果：<figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/2.jpg title="图 3" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/2.jpg data-sub-html="<h2> </h2><p>图 3</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/2.jpg data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/2.jpg, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/2.jpg 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/2.jpg 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/2.jpg></a><figcaption class=image-caption>图 3</figcaption></figure></p><p>这里用的控件是 Label，对于其它控件同理，如 Button, Frame, Entry, Checkbutton, Radiobutton, Scale 等等。</p><p>除此之外，tkinter 也提供了一些封装好的对话框供我们调用。例如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter.filedialog</span>   <span class=kn>import</span> <span class=n>askopenfilename</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter.colorchooser</span> <span class=kn>import</span> <span class=n>askcolor</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter.messagebox</span>   <span class=kn>import</span> <span class=n>askquestion</span><span class=p>,</span> <span class=n>showerror</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter.simpledialog</span> <span class=kn>import</span> <span class=n>askfloat</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>demos</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;Open&#39;</span><span class=p>:</span>  <span class=n>askopenfilename</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;Color&#39;</span><span class=p>:</span> <span class=n>askcolor</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;Query&#39;</span><span class=p>:</span> <span class=k>lambda</span><span class=p>:</span> <span class=n>askquestion</span><span class=p>(</span><span class=s1>&#39;Warning&#39;</span><span class=p>,</span> <span class=s1>&#39;You typed&#34;rm *&#34;</span><span class=se>\n</span><span class=s1>Confirm?&#39;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;Error&#39;</span><span class=p>:</span> <span class=k>lambda</span><span class=p>:</span> <span class=n>showerror</span><span class=p>(</span><span class=s1>&#39;Error!&#39;</span><span class=p>,</span> <span class=s2>&#34;He&#39;s dead, Jim&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=s1>&#39;Input&#39;</span><span class=p>:</span> <span class=k>lambda</span><span class=p>:</span> <span class=n>askfloat</span><span class=p>(</span><span class=s1>&#39;Entry&#39;</span><span class=p>,</span> <span class=s1>&#39;Enter credit card number&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Demo</span><span class=p>(</span><span class=n>Frame</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>parent</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span> <span class=o>**</span><span class=n>options</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>Frame</span><span class=o>.</span><span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>parent</span><span class=p>,</span> <span class=o>**</span><span class=n>options</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>pack</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=n>Label</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>text</span><span class=o>=</span><span class=s2>&#34;Basic demos&#34;</span><span class=p>)</span><span class=o>.</span><span class=n>pack</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=n>value</span><span class=p>)</span> <span class=ow>in</span> <span class=n>demos</span><span class=o>.</span><span class=n>items</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>            <span class=n>Button</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>text</span><span class=o>=</span><span class=n>key</span><span class=p>,</span> <span class=n>command</span><span class=o>=</span><span class=n>value</span><span class=p>)</span><span class=o>.</span><span class=n>pack</span><span class=p>(</span><span class=n>side</span><span class=o>=</span><span class=n>TOP</span><span class=p>,</span> <span class=n>fill</span><span class=o>=</span><span class=n>BOTH</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s1>&#39;__main__&#39;</span><span class=p>:</span> <span class=n>Demo</span><span class=p>()</span><span class=o>.</span><span class=n>mainloop</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>点击 Open 按钮，会出现文件选择的对话框；Color 则对应颜色选择对话框；Query 对应消息提示框 (带问号 + 是 / 否选项)；Error 出现错误提示框；Input 则弹出带文本框的对话框，允许用户进行输入。</p><p>从这个例子我们也可以发现，tkinter 和面向对象的结合同样十分便捷。运用这种面向对象的思想，我们实现一个按钮类，用于在退出时弹出确认对话框：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter.messagebox</span> <span class=kn>import</span> <span class=n>askokcancel</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Quitter</span><span class=p>(</span><span class=n>Frame</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>parent</span><span class=o>=</span><span class=kc>None</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>Frame</span><span class=o>.</span><span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>parent</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>pack</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=n>widget</span> <span class=o>=</span> <span class=n>Button</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>text</span><span class=o>=</span><span class=s1>&#39;Quit&#39;</span><span class=p>,</span> <span class=n>command</span><span class=o>=</span><span class=bp>self</span><span class=o>.</span><span class=n>quit</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>widget</span><span class=o>.</span><span class=n>pack</span><span class=p>(</span><span class=n>side</span><span class=o>=</span><span class=n>LEFT</span><span class=p>,</span> <span class=n>expand</span><span class=o>=</span><span class=n>YES</span><span class=p>,</span> <span class=n>fill</span><span class=o>=</span><span class=n>BOTH</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>quit</span><span class=p>(</span><span class=bp>self</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>ans</span> <span class=o>=</span> <span class=n>askokcancel</span><span class=p>(</span><span class=s1>&#39;Verify exit&#39;</span><span class=p>,</span> <span class=s2>&#34;Really quit?&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>ans</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>quit</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s1>&#39;__main__&#39;</span><span class=p>:</span>  <span class=n>Quitter</span><span class=p>()</span><span class=o>.</span><span class=n>mainloop</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>此外，除了用上面提到的 <code>pack</code> 方法可以管理控件布局外，我们还可以使用 grid 布局管理器。它将控件放置到一个二维的表格里，主控件被分割成一系列的行和列，表格中的每个单元（cell）都可以放置一个控件。例如：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>master</span> <span class=o>=</span> <span class=n>Tk</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Label</span><span class=p>(</span><span class=n>master</span><span class=p>,</span> <span class=n>text</span><span class=o>=</span><span class=s2>&#34;First&#34;</span><span class=p>)</span><span class=o>.</span><span class=n>grid</span><span class=p>(</span><span class=n>row</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span><span class=n>column</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span> <span class=n>sticky</span><span class=o>=</span><span class=n>W</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>Label</span><span class=p>(</span><span class=n>master</span><span class=p>,</span> <span class=n>text</span><span class=o>=</span><span class=s2>&#34;Second&#34;</span><span class=p>)</span><span class=o>.</span><span class=n>grid</span><span class=p>(</span><span class=n>row</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span><span class=n>column</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span> <span class=n>sticky</span><span class=o>=</span><span class=n>W</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>e1</span> <span class=o>=</span> <span class=n>Entry</span><span class=p>(</span><span class=n>master</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>e2</span> <span class=o>=</span> <span class=n>Entry</span><span class=p>(</span><span class=n>master</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>e1</span><span class=o>.</span><span class=n>grid</span><span class=p>(</span><span class=n>row</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span> <span class=n>column</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span><span class=n>sticky</span><span class=o>=</span><span class=p>(</span><span class=n>E</span><span class=p>,</span> <span class=n>S</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=n>e2</span><span class=o>.</span><span class=n>grid</span><span class=p>(</span><span class=n>row</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span> <span class=n>column</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span><span class=n>sticky</span><span class=o>=</span><span class=p>(</span><span class=n>E</span><span class=p>,</span> <span class=n>S</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>master</span><span class=o>.</span><span class=n>mainloop</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>效果：</p><p><figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/3.jpg title="图 4" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/3.jpg data-sub-html="<h2> </h2><p>图 4</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/3.jpg data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/3.jpg, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/3.jpg 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/3.jpg 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/3.jpg></a><figcaption class=image-caption>图 4</figcaption></figure></p><p>需要注意的是，pack 布局管理器与 grid 布局管理器不应在一个窗口中混合使用。</p><p>如果我们想在窗体中显示图片也同样可行。这需要用到 <code>Canvas</code> 对象：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>picdir</span> <span class=o>=</span> <span class=s2>&#34;pic.gif&#34;</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>tkinter</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span><span class=line><span class=cl><span class=n>win</span> <span class=o>=</span> <span class=n>Tk</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>img</span> <span class=o>=</span> <span class=n>PhotoImage</span><span class=p>(</span><span class=n>file</span><span class=o>=</span><span class=n>picdir</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>can</span> <span class=o>=</span> <span class=n>Canvas</span><span class=p>(</span><span class=n>win</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>can</span><span class=o>.</span><span class=n>pack</span><span class=p>(</span><span class=n>fill</span><span class=o>=</span><span class=n>BOTH</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>can</span><span class=o>.</span><span class=n>create_image</span><span class=p>(</span><span class=mi>20</span><span class=p>,</span> <span class=mi>20</span><span class=p>,</span> <span class=n>image</span><span class=o>=</span><span class=n>img</span><span class=p>,</span> <span class=n>anchor</span><span class=o>=</span><span class=n>NW</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>win</span><span class=o>.</span><span class=n>mainloop</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>这是最简单的在窗体中显示一张图片的方法，同样我们可以给 Button 的 img 属性赋值来在按钮上显示图片。</p><p>所谓 <code>Canvas</code> 对象，即画布对象，其功能远不止于绘制一张已有的图片。它不仅拥有其它控件类似的属性与方法，还有自带的许多绘图方法，如 <code>create_line, create_oval, create_rectangle, create_arc, create_image, create_text,</code> <code>create_window</code> 等。根据其参数列表传入适当的参数，可以完成大部分基本的绘图功能。结合前面提到的鼠标拖动事件与面向对象编程，完全可以让用户自己在窗体内创作图像。</p><p>tkinter 同样支持 listbox 控件，下拉菜单与窗体菜单，带滚动条的文本框等等, 他们的方法多样，但也有许多相似之处。下面是两个简单的示例：</p><p><figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/4.png title="图 5" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/4.png data-sub-html="<h2> </h2><p>图 5</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/4.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/4.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/4.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/4.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/4.png></a><figcaption class=image-caption>图 5</figcaption></figure></p><p><figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/5.png title="图 6" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/5.png data-sub-html="<h2> </h2><p>图 6</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/5.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/5.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/5.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/5.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/5.png></a><figcaption class=image-caption>图 6</figcaption></figure></p><p>第一个是菜单栏的测试，第二个是一个简单的文本编辑器。</p><p>到这里，这门课程的内容差不多结束了。然而 Python 的功能远远不止这些，课程的结束也并不意味着 Python 学习的结束。在学习完课程之后，我又尝试写了基于 Python 的爬虫——根据豆瓣电影排行来自动推荐电影，并通过微信自动回复的接口实现交互。</p><p>项目地址：https://github.com/SignorMercurio/WechatFilmRecommender</p><h2 id=参考资料>参考资料</h2><ul><li><a href=https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000 target=_blank rel="noopener noreffer">Python 教程 - 廖雪峰的官方网站</a></li><li><a href=https://bop.mol.uno/ target=_blank rel="noopener noreffer">简明 Python 教程</a></li><li>教学课件</li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2019-01-06</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/%E9%A1%B9%E7%9B%AE/>项目</a>,&nbsp;<a href=/tags/python/>Python</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/probability-report/ class=prev rel=prev title=概率论课程报告><i class="fas fa-angle-left fa-fw"></i>概率论课程报告</a>
+<a href=/hexo/ class=next rel=next title="世外桃源：Hexo 踩坑记">世外桃源：Hexo 踩坑记<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.94.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2017 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Mercury</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/katex/katex.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:30},comment:{valine:{appId:"RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",appKey:"sw2sEPOl4haCAXKUFYiBFMrR",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"你的评论 ...",recordIP:!1,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{algoliaAppID:"P149SBLX5U",algoliaIndex:"blog",algoliaSearchKey:"cbd5db1f3910ee11bc18688f21b64bd4",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

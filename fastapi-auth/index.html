@@ -1,0 +1,446 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>久仰大名：基于 FastAPI 实现 OAuth2 登录认证 - Lab on Mercury</title><meta name=Description content="Lab on Mercury"><meta property="og:title" content="久仰大名：基于 FastAPI 实现 OAuth2 登录认证"><meta property="og:description" content="写 Pianoforte 时第一个遇到的可复用模块。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.sigmerc.top/fastapi-auth/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-01-10T16:34:22+00:00"><meta property="article:modified_time" content="2021-01-10T16:34:22+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="久仰大名：基于 FastAPI 实现 OAuth2 登录认证"><meta name=twitter:description content="写 Pianoforte 时第一个遇到的可复用模块。"><meta name=application-name content="Lab on Mercury"><meta name=apple-mobile-web-app-title content="Lab on Mercury"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.sigmerc.top/fastapi-auth/><link rel=prev href=https://blog.sigmerc.top/mini-capture/><link rel=next href=https://blog.sigmerc.top/fastapi-tortoise/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"久仰大名：基于 FastAPI 实现 OAuth2 登录认证","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.sigmerc.top\/fastapi-auth\/"},"genre":"posts","keywords":"Python, FastAPI, 认证, JWT, 项目","wordcount":1771,"url":"https:\/\/blog.sigmerc.top\/fastapi-auth\/","datePublished":"2021-01-10T16:34:22+00:00","dateModified":"2021-01-10T16:34:22+00:00","publisher":{"@type":"Organization","name":"Mercury","logo":{"@type":"ImageObject","url":"https:\/\/blog.sigmerc.top\/my_avatar.png","width":400,"height":400}},"author":{"@type":"Person","name":"Mercury"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-archive fa-fw"></i> 文章 </a><a class=menu-item href=/tags/><i class="fas fa-tags fa-fw"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-th fa-fw"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title><i class="fas fa-archive fa-fw"></i>文章</a><a class=menu-item href=/tags/ title><i class="fas fa-tags fa-fw"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-th fa-fw"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">久仰大名：基于 FastAPI 实现 OAuth2 登录认证</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>Mercury</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2/><i class="far fa-folder fa-fw"></i>探索</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-01-10>2021-01-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1771 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;<span id=/fastapi-auth/ class=leancloud_visitors data-flag-title="久仰大名：基于 FastAPI 实现 OAuth2 登录认证">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/0.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/0.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/0.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/0.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/0.png title=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/0.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#目录结构>目录结构</a></li><li><a href=#现有代码>现有代码</a><ul><li><a href=#mainpy>main.py</a></li><li><a href=#dbpy>db.py</a></li><li><a href=#modelspy>models.py</a></li><li><a href=#usersschemaspy>users/schemas.py</a></li><li><a href=#userscrudpy>users/crud.py</a></li></ul></li><li><a href=#认证功能实现>认证功能实现</a><ul><li><a href=#注册>注册</a></li><li><a href=#登录验证用户信息>登录：验证用户信息</a></li><li><a href=#登录生成-jwt>登录：生成 jwt</a></li><li><a href=#根据-jwt-获取用户信息>根据 jwt 获取用户信息</a></li></ul></li><li><a href=#测试>测试</a></li></ul></nav></div></div><div class=content id=content><p>写 Pianoforte 时第一个遇到的可复用模块。</p><p>最近在通过项目学习 FastAPI，发现登录认证模块可以复用，于是记录一下。代码主要修改自 <a href=https://fastapi.tiangolo.com/ target=_blank rel="noopener noreffer">官方文档</a>。</p><h2 id=目录结构>目录结构</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>.
+</span></span><span class=line><span class=cl>|--app.db
+</span></span><span class=line><span class=cl>|--requirements.txt
+</span></span><span class=line><span class=cl>|--app/
+</span></span><span class=line><span class=cl>|  |--__init__.py
+</span></span><span class=line><span class=cl>|  |--config.py
+</span></span><span class=line><span class=cl>|  |--db.py
+</span></span><span class=line><span class=cl>|  |--main.py
+</span></span><span class=line><span class=cl>|  |--models.py
+</span></span><span class=line><span class=cl>|  |--projects/
+</span></span><span class=line><span class=cl>|  |--users/
+</span></span><span class=line><span class=cl>|  |  |--__init__.py
+</span></span><span class=line><span class=cl>|  |  |--auth.py
+</span></span><span class=line><span class=cl>|  |  |--config.py
+</span></span><span class=line><span class=cl>|  |  |--crud.py
+</span></span><span class=line><span class=cl>|  |  |--schemas.py
+</span></span><span class=line><span class=cl>|  |  |--users.py
+</span></span></code></pre></td></tr></table></div></div><p>最外层是 sqlite 数据库文件和依赖，<code>projects/</code> 目录和主题无关因此未列出。</p><h2 id=现有代码>现有代码</h2><h3 id=mainpy>main.py</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>fastapi</span> <span class=kn>import</span> <span class=n>Depends</span><span class=p>,</span> <span class=n>FastAPI</span><span class=p>,</span> <span class=n>HTTPException</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>fastapi.middleware.cors</span> <span class=kn>import</span> <span class=n>CORSMiddleware</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.db</span> <span class=kn>import</span> <span class=n>engine</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.</span> <span class=kn>import</span> <span class=n>models</span><span class=p>,</span> <span class=n>config</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.users</span> <span class=kn>import</span> <span class=n>users</span><span class=p>,</span> <span class=n>auth</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.projects</span> <span class=kn>import</span> <span class=n>projects</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>models</span><span class=o>.</span><span class=n>Base</span><span class=o>.</span><span class=n>metadata</span><span class=o>.</span><span class=n>create_all</span><span class=p>(</span><span class=n>bind</span><span class=o>=</span><span class=n>engine</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>app</span> <span class=o>=</span> <span class=n>FastAPI</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>title</span><span class=o>=</span><span class=s1>&#39;Pianoforte&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>description</span><span class=o>=</span><span class=s1>&#39;Pianoforte Is AN Offensive Framework Of Red TEam&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>version</span><span class=o>=</span><span class=s1>&#39;0.1.0&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>app</span><span class=o>.</span><span class=n>add_middleware</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>CORSMiddleware</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>allow_origins</span><span class=o>=</span><span class=n>config</span><span class=o>.</span><span class=n>allow_origins</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>allow_credentials</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>allow_methods</span><span class=o>=</span><span class=n>config</span><span class=o>.</span><span class=n>allow_methods</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>allow_headers</span><span class=o>=</span><span class=p>[</span><span class=s1>&#39;*&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>app</span><span class=o>.</span><span class=n>include_router</span><span class=p>(</span><span class=n>users</span><span class=o>.</span><span class=n>router</span><span class=p>,</span> <span class=n>prefix</span><span class=o>=</span><span class=s1>&#39;/users&#39;</span><span class=p>,</span> <span class=n>tags</span><span class=o>=</span><span class=p>[</span><span class=s1>&#39;users&#39;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>auth_needed</span> <span class=o>=</span> <span class=p>[</span><span class=n>Depends</span><span class=p>(</span><span class=n>auth</span><span class=o>.</span><span class=n>get_current_user</span><span class=p>)]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>app</span><span class=o>.</span><span class=n>include_router</span><span class=p>(</span><span class=n>projects</span><span class=o>.</span><span class=n>router</span><span class=p>,</span> <span class=n>prefix</span><span class=o>=</span><span class=s1>&#39;/projects&#39;</span><span class=p>,</span> <span class=n>tags</span><span class=o>=</span><span class=p>[</span><span class=s1>&#39;projects&#39;</span><span class=p>],</span> <span class=n>dependencies</span><span class=o>=</span><span class=n>auth_needed</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>首先根据 <code>models.py</code> 中的定义创建了数据库，数据库相关代码在 <code>db.py</code> 中。随后添加 CORS 中间件，并添加 <code>users</code> 路由和 <code>projects</code> 路由，后者需要认证后方能访问。我们通过 Dependency 的方式，要求 <code>auth.get_current_user</code> 函数运行正常才能访问 <code>projects</code> 路由，由此实现权限管理。</p><h3 id=dbpy>db.py</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sqlalchemy</span> <span class=kn>import</span> <span class=n>create_engine</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sqlalchemy.ext.declarative</span> <span class=kn>import</span> <span class=n>declarative_base</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sqlalchemy.orm</span> <span class=kn>import</span> <span class=n>sessionmaker</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>SQLALCHEMY_DATABASE_URL</span> <span class=o>=</span> <span class=s2>&#34;sqlite:///./app.db&#34;</span>
+</span></span><span class=line><span class=cl><span class=c1># SQLALCHEMY_DATABASE_URL = &#34;postgresql://user:password@postgresserver/db&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>engine</span> <span class=o>=</span> <span class=n>create_engine</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>SQLALCHEMY_DATABASE_URL</span><span class=p>,</span> <span class=n>connect_args</span><span class=o>=</span><span class=p>{</span><span class=s2>&#34;check_same_thread&#34;</span><span class=p>:</span> <span class=kc>False</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>SessionLocal</span> <span class=o>=</span> <span class=n>sessionmaker</span><span class=p>(</span><span class=n>autocommit</span><span class=o>=</span><span class=kc>False</span><span class=p>,</span> <span class=n>autoflush</span><span class=o>=</span><span class=kc>False</span><span class=p>,</span> <span class=n>bind</span><span class=o>=</span><span class=n>engine</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>Base</span> <span class=o>=</span> <span class=n>declarative_base</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>get_db</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=n>db</span> <span class=o>=</span> <span class=n>SessionLocal</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>yield</span> <span class=n>db</span>
+</span></span><span class=line><span class=cl>    <span class=k>finally</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>db</span><span class=o>.</span><span class=n>close</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>由于项目规模不大，选用 sqlite3 数据库配合 <code>sqlalchemy</code> 的 ORM 功能进行数据库操作。</p><blockquote><p>此处 <code>yield</code> 方式返回数据库 <code>Session</code> 需要 Python 3.7 及以上。</p></blockquote><h3 id=modelspy>models.py</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sqlalchemy</span> <span class=kn>import</span> <span class=n>Column</span><span class=p>,</span> <span class=n>Integer</span><span class=p>,</span> <span class=n>String</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.db</span> <span class=kn>import</span> <span class=n>Base</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>User</span><span class=p>(</span><span class=n>Base</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>__tablename__</span> <span class=o>=</span> <span class=s1>&#39;users&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nb>id</span> <span class=o>=</span> <span class=n>Column</span><span class=p>(</span><span class=n>Integer</span><span class=p>,</span> <span class=n>primary_key</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>index</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>username</span> <span class=o>=</span> <span class=n>Column</span><span class=p>(</span><span class=n>String</span><span class=p>,</span> <span class=n>unique</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>password</span> <span class=o>=</span> <span class=n>Column</span><span class=p>(</span><span class=n>String</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里仅展示了相关代码，即 <code>User</code> 类的字段。这一段代码在数据库中创建了 <code>users</code> 表来存放用户数据。</p><p>由于业务需要，限定 <code>username</code> 不能重复。</p><h3 id=usersschemaspy>users/schemas.py</h3><p>上面的 <code>models.py</code> 定义了数据库中的 <code>User</code> 类，而在本文件中定义了两种语义下的 <code>User</code> 类：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>pydantic</span> <span class=kn>import</span> <span class=n>BaseModel</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>UserBase</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>username</span><span class=p>:</span> <span class=nb>str</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>UserCreate</span><span class=p>(</span><span class=n>UserBase</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>password</span><span class=p>:</span> <span class=nb>str</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>User</span><span class=p>(</span><span class=n>UserBase</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=nb>id</span><span class=p>:</span> <span class=nb>int</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>class</span> <span class=nc>Config</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>orm_mode</span> <span class=o>=</span> <span class=kc>True</span>
+</span></span></code></pre></td></tr></table></div></div><p>其一是在注册与登录时使用的 <code>UserCreate</code> 类，此时不需要传输 <code>id</code>；其二是在获取用户信息时返回的 <code>User</code> 类，此时不需要传输 <code>password</code> 但需要 <code>id</code>。</p><h3 id=userscrudpy>users/crud.py</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sqlalchemy.orm</span> <span class=kn>import</span> <span class=n>Session</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>..models</span> <span class=kn>import</span> <span class=n>User</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.</span> <span class=kn>import</span> <span class=n>schemas</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>get</span><span class=p>(</span><span class=n>db</span><span class=p>:</span> <span class=n>Session</span><span class=p>,</span> <span class=n>username</span><span class=p>:</span> <span class=nb>str</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>db</span><span class=o>.</span><span class=n>query</span><span class=p>(</span><span class=n>User</span><span class=p>)</span><span class=o>.</span><span class=n>filter_by</span><span class=p>(</span><span class=n>username</span><span class=o>=</span><span class=n>username</span><span class=p>)</span><span class=o>.</span><span class=n>first</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>create</span><span class=p>(</span><span class=n>db</span><span class=p>:</span> <span class=n>Session</span><span class=p>,</span> <span class=n>param</span><span class=p>:</span> <span class=n>schemas</span><span class=o>.</span><span class=n>UserCreate</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>target</span> <span class=o>=</span> <span class=n>User</span><span class=p>(</span><span class=o>**</span><span class=n>param</span><span class=o>.</span><span class=n>dict</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>    <span class=n>db</span><span class=o>.</span><span class=n>add</span><span class=p>(</span><span class=n>target</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>db</span><span class=o>.</span><span class=n>commit</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>db</span><span class=o>.</span><span class=n>refresh</span><span class=p>(</span><span class=n>target</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>target</span>
+</span></span></code></pre></td></tr></table></div></div><p>关于数据库操作，这里只涉及到增和查操作。由于 <code>username</code> 唯一，可以使用 <code>username</code> 作为关键字查询。</p><p>在插入数据前，需要将用户传入的数据解构并构建 <code>User</code> 数据库对象。</p><h2 id=认证功能实现>认证功能实现</h2><p>我们计划用 OAuth2 的用户名密码认证，并将用户密码哈希后存入数据库。为了维护登陆状态，这里采用 jwt 代替较为繁琐的 cookie 机制。</p><h3 id=注册>注册</h3><p>注册部分较为简单（验证码等部分与主题无关，未展示），在 <code>users.py</code> 中编写路由函数：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>fastapi</span> <span class=kn>import</span> <span class=n>APIRouter</span><span class=p>,</span> <span class=n>Depends</span><span class=p>,</span> <span class=n>HTTPException</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sqlalchemy.orm</span> <span class=kn>import</span> <span class=n>Session</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sqlalchemy.exc</span> <span class=kn>import</span> <span class=n>IntegrityError</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.</span> <span class=kn>import</span> <span class=n>crud</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.auth</span> <span class=kn>import</span> <span class=n>get_current_user</span><span class=p>,</span> <span class=n>auth_user</span><span class=p>,</span> <span class=n>gen_token</span><span class=p>,</span> <span class=n>hash_password</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.schemas</span> <span class=kn>import</span> <span class=n>User</span><span class=p>,</span> <span class=n>UserCreate</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>..db</span> <span class=kn>import</span> <span class=n>get_db</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>router</span> <span class=o>=</span> <span class=n>APIRouter</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=c1># ...</span>
+</span></span><span class=line><span class=cl><span class=nd>@router</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>create</span><span class=p>(</span><span class=n>param</span><span class=p>:</span> <span class=n>UserCreate</span><span class=p>,</span> <span class=n>db</span><span class=p>:</span> <span class=n>Session</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>get_db</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>    <span class=n>param</span><span class=o>.</span><span class=n>password</span> <span class=o>=</span> <span class=n>hash_password</span><span class=p>(</span><span class=n>param</span><span class=o>.</span><span class=n>password</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>target</span> <span class=o>=</span> <span class=n>crud</span><span class=o>.</span><span class=n>create</span><span class=p>(</span><span class=n>db</span><span class=o>=</span><span class=n>db</span><span class=p>,</span> <span class=n>param</span><span class=o>=</span><span class=n>param</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>except</span> <span class=n>IntegrityError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>raise</span> <span class=n>HTTPException</span><span class=p>(</span><span class=n>status_code</span><span class=o>=</span><span class=mi>400</span><span class=p>,</span> <span class=n>detail</span><span class=o>=</span><span class=s1>&#39;Duplicate username&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span>
+</span></span></code></pre></td></tr></table></div></div><p>利用 <code>Depends(get_db)</code> 获取一个数据库 <code>Session</code>，然后借助 <code>crud.create</code> 插入密码被哈希后的用户数据。这里的 <code>hash_password</code> 来源于 <code>auth.py</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>passlib.context</span> <span class=kn>import</span> <span class=n>CryptContext</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>pwd_context</span> <span class=o>=</span> <span class=n>CryptContext</span><span class=p>(</span><span class=n>schemes</span><span class=o>=</span><span class=p>[</span><span class=s1>&#39;bcrypt&#39;</span><span class=p>],</span> <span class=n>deprecated</span><span class=o>=</span><span class=s1>&#39;auto&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>hash_password</span><span class=p>(</span><span class=n>password</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>pwd_context</span><span class=o>.</span><span class=n>hash</span><span class=p>(</span><span class=n>password</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>我们采用了 <code>bcrypt</code> 算法进行哈希。同理，验证函数同样简单：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>verify_password</span><span class=p>(</span><span class=n>plain</span><span class=p>,</span> <span class=n>hashed</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>pwd_context</span><span class=o>.</span><span class=n>verify</span><span class=p>(</span><span class=n>plain</span><span class=p>,</span> <span class=n>hashed</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=登录验证用户信息>登录：验证用户信息</h3><p>对于给定的 <code>username</code> 和 <code>password</code>，我们需要通过数据库查询验证用户名和密码是否合法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sqlalchemy.orm</span> <span class=kn>import</span> <span class=n>Session</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.</span> <span class=kn>import</span> <span class=n>crud</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>auth_user</span><span class=p>(</span><span class=n>db</span><span class=p>:</span> <span class=n>Session</span><span class=p>,</span> <span class=n>username</span><span class=p>:</span> <span class=nb>str</span><span class=p>,</span> <span class=n>password</span><span class=p>:</span> <span class=nb>str</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>user</span> <span class=o>=</span> <span class=n>crud</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>db</span><span class=o>=</span><span class=n>db</span><span class=p>,</span> <span class=n>username</span><span class=o>=</span><span class=n>username</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>user</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=kc>False</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=ow>not</span> <span class=n>verify_password</span><span class=p>(</span><span class=n>password</span><span class=p>,</span> <span class=n>user</span><span class=o>.</span><span class=n>password</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=kc>False</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>user</span>
+</span></span></code></pre></td></tr></table></div></div><p>根据 OAuth2 标准，接收用户名和密码时需要使用 <code>application/x-www-form-urlencoded</code> 格式，当用户名或密码错误时返回 401，且返回自定义 HTTP 头 <code>WWW-Authenticate: Bearer</code>，其中 <code>Bearer</code> 是我们这里使用的携带 token 的方式：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>typing</span> <span class=kn>import</span> <span class=n>Dict</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>fastapi.security</span> <span class=kn>import</span> <span class=n>OAuth2PasswordRequestForm</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@router</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=s1>&#39;/login&#39;</span><span class=p>,</span> <span class=n>response_model</span><span class=o>=</span><span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>str</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>login</span><span class=p>(</span><span class=n>form_data</span><span class=p>:</span> <span class=n>OAuth2PasswordRequestForm</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(),</span> <span class=n>db</span><span class=p>:</span> <span class=n>Session</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>get_db</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>    <span class=n>user</span> <span class=o>=</span> <span class=n>auth_user</span><span class=p>(</span><span class=n>db</span><span class=p>,</span> <span class=n>form_data</span><span class=o>.</span><span class=n>username</span><span class=p>,</span> <span class=n>form_data</span><span class=o>.</span><span class=n>password</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=ow>not</span> <span class=n>user</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>raise</span> <span class=n>HTTPException</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>            <span class=n>status_code</span><span class=o>=</span><span class=mi>401</span><span class=p>,</span> <span class=n>detail</span><span class=o>=</span><span class=s1>&#39;Incorrect username or password&#39;</span><span class=p>,</span> <span class=n>headers</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;WWW-Authenticate&#39;</span><span class=p>:</span> <span class=s1>&#39;Bearer&#39;</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>    <span class=c1># ...</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=登录生成-jwt>登录：生成 jwt</h3><p>对于给定的数据以及 token 失效时间，借助 <code>python-jose</code> 库，参考 jwt 标准生成 jwt：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>jose</span> <span class=kn>import</span> <span class=n>JWTError</span><span class=p>,</span> <span class=n>jwt</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>datetime</span> <span class=kn>import</span> <span class=n>datetime</span><span class=p>,</span> <span class=n>timedelta</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.config</span> <span class=kn>import</span> <span class=n>SECRET_KEY</span><span class=p>,</span> <span class=n>ALGORITHM</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>gen_token</span><span class=p>(</span><span class=n>data</span><span class=p>:</span> <span class=nb>dict</span><span class=p>,</span> <span class=n>expires_delta</span><span class=p>:</span> <span class=n>timedelta</span> <span class=o>=</span> <span class=kc>None</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>to_encode</span> <span class=o>=</span> <span class=n>data</span><span class=o>.</span><span class=n>copy</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>expires_delta</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>expire</span> <span class=o>=</span> <span class=n>datetime</span><span class=o>.</span><span class=n>utcnow</span><span class=p>()</span> <span class=o>+</span> <span class=n>expires_delta</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>expire</span> <span class=o>=</span> <span class=n>datetime</span><span class=o>.</span><span class=n>utcnow</span><span class=p>()</span> <span class=o>+</span> <span class=n>timedelta</span><span class=p>(</span><span class=n>minutes</span><span class=o>=</span><span class=mi>15</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>to_encode</span><span class=o>.</span><span class=n>update</span><span class=p>({</span><span class=s1>&#39;exp&#39;</span><span class=p>:</span> <span class=n>expire</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>    <span class=n>encoded_jwt</span> <span class=o>=</span> <span class=n>jwt</span><span class=o>.</span><span class=n>encode</span><span class=p>(</span><span class=n>to_encode</span><span class=p>,</span> <span class=n>SECRET_KEY</span><span class=p>,</span> <span class=n>algorithm</span><span class=o>=</span><span class=n>ALGORITHM</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>encoded_jwt</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里的 <code>data</code>，根据 jwt 标准可以设置 <code>sub</code> 字段为用户的 <code>username</code>，失效时间也可以在程序中自定义：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>.config</span> <span class=kn>import</span> <span class=n>ACCESS_TOKEN_EXPIRE_MINUTES</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nd>@router</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=s1>&#39;/login&#39;</span><span class=p>,</span> <span class=n>response_model</span><span class=o>=</span><span class=n>Dict</span><span class=p>[</span><span class=nb>str</span><span class=p>,</span> <span class=nb>str</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>login</span><span class=p>(</span><span class=n>form_data</span><span class=p>:</span> <span class=n>OAuth2PasswordRequestForm</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(),</span> <span class=n>db</span><span class=p>:</span> <span class=n>Session</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>get_db</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>    <span class=n>user</span> <span class=o>=</span> <span class=n>auth_user</span><span class=p>(</span><span class=n>db</span><span class=p>,</span> <span class=n>form_data</span><span class=o>.</span><span class=n>username</span><span class=p>,</span> <span class=n>form_data</span><span class=o>.</span><span class=n>password</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=ow>not</span> <span class=n>user</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>raise</span> <span class=n>HTTPException</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>            <span class=n>status_code</span><span class=o>=</span><span class=mi>401</span><span class=p>,</span> <span class=n>detail</span><span class=o>=</span><span class=s1>&#39;Incorrect username or password&#39;</span><span class=p>,</span> <span class=n>headers</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;WWW-Authenticate&#39;</span><span class=p>:</span> <span class=s1>&#39;Bearer&#39;</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>    <span class=n>access_token_expires</span> <span class=o>=</span> <span class=n>timedelta</span><span class=p>(</span><span class=n>minutes</span><span class=o>=</span><span class=n>ACCESS_TOKEN_EXPIRE_MINUTES</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>access_token</span> <span class=o>=</span> <span class=n>gen_token</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>data</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;sub&#39;</span><span class=p>:</span> <span class=n>user</span><span class=o>.</span><span class=n>username</span><span class=p>},</span> <span class=n>expires_delta</span><span class=o>=</span><span class=n>access_token_expires</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s1>&#39;access_token&#39;</span><span class=p>:</span> <span class=n>access_token</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s1>&#39;token_type&#39;</span><span class=p>:</span> <span class=s1>&#39;bearer&#39;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>最后根据 OAuth2 标准返回 <code>{access_token, token_type}</code> 对象。</p><h3 id=根据-jwt-获取用户信息>根据 jwt 获取用户信息</h3><p>先通过 <code>jwt.decode</code> 解码信息并验证签名，随后对得到的信息进行解析，最后回到数据库中验证解析后的信息：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>fastapi</span> <span class=kn>import</span> <span class=n>Depends</span><span class=p>,</span> <span class=n>HTTPException</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>fastapi.security</span> <span class=kn>import</span> <span class=n>OAuth2PasswordBearer</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>..db</span> <span class=kn>import</span> <span class=n>get_db</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>oauth2_scheme</span> <span class=o>=</span> <span class=n>OAuth2PasswordBearer</span><span class=p>(</span><span class=n>tokenUrl</span><span class=o>=</span><span class=s1>&#39;users/login&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>get_current_user</span><span class=p>(</span><span class=n>token</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>oauth2_scheme</span><span class=p>),</span> <span class=n>db</span><span class=p>:</span> <span class=n>Session</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>get_db</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>    <span class=n>credentials_exception</span> <span class=o>=</span> <span class=n>HTTPException</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>status_code</span><span class=o>=</span><span class=mi>401</span><span class=p>,</span> <span class=n>detail</span><span class=o>=</span><span class=s1>&#39;Could not validate credentials&#39;</span><span class=p>,</span> <span class=n>headers</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;WWW-Authenticate&#39;</span><span class=p>:</span> <span class=s1>&#39;Bearer&#39;</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>    <span class=k>try</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>payload</span> <span class=o>=</span> <span class=n>jwt</span><span class=o>.</span><span class=n>decode</span><span class=p>(</span><span class=n>token</span><span class=p>,</span> <span class=n>SECRET_KEY</span><span class=p>,</span> <span class=n>algorithms</span><span class=o>=</span><span class=p>[</span><span class=n>ALGORITHM</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>        <span class=n>username</span><span class=p>:</span> <span class=nb>str</span> <span class=o>=</span> <span class=n>payload</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;sub&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>username</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>raise</span> <span class=n>credentials_exception</span>
+</span></span><span class=line><span class=cl>    <span class=k>except</span> <span class=n>JWTError</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>raise</span> <span class=n>credentials_exception</span>
+</span></span><span class=line><span class=cl>    <span class=n>user</span> <span class=o>=</span> <span class=n>crud</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>db</span><span class=o>=</span><span class=n>db</span><span class=p>,</span> <span class=n>username</span><span class=o>=</span><span class=n>username</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>user</span> <span class=ow>is</span> <span class=kc>None</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>raise</span> <span class=n>credentials_exception</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>user</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里 <code>OAuth2PasswordBearer(tokenUrl='users/login')</code> 实际上和 <code>login</code> 函数的参数 <code>form_data: OAuth2PasswordRequestForm</code> 对应，形成完整的 OAuth2 password flow。</p><p>然后在 <code>users.py</code> 中暴露获取当前登陆用户信息的接口：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=nd>@router</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;/&#39;</span><span class=p>,</span> <span class=n>response_model</span><span class=o>=</span><span class=n>User</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>async</span> <span class=k>def</span> <span class=nf>get</span><span class=p>(</span><span class=n>current_user</span><span class=p>:</span> <span class=n>User</span> <span class=o>=</span> <span class=n>Depends</span><span class=p>(</span><span class=n>get_current_user</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>current_user</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=测试>测试</h2><p>在 <code>app/</code> 所在目录运行：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>python3 -m uvicorn app.main:app --reload
+</span></span></code></pre></td></tr></table></div></div><p>随后访问 http://localhost:8000/docs 即可看到 swagger 文档。</p><p><figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/1.png title="图 1" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/1.png data-sub-html="<h2> </h2><p>图 1</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/1.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/1.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/1.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/1.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/1.png></a><figcaption class=image-caption>图 1</figcaption></figure></p><p><figure><a class=lightgallery href=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/2.png title="图 2" data-thumbnail=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/2.png data-sub-html="<h2> </h2><p>图 2</p>"><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/2.png data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/2.png, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/2.png 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/2.png 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/2.png></a><figcaption class=image-caption>图 2</figcaption></figure></p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2021-01-10</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/python/>Python</a>,&nbsp;<a href=/tags/fastapi/>FastAPI</a>,&nbsp;<a href=/tags/%E8%AE%A4%E8%AF%81/>认证</a>,&nbsp;<a href=/tags/jwt/>JWT</a>,&nbsp;<a href=/tags/%E9%A1%B9%E7%9B%AE/>项目</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/mini-capture/ class=prev rel=prev title=透明代理：抓取微信小程序数据包><i class="fas fa-angle-left fa-fw"></i>透明代理：抓取微信小程序数据包</a>
+<a href=/fastapi-tortoise/ class=next rel=next title="各司其职：FastAPI + TortoiseORM 实现异步 DB 操作">各司其职：FastAPI + TortoiseORM 实现异步 DB 操作<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.94.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2017 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Mercury</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/katex/katex.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:30},comment:{valine:{appId:"RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",appKey:"sw2sEPOl4haCAXKUFYiBFMrR",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"你的评论 ...",recordIP:!1,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{algoliaAppID:"P149SBLX5U",algoliaIndex:"blog",algoliaSearchKey:"cbd5db1f3910ee11bc18688f21b64bd4",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
