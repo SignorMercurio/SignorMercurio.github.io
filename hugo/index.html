@@ -1,0 +1,783 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>乔迁新居：Hugo 博客的配置与部署 - Lab on Mercury</title><meta name=Description content="Lab on Mercury"><meta property="og:title" content="乔迁新居：Hugo 博客的配置与部署"><meta property="og:description" content="在静态网站生成器中，Hugo 的优势主要在于其性能和简单易用的配置。"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.sigmerc.top/hugo/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-03-11T13:10:42+00:00"><meta property="article:modified_time" content="2022-03-11T13:10:42+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="乔迁新居：Hugo 博客的配置与部署"><meta name=twitter:description content="在静态网站生成器中，Hugo 的优势主要在于其性能和简单易用的配置。"><meta name=application-name content="Lab on Mercury"><meta name=apple-mobile-web-app-title content="Lab on Mercury"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://blog.sigmerc.top/hugo/><link rel=prev href=https://blog.sigmerc.top/pet/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"乔迁新居：Hugo 博客的配置与部署","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/blog.sigmerc.top\/hugo\/"},"genre":"posts","keywords":"实践记录, CI\/CD","wordcount":4119,"url":"https:\/\/blog.sigmerc.top\/hugo\/","datePublished":"2022-03-11T13:10:42+00:00","dateModified":"2022-03-11T13:10:42+00:00","publisher":{"@type":"Organization","name":"Mercury","logo":{"@type":"ImageObject","url":"https:\/\/blog.sigmerc.top\/my_avatar.png","width":400,"height":400}},"author":{"@type":"Person","name":"Mercury"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/><i class="fas fa-archive fa-fw"></i> 文章 </a><a class=menu-item href=/tags/><i class="fas fa-tags fa-fw"></i> 标签 </a><a class=menu-item href=/categories/><i class="fas fa-th fa-fw"></i> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title="Lab on Mercury"><span class=header-title-pre><i class="fas fa-meteor fa-fw"></i></span>Lab on Mercury</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title><i class="fas fa-archive fa-fw"></i>文章</a><a class=menu-item href=/tags/ title><i class="fas fa-tags fa-fw"></i>标签</a><a class=menu-item href=/categories/ title><i class="fas fa-th fa-fw"></i>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">乔迁新居：Hugo 博客的配置与部署</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>Mercury</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E5%89%8D%E7%AB%AF/><i class="far fa-folder fa-fw"></i>前端</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-03-11>2022-03-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4119 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 9 分钟&nbsp;<span id=/hugo/ class=leancloud_visitors data-flag-title="乔迁新居：Hugo 博客的配置与部署">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hugo/0.jpg data-srcset="https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hugo/0.jpg, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hugo/0.jpg 1.5x, https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hugo/0.jpg 2x" data-sizes=auto alt=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hugo/0.jpg title=https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hugo/0.jpg></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#安装>安装</a><ul><li><a href=#安装-hugo>安装 Hugo</a></li><li><a href=#创建网站>创建网站</a></li><li><a href=#安装主题>安装主题</a></li></ul></li><li><a href=#配置>配置</a><ul><li><a href=#基础配置>基础配置</a></li><li><a href=#菜单配置>菜单配置</a></li><li><a href=#基础参数配置>基础参数配置</a></li><li><a href=#应用图标配置>应用图标配置</a></li><li><a href=#搜索配置>搜索配置</a></li><li><a href=#头部底部页面社交信息配置>头部、底部、页面、社交信息配置</a></li><li><a href=#文章页面配置>文章页面配置</a></li><li><a href=#其他配置>其他配置</a></li></ul></li><li><a href=#文章迁移>文章迁移</a></li><li><a href=#预览>预览</a></li><li><a href=#公式渲染>公式渲染</a></li><li><a href=#mermaid-图表渲染>Mermaid 图表渲染</a></li><li><a href=#添加数量统计>添加数量统计</a></li><li><a href=#自动化部署到-github-pages>自动化部署到 GitHub Pages</a></li><li><a href=#参考资料>参考资料</a></li></ul></nav></div></div><div class=content id=content><p>在静态网站生成器中，Hugo 的优势主要在于其性能和简单易用的配置。</p><h2 id=安装>安装</h2><h3 id=安装-hugo>安装 Hugo</h3><p>直接用包管理器安装，这种方式安装的是 Hugo Extended，可以支持更多功能如自定义 css 等<sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ brew install hugo
+</span></span></code></pre></td></tr></table></div></div><h3 id=创建网站>创建网站</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ hugo new site blog.sigmerc
+</span></span><span class=line><span class=cl>$ <span class=nb>cd</span> blog.sigmerc
+</span></span></code></pre></td></tr></table></div></div><h3 id=安装主题>安装主题</h3><p>推荐通过 git 子模块的方式安装，方便后续更新主题与 actions 部署。</p><p>我这里使用了 LoveIt 主题<sup id=fnref:2><a href=#fn:2 class=footnote-ref role=doc-noteref>2</a></sup>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ git init
+</span></span><span class=line><span class=cl>$ git submodule add https://github.com/dillonzq/LoveIt.git themes/LoveIt
+</span></span></code></pre></td></tr></table></div></div><h2 id=配置>配置</h2><p>所有配置都在 <code>config.toml</code> 中，下文记录一些值得注意的点。</p><h3 id=基础配置>基础配置</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=line><span class=cl><span class=nx>baseURL</span> <span class=p>=</span> <span class=s2>&#34;https://blog.sigmerc.top&#34;</span>
+</span></span><span class=line><span class=cl><span class=c># [en, zh-cn, fr, ...] 设置默认的语言</span>
+</span></span><span class=line><span class=cl><span class=nx>defaultContentLanguage</span> <span class=p>=</span> <span class=s2>&#34;zh-cn&#34;</span>
+</span></span><span class=line><span class=cl><span class=c># 网站语言, 仅在这里 CN 大写</span>
+</span></span><span class=line><span class=cl><span class=nx>languageCode</span> <span class=p>=</span> <span class=s2>&#34;zh-CN&#34;</span>
+</span></span><span class=line><span class=cl><span class=c># 是否包括中日韩文字</span>
+</span></span><span class=line><span class=cl><span class=nx>hasCJKLanguage</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl><span class=c># 网站标题</span>
+</span></span><span class=line><span class=cl><span class=nx>title</span> <span class=p>=</span> <span class=s2>&#34;Lab on Mercury&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 更改使用 Hugo 构建网站时使用的默认主题</span>
+</span></span><span class=line><span class=cl><span class=nx>theme</span> <span class=p>=</span> <span class=s2>&#34;LoveIt&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里需要注意的是设置 <code>hasCJKLanguage = true</code>，才能使后续许多功能针对中文正确生效。</p><h3 id=菜单配置>菜单配置</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=line><span class=cl><span class=p>[</span><span class=nx>menu</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=p>[[</span><span class=nx>menu</span><span class=p>.</span><span class=nx>main</span><span class=p>]]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>identifier</span> <span class=p>=</span> <span class=s2>&#34;posts&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标</span>
+</span></span><span class=line><span class=cl>    <span class=nx>pre</span> <span class=p>=</span> <span class=s2>&#34;&lt;i class=&#39;fas fa-archive fa-fw&#39;&gt;&lt;/i&gt;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标</span>
+</span></span><span class=line><span class=cl>    <span class=nx>post</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span> <span class=p>=</span> <span class=s2>&#34;文章&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>url</span> <span class=p>=</span> <span class=s2>&#34;/posts/&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># 当你将鼠标悬停在此菜单链接上时, 将显示的标题</span>
+</span></span><span class=line><span class=cl>    <span class=nx>title</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>weight</span> <span class=p>=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>  <span class=p>[[</span><span class=nx>menu</span><span class=p>.</span><span class=nx>main</span><span class=p>]]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>identifier</span> <span class=p>=</span> <span class=s2>&#34;tags&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>pre</span> <span class=p>=</span> <span class=s2>&#34;&lt;i class=&#39;fas fa-tags fa-fw&#39;&gt;&lt;/i&gt;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>post</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span> <span class=p>=</span> <span class=s2>&#34;标签&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>url</span> <span class=p>=</span> <span class=s2>&#34;/tags/&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>title</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>weight</span> <span class=p>=</span> <span class=mi>2</span>
+</span></span><span class=line><span class=cl>  <span class=p>[[</span><span class=nx>menu</span><span class=p>.</span><span class=nx>main</span><span class=p>]]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>identifier</span> <span class=p>=</span> <span class=s2>&#34;categories&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>pre</span> <span class=p>=</span> <span class=s2>&#34;&lt;i class=&#39;fas fa-th fa-fw&#39;&gt;&lt;/i&gt;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>post</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>name</span> <span class=p>=</span> <span class=s2>&#34;分类&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>url</span> <span class=p>=</span> <span class=s2>&#34;/categories/&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>title</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>weight</span> <span class=p>=</span> <span class=mi>3</span>
+</span></span></code></pre></td></tr></table></div></div><p>这里通过 <code>pre</code> 在菜单项前加了图标，注意只能使用 font awesome 免费图标。<code>weight</code> 决定了菜单项的顺序，数值越小越靠前。</p><h3 id=基础参数配置>基础参数配置</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=line><span class=cl><span class=p>[</span><span class=nx>params</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=c>#  LoveIt 主题版本</span>
+</span></span><span class=line><span class=cl>  <span class=nx>version</span> <span class=p>=</span> <span class=s2>&#34;0.2.X&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=c># 网站描述</span>
+</span></span><span class=line><span class=cl>  <span class=nx>description</span> <span class=p>=</span> <span class=s2>&#34;Lab on Mercury&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=c># 网站关键词</span>
+</span></span><span class=line><span class=cl>  <span class=nx>keywords</span> <span class=p>=</span> <span class=p>[</span><span class=s2>&#34;Blog&#34;</span><span class=p>,</span> <span class=s2>&#34;Technology&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=c># 网站默认主题样式 (&#34;light&#34;, &#34;dark&#34;, &#34;auto&#34;)</span>
+</span></span><span class=line><span class=cl>  <span class=nx>defaultTheme</span> <span class=p>=</span> <span class=s2>&#34;auto&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=c># CDN 前缀</span>
+</span></span><span class=line><span class=cl>  <span class=nx>cdnPrefix</span> <span class=p>=</span> <span class=s2>&#34;https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>随后是一系列参数的设置，这里额外设置了 <code>cdnPrefix</code>，这样在文章里就可以通过 shortcode 形式插入图片了<sup id=fnref:3><a href=#fn:3 class=footnote-ref role=doc-noteref>3</a></sup>。例如，图片链接可以写成： <code>https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/blabla/0.png</code>。</p><h3 id=应用图标配置>应用图标配置</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=line><span class=cl>  <span class=c># 应用图标配置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>app</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=c># 当添加到 iOS 主屏幕或者 Android 启动器时的标题, 覆盖默认标题</span>
+</span></span><span class=line><span class=cl>    <span class=nx>title</span> <span class=p>=</span> <span class=s2>&#34;Lab on Mercury&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># 是否隐藏网站图标资源链接</span>
+</span></span><span class=line><span class=cl>    <span class=nx>noFavicon</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c># 更现代的 SVG 网站图标, 可替代旧的 .png 和 .ico 文件</span>
+</span></span><span class=line><span class=cl>    <span class=nx>svgFavicon</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># Android 浏览器主题色</span>
+</span></span><span class=line><span class=cl>    <span class=nx>themeColor</span> <span class=p>=</span> <span class=s2>&#34;#ffffff&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># Safari 图标颜色</span>
+</span></span><span class=line><span class=cl>    <span class=nx>iconColor</span> <span class=p>=</span> <span class=s2>&#34;#5bbad5&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># Windows v8-10磁贴颜色</span>
+</span></span><span class=line><span class=cl>    <span class=nx>tileColor</span> <span class=p>=</span> <span class=s2>&#34;#da532c&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>通过 Favicon Generator<sup id=fnref:4><a href=#fn:4 class=footnote-ref role=doc-noteref>4</a></sup> 可以方便地生成各类浏览器上的图标，随后将这些图标以及相应的配置文件放入 <code>/static</code> 目录下即可。最后在 <code>site.webmanifest</code> 中填一下 <code>name</code> 和 <code>short_name</code>。</p><h3 id=搜索配置>搜索配置</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=line><span class=cl>  <span class=c>#  搜索配置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>search</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>enable</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=c># 搜索引擎的类型 (&#34;lunr&#34;, &#34;algolia&#34;)</span>
+</span></span><span class=line><span class=cl>    <span class=nx>type</span> <span class=p>=</span> <span class=s2>&#34;algolia&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># 文章内容最长索引长度</span>
+</span></span><span class=line><span class=cl>    <span class=nx>contentLength</span> <span class=p>=</span> <span class=mi>4000</span>
+</span></span><span class=line><span class=cl>    <span class=c># 搜索框的占位提示语</span>
+</span></span><span class=line><span class=cl>    <span class=nx>placeholder</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  最大结果数目</span>
+</span></span><span class=line><span class=cl>    <span class=nx>maxResultLength</span> <span class=p>=</span> <span class=mi>10</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  结果内容片段长度</span>
+</span></span><span class=line><span class=cl>    <span class=nx>snippetLength</span> <span class=p>=</span> <span class=mi>50</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  搜索结果中高亮部分的 HTML 标签</span>
+</span></span><span class=line><span class=cl>    <span class=nx>highlightTag</span> <span class=p>=</span> <span class=s2>&#34;em&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否在搜索索引中使用基于 baseURL 的绝对路径</span>
+</span></span><span class=line><span class=cl>    <span class=nx>absoluteURL</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>search</span><span class=p>.</span><span class=nx>algolia</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=nx>index</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=nx>appID</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=nx>searchKey</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>尝试了一下通过 <code>lunr</code> 搜索，不用配任何东西很方便，但每次搜索都延迟比较高，体验不太好。于是首先注册了 algolia，填入 <code>index</code>, <code>appID</code>, <code>searchKey</code>，随后安装 atomic-algolia<sup id=fnref:5><a href=#fn:5 class=footnote-ref role=doc-noteref>5</a></sup> 用于自动将 <code>index.json</code> 上传给 algolia：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ npm install atomic-algolia
+</span></span></code></pre></td></tr></table></div></div><p>在 <code>package.json</code> 中定义脚本：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl> <span class=s2>&#34;scripts&#34;</span><span class=err>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>   <span class=nt>&#34;algolia&#34;</span><span class=p>:</span> <span class=s2>&#34;atomic-algolia&#34;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span><span class=err>,</span>
+</span></span></code></pre></td></tr></table></div></div><p>在 <code>.env</code> 中设置环境变量：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nv>ALGOLIA_APP_ID</span><span class=o>=</span>xxxx
+</span></span><span class=line><span class=cl><span class=nv>ALGOLIA_ADMIN_KEY</span><span class=o>=</span>xxxx
+</span></span><span class=line><span class=cl><span class=nv>ALGOLIA_INDEX_NAME</span><span class=o>=</span>xxxx
+</span></span><span class=line><span class=cl><span class=nv>ALGOLIA_INDEX_FILE</span><span class=o>=</span>public/index.json
+</span></span></code></pre></td></tr></table></div></div><p>注意这里因为需要上传，所以用的是 admin key，和上面填的 search key 不同。</p><p>为了生成 <code>public/index.json</code>，在 <code>config.toml</code> 的最后 <code>outputs</code> 部分需要确保有 <code>JSON</code> 这一项。此时运行 <code>hugo</code> 命令就可以看到 <code>public/index.json</code> 了，最后运行 <code>algolia</code> 即可上传。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=line><span class=cl><span class=c># 用于 Hugo 输出文档的设置</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=nx>outputs</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=nx>home</span> <span class=p>=</span> <span class=p>[</span><span class=s2>&#34;HTML&#34;</span><span class=p>,</span> <span class=s2>&#34;RSS&#34;</span><span class=p>,</span> <span class=s2>&#34;JSON&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=nx>page</span> <span class=p>=</span> <span class=p>[</span><span class=s2>&#34;HTML&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=nx>section</span> <span class=p>=</span> <span class=p>[</span><span class=s2>&#34;HTML&#34;</span><span class=p>,</span> <span class=s2>&#34;RSS&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=nx>taxonomy</span> <span class=p>=</span> <span class=p>[</span><span class=s2>&#34;HTML&#34;</span><span class=p>,</span> <span class=s2>&#34;RSS&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=nx>taxonomyTerm</span> <span class=p>=</span> <span class=p>[</span><span class=s2>&#34;HTML&#34;</span><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=头部底部页面社交信息配置>头部、底部、页面、社交信息配置</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=line><span class=cl>  <span class=c># 页面头部导航栏配置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>header</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=c># 桌面端导航栏模式 (&#34;fixed&#34;, &#34;normal&#34;, &#34;auto&#34;)</span>
+</span></span><span class=line><span class=cl>    <span class=nx>desktopMode</span> <span class=p>=</span> <span class=s2>&#34;fixed&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># 移动端导航栏模式 (&#34;fixed&#34;, &#34;normal&#34;, &#34;auto&#34;)</span>
+</span></span><span class=line><span class=cl>    <span class=nx>mobileMode</span> <span class=p>=</span> <span class=s2>&#34;auto&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  页面头部导航栏标题配置</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>header</span><span class=p>.</span><span class=nx>title</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=c># LOGO 的 URL</span>
+</span></span><span class=line><span class=cl>      <span class=nx>logo</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c># 标题名称</span>
+</span></span><span class=line><span class=cl>      <span class=nx>name</span> <span class=p>=</span> <span class=s2>&#34;Lab on Mercury&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c># 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标</span>
+</span></span><span class=line><span class=cl>      <span class=nx>pre</span> <span class=p>=</span> <span class=s2>&#34;&lt;i class=&#39;fas fa-meteor fa-fw&#39;&gt;&lt;/i&gt;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c># 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标</span>
+</span></span><span class=line><span class=cl>      <span class=nx>post</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c>#  是否为标题显示打字机动画</span>
+</span></span><span class=line><span class=cl>      <span class=nx>typeit</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c># 页面底部信息配置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>footer</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>enable</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  自定义内容 (支持 HTML 格式)</span>
+</span></span><span class=line><span class=cl>    <span class=nx>custom</span> <span class=p>=</span> <span class=s1>&#39;&#39;</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否显示 Hugo 和主题信息</span>
+</span></span><span class=line><span class=cl>    <span class=nx>hugo</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否显示版权信息</span>
+</span></span><span class=line><span class=cl>    <span class=nx>copyright</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否显示作者</span>
+</span></span><span class=line><span class=cl>    <span class=nx>author</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=c># 网站创立年份</span>
+</span></span><span class=line><span class=cl>    <span class=nx>since</span> <span class=p>=</span> <span class=mi>2017</span>
+</span></span><span class=line><span class=cl>    <span class=c># ICP 备案信息，仅在中国使用 (支持 HTML 格式)</span>
+</span></span><span class=line><span class=cl>    <span class=nx>icp</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># 许可协议信息 (支持 HTML 格式)</span>
+</span></span><span class=line><span class=cl>    <span class=nx>license</span> <span class=p>=</span> <span class=s1>&#39;&lt;a rel=&#34;license external nofollow noopener noreffer&#34; href=&#34;https://creativecommons.org/licenses/by-nc/4.0/&#34; target=&#34;_blank&#34;&gt;CC BY-NC 4.0&lt;/a&gt;&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c># Section (所有文章) 页面配置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>section</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=c># section 页面每页显示文章数量</span>
+</span></span><span class=line><span class=cl>    <span class=nx>paginate</span> <span class=p>=</span> <span class=mi>20</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c># List (目录或标签) 页面配置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>list</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=c># list 页面每页显示文章数量</span>
+</span></span><span class=line><span class=cl>    <span class=nx>paginate</span> <span class=p>=</span> <span class=mi>20</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=c># 主页配置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>home</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  RSS 文章数目</span>
+</span></span><span class=line><span class=cl>    <span class=nx>rss</span> <span class=p>=</span> <span class=mi>10</span>
+</span></span><span class=line><span class=cl>    <span class=c># 主页个人信息</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>home</span><span class=p>.</span><span class=nx>profile</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=nx>enable</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=c># Gravatar 邮箱，用于优先在主页显示的头像</span>
+</span></span><span class=line><span class=cl>      <span class=nx>gravatarEmail</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c># 主页显示头像的 URL</span>
+</span></span><span class=line><span class=cl>      <span class=nx>avatarURL</span> <span class=p>=</span> <span class=s2>&#34;my_avatar.png&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c>#  主页显示的网站标题 (支持 HTML 格式)</span>
+</span></span><span class=line><span class=cl>      <span class=nx>title</span> <span class=p>=</span> <span class=s2>&#34;Mercury&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c># 主页显示的网站副标题</span>
+</span></span><span class=line><span class=cl>      <span class=nx>subtitle</span> <span class=p>=</span> <span class=s2>&#34;A student&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c># 是否为副标题显示打字机动画</span>
+</span></span><span class=line><span class=cl>      <span class=nx>typeit</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>      <span class=c># 是否显示社交账号</span>
+</span></span><span class=line><span class=cl>      <span class=nx>social</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=c>#  免责声明 (支持 HTML 格式)</span>
+</span></span><span class=line><span class=cl>      <span class=nx>disclaimer</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c># 主页文章列表</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>home</span><span class=p>.</span><span class=nx>posts</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=nx>enable</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=c># 主页每页显示文章数量</span>
+</span></span><span class=line><span class=cl>      <span class=nx>paginate</span> <span class=p>=</span> <span class=mi>10</span>
+</span></span><span class=line><span class=cl>      <span class=c>#  被 params.page 中的 hiddenFromHomePage 替代</span>
+</span></span><span class=line><span class=cl>      <span class=c># 当你没有在文章前置参数中设置 &#34;hiddenFromHomePage&#34; 时的默认行为</span>
+</span></span><span class=line><span class=cl>      <span class=nx>defaultHiddenFromHomePage</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>      
+</span></span><span class=line><span class=cl>  <span class=c># 作者的社交信息设置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>social</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>GitHub</span> <span class=p>=</span> <span class=s2>&#34;SignorMercurio&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>Email</span> <span class=p>=</span> <span class=s2>&#34;signormercurio@gmail.com&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=nx>RSS</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span></code></pre></td></tr></table></div></div><p>和菜单配置类似，头部标题前也可以通过 <code>pre</code> 添加元素。<code>params.home.profile</code> 中的 <code>avatarURL</code> 我使用了本地资源，存放在 <code>/assets/my_avatar.png</code> 中。这里没有放在 <code>/static</code> 下是因为切换页码后 URL 会由 <code>/</code> 变成 <code>/page/2</code>，此时如果图片放在了 <code>/static</code> 则会依然尝试去根目录找图片，导致无法找到。</p><h3 id=文章页面配置>文章页面配置</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span><span class=lnt>88
+</span><span class=lnt>89
+</span><span class=lnt>90
+</span><span class=lnt>91
+</span><span class=lnt>92
+</span><span class=lnt>93
+</span><span class=lnt>94
+</span><span class=lnt>95
+</span><span class=lnt>96
+</span><span class=lnt>97
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=line><span class=cl>  <span class=c>#  文章页面配置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否在主页隐藏一篇文章</span>
+</span></span><span class=line><span class=cl>    <span class=nx>hiddenFromHomePage</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否在搜索结果中隐藏一篇文章</span>
+</span></span><span class=line><span class=cl>    <span class=nx>hiddenFromSearch</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否使用 twemoji</span>
+</span></span><span class=line><span class=cl>    <span class=nx>twemoji</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c># 是否使用 lightgallery</span>
+</span></span><span class=line><span class=cl>    <span class=nx>lightgallery</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否使用 ruby 扩展语法</span>
+</span></span><span class=line><span class=cl>    <span class=nx>ruby</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否使用 fraction 扩展语法</span>
+</span></span><span class=line><span class=cl>    <span class=nx>fraction</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否使用 fontawesome 扩展语法</span>
+</span></span><span class=line><span class=cl>    <span class=nx>fontawesome</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c># 是否在文章页面显示原始 Markdown 文档链接</span>
+</span></span><span class=line><span class=cl>    <span class=nx>linkToMarkdown</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  是否在 RSS 中显示全文内容</span>
+</span></span><span class=line><span class=cl>    <span class=nx>rssFullText</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  目录配置</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>toc</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=c># 是否使用目录</span>
+</span></span><span class=line><span class=cl>      <span class=nx>enable</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=c>#  是否保持使用文章前面的静态目录</span>
+</span></span><span class=line><span class=cl>      <span class=nx>keepStatic</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>      <span class=c># 是否使侧边目录自动折叠展开</span>
+</span></span><span class=line><span class=cl>      <span class=nx>auto</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  代码配置</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>code</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=c># 是否显示代码块的复制按钮</span>
+</span></span><span class=line><span class=cl>      <span class=nx>copy</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=c># 默认展开显示的代码行数</span>
+</span></span><span class=line><span class=cl>      <span class=nx>maxShownLines</span> <span class=p>=</span> <span class=mi>30</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  KaTeX 数学公式</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>math</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=nx>enable</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=c># 默认块定界符是 $$ ... $$ 和 \\[ ... \\]</span>
+</span></span><span class=line><span class=cl>      <span class=nx>blockLeftDelimiter</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=nx>blockRightDelimiter</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c># 默认行内定界符是 $ ... $ 和 \\( ... \\)</span>
+</span></span><span class=line><span class=cl>      <span class=nx>inlineLeftDelimiter</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=nx>inlineRightDelimiter</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c># KaTeX 插件 copy_tex</span>
+</span></span><span class=line><span class=cl>      <span class=nx>copyTex</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>      <span class=c># KaTeX 插件 mhchem</span>
+</span></span><span class=line><span class=cl>      <span class=nx>mhchem</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  评论系统设置</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>comment</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=nx>enable</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=c># Disqus 评论系统设置</span>
+</span></span><span class=line><span class=cl>      <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>comment</span><span class=p>.</span><span class=nx>disqus</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=c># </span>
+</span></span><span class=line><span class=cl>        <span class=nx>enable</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>        <span class=c># Disqus 的 shortname，用来在文章中启用 Disqus 评论系统</span>
+</span></span><span class=line><span class=cl>        <span class=nx>shortname</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=c># Valine 评论系统设置</span>
+</span></span><span class=line><span class=cl>      <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>comment</span><span class=p>.</span><span class=nx>valine</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=nx>enable</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>        <span class=nx>appId</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>appKey</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>placeholder</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>avatar</span> <span class=p>=</span> <span class=s2>&#34;mp&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>meta</span><span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>pageSize</span> <span class=p>=</span> <span class=mi>10</span>
+</span></span><span class=line><span class=cl>        <span class=nx>lang</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>visitor</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>        <span class=nx>recordIP</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>        <span class=nx>highlight</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>        <span class=nx>enableQQ</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>        <span class=nx>serverURLs</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c>#  emoji 数据文件名称, 默认是 &#34;google.yml&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c># (&#34;apple.yml&#34;, &#34;google.yml&#34;, &#34;facebook.yml&#34;, &#34;twitter.yml&#34;)</span>
+</span></span><span class=line><span class=cl>        <span class=c># 位于 &#34;themes/LoveIt/assets/data/emoji/&#34; 目录</span>
+</span></span><span class=line><span class=cl>        <span class=c># 可以在你的项目下相同路径存放你自己的数据文件:</span>
+</span></span><span class=line><span class=cl>        <span class=c># &#34;assets/data/emoji/&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>emoji</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  第三方库配置</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>library</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>library</span><span class=p>.</span><span class=nx>css</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=c># someCSS = &#34;some.css&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c># 位于 &#34;assets/&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c># 或者</span>
+</span></span><span class=line><span class=cl>        <span class=c># someCSS = &#34;https://cdn.example.com/some.css&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>library</span><span class=p>.</span><span class=nx>js</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=c># someJavascript = &#34;some.js&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c># 位于 &#34;assets/&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=c># 或者</span>
+</span></span><span class=line><span class=cl>        <span class=c># someJavascript = &#34;https://cdn.example.com/some.js&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=c>#  页面 SEO 配置</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>seo</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=c># 图片 URL</span>
+</span></span><span class=line><span class=cl>      <span class=nx>images</span> <span class=p>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>      <span class=c># 出版者信息</span>
+</span></span><span class=line><span class=cl>      <span class=p>[</span><span class=nx>params</span><span class=p>.</span><span class=nx>page</span><span class=p>.</span><span class=nx>seo</span><span class=p>.</span><span class=nx>publisher</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>        <span class=nx>name</span> <span class=p>=</span> <span class=s2>&#34;Mercury&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>logoUrl</span> <span class=p>=</span> <span class=s2>&#34;my_avatar.png&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>这个部分的配置都可以被文章里的 front matter 覆盖，所以这里设置的是默认值。因此关闭了大部分不必要功能，只保留了 lightgallery 即点击放大图片的功能、代码复制功能、基础的公式渲染功能和评论系统默认开启。目录的 <code>keepStatic</code> 如果开启则会显示在文章上方而不是侧边栏，我觉得不太方便就关闭了。评论采用了 LeanCloud + Valine，需要填 appId 和 appKey。</p><h3 id=其他配置>其他配置</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-toml data-lang=toml><span class=line><span class=cl><span class=c># Hugo 解析文档的配置</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=nx>markup</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=c># 语法高亮设置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>markup</span><span class=p>.</span><span class=nx>highlight</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>codeFences</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=nx>guessSyntax</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=nx>lineNos</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=nx>lineNumbersInTable</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=c># false 是必要的设置</span>
+</span></span><span class=line><span class=cl>    <span class=c># (https://github.com/dillonzq/LoveIt/issues/158)</span>
+</span></span><span class=line><span class=cl>    <span class=nx>noClasses</span> <span class=p>=</span> <span class=kc>false</span>
+</span></span><span class=line><span class=cl>  <span class=c># Goldmark 是 Hugo 0.60 以来的默认 Markdown 解析库</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>markup</span><span class=p>.</span><span class=nx>goldmark</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>markup</span><span class=p>.</span><span class=nx>goldmark</span><span class=p>.</span><span class=nx>extensions</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=nx>definitionList</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=nx>footnote</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=nx>linkify</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=nx>strikethrough</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=nx>table</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=nx>taskList</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>      <span class=nx>typographer</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>markup</span><span class=p>.</span><span class=nx>goldmark</span><span class=p>.</span><span class=nx>renderer</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=c># 是否在文档中直接使用 HTML 标签</span>
+</span></span><span class=line><span class=cl>      <span class=nx>unsafe</span> <span class=p>=</span> <span class=kc>true</span>
+</span></span><span class=line><span class=cl>  <span class=c># 目录设置</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>markup</span><span class=p>.</span><span class=nx>tableOfContents</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>startLevel</span> <span class=p>=</span> <span class=mi>2</span>
+</span></span><span class=line><span class=cl>    <span class=nx>endLevel</span> <span class=p>=</span> <span class=mi>5</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 作者配置</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=nx>author</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=nx>name</span> <span class=p>=</span> <span class=s2>&#34;Mercury&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>email</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>link</span> <span class=p>=</span> <span class=s2>&#34;&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># 网站地图配置</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=nx>sitemap</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=nx>changefreq</span> <span class=p>=</span> <span class=s2>&#34;weekly&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>filename</span> <span class=p>=</span> <span class=s2>&#34;sitemap.xml&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>priority</span> <span class=p>=</span> <span class=mf>0.5</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c># Permalinks 配置</span>
+</span></span><span class=line><span class=cl><span class=p>[</span><span class=nx>Permalinks</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=nx>posts</span> <span class=p>=</span> <span class=s2>&#34;:filename&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>根据个人习惯配置，比较重要的是 <code>markup.goldmark.renderer</code> 里的 <code>unsafe</code> 选项，开启后可以比较方便地混排 Markdown 和 HTML。<code>markup.tableOfContents</code> 中，<code>2-5</code> 的配置意味着一级标题、五级标题和六级标题不会在目录中显示。<code>Permalinks</code> 的 <code>posts</code> 则直接决定了一篇文章的永久链接格式。</p><h2 id=文章迁移>文章迁移</h2><p>总的来说区别不太大，主要是 front matter 中：</p><ul><li><code>tag</code> 变成 <code>tags</code></li><li><code>cover</code> 和 <code>thumbnails</code> 变成 <code>featuredImage</code> 和 <code>featuredImagePreview</code></li><li>摘要分隔符从 <code>&lt;!-- more --></code> 变成 <code>&lt;!--more--></code></li></ul><p>一个简单的模版：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-markdown data-lang=markdown><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>title: &#34;{{ replace .Name &#34;-&#34; &#34; &#34; | title }}&#34;
+</span></span><span class=line><span class=cl>date: {{ .Date }}
+</span></span><span class=line><span class=cl>tags:
+</span></span><span class=line><span class=cl>  <span class=k>-</span> t
+</span></span><span class=line><span class=cl>categories:
+</span></span><span class=line><span class=cl>  <span class=k>-</span> c
+</span></span><span class=line><span class=cl>---
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>a
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c>&lt;!--more--&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>p
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=gu>## 参考资料
+</span></span></span><span class=line><span class=cl><span class=gu></span>
+</span></span><span class=line><span class=cl>[^1]: r
+</span></span></code></pre></td></tr></table></div></div><p>如果文中含公式，则在 front matter 中加一行 <code>math: true</code> 即可。</p><h2 id=预览>预览</h2><p>在本地 1313 端口打开测试服务器：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ hugo server
+</span></span></code></pre></td></tr></table></div></div><p>默认为 development 模式，评论、CDN、fingerprint 都被关闭，可以手动指定 production 模式：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ hugo server -e production
+</span></span></code></pre></td></tr></table></div></div><h2 id=公式渲染>公式渲染</h2><p>KaTeX<sup id=fnref:6><a href=#fn:6 class=footnote-ref role=doc-noteref>6</a></sup> 虽然比 mathjax 好点，但在 Markdown 中依然面临着渲染问题，例如多行公式中换行时需要 <code>\\\\ </code>（末尾有空格） 而不是 <code>\\</code> 等<sup id=fnref:7><a href=#fn:7 class=footnote-ref role=doc-noteref>7</a></sup>。一个更简洁的办法是用 <code>\cr</code> 换行。同理在输入转义字符时也需要对 <code>\</code> 进行二次转义<sup id=fnref:8><a href=#fn:8 class=footnote-ref role=doc-noteref>8</a></sup>。</p><h2 id=mermaid-图表渲染>Mermaid 图表渲染</h2><p>采用了主题提供的扩展 shortcode：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-markdown data-lang=markdown><span class=line><span class=cl>{{<span class=p>&lt;</span> <span class=nt>mermaid</span> <span class=p>&gt;</span>}}
+</span></span><span class=line><span class=cl>...
+</span></span><span class=line><span class=cl>{{<span class=p>&lt;</span> <span class=p>/</span><span class=nt>mermaid</span> <span class=p>&gt;</span>}}
+</span></span></code></pre></td></tr></table></div></div><h2 id=添加数量统计>添加数量统计</h2><p>通过 Hugo 统计了文章数量、标签数量、分类数量等信息并通过 <code>&lt;sup></code> 标签展示<sup id=fnref:9><a href=#fn:9 class=footnote-ref role=doc-noteref>9</a></sup>。需要修改的文件有：</p><ul><li><code>/layouts/taxonomy/list.html</code></li><li><code>/layouts/taxonomy/terms.html</code></li><li><code>/layouts/_default/section.html</code></li></ul><p>从主题目录中复制这些文件到根目录，随后在想要添加上标的地方插入 <code>&lt;sup>{{ len .Pages }}&lt;/sup></code> 即可。这里利用了 Hugo 中根目录下文件渲染优先级高于主题目录下同名文件的机制，便于维护。同理，也可以复制 <code>/assets/css/_custom.scss</code> 来自定义样式（需要 Hugo Extended）。</p><h2 id=自动化部署到-github-pages>自动化部署到 GitHub Pages</h2><p>编写 <code>.github/workflows/gh-pages.yml</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>github pages</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>on</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>push</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>branches</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=l>main</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>pull_request</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>jobs</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=nt>deploy</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>runs-on</span><span class=p>:</span><span class=w> </span><span class=l>ubuntu-20.04</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nt>steps</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>actions/checkout@v2</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>submodules</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w> </span><span class=c># Fetch Hugo themes (true OR recursive)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>fetch-depth</span><span class=p>:</span><span class=w> </span><span class=m>0</span><span class=w> </span><span class=c># Fetch all history for .GitInfo and .Lastmod</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Setup Hugo</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>peaceiris/actions-hugo@v2</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>hugo-version</span><span class=p>:</span><span class=w> </span><span class=s1>&#39;latest&#39;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>extended</span><span class=p>:</span><span class=w> </span><span class=kc>true</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Build</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>run</span><span class=p>:</span><span class=w> </span><span class=l>hugo --minify</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>      </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>Deploy</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>uses</span><span class=p>:</span><span class=w> </span><span class=l>peaceiris/actions-gh-pages@v3</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>if</span><span class=p>:</span><span class=w> </span><span class=l>github.ref == &#39;refs/heads/main&#39;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=nt>with</span><span class=p>:</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>github_token</span><span class=p>:</span><span class=w> </span><span class=l>${{ secrets.TOKEN }}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>          </span><span class=nt>publish_dir</span><span class=p>:</span><span class=w> </span><span class=l>./public</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>然后在 <code>/static</code> 创建 <code>CNAME</code> 文件，内容是自己的自定义域名，使得生成的 <code>public</code> 根目录下就包含这个 <code>CNAME</code>。最后确保 push 到 <code>main</code> 分支，actions 运行成功后会在 <code>gh-pages</code> 分支生成网站静态资源，在 GitHub Pages 里设置部署 <code>gh-pages</code> 的 <code>/</code> 目录即可。</p><h2 id=参考资料>参考资料</h2><section class=footnotes role=doc-endnotes><hr><ol><li id=fn:1 role=doc-endnote><p><a href=https://gohugo.io/documentation/ target=_blank rel="noopener noreffer">Hugo 文档</a>&#160;<a href=#fnref:1 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:2 role=doc-endnote><p><a href=https://hugoloveit.com/zh-cn/posts/ target=_blank rel="noopener noreffer">LoveIt 主题文档</a>&#160;<a href=#fnref:2 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:3 role=doc-endnote><p><a href=https://lewky.cn/posts/hugo-3.html target=_blank rel="noopener noreffer">Hugo系列(3.0) - LoveIt主题美化与博客功能增强 · 第一章</a>&#160;<a href=#fnref:3 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:4 role=doc-endnote><p><a href=https://realfavicongenerator.net/ target=_blank rel="noopener noreffer">Favicon Generator</a>&#160;<a href=#fnref:4 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:5 role=doc-endnote><p><a href=https://github.com/chrisdmacrae/atomic-algolia target=_blank rel="noopener noreffer">atomic-algolia</a>&#160;<a href=#fnref:5 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:6 role=doc-endnote><p><a href=https://katex.org/docs/supported.html target=_blank rel="noopener noreffer">Supported Functions - KaTeX</a>&#160;<a href=#fnref:6 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:7 role=doc-endnote><p><a href=https://github.com/dillonzq/LoveIt/issues/402 target=_blank rel="noopener noreffer">Hugo/Katex failed to render multi-line Latex</a>&#160;<a href=#fnref:7 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:8 role=doc-endnote><p><a href=https://kissingfire123.github.io/2022/02/18_%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8Fkatex%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95%E6%80%BB%E7%BB%93/ target=_blank rel="noopener noreffer">常用数学公式排版KaTex语法总结</a>&#160;<a href=#fnref:8 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:9 role=doc-endnote><p><a href=https://lewky.cn/posts/hugo-3.2.html/ target=_blank rel="noopener noreffer">Hugo系列(3.2) - LoveIt主题美化与博客功能增强 · 第三章</a>&#160;<a href=#fnref:9 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li></ol></section></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2022-03-11</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/%E5%AE%9E%E8%B7%B5%E8%AE%B0%E5%BD%95/>实践记录</a>,&nbsp;<a href=/tags/ci/cd/>CI/CD</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/pet/ class=prev rel=prev title=扑朔迷离：隐私增强技术实践><i class="fas fa-angle-left fa-fw"></i>扑朔迷离：隐私增强技术实践</a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.94.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2017 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank>Mercury</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/katex/katex.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:30},comment:{valine:{appId:"RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",appKey:"sw2sEPOl4haCAXKUFYiBFMrR",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"你的评论 ...",recordIP:!1,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{algoliaAppID:"P149SBLX5U",algoliaIndex:"blog",algoliaSearchKey:"cbd5db1f3910ee11bc18688f21b64bd4",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
