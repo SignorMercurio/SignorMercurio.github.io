@@ -9,7 +9,7 @@ categories:
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hugo/0.jpg
 ---
 
-在静态网站生成器中，Hugo 的优势主要在于其性能和简单易用的配置。
+博客从 Hexo 迁移到了 Hugo。在静态网站生成器中，Hugo 的优势主要在于其性能和简单易用的配置。
 
 <!--more-->
 
