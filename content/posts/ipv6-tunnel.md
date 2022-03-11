@@ -3,6 +3,7 @@ title: 舍近求远：开通 IPv6 隧道
 date: 2019-09-26 22:34:18
 tags:
   - 网络
+  - 实践记录
 categories:
   - 探索
 ---

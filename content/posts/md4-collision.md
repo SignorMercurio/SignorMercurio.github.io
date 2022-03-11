@@ -4,7 +4,6 @@ date: 2019-03-06 14:01:28
 tags:
   - Hash
   - 位运算
-  - C/C++
 categories: 
   - 密码学
 math: true

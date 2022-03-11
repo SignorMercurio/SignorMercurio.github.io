@@ -2,7 +2,7 @@
 title: 盘根错节：GLibc 堆内存管理机制简介
 date: 2019-12-08 16:53:39
 tags:
-  - C/C++
+  - Linux
   - 堆漏洞
 categories:
   - 二进制安全

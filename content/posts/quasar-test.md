@@ -3,6 +3,7 @@ title: 胸有成竹：Quasar Testing 指南
 date: 2021-03-21 11:36:12
 tags:
   - Quasar
+  - 实践记录
 categories:
   - 前端
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/QuasarTest/0.png

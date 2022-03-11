@@ -3,6 +3,7 @@ title: 捅马蜂窝：H1ve 部署实践
 date: 2020-02-09 16:43:13
 tags:
   - Docker
+  - 实践记录
 categories:
   - 探索
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/H1veDeploy/0.png

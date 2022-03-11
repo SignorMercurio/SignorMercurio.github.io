@@ -4,6 +4,7 @@ date: 2020-10-18 13:24:01
 tags:
   - Kali
   - 网络
+  - 实践记录
 categories:
   - 安全工具
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/AircrackWPA/0.jpg

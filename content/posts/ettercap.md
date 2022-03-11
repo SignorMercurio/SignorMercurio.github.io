@@ -3,6 +3,7 @@ title: Ettercap 简易入门
 date: 2019-07-20 00:03:58
 tags:
   - Kali
+  - 实践记录
   - DNS
   - 网络
 categories:

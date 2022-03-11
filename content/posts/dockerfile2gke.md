@@ -7,6 +7,7 @@ tags:
   - Kubernetes
   - CI/CD
   - ARM
+  - 实践记录
 categories:
   - 云
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Dockerfile2GKE/0.png

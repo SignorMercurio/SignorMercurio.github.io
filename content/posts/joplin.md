@@ -2,7 +2,7 @@
 title: 信手拈来：Joplin 使用小记
 date: 2021-07-17 21:00:31
 tags:
-  - Joplin
+  - 实践记录
 categories:
   - 探索
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Joplin/0.png

@@ -2,7 +2,7 @@
 title: VSCode + APICloud + GitHub 开发环境配置
 date: 2019-01-17 14:22:32
 tags:
-  - VSCode
+  - 实践记录
 categories:
   - 前端
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/VSCodeAPICloud/0.jpg

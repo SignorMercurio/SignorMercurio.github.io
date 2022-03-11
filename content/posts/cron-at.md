@@ -3,6 +3,7 @@ title: 风雨无阻：crontab + at 实现随机定时任务
 date: 2020-01-23 03:58:58
 tags:
   - Linux
+  - 实践记录
 categories:
   - 自动化
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CronAt/0.png

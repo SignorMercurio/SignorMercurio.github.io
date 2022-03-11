@@ -3,6 +3,7 @@ title: Beef 加载 Metasploit 插件 & Metasploit 连接 PostgreSQL
 date: 2019-07-21 12:17:14
 tags:
   - Kali
+  - 实践记录
 categories:
   - 安全工具
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BeefMSF/0.png

@@ -3,6 +3,7 @@ title: 闻鸡起舞：利用 GitHub Actions 进行持续部署
 date: 2020-07-16 22:13:48
 tags:
   - CI/CD
+  - 实践记录
 categories:
   - 自动化
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GitHubActionsCD/0.png

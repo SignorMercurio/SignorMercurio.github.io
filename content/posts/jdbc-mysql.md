@@ -3,7 +3,7 @@ title: 通过 JDBC 连接 MySQL
 date: 2019-03-25 23:11:05
 tags:
   - Java
-  - MySQL
+  - 实践记录
 categories:
   - 探索
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/JDBCMySQL/0.jpg

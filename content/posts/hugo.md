@@ -1,3 +1,53 @@
+---
+title: 乔迁新居：Hugo 博客的配置与部署
+date: 2022-03-11T13:10:42Z
+tags:
+  - 实践记录
+  - CI/CD
+categories:
+  - 前端
+featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hugo/0.jpg
+---
+
+在静态网站生成器中，Hugo 的优势主要在于其性能和简单易用的配置。
+
+<!--more-->
+
+## 安装
+
+### 安装 Hugo
+
+直接用包管理器安装，这种方式安装的是 Hugo Extended，可以支持更多功能如自定义 css 等[^1]。
+
+```shell
+$ brew install hugo
+```
+
+### 创建网站
+
+```shell
+$ hugo new site blog.sigmerc
+$ cd blog.sigmerc
+```
+
+### 安装主题
+
+推荐通过 git 子模块的方式安装，方便后续更新主题与 actions 部署。
+
+我这里使用了 LoveIt 主题[^2]：
+
+```shell
+$ git init
+$ git submodule add https://github.com/dillonzq/LoveIt.git themes/LoveIt
+```
+
+## 配置
+
+所有配置都在 `config.toml` 中，下文记录一些值得注意的点。
+
+### 基础配置
+
+```toml
 baseURL = "https://blog.sigmerc.top"
 # [en, zh-cn, fr, ...] 设置默认的语言
 defaultContentLanguage = "zh-cn"
@@ -10,7 +60,13 @@ title = "Lab on Mercury"
 
 # 更改使用 Hugo 构建网站时使用的默认主题
 theme = "LoveIt"
+```
 
+这里需要注意的是设置 `hasCJKLanguage = true`，才能使后续许多功能针对中文正确生效。
+
+### 菜单配置
+
+```toml
 [menu]
   [[menu.main]]
     identifier = "posts"
@@ -39,7 +95,13 @@ theme = "LoveIt"
     url = "/categories/"
     title = ""
     weight = 3
+```
 
+这里通过 `pre` 在菜单项前加了图标，注意只能使用 font awesome 免费图标。`weight` 决定了菜单项的顺序，数值越小越靠前。
+
+### 基础参数配置
+
+```toml
 [params]
   #  LoveIt 主题版本
   version = "0.2.X"
@@ -51,7 +113,13 @@ theme = "LoveIt"
   defaultTheme = "auto"
   # CDN 前缀
   cdnPrefix = "https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn"
+```
 
+随后是一系列参数的设置，这里额外设置了 `cdnPrefix`，这样在文章里就可以通过 shortcode 形式插入图片了[^3]。例如，图片链接可以写成： `{{< param cdnPrefix >}}/blabla/0.png`。
+
+### 应用图标配置
+
+```toml
   # 应用图标配置
   [params.app]
     # 当添加到 iOS 主屏幕或者 Android 启动器时的标题, 覆盖默认标题
@@ -66,7 +134,13 @@ theme = "LoveIt"
     iconColor = "#5bbad5"
     # Windows v8-10磁贴颜色
     tileColor = "#da532c"
+```
 
+通过 Favicon Generator[^4] 可以方便地生成各类浏览器上的图标，随后将这些图标以及相应的配置文件放入 `/static` 目录下即可。最后在 `site.webmanifest` 中填一下 `name` 和 `short_name`。
+
+### 搜索配置
+
+```toml
   #  搜索配置
   [params.search]
     enable = true
@@ -85,10 +159,51 @@ theme = "LoveIt"
     #  是否在搜索索引中使用基于 baseURL 的绝对路径
     absoluteURL = false
     [params.search.algolia]
-      index = "blog"
-      appID = "P149SBLX5U"
-      searchKey = "cbd5db1f3910ee11bc18688f21b64bd4"
+      index = ""
+      appID = ""
+      searchKey = ""
+```
 
+尝试了一下通过 `lunr` 搜索，不用配任何东西很方便，但每次搜索都延迟比较高，体验不太好。于是首先注册了 algolia，填入 `index`, `appID`, `searchKey`，随后安装 atomic-algolia[^5] 用于自动将 `index.json` 上传给 algolia：
+
+```shell
+$ npm install atomic-algolia
+```
+
+在 `package.json` 中定义脚本：
+
+```json
+ "scripts": {
+   "algolia": "atomic-algolia"
+ },
+```
+
+在 `.env` 中设置环境变量：
+
+```bash
+ALGOLIA_APP_ID=xxxx
+ALGOLIA_ADMIN_KEY=xxxx
+ALGOLIA_INDEX_NAME=xxxx
+ALGOLIA_INDEX_FILE=public/index.json
+```
+
+注意这里因为需要上传，所以用的是 admin key，和上面填的 search key 不同。
+
+为了生成 `public/index.json`，在 `config.toml` 的最后 `outputs` 部分需要确保有 `JSON` 这一项。此时运行 `hugo` 命令就可以看到 `public/index.json` 了，最后运行 `algolia` 即可上传。
+
+```toml
+# 用于 Hugo 输出文档的设置
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  page = ["HTML"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML", "RSS"]
+  taxonomyTerm = ["HTML"]
+```
+
+### 头部、底部、页面、社交信息配置
+
+```toml
   # 页面头部导航栏配置
   [params.header]
     # 桌面端导航栏模式 ("fixed", "normal", "auto")
@@ -165,13 +280,19 @@ theme = "LoveIt"
       #  被 params.page 中的 hiddenFromHomePage 替代
       # 当你没有在文章前置参数中设置 "hiddenFromHomePage" 时的默认行为
       defaultHiddenFromHomePage = false
-
+      
   # 作者的社交信息设置
   [params.social]
     GitHub = "SignorMercurio"
     Email = "signormercurio@gmail.com"
     RSS = true
+```
 
+和菜单配置类似，头部标题前也可以通过 `pre` 添加元素。`params.home.profile` 中的 `avatarURL` 我使用了本地资源，存放在 `/assets/my_avatar.png` 中。这里没有放在 `/static` 下是因为切换页码后 URL 会由 `/` 变成 `/page/2`，此时如果图片放在了 `/static` 则会依然尝试去根目录找图片，导致无法找到。
+
+### 文章页面配置
+
+```toml
   #  文章页面配置
   [params.page]
     #  是否在主页隐藏一篇文章
@@ -231,8 +352,8 @@ theme = "LoveIt"
       # Valine 评论系统设置
       [params.page.comment.valine]
         enable = true
-        appId = "RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz"
-        appKey = "sw2sEPOl4haCAXKUFYiBFMrR"
+        appId = ""
+        appKey = ""
         placeholder = ""
         avatar = "mp"
         meta= ""
@@ -269,7 +390,13 @@ theme = "LoveIt"
       [params.page.seo.publisher]
         name = "Mercury"
         logoUrl = "my_avatar.png"
+```
 
+这个部分的配置都可以被文章里的 front matter 覆盖，所以这里设置的是默认值。因此关闭了大部分不必要功能，只保留了 lightgallery 即点击放大图片的功能、代码复制功能、基础的公式渲染功能和评论系统默认开启。目录的 `keepStatic` 如果开启则会显示在文章上方而不是侧边栏，我觉得不太方便就关闭了。评论采用了 LeanCloud + Valine，需要填 appId 和 appKey。
+
+### 其他配置
+
+```toml
 # Hugo 解析文档的配置
 [markup]
   # 语法高亮设置
@@ -314,11 +441,131 @@ theme = "LoveIt"
 # Permalinks 配置
 [Permalinks]
   posts = ":filename"
+```
 
-# 用于 Hugo 输出文档的设置
-[outputs]
-  home = ["HTML", "RSS", "JSON"]
-  page = ["HTML"]
-  section = ["HTML", "RSS"]
-  taxonomy = ["HTML", "RSS"]
-  taxonomyTerm = ["HTML"]
+根据个人习惯配置，比较重要的是 `markup.goldmark.renderer` 里的 `unsafe` 选项，开启后可以比较方便地混排 Markdown 和 HTML。`markup.tableOfContents` 中，`2-5` 的配置意味着一级标题、五级标题和六级标题不会在目录中显示。`Permalinks` 的 `posts` 则直接决定了一篇文章的永久链接格式。
+
+## 文章迁移
+
+总的来说区别不太大，主要是 front matter 中：
+
+- `tag` 变成 `tags`
+- `cover` 和 `thumbnails` 变成 `featuredImage` 和 `featuredImagePreview`
+- 摘要分隔符从 `<!-- more -->` 变成 `<!--more-->`
+
+一个简单的模版：
+
+```markdown
+---
+title: "{{ replace .Name "-" " " | title }}"
+date: {{ .Date }}
+tags:
+  - t
+categories:
+  - c
+---
+
+a
+
+<!--more-->
+
+p
+
+## 参考资料
+
+[^1]: r
+```
+
+如果文中含公式，则在 front matter 中加一行 `math: true` 即可。
+
+## 预览
+
+在本地 1313 端口打开测试服务器：
+
+```shell
+$ hugo server
+```
+
+默认为 development 模式，评论、CDN、fingerprint 都被关闭，可以手动指定 production 模式：
+
+```shell
+$ hugo server -e production
+```
+
+## 公式渲染
+
+KaTeX[^6] 虽然比 mathjax 好点，但在 Markdown 中依然面临着渲染问题，例如多行公式中换行时需要 `\\\\ `（末尾有空格） 而不是 `\\` 等[^7]。一个更简洁的办法是用 `\cr` 换行。同理在输入转义字符时也需要对 `\` 进行二次转义[^8]。
+
+## Mermaid 图表渲染
+
+采用了主题提供的扩展 shortcode：
+
+```markdown
+{{</* mermaid */>}}
+...
+{{</* /mermaid */>}}
+```
+
+## 添加数量统计
+
+通过 Hugo 统计了文章数量、标签数量、分类数量等信息并通过 `<sup>` 标签展示[^9]。需要修改的文件有：
+
+- `/layouts/taxonomy/list.html`
+- `/layouts/taxonomy/terms.html`
+- `/layouts/_default/section.html`
+
+从主题目录中复制这些文件到根目录，随后在想要添加上标的地方插入 `<sup>{{ len .Pages }}</sup>` 即可。这里利用了 Hugo 中根目录下文件渲染优先级高于主题目录下同名文件的机制，便于维护。同理，也可以复制 `/assets/css/_custom.scss` 来自定义样式（需要 Hugo Extended）。
+
+## 自动化部署到 GitHub Pages
+
+编写 `.github/workflows/gh-pages.yml`：
+
+```yaml
+name: github pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true # Fetch Hugo themes (true OR recursive)
+          fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
+
+      - name: Setup Hugo
+        uses: peaceiris/actions-hugo@v2
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      - name: Build
+        run: hugo --minify
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          github_token: ${{ secrets.TOKEN }}
+          publish_dir: ./public
+```
+
+然后在 `/static` 创建 `CNAME` 文件，内容是自己的自定义域名，使得生成的 `public` 根目录下就包含这个 `CNAME`。最后确保 push 到 `main` 分支，actions 运行成功后会在 `gh-pages` 分支生成网站静态资源，在 GitHub Pages 里设置部署 `gh-pages` 的 `/` 目录即可。
+
+## 参考资料
+
+[^1]: [Hugo 文档](https://gohugo.io/documentation/)
+[^2]: [LoveIt 主题文档](https://hugoloveit.com/zh-cn/posts/)
+[^3]: [Hugo系列(3.0) - LoveIt主题美化与博客功能增强 · 第一章](https://lewky.cn/posts/hugo-3.html)
+[^4]: [Favicon Generator](https://realfavicongenerator.net/)
+[^5]: [atomic-algolia](https://github.com/chrisdmacrae/atomic-algolia)
+[^6]: [Supported Functions - KaTeX](https://katex.org/docs/supported.html)
+[^7]: [Hugo/Katex failed to render multi-line Latex](https://github.com/dillonzq/LoveIt/issues/402)
+[^8]: [常用数学公式排版KaTex语法总结](https://kissingfire123.github.io/2022/02/18_%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8Fkatex%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95%E6%80%BB%E7%BB%93/)
+[^9]: [Hugo系列(3.2) - LoveIt主题美化与博客功能增强 · 第三章](https://lewky.cn/posts/hugo-3.2.html/)
+
