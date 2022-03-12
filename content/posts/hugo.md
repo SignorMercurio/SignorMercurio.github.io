@@ -506,7 +506,9 @@ KaTeX[^6] 虽然比 mathjax 好点，但在 Markdown 中依然面临着渲染问
 {{</* /mermaid */>}}
 ```
 
-## 添加数量统计
+## 自定义样式
+
+### 添加数量统计
 
 通过 Hugo 统计了文章数量、标签数量、分类数量等信息并通过 `<sup>` 标签展示[^9]。需要修改的文件有：
 
@@ -514,7 +516,89 @@ KaTeX[^6] 虽然比 mathjax 好点，但在 Markdown 中依然面临着渲染问
 - `/layouts/taxonomy/terms.html`
 - `/layouts/_default/section.html`
 
-从主题目录中复制这些文件到根目录，随后在想要添加上标的地方插入 `<sup>{{ len .Pages }}</sup>` 即可。这里利用了 Hugo 中根目录下文件渲染优先级高于主题目录下同名文件的机制，便于维护。同理，也可以复制 `/assets/css/_custom.scss` 来自定义样式（需要 Hugo Extended）。
+从主题目录中复制这些文件到根目录，随后在想要添加上标的地方插入 `<sup>{{ len .Pages }}</sup>` 即可。这里利用了 Hugo 中根目录下文件渲染优先级高于主题目录下同名文件的机制，便于维护。同理，也可以新建 `/assets/css/_custom.scss` 来自定义样式（需要 Hugo Extended）。
+
+### 补充代码类型
+
+原主题虽然能正确高亮汇编和 Dockerfile 代码，但并不会在代码类型上正确显示对应的类型。对此，我们可以新建 `/assets/css/_override.scss` 覆盖 `code-type-map` 变量：
+```scss
+// Code type map
+$code-type-map: (
+  // Custom code type
+  language-asm: 'Assembly',
+  language-bash: 'Bash',
+  language-c: 'C',
+  language-cs: 'C#',
+  language-cpp: 'C++',
+  language-clojure: 'Clojure',
+  language-coffeescript: 'CoffeeScript',
+  language-css: 'CSS',
+  language-dart: 'Dart',
+  language-diff: 'Diff',
+  language-dockerfile: 'Dockerfile',
+  language-erlang: 'Erlang',
+  language-go: 'Go',
+  language-go-html-template: 'Go HTML Template',
+  language-groovy: 'Groovy',
+  language-haskell: 'Haskell',
+  language-html: 'HTML',
+  language-http: 'HTTP',
+  language-xml: 'XML',
+  language-java: 'Java',
+  language-js: 'JavaScript',
+  language-javascript: 'JavaScript',
+  language-json: 'JSON',
+  language-kotlin: 'Kotlin',
+  language-latex: 'LaTeX',
+  language-less: 'Less',
+  language-lisp: 'Lisp',
+  language-lua: 'Lua',
+  language-makefile: 'Makefile',
+  language-markdown: 'Markdown',
+  language-matlab: 'Matlab',
+  language-objectivec: 'Objective-C',
+  language-php: 'PHP',
+  language-perl: 'Perl',
+  language-python: 'Python',
+  language-r: 'R',
+  language-ruby: 'Ruby',
+  language-rust: 'Rust',
+  language-scala: 'Scala',
+  language-scss: 'Scss',
+  language-shell: 'Shell',
+  language-sql: 'SQL',
+  language-swift: 'Swift',
+  language-tex: 'TeX',
+  language-toml: 'TOML',
+  language-ts: 'TypeScript',
+  language-typescript: 'TypeScript',
+  language-vue: 'Vue',
+  language-yml: 'YAML',
+  language-yaml: 'YAML'
+);
+```
+
+注意将最后原有的 `!default` 去掉，否则无法覆盖默认值。
+
+### 修改代码字体
+
+在 `/assets/css/_override.scss` 中添加：
+
+```scss
+// Font family of the code
+$code-font-family: JuliaMono, Monaco, Fira Code, Jetbrains Mono, Hack, Noto Mono,
+  Menlo, Droid Sans Mono, DejaVu Sans Mono, Consolas, monospace,
+  $global-font-family;
+```
+
+### 图片圆角化
+
+在 `/assets/css/_custom.scss` 中添加：
+```scss
+img {
+  border-radius: 0.5rem;
+}
+```
 
 ## 自动化部署到 GitHub Pages
 
