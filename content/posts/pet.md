@@ -2042,3 +2042,7 @@ Apple 使用 PSI 技术来检测用户的 iCloud 中是否存储了非法的儿�
 然后，服务器生成新密钥 $\hat{S'}=H'(\hat{S})$，提取 $rkey=Dec_{\hat{S'}}(ct)$，如果解密失败则中止。下一步则是提取 $adct$ 和 $sh$，只需要 $(adct,sh)=Dec_{rkey}(rct)$，如果解密失败同样中止。解密完成后，将 $(id,adct,sh)$ 加入到 `SHARES` 中。此时我们成功匹配到了非法图片。
 
 如果 `SHARES` 中存在至少 t+1 份碎片，那么就可以重建 $adkey$ 了。最后一步就是利用 $adkey$ 提取 $ad$：$ad=Dec_{adkey}(adct)$。
+
+## Selective Disclosure
+
+传统认证系统往往将身份和属性绑定，这会导致一定程度的隐私泄露。而在 Selective Disclosure 中，Verifier 不会获得任何关于 Prover 的非必要的信息。首先 Issuer 给 Prover 一个类似证书的 credential，随后 Prover 对自身的属性进行断言，最后 Verifier 和 Issuer 交互来验证 Prover 的断言是否合法。
