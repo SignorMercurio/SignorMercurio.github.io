@@ -159,6 +159,8 @@ $ composer require overtrue/flysystem-qiniu:^1.0
 
 随后配置允许的 MIME 类型的正则，例如只允许图片：`^image\/.*`。在“存储设置”中填写七牛的 CDN 地址，然后在“七牛存储设置”中填写 AK、SK 和空间名。
 
+更新：目前已采用腾讯云 COS 作为图床[^6]，基于 AWS S3 协议，因此需要插件 `league/flysystem-aws-s3-v3`。
+
 ## 站点数据迁移
 
 插件直接 composer 重装即可，数据方面主要包括两者：
@@ -208,7 +210,7 @@ SSLStaplingCache "shmcb:logs/stapling-cache(150000)"
 SSLSessionTickets Off
 ```
 
-修改 `sites-enabled/000-default.conf`，开启 443 监听并重定向 HTTP 至 HTTPS[^6]：
+修改 `sites-enabled/000-default.conf`，开启 443 监听并重定向 HTTP 至 HTTPS[^7]：
 ```
 <VirtualHost *:80>
 	RewriteEngine on
@@ -253,21 +255,43 @@ $ sudo systemctl restart apache2
 
 ## 其他实用插件
 
-```shell
-$ composer require clarkwinkelmann/flarum-ext-emojionearea # emoji 选择框
-$ composer require fof/forum-statistics-widget             # 论坛统计
-$ composer require fof/nightmode:"*"                       # 日间/夜间模式切换
-$ composer require fof/user-bio:"*"                        # 用户个性签名
-$ composer require fof/reactions:"*"                       # 戳表情
-$ composer require fof/recaptcha                           # 验证码，不支持 v3
-$ composer require fof/links                               # 导航栏链接
-$ composer require fof/pages                               # 自定义页面
-$ composer require fof/byobu:"*"                           # 私密主题
-$ composer require the-turk/flarum-stickiest:^2.0.1        # 永久置顶
-$ composer require nyu8/flarum-email-filter                # 邮件黑白名单
-$ composer require zerosonesfun/flarum-up:"*"              # “回到顶部”按钮
-$ composer require acpl/mobile-tab:"*"                     # 移动端底部导航
-```
+- 移动端底部导航 `acpl/mobile-tab`
+- 论坛统计小部件 `afrux/forum-stats-widget`
+- 论坛自动管理 `askvortsov/flarum-auto-moderator`
+- 管理员警告 `askvortsov/flarum-moderator-warnings`
+- 用户组头像框 `clarkwinkelmann/flarum-ext-circle-groups`
+- Emoji 选择框 `clarkwinkelmann/flarum-ext-emojionearea`
+- 个人资料卡展示被点赞次数 `clarkwinkelmann/flarum-ext-likes-received`
+- 链接预览 `datlechin/flarum-link-preview`
+- 图片 Fancybox `darkle/fancybox`
+- 基于 Extiverse 的插件版本管理 `extiverse/mercury`
+- 简体中文语言包 `flarum-lang/chinese-simplified`
+- FoF 系列 `fof/`
+  - 私密主题 `byobu`
+  - 链接自动转图片 `formatting`
+  - 导航栏链接 `links`
+  - 扩展个人资料字段 `masquerade`
+  - 日间/夜间模式切换 `nightmode`
+  - 自定义页面 `pages`
+  - 发起投票 `polls`
+  - 戳表情 `reactions`
+  - 注册验证码 `recaptcha`，不支持 recaptcha v3
+  - HTTPS 站点加载 HTTP 图片 `secure-https`，需修改源码与新版兼容
+  - 注册时勾选同意服务条款 `terms`
+  - 文件上传 `upload`
+  - 个性签名 `user-bio`
+
+- 邮件发送 `guzzlehttp/guzzle`
+- 自定义 HTML `<head>` 标签 `ianm/html-head`
+- 信息流显示主题摘要 `ianm/synopsis`
+- 登录可见 `jslirola/flarum-ext-login2seeplus`
+- 图片布局 `malago/flarum-ext-fancybox`
+- 自动加载更多 `noriods/auto-more`
+- 邮件黑白名单过滤 `nyu8/flarum-email-filter`
+- slug 统一使用 id `pipecraft/flarum-ext-id-slug`
+- 超级置顶 `the-turk/flarum-stickiest`
+- 在新标签页中打开外部链接 `zerosonesfun/elint`
+- “回到顶部”按钮 `zerosonesfun/flarum-up` 
 
 ### 自定义页面 CSS 调整
 
@@ -278,6 +302,7 @@ $ composer require acpl/mobile-tab:"*"                     # 移动端底部导�
 .Post-body h2, .Post-body h4{line-height:0.1}
 .Post-body ul{margin-block-start:0;margin-bottom:0}
 .Post-body{line-height:1}
+.grey{color:#757575}
 </style>
 ```
 
@@ -303,4 +328,5 @@ $ composer require acpl/mobile-tab:"*"                     # 移动端底部导�
 [^3]: [Flarum 官方文档](https://docs.flarum.org/zh/install)
 [^4]: [Simplified Chinese Language Pack / 简体中文语言包 - Flarum Community](https://discuss.flarum.org/d/22690-simplified-chinese-language-pack)
 [^5]: [FoF 文件上传](https://discuss.flarum.org.cn/d/1292/150)
-[^6]: [How to enable HTTPS with Apache 2 on Ubuntu 20.04](https://www.arubacloud.com/tutorial/how-to-enable-https-protocol-with-apache-2-on-ubuntu-20-04.aspx#GettinganSSLCertificate)
+[^6]: [Flarum 使用腾讯云COS对象存储](https://jacobruan.com/flarum-uses-tencent-cloud-cos-storage/)
+[^7]: [How to enable HTTPS with Apache 2 on Ubuntu 20.04](https://www.arubacloud.com/tutorial/how-to-enable-https-protocol-with-apache-2-on-ubuntu-20-04.aspx#GettinganSSLCertificate)

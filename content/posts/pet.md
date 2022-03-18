@@ -2045,4 +2045,52 @@ Apple 使用 PSI 技术来检测用户的 iCloud 中是否存储了非法的儿�
 
 ## Selective Disclosure
 
-传统认证系统往往将身份和属性绑定，这会导致一定程度的隐私泄露。而在 Selective Disclosure 中，Verifier 不会获得任何关于 Prover 的非必要的信息。首先 Issuer 给 Prover 一个类似证书的 credential，随后 Prover 对自身的属性进行断言，最后 Verifier 和 Issuer 交互来验证 Prover 的断言是否合法。
+传统认证系统往往将身份和属性绑定，这会导致一定程度的隐私泄露。而在 Selective Disclosure 中，Verifier 不会获得任何关于 Prover 的非必要的信息。首先 Issuer 给 Prover 一个类似证书的 credential，随后 Prover 对自身的属性进行断言发给 Verifier，最后 Verifier 和 Issuer 交互来验证 Prover 的断言是否合法。
+
+这里介绍一种基于 MAC 的方案，该方案假设 Issuer 和 Verifier 是同一主体。
+
+传统方式中，Prover 将断言发给 Verifier 时由于用到了 MAC，无法破坏完整性，但 MAC 并不提供机密性。但如果加入零知识证明和匿名通信机制，那么Prover 就可以通过匿名通信信道和 Verifier 交互，并通过零知识证明来证明断言、以及对应的 MAC。
+
+### Algebraic MAC
+
+Algebraic MAC 提供了两个很好的性质：
+
+- 在可行时间里证明 MAC 的生成
+- 在可行时间里证明 MAC 的持有
+
+首先需要一个素群 G，生成元 g 和 h，随后生成私钥 $sk=\{x_0,x_1,...,x_k\}$，其中 k 是要编码的属性个数。随后公布 Issuer 参数 $\texttt{iparams=}\{X_i=h^{x_i}\} \texttt{ for }i>0$。
+
+Algebraic MAC 以私钥和 k 个属性 $m=\{m_i\}\texttt{ for }1<=i<=k$，选择一个 $u\in G/\{1\}$,计算 $u'=u^{H_{sk}(m)}$，其中 $H_{sk}(m)=x_0+\Sigma m_ix_i$。最后输出 tag：$(u,u')$。
+
+验证的过程则是反过来，验证 $u'$ 是否等于 $u^{H_{sk}(m)}$。这里可以注意到，MAC 的生成和验证都需要私钥。
+
+### aMAC + ZKP
+
+在 Selective Disclosure 方案中，我们要让 Prover 零知识证明它知道关于这些属性的合法的 aMAC。整个方案分四阶段：
+
+- Setup 初始化参数 （G，p，g，h）
+- CredKeyGen 生成 Issue 密钥和公钥
+- Credential Issuance Protocol
+- Credential Showing Protocol
+
+在 CredKeyGen 中，首先初始化 aMAC 的参数，随后在 $Z_p$ 中随机选择 $o_{xo}$，计算 Commitment $C_{xo}=g^{x_0}h^{o_{xo}}$。输出公钥 $(\texttt{iparams}, C_{xo})$，私钥 $(sk,o_{xo})$。
+
+Credential Issuance 中 Issuer 将属性编码成消息 $m_i$，计算 $Tag(u,u')=MAC(sk,\{m_i\})$，然后计算证明 $\pi_0=NIZK\{(sk,o_{xo}):u',C_{xo},X_i\}$。Prover 获得 $(u,u')$ 后，验证 $\pi_0$。
+
+Credential Showing 中 Prover 在 $Z_p$ 中随机选择 $a,z_i,r$，计算：
+
+- $u_a,u_a'=(u^a,u'^a)$
+- $C_{mi}=u^{m_i}h^{z_i}$
+- $C_{u'}=u_a'g^r$
+
+随后产生证明 $\pi_1=NIZK{(z_i,r,m_i):C_{mi},V=g^{-r}\Pi X_i^{z_i}+...}$， `...` 处是其他关于属性的声明。输出 $(i_a,C_{mi}, C_{u'}),\pi_1$.
+
+> 选择这么多随机数都是为了让属性匿名化。
+
+最后，Verifier 计算 $V=u_a^{x_0}\Pi C_{mi}^{x_i}/C_{u'}$，并利用 V 来验证 $\pi_1$.
+
+### 应用
+
+- 基于属性的访问控制
+- 分布式身份管理
+- 隐私友好的电子身份信息
