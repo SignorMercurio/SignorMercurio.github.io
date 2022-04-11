@@ -48,7 +48,6 @@ int main(int argc, char* argv[], char* envp[]){
 ```shell
 $ ./fd 4660
 LETMEWIN
-
 ```
 
 ## collision
@@ -107,19 +106,19 @@ $ ./col $(python -c'print "\xe8\x05\xd9\x1d"+"\x01"*16')
 #include <string.h>
 #include <stdlib.h>
 void func(int key){
-	char overflowme[32];
-	printf("overflow me :");
-	gets(overflowme);	// smash me!
-	if(key == 0xcafebabe){
-		system("/bin/sh");
-	}
-	else{
-		printf("Nah..\n");
-	}
+    char overflowme[32];
+    printf("overflow me :");
+    gets(overflowme);    // smash me!
+    if(key == 0xcafebabe){
+        system("/bin/sh");
+    }
+    else{
+        printf("Nah..\n");
+    }
 }
 int main(int argc, char* argv[]){
-	func(0xdeadbeef);
-	return 0;
+    func(0xdeadbeef);
+    return 0;
 }
 ```
 
@@ -234,7 +233,7 @@ $ python
 需要注意的是，`scanf` 的时候接收 `%d`，因此需要 `str` 一下转成十进制字符串。
 
 > 注：
->
+> 
 > 1. GLIBC 函数的 GOT 地址，在 pwntools 中可以用类似 `elf.got['fflush']` 的方法获得，更加方便
 > 2. 如果开启了 PIE 则需要 leak 出 GOT 地址。
 
@@ -286,65 +285,65 @@ int main(){
 #include <arpa/inet.h>
 
 int main(int argc, char* argv[], char* envp[]){
-	printf("Welcome to pwnable.kr\n");
-	printf("Let's see if you know how to give input to program\n");
-	printf("Just give me correct inputs then you will get the flag :)\n");
+    printf("Welcome to pwnable.kr\n");
+    printf("Let's see if you know how to give input to program\n");
+    printf("Just give me correct inputs then you will get the flag :)\n");
 
-	// argv
-	if(argc != 100) return 0;
-	if(strcmp(argv['A'],"\x00")) return 0;
-	if(strcmp(argv['B'],"\x20\x0a\x0d")) return 0;
-	printf("Stage 1 clear!\n");
+    // argv
+    if(argc != 100) return 0;
+    if(strcmp(argv['A'],"\x00")) return 0;
+    if(strcmp(argv['B'],"\x20\x0a\x0d")) return 0;
+    printf("Stage 1 clear!\n");
 
-	// stdio
-	char buf[4];
-	read(0, buf, 4);
-	if(memcmp(buf,"\x00\x0a\x00\xff", 4)) return 0;
-	read(2, buf, 4);
+    // stdio
+    char buf[4];
+    read(0, buf, 4);
+    if(memcmp(buf,"\x00\x0a\x00\xff", 4)) return 0;
+    read(2, buf, 4);
         if(memcmp(buf,"\x00\x0a\x02\xff", 4)) return 0;
-	printf("Stage 2 clear!\n");
+    printf("Stage 2 clear!\n");
 
-	// env
-	if(strcmp("\xca\xfe\xba\xbe", getenv("\xde\xad\xbe\xef"))) return 0;
-	printf("Stage 3 clear!\n");
+    // env
+    if(strcmp("\xca\xfe\xba\xbe", getenv("\xde\xad\xbe\xef"))) return 0;
+    printf("Stage 3 clear!\n");
 
-	// file
-	FILE* fp = fopen("\x0a", "r");
-	if(!fp) return 0;
-	if(fread(buf, 4, 1, fp)!=1 ) return 0;
-	if(memcmp(buf,"\x00\x00\x00\x00", 4) ) return 0;
-	fclose(fp);
-	printf("Stage 4 clear!\n");
+    // file
+    FILE* fp = fopen("\x0a", "r");
+    if(!fp) return 0;
+    if(fread(buf, 4, 1, fp)!=1 ) return 0;
+    if(memcmp(buf,"\x00\x00\x00\x00", 4) ) return 0;
+    fclose(fp);
+    printf("Stage 4 clear!\n");
 
-	// network
-	int sd, cd;
-	struct sockaddr_in saddr, caddr;
-	sd = socket(AF_INET, SOCK_STREAM, 0);
-	if(sd == -1){
-		printf("socket error, tell admin\n");
-		return 0;
-	}
-	saddr.sin_family = AF_INET;
-	saddr.sin_addr.s_addr = INADDR_ANY;
-	saddr.sin_port = htons(atoi(argv['C']) );
-	if(bind(sd, (struct sockaddr*)&saddr, sizeof(saddr)) <0){
-		printf("bind error, use another port\n");
-    		return 1;
-	}
-	listen(sd, 1);
-	int c = sizeof(struct sockaddr_in);
-	cd = accept(sd, (struct sockaddr *)&caddr, (socklen_t*)&c);
-	if(cd < 0){
-		printf("accept error, tell admin\n");
-		return 0;
-	}
-	if(recv(cd, buf, 4, 0) != 4 ) return 0;
-	if(memcmp(buf,"\xde\xad\xbe\xef", 4)) return 0;
-	printf("Stage 5 clear!\n");
+    // network
+    int sd, cd;
+    struct sockaddr_in saddr, caddr;
+    sd = socket(AF_INET, SOCK_STREAM, 0);
+    if(sd == -1){
+        printf("socket error, tell admin\n");
+        return 0;
+    }
+    saddr.sin_family = AF_INET;
+    saddr.sin_addr.s_addr = INADDR_ANY;
+    saddr.sin_port = htons(atoi(argv['C']) );
+    if(bind(sd, (struct sockaddr*)&saddr, sizeof(saddr)) <0){
+        printf("bind error, use another port\n");
+            return 1;
+    }
+    listen(sd, 1);
+    int c = sizeof(struct sockaddr_in);
+    cd = accept(sd, (struct sockaddr *)&caddr, (socklen_t*)&c);
+    if(cd < 0){
+        printf("accept error, tell admin\n");
+        return 0;
+    }
+    if(recv(cd, buf, 4, 0) != 4 ) return 0;
+    if(memcmp(buf,"\xde\xad\xbe\xef", 4)) return 0;
+    printf("Stage 5 clear!\n");
 
-	// here's your flag
-	system("/bin/cat flag");
-	return 0;
+    // here's your flag
+    system("/bin/cat flag");
+    return 0;
 }
 ```
 
@@ -401,40 +400,40 @@ s.close()
 #include <stdio.h>
 #include <fcntl.h>
 int key1(){
-	asm("mov r3, pc\n");
+    asm("mov r3, pc\n");
 }
 int key2(){
-	asm(
-	"push	{r6}\n"
-	"add	r6, pc, $1\n"
-	"bx	r6\n"
-	".code   16\n"
-	"mov	r3, pc\n"
-	"add	r3, $0x4\n"
-	"push	{r3}\n"
-	"pop	{pc}\n"
-	".code	32\n"
-	"pop	{r6}\n"
-	);
+    asm(
+    "push    {r6}\n"
+    "add    r6, pc, $1\n"
+    "bx    r6\n"
+    ".code   16\n"
+    "mov    r3, pc\n"
+    "add    r3, $0x4\n"
+    "push    {r3}\n"
+    "pop    {pc}\n"
+    ".code    32\n"
+    "pop    {r6}\n"
+    );
 }
 int key3(){
-	asm("mov r3, lr\n");
+    asm("mov r3, lr\n");
 }
 int main(){
-	int key=0;
-	printf("Daddy has very strong arm! :");
-	scanf("%d", &key);
-	if((key1()+key2()+key3()) == key ){
-		printf("Congratz!\n");
-		int fd = open("flag", O_RDONLY);
-		char buf[100];
-		int r = read(fd, buf, 100);
-		write(0, buf, r);
-	}
-	else{
-		printf("I have strong leg :P\n");
-	}
-	return 0;
+    int key=0;
+    printf("Daddy has very strong arm! :");
+    scanf("%d", &key);
+    if((key1()+key2()+key3()) == key ){
+        printf("Congratz!\n");
+        int fd = open("flag", O_RDONLY);
+        char buf[100];
+        int r = read(fd, buf, 100);
+        write(0, buf, r);
+    }
+    else{
+        printf("I have strong leg :P\n");
+    }
+    return 0;
 }
 ```
 
@@ -455,13 +454,13 @@ arm 架构下：
 ```
 (gdb) disass key1
 Dump of assembler code for function key1:
-   0x00008cd4 <+0>:	push	{r11}		; (str r11, [sp, #-4]!)
-   0x00008cd8 <+4>:	add	r11, sp, #0
-   0x00008cdc <+8>:	mov	r3, pc
-   0x00008ce0 <+12>:	mov	r0, r3
-   0x00008ce4 <+16>:	sub	sp, r11, #0
-   0x00008ce8 <+20>:	pop	{r11}		; (ldr r11, [sp], #4)
-   0x00008cec <+24>:	bx	lr
+   0x00008cd4 <+0>:    push    {r11}        ; (str r11, [sp, #-4]!)
+   0x00008cd8 <+4>:    add    r11, sp, #0
+   0x00008cdc <+8>:    mov    r3, pc
+   0x00008ce0 <+12>:    mov    r0, r3
+   0x00008ce4 <+16>:    sub    sp, r11, #0
+   0x00008ce8 <+20>:    pop    {r11}        ; (ldr r11, [sp], #4)
+   0x00008cec <+24>:    bx    lr
 End of assembler dump.
 ```
 
@@ -472,20 +471,20 @@ key2：
 ```
 (gdb) disass key2
 Dump of assembler code for function key2:
-   0x00008cf0 <+0>:	push	{r11}		; (str r11, [sp, #-4]!)
-   0x00008cf4 <+4>:	add	r11, sp, #0
-   0x00008cf8 <+8>:	push	{r6}		; (str r6, [sp, #-4]!)
-   0x00008cfc <+12>:	add	r6, pc, #1
-   0x00008d00 <+16>:	bx	r6
-   0x00008d04 <+20>:	mov	r3, pc
-   0x00008d06 <+22>:	adds	r3, #4
-   0x00008d08 <+24>:	push	{r3}
-   0x00008d0a <+26>:	pop	{pc}
-   0x00008d0c <+28>:	pop	{r6}		; (ldr r6, [sp], #4)
-   0x00008d10 <+32>:	mov	r0, r3
-   0x00008d14 <+36>:	sub	sp, r11, #0
-   0x00008d18 <+40>:	pop	{r11}		; (ldr r11, [sp], #4)
-   0x00008d1c <+44>:	bx	lr
+   0x00008cf0 <+0>:    push    {r11}        ; (str r11, [sp, #-4]!)
+   0x00008cf4 <+4>:    add    r11, sp, #0
+   0x00008cf8 <+8>:    push    {r6}        ; (str r6, [sp, #-4]!)
+   0x00008cfc <+12>:    add    r6, pc, #1
+   0x00008d00 <+16>:    bx    r6
+   0x00008d04 <+20>:    mov    r3, pc
+   0x00008d06 <+22>:    adds    r3, #4
+   0x00008d08 <+24>:    push    {r3}
+   0x00008d0a <+26>:    pop    {pc}
+   0x00008d0c <+28>:    pop    {r6}        ; (ldr r6, [sp], #4)
+   0x00008d10 <+32>:    mov    r0, r3
+   0x00008d14 <+36>:    sub    sp, r11, #0
+   0x00008d18 <+40>:    pop    {r11}        ; (ldr r11, [sp], #4)
+   0x00008d1c <+44>:    bx    lr
 End of assembler dump.
 ```
 
@@ -498,13 +497,13 @@ key3：
 ```
 (gdb) disass key3
 Dump of assembler code for function key3:
-   0x00008d20 <+0>:	push	{r11}		; (str r11, [sp, #-4]!)
-   0x00008d24 <+4>:	add	r11, sp, #0
-   0x00008d28 <+8>:	mov	r3, lr
-   0x00008d2c <+12>:	mov	r0, r3
-   0x00008d30 <+16>:	sub	sp, r11, #0
-   0x00008d34 <+20>:	pop	{r11}		; (ldr r11, [sp], #4)
-   0x00008d38 <+24>:	bx	lr
+   0x00008d20 <+0>:    push    {r11}        ; (str r11, [sp, #-4]!)
+   0x00008d24 <+4>:    add    r11, sp, #0
+   0x00008d28 <+8>:    mov    r3, lr
+   0x00008d2c <+12>:    mov    r0, r3
+   0x00008d30 <+16>:    sub    sp, r11, #0
+   0x00008d34 <+20>:    pop    {r11}        ; (ldr r11, [sp], #4)
+   0x00008d38 <+24>:    bx    lr
 End of assembler dump.
 (gdb)
 ```
@@ -513,15 +512,15 @@ End of assembler dump.
 
 ```
 ...
-   0x00008d64 <+40>:	bl	0xfbd8 <__isoc99_scanf>
-   0x00008d68 <+44>:	bl	0x8cd4 <key1>
-   0x00008d6c <+48>:	mov	r4, r0
-   0x00008d70 <+52>:	bl	0x8cf0 <key2>
-   0x00008d74 <+56>:	mov	r3, r0
-   0x00008d78 <+60>:	add	r4, r4, r3
-   0x00008d7c <+64>:	bl	0x8d20 <key3>
-   0x00008d80 <+68>:	mov	r3, r0
-   0x00008d84 <+72>:	add	r2, r4, r3
+   0x00008d64 <+40>:    bl    0xfbd8 <__isoc99_scanf>
+   0x00008d68 <+44>:    bl    0x8cd4 <key1>
+   0x00008d6c <+48>:    mov    r4, r0
+   0x00008d70 <+52>:    bl    0x8cf0 <key2>
+   0x00008d74 <+56>:    mov    r3, r0
+   0x00008d78 <+60>:    add    r4, r4, r3
+   0x00008d7c <+64>:    bl    0x8d20 <key3>
+   0x00008d80 <+68>:    mov    r3, r0
+   0x00008d84 <+72>:    add    r2, r4, r3
 ...
 ```
 
@@ -640,23 +639,23 @@ ret = p.recv()
 sleep(3)
 
 for i in range(100):
-	ret = p.recv()
-	N = ret[ret.find("N=")+2:ret.find(" ")]
-	C = ret[ret.find("C=")+2:ret.find("\n")]
-	low = 0
-	high = int(N)
-	for j in range(int(C)):
-		cnt = (high-low) / 2
-		mid = low + cnt
-		query = ''.join([str(i) for i in range(low, mid)])
-		p.sendline(query)
-		ret = p.recv()
-		if int(ret) % 10 == 0:
-			low = mid
-		else:
-			high = mid
-	p.sendline(str(low))
-	print p.recv()
+    ret = p.recv()
+    N = ret[ret.find("N=")+2:ret.find(" ")]
+    C = ret[ret.find("C=")+2:ret.find("\n")]
+    low = 0
+    high = int(N)
+    for j in range(int(C)):
+        cnt = (high-low) / 2
+        mid = low + cnt
+        query = ''.join([str(i) for i in range(low, mid)])
+        p.sendline(query)
+        ret = p.recv()
+        if int(ret) % 10 == 0:
+            low = mid
+        else:
+            high = mid
+    p.sendline(str(low))
+    print p.recv()
 
 print p.recv()
 ```
@@ -712,92 +711,92 @@ unsigned char submit[6];
 
 void play(){
 
-	int i;
-	printf("Submit your 6 lotto bytes :");
-	fflush(stdout);
+    int i;
+    printf("Submit your 6 lotto bytes :");
+    fflush(stdout);
 
-	int r;
-	r = read(0, submit, 6);
+    int r;
+    r = read(0, submit, 6);
 
-	printf("Lotto Start!\n");
-	//sleep(1);
+    printf("Lotto Start!\n");
+    //sleep(1);
 
-	// generate lotto numbers
-	int fd = open("/dev/urandom", O_RDONLY);
-	if(fd==-1){
-		printf("error. tell admin\n");
-		exit(-1);
-	}
-	unsigned char lotto[6];
-	if(read(fd, lotto, 6) != 6){
-		printf("error2. tell admin\n");
-		exit(-1);
-	}
-	for(i=0; i<6; i++){
-		lotto[i] = (lotto[i] % 45) + 1;		// 1 ~ 45
-	}
-	close(fd);
+    // generate lotto numbers
+    int fd = open("/dev/urandom", O_RDONLY);
+    if(fd==-1){
+        printf("error. tell admin\n");
+        exit(-1);
+    }
+    unsigned char lotto[6];
+    if(read(fd, lotto, 6) != 6){
+        printf("error2. tell admin\n");
+        exit(-1);
+    }
+    for(i=0; i<6; i++){
+        lotto[i] = (lotto[i] % 45) + 1;        // 1 ~ 45
+    }
+    close(fd);
 
-	// calculate lotto score
-	int match = 0, j = 0;
-	for(i=0; i<6; i++){
-		for(j=0; j<6; j++){
-			if(lotto[i] == submit[j]){
-				match++;
-			}
-		}
-	}
+    // calculate lotto score
+    int match = 0, j = 0;
+    for(i=0; i<6; i++){
+        for(j=0; j<6; j++){
+            if(lotto[i] == submit[j]){
+                match++;
+            }
+        }
+    }
 
-	// win!
-	if(match == 6){
-		system("/bin/cat flag");
-	}
-	else{
-		printf("bad luck...\n");
-	}
+    // win!
+    if(match == 6){
+        system("/bin/cat flag");
+    }
+    else{
+        printf("bad luck...\n");
+    }
 
 }
 
 void help(){
-	printf("- nLotto Rule -\n");
-	printf("nlotto is consisted with 6 random natural numbers less than 46\n");
-	printf("your goal is to match lotto numbers as many as you can\n");
-	printf("if you win lottery for *1st place*, you will get reward\n");
-	printf("for more details, follow the link below\n");
-	printf("http://www.nlotto.co.kr/counsel.do?method=playerGuide#buying_guide01\n\n");
-	printf("mathematical chance to win this game is known to be 1/8145060.\n");
+    printf("- nLotto Rule -\n");
+    printf("nlotto is consisted with 6 random natural numbers less than 46\n");
+    printf("your goal is to match lotto numbers as many as you can\n");
+    printf("if you win lottery for *1st place*, you will get reward\n");
+    printf("for more details, follow the link below\n");
+    printf("http://www.nlotto.co.kr/counsel.do?method=playerGuide#buying_guide01\n\n");
+    printf("mathematical chance to win this game is known to be 1/8145060.\n");
 }
 
 int main(int argc, char* argv[]){
 
-	// menu
-	unsigned int menu;
+    // menu
+    unsigned int menu;
 
-	while(1){
+    while(1){
 
-		printf("- Select Menu -\n");
-		printf("1. Play Lotto\n");
-		printf("2. Help\n");
-		printf("3. Exit\n");
+        printf("- Select Menu -\n");
+        printf("1. Play Lotto\n");
+        printf("2. Help\n");
+        printf("3. Exit\n");
 
-		scanf("%d", &menu);
+        scanf("%d", &menu);
 
-		switch(menu){
-			case 1:
-				play();
-				break;
-			case 2:
-				help();
-				break;
-			case 3:
-				printf("bye\n");
-				return 0;
-			default:
-				printf("invalid menu\n");
-				break;
-		}
-	}
-	return 0;
+        switch(menu){
+            case 1:
+                play();
+                break;
+            case 2:
+                help();
+                break;
+            case 3:
+                printf("bye\n");
+                return 0;
+            default:
+                printf("invalid menu\n");
+                break;
+        }
+    }
+    return 0;
 }
 ```
 
@@ -807,11 +806,11 @@ int main(int argc, char* argv[]){
 // calculate lotto score
 int match = 0, j = 0;
 for(i=0; i<6; i++){
-	for(j=0; j<6; j++){
-		if(lotto[i] == submit[j]){
-			match++;
-		}
-	}
+    for(j=0; j<6; j++){
+        if(lotto[i] == submit[j]){
+            match++;
+        }
+    }
 }
 ```
 
@@ -819,9 +818,9 @@ for(i=0; i<6; i++){
 
 ```c
 for (i = 0; i < 6; i++) {
-	if (lotto[i] == submit[i]) {
-		match++;
-	}
+    if (lotto[i] == submit[i]) {
+        match++;
+    }
 }
 ```
 
@@ -838,17 +837,17 @@ for (i = 0; i < 6; i++) {
 #include <string.h>
 
 int filter(char* cmd){
-	int r=0;
-	r += strstr(cmd,"flag")!=0;
-	r += strstr(cmd,"sh")!=0;
-	r += strstr(cmd,"tmp")!=0;
-	return r;
+    int r=0;
+    r += strstr(cmd,"flag")!=0;
+    r += strstr(cmd,"sh")!=0;
+    r += strstr(cmd,"tmp")!=0;
+    return r;
 }
 int main(int argc, char* argv[], char** envp){
-	putenv("PATH=/thankyouverymuch");
-	if(filter(argv[1])) return 0;
-	system(argv[1] );
-	return 0;
+    putenv("PATH=/thankyouverymuch");
+    if(filter(argv[1])) return 0;
+    system(argv[1] );
+    return 0;
 }
 ```
 
@@ -865,29 +864,29 @@ $ ./cmd1 "/bin/cat /home/cmd1/fla*"
 #include <string.h>
 
 int filter(char* cmd){
-	int r=0;
-	r += strstr(cmd,"=")!=0;
-	r += strstr(cmd,"PATH")!=0;
-	r += strstr(cmd,"export")!=0;
-	r += strstr(cmd,"/")!=0;
-	r += strstr(cmd,"`")!=0;
-	r += strstr(cmd,"flag")!=0;
-	return r;
+    int r=0;
+    r += strstr(cmd,"=")!=0;
+    r += strstr(cmd,"PATH")!=0;
+    r += strstr(cmd,"export")!=0;
+    r += strstr(cmd,"/")!=0;
+    r += strstr(cmd,"`")!=0;
+    r += strstr(cmd,"flag")!=0;
+    return r;
 }
 
 extern char** environ;
 void delete_env(){
-	char** p;
-	for(p=environ; *p; p++)	memset(*p, 0, strlen(*p));
+    char** p;
+    for(p=environ; *p; p++)    memset(*p, 0, strlen(*p));
 }
 
 int main(int argc, char* argv[], char** envp){
-	delete_env();
-	putenv("PATH=/no_command_execution_until_you_become_a_hacker");
-	if(filter(argv[1])) return 0;
-	printf("%s\n", argv[1]);
-	system(argv[1] );
-	return 0;
+    delete_env();
+    putenv("PATH=/no_command_execution_until_you_become_a_hacker");
+    if(filter(argv[1])) return 0;
+    printf("%s\n", argv[1]);
+    system(argv[1] );
+    return 0;
 }
 ```
 
@@ -1011,18 +1010,18 @@ int main(int argc, char* argv[]){
 (gdb) p/x $rbx
 $1 = 0x1fe8c50
 (gdb) x/8 0x1fe8c50
-0x1fe8c50:	0x00401570	0x00000000	0x00000019	0x00000000
-0x1fe8c60:	0x01fe8c38	0x00000000	0x000203a1	0x00000000
+0x1fe8c50:    0x00401570    0x00000000    0x00000019    0x00000000
+0x1fe8c60:    0x01fe8c38    0x00000000    0x000203a1    0x00000000
 ```
 
 由于虚函数表地址在对象首部，所以这里虚函数表地址就是 `0x401570`。我们继续看虚函数表：
 
 ```
 (gdb) x/8a 0x401570
-0x401570 <_ZTV3Man+16>:	0x40117a <_ZN5Human10give_shellEv>	0x4012d2 <_ZN3Man9introduceEv>
-0x401580 <_ZTV5Human>:	0x0	0x4015f0 <_ZTI5Human>
-0x401590 <_ZTV5Human+16>:	0x40117a <_ZN5Human10give_shellEv>	0x401192 <_ZN5Human9introduceEv>
-0x4015a0 <_ZTS5Woman>:	0x6e616d6f5735	0x0
+0x401570 <_ZTV3Man+16>:    0x40117a <_ZN5Human10give_shellEv>    0x4012d2 <_ZN3Man9introduceEv>
+0x401580 <_ZTV5Human>:    0x0    0x4015f0 <_ZTI5Human>
+0x401590 <_ZTV5Human+16>:    0x40117a <_ZN5Human10give_shellEv>    0x401192 <_ZN5Human9introduceEv>
+0x4015a0 <_ZTS5Woman>:    0x6e616d6f5735    0x0
 ```
 
 用 `a` 可以把函数名显示出来，可以看到 `Man` 和 `Human` 的 `give_shell` 虚函数地址相同，而 `introduce` 不同，这是符合 C++ 虚函数机制的：私有虚函数不能被继承，但是会在子类的虚函数表中出现。换句话说，子类调用的本质上还是父类的虚函数。
@@ -1087,112 +1086,112 @@ unsigned long long rdtsc(){
 }
 
 char* slow_memcpy(char* dest, const char* src, size_t len){
-	int i;
-	for (i=0; i<len; i++) {
-		dest[i] = src[i];
-	}
-	return dest;
+    int i;
+    for (i=0; i<len; i++) {
+        dest[i] = src[i];
+    }
+    return dest;
 }
 
 char* fast_memcpy(char* dest, const char* src, size_t len){
-	size_t i;
-	// 64-byte block fast copy
-	if(len>= 64){
-		i = len / 64;
-		len &= (64-1);
-		while(i--> 0){
-			__asm__ __volatile__ (
-			"movdqa (%0), %%xmm0\n"
-			"movdqa 16(%0), %%xmm1\n"
-			"movdqa 32(%0), %%xmm2\n"
-			"movdqa 48(%0), %%xmm3\n"
-			"movntps %%xmm0, (%1)\n"
-			"movntps %%xmm1, 16(%1)\n"
-			"movntps %%xmm2, 32(%1)\n"
-			"movntps %%xmm3, 48(%1)\n"
-			::"r"(src),"r"(dest):"memory");
-			dest += 64;
-			src += 64;
-		}
-	}
+    size_t i;
+    // 64-byte block fast copy
+    if(len>= 64){
+        i = len / 64;
+        len &= (64-1);
+        while(i--> 0){
+            __asm__ __volatile__ (
+            "movdqa (%0), %%xmm0\n"
+            "movdqa 16(%0), %%xmm1\n"
+            "movdqa 32(%0), %%xmm2\n"
+            "movdqa 48(%0), %%xmm3\n"
+            "movntps %%xmm0, (%1)\n"
+            "movntps %%xmm1, 16(%1)\n"
+            "movntps %%xmm2, 32(%1)\n"
+            "movntps %%xmm3, 48(%1)\n"
+            ::"r"(src),"r"(dest):"memory");
+            dest += 64;
+            src += 64;
+        }
+    }
 
-	// byte-to-byte slow copy
-	if(len) slow_memcpy(dest, src, len);
-	return dest;
+    // byte-to-byte slow copy
+    if(len) slow_memcpy(dest, src, len);
+    return dest;
 }
 
 int main(void){
 
-	setvbuf(stdout, 0, _IONBF, 0);
-	setvbuf(stdin, 0, _IOLBF, 0);
+    setvbuf(stdout, 0, _IONBF, 0);
+    setvbuf(stdin, 0, _IOLBF, 0);
 
-	printf("Hey, I have a boring assignment for CS class.. :(\n");
-	printf("The assignment is simple.\n");
+    printf("Hey, I have a boring assignment for CS class.. :(\n");
+    printf("The assignment is simple.\n");
 
-	printf("-----------------------------------------------------\n");
-	printf("- What is the best implementation of memcpy?        -\n");
-	printf("- 1. implement your own slow/fast version of memcpy -\n");
-	printf("- 2. compare them with various size of data         -\n");
-	printf("- 3. conclude your experiment and submit report     -\n");
-	printf("-----------------------------------------------------\n");
+    printf("-----------------------------------------------------\n");
+    printf("- What is the best implementation of memcpy?        -\n");
+    printf("- 1. implement your own slow/fast version of memcpy -\n");
+    printf("- 2. compare them with various size of data         -\n");
+    printf("- 3. conclude your experiment and submit report     -\n");
+    printf("-----------------------------------------------------\n");
 
-	printf("This time, just help me out with my experiment and get flag\n");
-	printf("No fancy hacking, I promise :D\n");
+    printf("This time, just help me out with my experiment and get flag\n");
+    printf("No fancy hacking, I promise :D\n");
 
-	unsigned long long t1, t2;
-	int e;
-	char* src;
-	char* dest;
-	unsigned int low, high;
-	unsigned int size;
-	// allocate memory
-	char* cache1 = mmap(0, 0x4000, 7, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-	char* cache2 = mmap(0, 0x4000, 7, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-	src = mmap(0, 0x2000, 7, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+    unsigned long long t1, t2;
+    int e;
+    char* src;
+    char* dest;
+    unsigned int low, high;
+    unsigned int size;
+    // allocate memory
+    char* cache1 = mmap(0, 0x4000, 7, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+    char* cache2 = mmap(0, 0x4000, 7, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+    src = mmap(0, 0x2000, 7, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
 
-	size_t sizes[10];
-	int i=0;
+    size_t sizes[10];
+    int i=0;
 
-	// setup experiment parameters
-	for(e=4; e<14; e++){	// 2^13 = 8K
-		low = pow(2,e-1);
-		high = pow(2,e);
-		printf("specify the memcpy amount between %d ~ %d :", low, high);
-		scanf("%d", &size);
-		if(size < low || size> high ){
-			printf("don't mess with the experiment.\n");
-			exit(0);
-		}
-		sizes[i++] = size;
-	}
+    // setup experiment parameters
+    for(e=4; e<14; e++){    // 2^13 = 8K
+        low = pow(2,e-1);
+        high = pow(2,e);
+        printf("specify the memcpy amount between %d ~ %d :", low, high);
+        scanf("%d", &size);
+        if(size < low || size> high ){
+            printf("don't mess with the experiment.\n");
+            exit(0);
+        }
+        sizes[i++] = size;
+    }
 
-	sleep(1);
-	printf("ok, lets run the experiment with your configuration\n");
-	sleep(1);
+    sleep(1);
+    printf("ok, lets run the experiment with your configuration\n");
+    sleep(1);
 
-	// run experiment
-	for(i=0; i<10; i++){
-		size = sizes[i];
-		printf("experiment %d : memcpy with buffer size %d\n", i+1, size);
-		dest = malloc(size);
+    // run experiment
+    for(i=0; i<10; i++){
+        size = sizes[i];
+        printf("experiment %d : memcpy with buffer size %d\n", i+1, size);
+        dest = malloc(size);
 
-		memcpy(cache1, cache2, 0x4000);		// to eliminate cache effect
-		t1 = rdtsc();
-		slow_memcpy(dest, src, size);		// byte-to-byte memcpy
-		t2 = rdtsc();
-		printf("ellapsed CPU cycles for slow_memcpy : %llu\n", t2-t1);
+        memcpy(cache1, cache2, 0x4000);        // to eliminate cache effect
+        t1 = rdtsc();
+        slow_memcpy(dest, src, size);        // byte-to-byte memcpy
+        t2 = rdtsc();
+        printf("ellapsed CPU cycles for slow_memcpy : %llu\n", t2-t1);
 
-		memcpy(cache1, cache2, 0x4000);		// to eliminate cache effect
-		t1 = rdtsc();
-		fast_memcpy(dest, src, size);		// block-to-block memcpy
-		t2 = rdtsc();
-		printf("ellapsed CPU cycles for fast_memcpy : %llu\n", t2-t1);
-		printf("\n");
-	}
+        memcpy(cache1, cache2, 0x4000);        // to eliminate cache effect
+        t1 = rdtsc();
+        fast_memcpy(dest, src, size);        // block-to-block memcpy
+        t2 = rdtsc();
+        printf("ellapsed CPU cycles for fast_memcpy : %llu\n", t2-t1);
+        printf("\n");
+    }
 
-	printf("thanks for helping my experiment!\n");
-	printf("flag : ----- erased in this source code -----\n");
-	return 0;
+    printf("thanks for helping my experiment!\n");
+    printf("flag : ----- erased in this source code -----\n");
+    return 0;
 }
 ```
 
@@ -1227,51 +1226,51 @@ int main(void){
 #define LENGTH 128
 
 void sandbox(){
-	scmp_filter_ctx ctx = seccomp_init(SCMP_ACT_KILL);
-	if (ctx == NULL) {
-		printf("seccomp error\n");
-		exit(0);
-	}
+    scmp_filter_ctx ctx = seccomp_init(SCMP_ACT_KILL);
+    if (ctx == NULL) {
+        printf("seccomp error\n");
+        exit(0);
+    }
 
-	seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(open), 0);
-	seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(read), 0);
-	seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(write), 0);
-	seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(exit), 0);
-	seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(exit_group), 0);
+    seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(open), 0);
+    seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(read), 0);
+    seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(write), 0);
+    seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(exit), 0);
+    seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(exit_group), 0);
 
-	if (seccomp_load(ctx) <0){
-		seccomp_release(ctx);
-		printf("seccomp error\n");
-		exit(0);
-	}
-	seccomp_release(ctx);
+    if (seccomp_load(ctx) <0){
+        seccomp_release(ctx);
+        printf("seccomp error\n");
+        exit(0);
+    }
+    seccomp_release(ctx);
 }
 
 char stub[] ="\x48\x31\xc0\x48\x31\xdb\x48\x31\xc9\x48\x31\xd2\x48\x31\xf6\x48\x31\xff\x48\x31\xed\x4d\x31\xc0\x4d\x31\xc9\x4d\x31\xd2\x4d\x31\xdb\x4d\x31\xe4\x4d\x31\xed\x4d\x31\xf6\x4d\x31\xff";
 unsigned char filter[256];
 int main(int argc, char* argv[]){
 
-	setvbuf(stdout, 0, _IONBF, 0);
-	setvbuf(stdin, 0, _IOLBF, 0);
+    setvbuf(stdout, 0, _IONBF, 0);
+    setvbuf(stdin, 0, _IOLBF, 0);
 
-	printf("Welcome to shellcoding practice challenge.\n");
-	printf("In this challenge, you can run your x64 shellcode under SECCOMP sandbox.\n");
-	printf("Try to make shellcode that spits flag using open()/read()/write() systemcalls only.\n");
-	printf("If this does not challenge you. you should play'asg'challenge :)\n");
+    printf("Welcome to shellcoding practice challenge.\n");
+    printf("In this challenge, you can run your x64 shellcode under SECCOMP sandbox.\n");
+    printf("Try to make shellcode that spits flag using open()/read()/write() systemcalls only.\n");
+    printf("If this does not challenge you. you should play'asg'challenge :)\n");
 
-	char* sh = (char*)mmap(0x41414000, 0x1000, 7, MAP_ANONYMOUS | MAP_FIXED | MAP_PRIVATE, 0, 0);
-	memset(sh, 0x90, 0x1000);
-	memcpy(sh, stub, strlen(stub));
+    char* sh = (char*)mmap(0x41414000, 0x1000, 7, MAP_ANONYMOUS | MAP_FIXED | MAP_PRIVATE, 0, 0);
+    memset(sh, 0x90, 0x1000);
+    memcpy(sh, stub, strlen(stub));
 
-	int offset = sizeof(stub);
-	printf("give me your x64 shellcode:");
-	read(0, sh+offset, 1000);
+    int offset = sizeof(stub);
+    printf("give me your x64 shellcode:");
+    read(0, sh+offset, 1000);
 
-	alarm(10);
-	chroot("/home/asm_pwn");	// you are in chroot jail. so you can't use symlink in /tmp
-	sandbox();
-	((void (*)(void))sh)();
-	return 0;
+    alarm(10);
+    chroot("/home/asm_pwn");    // you are in chroot jail. so you can't use symlink in /tmp
+    sandbox();
+    ((void (*)(void))sh)();
+    return 0;
 }
 ```
 
@@ -1409,7 +1408,7 @@ int main(int argc, char* argv[]){
 然而，尽管 `P->fd->bk` 和 `P->bk->fd` 会被检查合法性，这两句赋值语句中的 `P->fd` 和 `P->bk` 都不会被检查，换句话说我们可以用这个特性使右边的地址覆盖掉左边地址。
 
 > 再简单一点，注意到 `->fd` 等于 `+0x0`，`->bk` 等于 `+0x4`，也就是：
->
+> 
 > ```
 > [P]+0x4 = P+0x4
 > [P+0x4] = P
@@ -1524,27 +1523,27 @@ char flag[100];
 char password[100];
 char* key = "3\rG[S/%\x1c\x1d#0?\rIS\x0f\x1c\x1d\x18;,4\x1b\x00\x1bp;5\x0b\x1b\x08\x45+";
 void calc_flag(char* s){
-	int i;
-	for(i=0; i<strlen(s); i++){
-		flag[i] = s[i] ^ key[i];
-	}
-	printf("%s\n", flag);
+    int i;
+    for(i=0; i<strlen(s); i++){
+        flag[i] = s[i] ^ key[i];
+    }
+    printf("%s\n", flag);
 }
 int main(){
-	FILE* fp = fopen("/home/blukat/password", "r");
-	fgets(password, 100, fp);
-	char buf[100];
-	printf("guess the password!\n");
-	fgets(buf, 128, stdin);
-	if(!strcmp(password, buf)){
-		printf("congrats! here is your flag:");
-		calc_flag(password);
-	}
-	else{
-		printf("wrong guess!\n");
-		exit(0);
-	}
-	return 0;
+    FILE* fp = fopen("/home/blukat/password", "r");
+    fgets(password, 100, fp);
+    char buf[100];
+    printf("guess the password!\n");
+    fgets(buf, 128, stdin);
+    if(!strcmp(password, buf)){
+        printf("congrats! here is your flag:");
+        calc_flag(password);
+    }
+    else{
+        printf("wrong guess!\n");
+        exit(0);
+    }
+    return 0;
 }
 ```
 
@@ -1698,8 +1697,8 @@ p.recvline()
 
 sum = 0
 for i in range(7):
-	p.recvuntil('+')
-	sum += int(p.recvline()[:-2]) # strip )\n
+    p.recvuntil('+')
+    sum += int(p.recvline()[:-2]) # strip )\n
 
 p.recvuntil(':')
 p.sendline('1')

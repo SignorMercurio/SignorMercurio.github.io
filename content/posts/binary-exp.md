@@ -450,11 +450,8 @@ C 程序运行过程中，会持续地维护这个 `stack` 段也就是栈，用
 汇编语言是 Intel 推出的一系列汇编的指令集合，有两种语法：
 
 1. Intel 语法：`operand destination, source`
-
 - `mov eax, 5`
-
 2. AT&T 语法：`operand source, destination`
-
 - `mov $5, %eax`
 
 本课程将使用更简单的 Intel 语法（CSAPP 使用 AT&T 语法）。

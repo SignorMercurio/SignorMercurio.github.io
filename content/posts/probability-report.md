@@ -12,6 +12,7 @@ categories:
 <!--more-->
 
 ## 背景
+
 这篇报告的灵感来源于一道 1992 年普特南数学竞赛真题，原题的表述如下：
 
 > A–6 Four points are chosen at random on the surface of a sphere. What is the probability that the center of the sphere lies inside the tetrahedron whose vertices are at the four points? (It is understood that each point is independently chosen relative to a uniform distribution on the sphere.)
@@ -19,7 +20,9 @@ categories:
 题目大意：在球面上随机选择四个点构成四面体，求球心落在该四面体内（含边界）的概率。
 
 ## 初步思路
+
 ### 减小规模
+
 对于这类空间几何问题，容易想到通过 “降维处理” 来降低思维难度。因此，我们不妨考虑如下问题：
 
 在圆上任取三个点构成三角形，求圆心落在该三角形内（含边界）的概率。
@@ -35,12 +38,15 @@ categories:
 同样地，这里取（最大值 + 最小值）的均值也是因为，我们已经假定 P1,P2 在圆上均匀分布——因此弧长在 0 到半周长也是均匀分布的。于是我们求出弧的平均长度，实际上就是求出了圆心落在三角形内（含边界）的概率期望。
 
 ### 推广
+
 推广到三维，假设四个点分别为 P1,P2,P3,P4，我们固定 P1,P2,P3 点，并且分别过 P1,P2,P3 以及球心作直线，这些直线两两决定一个平面。画出图像后可以看到，球面被平面分为了 8 个区域，而 P4 需要落在 P1,P2,P3 相对的那个区域里。
 
 然而，有别于二维情况，让 P1,P2,P3 变化并设法求出那块区域的平均面积是十分困难的。也许可以借助曲面积分解决，但步骤将十分繁琐。因此，我们需要变换思路。
 
 ## 变换思路
+
 ### 低维情况另解
+
 回到二维的情况，既然刚才的方法推广时遇到了困难，那么能不能换一种更容易推广的方法呢？这需要对问题作进一步的简化。
 
 考虑刚才的解法中的核心元素：新增的两条辅助线。由于这两条辅助线简化了问题，我们尝试将问题只用这些新增的元素重新描述。在这里，我们不再考虑随机选取三个点，而是考虑：随机选择两条过圆心的直线，每条直线对应圆上的两个点。
@@ -52,9 +58,11 @@ categories:
 可以看到，调整了随机选点的过程后，我们用一种截然不同的方式求得了答案。更重要的是，将这一过程推广到三维极其容易。
 
 ### 重新推广
+
 任取球面上一点 P4，再任取三条过球心的直线。对每条直线，在它与球面的两个交点中选取一个作为 Pi, i=1,2,3。我们得到 2^3=8 种等可能结果，其中有且仅有一种结果能使得 P4 落在 P1,P2,P3 相对的球面区域上。即，有且仅有一种结果使得球心落在该四面体内。显而易见，1/8 就是这个问题的答案了。
 
 ## 结论与启示
+
 必须承认，上述解法是基于几何直观的，离开这种几何直观性，要如何证明我们得到的结果是正确的呢？换而言之，怎么把解答的过程用数学语言写下来？
 
 这个问题在数学中十分常见：理解问题并知道关键是一回事，但掌握相关背景知识，更正式、清晰地阐述这个理解，完全就是另一回事了。
@@ -64,8 +72,10 @@ categories:
 此外，更值得强调的是解题过程中的严谨性。概率论在诞生之初，（也许是由于过分强调实用的原因）并不严谨，也没有一个稳固的公理体系。而如今，运用公理逐渐完备的概率论进行计算时，我们也必须注意避免犯下隐蔽的 “假设性错误”，由于想当然的假设和自己补充的条件而得出错误的结论。和数学领域其它学科一样，是严谨性使得概率论来源于生活却又高于生活。
 
 ---
+
 > 参考资料：
->- http://kskedlaya.org/putnam-archive/1992.pdf
->- http://lsusmath.rickmabry.org/psisson/putnam/putnam-web.htm
->- http://kskedlaya.org/putnam-archive/2005.pdf
->- http://kskedlaya.org/putnam-archive/2005s.pdf
+> 
+> - http://kskedlaya.org/putnam-archive/1992.pdf
+> - http://lsusmath.rickmabry.org/psisson/putnam/putnam-web.htm
+> - http://kskedlaya.org/putnam-archive/2005.pdf
+> - http://kskedlaya.org/putnam-archive/2005s.pdf

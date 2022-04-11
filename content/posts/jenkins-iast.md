@@ -130,7 +130,7 @@ git push -u origin master
 2. 第二步中 `IAST 服务器地址 ` 请填写公网雳鉴地址，即 `http://47.100.14.22:81/`。
 
 3. 第三步结束后，先如图配置好 repo 地址（项目名需自行替换）：
-
+   
    ![图 11]({{< param cdnPrefix >}}/JenkinsIAST/11.png)
 
 4. 第四步中 `被测站点地址` 即部署 Java Web 应用的服务器地址，形式一般是 `ip:port`。

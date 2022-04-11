@@ -24,6 +24,7 @@ categories:
 关于这个数据结构还在摸索……下面是两个栗子:
 
 ## HDU 1166 敌兵布阵
+
 [https://cn.vjudge.net/problem/HDU-116](https://cn.vjudge.net/problem/HDU-1166)
 
 ```cpp
@@ -92,6 +93,7 @@ int main()
 ```
 
 ## EOJ 3389 线段树：点增加
+
 [http://acm.ecnu.edu.cn/problem/3389/](http://acm.ecnu.edu.cn/problem/3389/)
 微坑的模板题。
 

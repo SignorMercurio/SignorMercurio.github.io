@@ -46,7 +46,7 @@ int main()
     while (~scanf("%[^+]+%[^=]=%s", str1, str2, str3)){
         rev_str(str1);rev_str(str2);rev_str(str3);
         if (atoi(str3) == atoi(str2) + atoi(str1))
-	        printf("True\n");
+            printf("True\n");
         else printf("False\n");
 
         if (atoi(str3) == 0 && atoi(str2) == 0 && atoi(str1) == 0) break;
@@ -68,18 +68,28 @@ int main()
 ### 所以怎么算星期几？
 
 1. _蔡勒公式 (Zeller formula)：_
-
+   
    - **1582.10.4 后：**
-     $$ w=(y+[\frac{y}{4}]+[\frac{c}{4}]-2c+[\frac{13(m+1)}{5}]+d-1)\%7 $$
+     
+     $$
+     w=(y+[\frac{y}{4}]+[\frac{c}{4}]-2c+[\frac{13(m+1)}{5}]+d-1)\%7
+
+     $$
+   
    - **1582.10.4 及之前：**
-     $$ w=(y+[\frac{y}{4}]+[\frac{c}{4}]-2c+[\frac{13(m+1)}{5}]+d+2)\%7 $$
-
+     
+     $$
+     w=(y+[\frac{y}{4}]+[\frac{c}{4}]-2c+[\frac{13(m+1)}{5}]+d+2)\%7
+     $$
+   
    其中 m, d 对应月日，c 为年份前两位（世纪数 ** 减 1**），y 为年份后两位。
-
-2)  _基姆拉尔森公式 (Kim larsson calculation formula)：_
-    $$ w=(d+2m+[\frac{3(m+1)}{5}]+y+[\frac{y}{4}]-[\frac{y}{100}]+[\frac{y}{400}]+1)\%7 $$
-
-    需要注意的是，基姆拉尔森公式的结果为 0 时表示周一，6 表示周日，以此类推。
+2) _基姆拉尔森公式 (Kim larsson calculation formula)：_
+   
+   $$
+   w=(d+2m+[\frac{3(m+1)}{5}]+y+[\frac{y}{4}]-[\frac{y}{100}]+[\frac{y}{400}]+1)\%7
+   $$
+   
+   需要注意的是，基姆拉尔森公式的结果为 0 时表示周一，6 表示周日，以此类推。
 
 ### 注意事项
 
@@ -131,7 +141,7 @@ int main(void)
 ## EOJ1224 简单迷宫问题
 
 > 一天，sunny 不小心进入了一个迷宫，不仅很难寻找出路，而且有的地方还有怪物，但是 sunny 有足够的能力杀死怪物，但是需要一定的时间，但是 sunny 想早一点走出迷宫，所以请你帮助他计算出最少的时间走出迷宫，输出这个最少时间。
-我们规定每走一格需要时间单位 1, 杀死怪物也需要时间 1, 如果不能走到出口，则输出 impossible. 每次走只能是上下左右 4 个方向。
+> 我们规定每走一格需要时间单位 1, 杀死怪物也需要时间 1, 如果不能走到出口，则输出 impossible. 每次走只能是上下左右 4 个方向。
 
 先四面造墙，省去判断是否出界的函数。之后对于有怪物的格子，新状态再搜索树中是当前状态的下两层的，因此不能走过之后直接 `step+2` 标记掉，而是要记录下这个状态 (`cnt=1`)。很容易 WA 的点。
 
@@ -298,6 +308,7 @@ F_n
 $$
 
 我们记
+
 $$
 \begin{pmatrix}
 1 & 1\cr
@@ -306,6 +317,7 @@ $$
 $$
 
 为 $A$，由此我们可以推得：
+
 $$
 \begin{pmatrix}
 F*{n+1}\cr
@@ -317,6 +329,7 @@ A^n
 0
 \end{pmatrix}
 $$
+
 于是对 $A^n$ 求解就很容易得到答案了。
 
 ```cpp
@@ -494,7 +507,7 @@ int main()
             cout << ans << endl;
         }
     }
-	return 0;
+    return 0;
 }
 ```
 
@@ -517,18 +530,18 @@ int fa[N];
 
 int union_find(int x)
 {
-	return fa[x] == x ? x : fa[x] = union_find(fa[x]);
+    return fa[x] == x ? x : fa[x] = union_find(fa[x]);
 }
 
 bool unite(int a, int b)
 {
-	a = union_find(a);
-	b = union_find(b);
-	if (a != b) {
-		fa[a] = b;
-		return 1;
-	}
-	return 0;
+    a = union_find(a);
+    b = union_find(b);
+    if (a != b) {
+        fa[a] = b;
+        return 1;
+    }
+    return 0;
 }
 
 vector<tuple<int, int, int> > v;
@@ -548,9 +561,9 @@ ll kruskal()
 
 int main()
 {
-	int cas, n, i;
-	cin >> cas;
-	for (int t = 1; t <= cas; ++t) {
+    int cas, n, i;
+    cin >> cas;
+    for (int t = 1; t <= cas; ++t) {
         cin >> n;
         v.clear();
         for (i = 0; i < n; ++i) cin >> r[i];
@@ -560,8 +573,8 @@ int main()
                 v.emplace_back(min(r[i]^b[j], r[j]^b[i]), i, j);
             fa[i] = i;
         }
-		printf("Case #%d: %lld\n", t, kruskal());
-	}
+        printf("Case #%d: %lld\n", t, kruskal());
+    }
     return 0;
 }
 ```
@@ -674,4 +687,3 @@ int main()
     return 0;
 }
 ```
-

@@ -1,6 +1,7 @@
 ---
 title: 又见 LAMP：用 Flarum 搭建功能强大的在线论坛
 date: 2022-03-13T18:28:09Z
+lastmod: 2022-04-11 19:55:00
 tags:
   - PHP
   - 实践记录
@@ -194,6 +195,7 @@ mysql> source backup.sql;
 ## 开启 HTTPS
 
 编写 `conf-enabled/ssl-params.conf`：
+
 ```
 SSLCipherSuite EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH
 SSLProtocol all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1
@@ -211,35 +213,36 @@ SSLSessionTickets Off
 ```
 
 修改 `sites-enabled/000-default.conf`，开启 443 监听并重定向 HTTP 至 HTTPS[^7]：
+
 ```
 <VirtualHost *:80>
-	RewriteEngine on
-	RewriteCond %{HTTPS} !=on
-	RewriteRule ^/?(.*) https://%{SERVER_NAME}$1 [R=301,L]
+    RewriteEngine on
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^/?(.*) https://%{SERVER_NAME}$1 [R=301,L]
 </VirtualHost>
 
 <IfModule mod_ssl.c>
-	<VirtualHost *:443>
-		ServerName [your domain]
-		ServerAdmin webmaster@localhost
-		DocumentRoot /path/to/flarum/public
+    <VirtualHost *:443>
+        ServerName [your domain]
+        ServerAdmin webmaster@localhost
+        DocumentRoot /path/to/flarum/public
 
-		ErrorLog ${APACHE_LOG_DIR}/error.log
-		CustomLog ${APACHE_LOG_DIR}/access.log combined
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
 
-		SSLEngine on
+        SSLEngine on
 
-		SSLCertificateFile	/path/to/[your domain].crt
-		SSLCertificateKeyFile /path/to/[your domain].key
-		SSLCertificateChainFile /path/to/[your domain]_chain.crt
+        SSLCertificateFile    /path/to/[your domain].crt
+        SSLCertificateKeyFile /path/to/[your domain].key
+        SSLCertificateChainFile /path/to/[your domain]_chain.crt
 
-		<FilesMatch "\.(cgi|shtml|phtml|php)$">
-				SSLOptions +StdEnvVars
-		</FilesMatch>
-		<Directory /usr/lib/cgi-bin>
-				SSLOptions +StdEnvVars
-		</Directory>
-	</VirtualHost>
+        <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                SSLOptions +StdEnvVars
+        </FilesMatch>
+        <Directory /usr/lib/cgi-bin>
+                SSLOptions +StdEnvVars
+        </Directory>
+    </VirtualHost>
 </IfModule>
 
 # vim: syntax=apache ts=4 sw=4 sts=4 sr noet
@@ -253,10 +256,13 @@ $ sudo a2enmod headers
 $ sudo systemctl restart apache2
 ```
 
-## 其他实用插件
+## 实用插件记录
+
+来自 Extiverse[^8]：
 
 - 移动端底部导航 `acpl/mobile-tab`
 - 论坛统计小部件 `afrux/forum-stats-widget`
+- 论坛公告小部件 `afrux/news-widget`
 - 论坛自动管理 `askvortsov/flarum-auto-moderator`
 - 管理员警告 `askvortsov/flarum-moderator-warnings`
 - 用户组头像框 `clarkwinkelmann/flarum-ext-circle-groups`
@@ -264,53 +270,61 @@ $ sudo systemctl restart apache2
 - 个人资料卡展示被点赞次数 `clarkwinkelmann/flarum-ext-likes-received`
 - 链接预览 `datlechin/flarum-link-preview`
 - 图片 Fancybox `darkle/fancybox`
+- 楼主标识 `dem13n/topic-starter-label`
+- 固定可滚动的标签导航 `ecnu-im/sticky-sidenav`
 - 基于 Extiverse 的插件版本管理 `extiverse/mercury`
 - 简体中文语言包 `flarum-lang/chinese-simplified`
 - FoF 系列 `fof/`
   - 私密主题 `byobu`
+  - 关注标签 `follow-tags`
   - 链接自动转图片 `formatting`
   - 导航栏链接 `links`
   - 扩展个人资料字段 `masquerade`
+  - 合并主题 `merge-discussions`
   - 日间/夜间模式切换 `nightmode`
   - 自定义页面 `pages`
   - 发起投票 `polls`
   - 戳表情 `reactions`
   - 注册验证码 `recaptcha`，不支持 recaptcha v3
-  - HTTPS 站点加载 HTTP 图片 `secure-https`，需修改源码与新版兼容
   - 注册时勾选同意服务条款 `terms`
   - 文件上传 `upload`
   - 个性签名 `user-bio`
-
 - 邮件发送 `guzzlehttp/guzzle`
 - 自定义 HTML `<head>` 标签 `ianm/html-head`
 - 信息流显示主题摘要 `ianm/synopsis`
 - 登录可见 `jslirola/flarum-ext-login2seeplus`
+- 热门主题 `justoverclock/hot-discussions`
+- 设置 OpenGraph `<meta>` 标签 `justoverclock/og-meta-tag`
+- AWS S3 协议支持 `league/flysystem-aws-s3-v3`
 - 图片布局 `malago/flarum-ext-fancybox`
+- 主题浏览次数统计 `michaelbelgium/flarum-discussion-views`
+- 注册时确认密码 `nearata/flarum-ext-signup-confirm-password`
 - 自动加载更多 `noriods/auto-more`
 - 邮件黑白名单过滤 `nyu8/flarum-email-filter`
 - slug 统一使用 id `pipecraft/flarum-ext-id-slug`
 - 超级置顶 `the-turk/flarum-stickiest`
+- 卡片主题 `yannisme/oxotheme`
+- 发布主题时预览 `zerosonesfun/composer-preview`
 - 在新标签页中打开外部链接 `zerosonesfun/elint`
 - “回到顶部”按钮 `zerosonesfun/flarum-up` 
 
+## 自定义样式
+
 ### 自定义页面 CSS 调整
 
-使用自定义页面写更新日志。自定义页面支持 Markdown，但因为直接套用了论坛里帖子的 CSS 导致间距过大，因此可以在页面中添加：
+自定义页面支持 Markdown，但因为直接套用了论坛里帖子的 CSS 导致间距过大，因此可以在页面中添加[^9]：
 
 ```html
 <style>
-.Post-body h2, .Post-body h4{line-height:0.1}
-.Post-body ul{margin-block-start:0;margin-bottom:0}
-.Post-body{line-height:1}
-.grey{color:#757575}
+.Pages-container {
+white-space: normal !important;
+}
 </style>
 ```
 
-然后用 `h2`, `h4`, `ul`, `li` 等标签即可。
-
 ### “回到顶部”按钮 CSS 调整
 
-在 `外观->自定义样式` 中写 CSS：
+在 `外观->自定义样式` 中写 CSS[^10]：
 
 ```css
 #Up {
@@ -320,6 +334,9 @@ $ sudo systemctl restart apache2
 }
 ```
 
+### 插件开发
+
+对于一些可复用的较复杂的样式，可以提取出来写成插件并发布到社区。Flarum 提供了 flarum-cli[^11] 来快速创建插件模版，只需运行 `flarum init`，随后根据插件涉及的更改选择需要的模版项即可，十分方便。一个最简单的插件[^12]可以只修改前台样式，也就是只编写 `less/forum.less` 文件；而复杂的插件可以修改前/后台的样式、组件、JS 代码、以及后端的 PHP 代码等等。关于插件开发，可以参考 Flarum 插件开发文档[^13]。
 
 ## 参考资料
 
@@ -330,3 +347,12 @@ $ sudo systemctl restart apache2
 [^5]: [FoF 文件上传](https://discuss.flarum.org.cn/d/1292/150)
 [^6]: [Flarum 使用腾讯云COS对象存储](https://jacobruan.com/flarum-uses-tencent-cloud-cos-storage/)
 [^7]: [How to enable HTTPS with Apache 2 on Ubuntu 20.04](https://www.arubacloud.com/tutorial/how-to-enable-https-protocol-with-apache-2-on-ubuntu-20-04.aspx#GettinganSSLCertificate)
+
+[^8]: [Extiverse](https://extiverse.com/)
+
+[^9]: [FriendsOfFlarum Pages: Page 21 - Flarum Community](https://discuss.flarum.org/d/18301-friendsofflarum-pages/413)
+
+[^10]: [Up (A back to top button) - Flarum Community](https://discuss.flarum.org/d/29223-up-a-back-to-top-button/5)
+[^11]: [flarum/cli](https://github.com/flarum/cli)
+[^12]: [ECNU-Forum/sticky-sidenav](https://github.com/ECNU-Forum/sticky-sidenav)
+[^13]: [Flarum 插件开发文档](https://docs.flarum.org/extend)

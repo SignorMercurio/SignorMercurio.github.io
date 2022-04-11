@@ -20,6 +20,7 @@ categories:
 <!--more-->
 
 ## 线段树 (EOJ 2525)
+
 > 有 n 个灯，m 次操作，0 表示一段区间内灯的状态全部反转，1 表示询问一段区间内亮着的灯的数量。
 
 ```cpp
@@ -79,6 +80,7 @@ int main()
 ```
 
 ## 最大连续子序列的和
+
 由于要让和最大，可以直接屏蔽掉和为负数的情况 `(tot < 0)`，但是由于求的是连续子序列的和，不能一遇到负数的项就扔掉。如：`5 6 -1 5 4 -7`，最大连续子序列和为 `6+(-1)+5+4=14`。
 然后用 `tot` 更新 `ans` 就行了。
 
@@ -107,11 +109,11 @@ int main()
 ```
 
 ## 高斯消元求行列式及逆矩阵
+
 > 给定一个 n*n 的矩阵，输出它的行列式值和逆矩阵（保证存在）。
 
 期末复习线性代数时，发现自己求逆矩阵总是求错，于是干脆写了个程序来实现。。
 高斯消元法求解线性方程组只要稍微修改下代码就可以，判断无解 / 无穷多解也不难，至于求自由未知量然后输出任意一解…… 还没有想好。
-
 
 ```cpp
 #include <bits/stdc++.h>
@@ -185,8 +187,8 @@ int main()
 }
 ```
 
-
 ## 计算两个一元多项式的乘积
+
 算是高精度乘法？
 细节比较多。降幂输出非零系数。
 
@@ -250,7 +252,6 @@ int main()
 }
 ```
 
-
 ## Prim(EOJ 3199)
 
 ```cpp
@@ -298,12 +299,11 @@ int main()
 }
 ```
 
-
 ## Kruskal(EOJ 3201)
+
 > n 个点，m 条边的图，要使得图中没有圈，求要去掉的边的权值和的最小值。
 
 求图的最大生成树，用总权值减生成树权值得到答案。似乎是只能用 Kruskal 做。边数组应该是要开到 10000 * 10000 / 2 的，没想到 EOJ 上提交 RTE，改成 10000 * 100 就好了……
-
 
 ```cpp
 #include <bits/stdc++.h>
@@ -378,8 +378,9 @@ int main()
 ```
 
 ## KMP
+
 > 对于一个给定的字符串 s，唐纳德给出 q 次询问，第 i 次询问包括三个参数 li,ri,zi，问在 `s[li…ri]` 的所有子串中共有多少个恰好为 zi。
-1≤|s|≤100, q≤∑|zi|≤100
+> 1≤|s|≤100, q≤∑|zi|≤100
 
 坑点在于可重复。。比赛时用 Python 的切片水过去了，后来发现 C++ 用 string 的 `substr` 和 `find` 方法也不难写，这里仅记录一下刚学的 KMP 解法。
 
@@ -434,10 +435,10 @@ int main()
 ```
 
 ## 带路径还原的 BFS
+
 > 给定一个迷宫和起点终点，求最快要多少步到终点以及最快的路径，不能到达输出 -1。
 
 显然 bfs，也因此需要开一个 `step` 数组记录步数，更新没有走过的点的 `step`。路径还原则又需要一个数组记录这一步的上一个点，还原时从后往前递归输出即可。
-
 
 ```cpp
 #include <bits/stdc++.h>
@@ -526,6 +527,7 @@ int main()
 ```
 
 ## 判断两条线段是否相交
+
 包括了一个或多个点重合的情况。
 输入点的坐标顺序为 Ax,Ay,Bx,By,Cx,Cy,Dx,Dy，判断线段 AB 与线段 CD 是否相交。
 由于问题比较简单，没有用到向量、叉积什么的，而是用了奇怪的作图法 + 不证明直接推广法（？）。
@@ -549,6 +551,7 @@ int main()
 ```
 
 ## 计算多边形面积
+
 我们假定得到了按照逆时针顺序给出的 n 个顶点的坐标 `x1, y1, x2, y2 ... xn, yn` 且坐标均为整数。
 那么最简洁的方法就是计算向量叉积（其实也是算行列式）来求，对凹多边形也适用。直观的理解是将多边形分为了若干个小三角形分别求面积。
 
@@ -576,9 +579,10 @@ int main(void)
 ```
 
 ## 判断线段是否与矩形相交
+
 > 输入格式：
-xstart ystart xend yend xleft ytop xright ybottom
-Note: The terms top left and bottom right do not imply any ordering of coordinates.
+> xstart ystart xend yend xleft ytop xright ybottom
+> Note: The terms top left and bottom right do not imply any ordering of coordinates.
 
 计算几何题对我来说，光是写对就要花很久，而代码还要做到既简洁又易懂真是难上加难……
 注意点在于：线段与矩形不相交，这意味着线段不仅可以在矩形外，还可以在矩形内。
@@ -589,37 +593,37 @@ using namespace std;
 
 int main()
 {
-	int t, x1, y1, x2, y2, xl, yt, xr, yb;
-	int a, b, c, f1, f2, f3, f4;
-	cin >> t;
-	while (t--)
+    int t, x1, y1, x2, y2, xl, yt, xr, yb;
+    int a, b, c, f1, f2, f3, f4;
+    cin >> t;
+    while (t--)
     {
-		scanf("%d%d%d%d%d%d%d%d", &x1, &y1, &x2, &y2, &xl, &yt, &xr, &yb);
-		if (xl> xr) swap(xl, xr);
+        scanf("%d%d%d%d%d%d%d%d", &x1, &y1, &x2, &y2, &xl, &yt, &xr, &yb);
+        if (xl> xr) swap(xl, xr);
         if (yt < yb) swap(yt, yb);
-		a = y1 - y2;
-		b = x2 - x1;
-		c = x1 * y2 - y1 * x2;
-		f1 = a * xl + b * yb + c;
-		f2 = a * xl + b * yt + c;
-		f3 = a * xr + b * yb + c;
-		f4 = a * xr + b * yt + c;
-		if ((f1>0 && f2>0 && f3>0 && f4>0) || (f1<0 && f2<0 && f3<0 && f4<0))
-			printf("F\n");
-		else if ((x1> xr && x2 > xr) || (x1 < xl && x2 < xl))
-			printf("F\n");
-		else if ((y1> yt && y2 > yt) || (y1 < yb && y2 < yb))
-			printf("F\n");
-		else
+        a = y1 - y2;
+        b = x2 - x1;
+        c = x1 * y2 - y1 * x2;
+        f1 = a * xl + b * yb + c;
+        f2 = a * xl + b * yt + c;
+        f3 = a * xr + b * yb + c;
+        f4 = a * xr + b * yt + c;
+        if ((f1>0 && f2>0 && f3>0 && f4>0) || (f1<0 && f2<0 && f3<0 && f4<0))
+            printf("F\n");
+        else if ((x1> xr && x2 > xr) || (x1 < xl && x2 < xl))
+            printf("F\n");
+        else if ((y1> yt && y2 > yt) || (y1 < yb && y2 < yb))
+            printf("F\n");
+        else
             printf("T\n");
-	}
-	return 0;
+    }
+    return 0;
 }
 ```
 
 ## Graham 求凸包 (EOJ 1189)
-> 给定平面上的 n 个点及半径 r，求圆的周长与凸包周长之和。
 
+> 给定平面上的 n 个点及半径 r，求圆的周长与凸包周长之和。
 
 ```cpp
 #include <bits/stdc++.h>

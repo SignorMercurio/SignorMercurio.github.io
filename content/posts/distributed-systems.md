@@ -22,7 +22,7 @@ COMP0133《分布式系统与安全》是我从本科到硕士期间最有价值
 Brad Karp 老师讲解清晰又不失风趣，硬是把线上课上出了线下课的体验。尽管才上了两周的课，我相信这门课会让我受益匪浅。
 
 > 一开始给我留下比较好的印象的就是老师摒弃了学校的课程平台 Moodle，转而使用 GitHub Classroom 和 Piazza。众所周知，所谓学校的课程平台并不会给师生带来什么好的体验。
->
+> 
 > 此外，GitHub Classroom 还能自动测试和批改作业，很有意思，使用体验也很好。
 
 这门课是没有教材的，这实际上对老师的水平提出了很高的要求：他必须自己四处收集资源备课、讲述自己的理解，而非将教材上的内容略作修改、照本宣科。取而代之的阅读材料是一系列经典论文。
@@ -207,7 +207,7 @@ NFS Client 使用 mounter 将远程目录挂载到本地目录。mounter 向指�
 
 为什么 NFS 不直接用常规的文件路径来标识文件呢？当然是为了处理数据一致性的问题。假设一个 Client 打开了 `dir1` 下的文件正准备读取，此时另一个 Client 却重命名了这个目录为 `dir2`，那么根据 Unix 规范最终读取的路径是 `dir2/xxx` 。如果 NFS 直接用文件路径标识文件，就无法与 Unix 文件系统的行为保持一致，这也是 file handle 中引入 inode 的原因。
 
-那么 generation number 又有什么用？假设一个 Client 打开了一个文件正准备读区，此时另一个 Client 却删除了这个文件，创建了新的同名文件，那么根据 Unix 规范最终读取的是旧文件的内容。如果 NFS 恰好将旧文件的 inode 分配给新创建的文件，就会导致读到的是新文件的内容。generation number 则会在重用 inode 时 +1，确保读到的是原来的旧文件。解决了重用 inode 的风险，NFS Server 就能立刻回收 inode。
+那么 generation number 又有什么用？假设一个 Client 打开了一个文件正准备读取，此时另一个 Client 却删除了这个文件，创建了新的同名文件，那么根据 Unix 规范最终读取的是旧文件的内容。如果 NFS 恰好将旧文件的 inode 分配给新创建的文件，就会导致读到的是新文件的内容。generation number 则会在重用 inode 时 +1，确保读到的是原来的旧文件。解决了重用 inode 的风险，NFS Server 就能立刻回收 inode。
 
 即使 Client 打开文件获得 file handle 后 Server 宕机，这个 file handle 在 Server 恢复后依然有效。
 
@@ -687,11 +687,11 @@ record append 操作的流程和写操作基本一致，在 primary 的逻辑上
 
 根据这两个指标，我们可以得到：
 
-|              | Write                 | Record Append                          |
-| ------------ | --------------------- | -------------------------------------- |
+|        | Write                 | Record Append                          |
+| ------ | --------------------- | -------------------------------------- |
 | 串行修改成功 | defined               | defined interspersed with inconsistent |
 | 并行修改成功 | consistent, undefined | defined interspersed with inconsistent |
-| 修改失败     | inconsistent          | Inconsistent                           |
+| 修改失败   | inconsistent          | Inconsistent                           |
 
 对于成功的并行写操作，尽管 GFS 可以保证文件区域内容一致，但由于 primary 对并行操作的排序未必和实际发起操作的顺序一致，客户端未必能看到一致的修改操作记录，因此 defined 是无法保证的。因此 GFS 设计者不建议使用 concurrent write。
 
@@ -825,18 +825,19 @@ $$
 \\{s,c,addr,timestamp,ttl,K_{s,c}\\}K_s
 $$
 
-| 符号         | 含义                         |
-| ------------ | ---------------------------- |
+| 符号           | 含义                   |
+| ------------ | -------------------- |
 | s            | 服务器（的名称）             |
 | c            | 客户端（的名称）             |
-| addr         | 客户端 IP 地址               |
-| timestamp    | 时间戳                       |
-| ttl          | ticket 有效时长              |
-| $K_{s,c}$    | s 和 c 的 session key        |
-| $K_s$        | s 的密钥                     |
+| addr         | 客户端 IP 地址            |
+| timestamp    | 时间戳                  |
+| ttl          | ticket 有效时长          |
+| $K_{s,c}$    | s 和 c 的 session key  |
+| $K_s$        | s 的密钥                |
 | $\\{abc\\}K$ | 用 $K$ 加密 $abc$ 得到的密文 |
 
 ticket 颁发后能被用多次，但 authenticator 只能用一次；ticket 由服务器生成，而 authenticator 由客户端生成。一个 authenticator 通常长这样：
+
 $$
 \\{c,addr,timestamp\\}K_{s,c}
 $$
@@ -844,21 +845,23 @@ $$
 #### 获取 TGS ticket
 
 最初，用户只能通过密码来证明身份。因此用户首先要输入用户名，此时客户端向 Kerberos 系统发送：
+
 $$
 c,tgs
 $$
 
-| 符号 | 含义                             |
-| ---- | -------------------------------- |
-| tgs  | ticket-granting 服务器（的名称） |
+| 符号  | 含义                       |
+| --- | ------------------------ |
+| tgs | ticket-granting 服务器（的名称） |
 
 表示想要使用 ticket-granting 服务器上的服务。Kerberos 系统检查 c 后生成 c 和 tgs 的 session key。随后回复：
+
 $$
 \\{\ K_{c,tgs},\\{T_{c,tgs}\\}K_{tgs}\ \\}K_c
 $$
 
-| 符号        | 含义                     |
-| ----------- | ------------------------ |
+| 符号          | 含义                  |
+| ----------- | ------------------- |
 | $T_{c,tgs}$ | c 使用 tgs 服务的 ticket |
 
 用户收到后，输入密码。此时密码被转化为密钥并解密这个消息。这样，用户就可以访问 tgs 了。
@@ -866,32 +869,39 @@ $$
 #### 获取服务 ticket
 
 如果用户还没有获取过这个服务的 ticket 或者 ticket 已经过期了，那么就需要从 tgs 那里获取服务 ticket。客户端向 tgs 发送：
+
 $$
 s,\\{T_{c,tgs}\\}K_{tgs},\\{A_c\\}K_{c,tgs}
 $$
 
-| 符号  | 含义               |
-| ----- | ------------------ |
+| 符号    | 含义                |
+| ----- | ----------------- |
 | $A_c$ | c 的 authenticator |
 
 tgs 随后解密并检查 ticket 和 authenticator，并生成 c 和 s 的 session key。随后回复：
+
 $$
 \\{\ \\{T_{c,s}\\}K_s,K_{c,s}\ \\}K_{c,tgs}
 $$
+
 用户收到后，不需要再次输入密码就可以自动使用 $K_{c,tgs}$ 解密消息，获得 c 使用 s 服务的 ticket。这样，用户就可以访问 s 了。
 
 #### 访问服务
 
 客户端向 s 发送：
+
 $$
 \\{A_c\\}K_{c,s},\\{T_{c,s}\\}K_s
 $$
+
 s 随后解密并检查 ticket 和 authenticator，如果合法则认证成功，开始提供服务。为了防止重放攻击，服务器会丢弃 timestamp 来自未来的、或者和已接收 timestamp 重复的那些请求。
 
 最后，如果客户端也需要服务器证明身份，s 只需要回复：
+
 $$
 \\{timestamp+1\\}K_{c,s}
 $$
+
 ![图 4｜Kerberos 认证过程]({{< param cdnPrefix >}}/DistributedSystems/4.png)
 
 ### 局限性
@@ -936,58 +946,74 @@ TAOS 的论文中提供了一种基于公钥密码体制和证书的分布式认
 一台机器 $Vax4$ 运行了操作系统 $OS$，两者形成了一个节点 $WS$。用户 $Bob$ 登陆了 $WS$，现在需要向远程文件服务器 $FS$ 发送认证请求。为此，$Vax4$ 必须有自己的密钥对，不妨令其公钥为 $K_{vax4}$，私钥为 $K_{vax4}^{-1}$，其中私钥仅仅对 $Vax4$ 的启动固件可见，对 $OS$ 是不可见的。
 
 $Vax4$ 启动时，用私钥签名一个启动证书，将权限移交给新生成的节点公钥 $K_{ws}$。这个证书可以表示为：
+
 $$
 (K_{vax4}\ as\ OS)\ says\ (K_{ws}\Rightarrow(K_{vax4}\ as\ OS))\tag{1}
 $$
+
 > 1. 为什么不直接使用 $K_{vax4}$？
->
+>    
 >    一方面，我们不希望机器私钥被窃取；另一方面，我们也**不希望这些涉及的声明在机器重启后依然有效**。
->
+> 
 > 2. 那为什么不直接使用 $K_{ws}$ 作为机器的标识？
->
+>    
 >    因为我们**希望机器的标识在重启后依然有效**。
->
+> 
 > 3. 所以到底为什么需要机器的标识？
->
+>    
 >    因为我们希望 $Bob$ 能将权限委托给特定的机器。
 
 因此，启动后 $WS$ 获得了启动证书、节点私钥 $K_{ws}^{-1}$，但无法知道 $K_{vax4}^{-1}$。
 
 登陆操作可以看作一种特殊的 delegation。$Bob$ 登陆时，用自己的私钥 $K_{bob}^{-1}$ 签名一个 delegation 证书，将权限委托给 $WS$：
+
 $$
 K_{bob}\ says\ ((K_{ws}|K_{bob})\Rightarrow(K_{ws}\ for\ K_{bob}))\tag{2}
 $$
+
 现在，需要向 $FS$ 发送请求。首先需要一个发送请求的信道 $C_{bob}$，以及请求本身 $RQ$。发送请求可以写作：
+
 $$
 C_{bob}\ says\ RQ\tag{3}
 $$
-并且，$WS$ 需要签名一个信道证书，将权限移交给信道：
+
+并且 $WS$ 需要签名一个信道证书，将权限移交给信道：
+
 $$
 (K_{ws}|K_{bob})\ says\ (C_{bob}\Rightarrow(K_{ws}|K_{bob}))\tag{4}
 $$
+
 结合 (4) 和 (2)，使用 delegation，$FS$ 可以推出：
+
 $$
 (K_{ws}\ for\ K_{bob})\ says\ (C_{bob}\Rightarrow(K_{ws}\ for\ K_{bob}))\tag{5}
 $$
+
 结合 (5) 和 (3)，使用 handoff，$FS$ 可以推出：
+
 $$
 (K_{ws}\ for\ K_{bob})\ says\ RQ\tag{6}
 $$
+
 结合 (6) 和 (1)，使用 handoff，$FS$ 可以推出：
+
 $$
 ((K_{vax4}\ as\ OS)\ for\ K_{bob})\ says\ RQ\tag{7}
 $$
+
 最后，$FS$ 还需要证明 $K_{vax4}$ 和 $K_{bob}$ 确实代表了 $Vax4$ 和 $Bob$。为此，必须引入受信任的第三方机构 $CA$，也就是说相信 $K_{ca}\Rightarrow$ 任意的主体。因此，$FS$ 可以使用如下证书：
+
 $$
-K_{ca}\ says\ (K_{vax4}\Rightarrow Vax4)
-$$
-$$
+K_{ca}\ says\ (K_{vax4}\Rightarrow Vax4)\\\\ 
 K_{ca}\ says\ (K_{bob}\Rightarrow Bob)
 $$
+
 结合 (7)，使用 handoff，最终得到：
+
 $$
 ((Vax4\ as\ OS)\ for\ Bob)\ says\ RQ
 $$
+
 其语义是：$FS$ 得知运行着 $OS$ 的机器 $Vax4$ 代表用户 $Bob$ 发送了请求 $RQ$。
 
 ## ASLR

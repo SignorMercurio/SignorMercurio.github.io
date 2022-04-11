@@ -112,9 +112,9 @@ print('%s does it %d times' % ('s.b.', 6))
 
 ```python
 for i in range(5):
-	print(i)
+    print(i)
 else:
-	print('Done')
+    print('Done')
 # 0
 # 1
 # 2
@@ -122,10 +122,10 @@ else:
 # 4
 # Done
 while True:
-	print('Reached')
-	break
+    print('Reached')
+    break
 else:
-	print('Not reached')
+    print('Not reached')
 print('Done')
 # Reached
 # Done
@@ -142,25 +142,25 @@ print('Done')
 
 ```python
 def func(a, b=5, c=10):
-	print('a is', a, 'and b is', b, 'and c is', c)
+    print('a is', a, 'and b is', b, 'and c is', c)
 
 func(3, 7) # a is 3 and b is 7 and c is 10
 func(25, c=24) # a is 25 and b is 5 and c is 24
 func(c=50, a=100) # a is 100 and b is 5 and c is 50
 
 def add_end(L=[]):
-	L.append('END')
-	return L
+    L.append('END')
+    return L
 
 add_end([1, 2, 3]) # [1, 2, 3,'END']
 add_end() # ['END']
 add_end() # ['END','END']
 
 def calc(*numbers):
-	sum = 0
-	for n in numbers:
-		sum = sum + n * n
-	return sum
+    sum = 0
+    for n in numbers:
+        sum = sum + n * n
+    return sum
 
 calc(1, 2, 3) # 14
 calc() # 0
@@ -242,7 +242,7 @@ isinstance(123, Iterable) # False
 ```python
 d = {'a': 97, 'b': 98, 'c': 99}
 for key, val in d.items():
-	print(key +'='+ val)
+    print(key +'='+ val)
 # b = 98
 # a = 97
 # c = 99 (unordered)

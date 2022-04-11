@@ -105,4 +105,3 @@ print("m2': {}".format(m2_))
 m_ = L(quick_pow(c1*c2,lamb,n2)) * mu % n
 print("m': {}".format(m_))
 ```
-

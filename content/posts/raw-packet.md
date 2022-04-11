@@ -33,7 +33,7 @@ extern int errno;
 typedef struct PACKET_RAW_HEADER {
     uint32_t dwIP;
     uint16_t uPort;
-    
+
     PACKET_RAW_HEADER() : dwIP(0), uPort(0) {}
 } PacketRawHeader, * pPacketRawHeader;
 #pragma pack()
@@ -117,7 +117,7 @@ int sendrawpacket(PacketRawHeader* pRawHeader, bool bTCP)
         fprintf(stderr,"Error allocating memory:%s\n", strerror(errno));
         goto end;
     }
-    
+
     clientaddr->sin_family = AF_INET;
     clientaddr->sin_port = pRawHeader->uPort;
     clientaddr->sin_addr.s_addr = pRawHeader->dwIP;
@@ -203,7 +203,7 @@ unsigned short csum(unsigned short *ptr, int nbytes)
     register long sum;
     unsigned short oddbyte;
     register short answer;
- 
+
     sum = 0;
     while (nbytes> 1) {
         sum += *ptr++;
@@ -214,11 +214,11 @@ unsigned short csum(unsigned short *ptr, int nbytes)
         *((u_char*)&oddbyte) = *(u_char*)ptr;
         sum += oddbyte;
     }
- 
+
     sum = (sum>>16) + (sum & 0xffff);
     sum = sum + (sum>>16);
     answer = (short)~sum;
-     
+
     return (answer);
 }
 ```
@@ -299,16 +299,16 @@ int sendrawpacket(PacketRawHeader* pRawHeader, bool bTCP)
         fprintf(stderr,"Error allocating memory:%s\n", strerror(errno));
         goto end1;
     }
-    
+
     memcpy(csum_buffer, (char *)&csum_hdr, PHDR_SZ);
     memcpy(csum_buffer + PHDR_SZ, udp_hdr, hdr_size + strlen(string_data));
-    
+
     if (bTCP) {
         tcp_hdr->check = csum((unsigned short *) csum_buffer, psize);
     } else {
         udp_hdr->check = csum((unsigned short *) csum_buffer, psize);
     }
-    
+
     free (csum_buffer);
     csum_buffer = NULL;
     //...
@@ -332,8 +332,6 @@ end:
  \                                                   /
   ---------------------- buffer ---------------------
 ```
-
-
 
 ### 发送数据包
 

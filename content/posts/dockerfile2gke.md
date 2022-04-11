@@ -109,10 +109,10 @@ jobs:
       - name: Publish
         run: |-
           docker push "gcr.io/$PROJECT_ID/$IMAGE:$GITHUB_SHA"
-      
+
       # Set up kustomize
       # ...
-      
+
       # Deploy the Docker image to the GKE cluster
       # ...
 ```
@@ -234,4 +234,3 @@ resources:
 ```
 
 大功告成，可以 push 一下看看 Actions 的运行结果了。运行完成之后，也可以在 GKE 上看到对应的信息。
-

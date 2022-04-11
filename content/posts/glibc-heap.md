@@ -443,20 +443,25 @@ unsorted bin 是一个双向循环链表，chunk 大小：大于 `global_max_fas
 当程序申请大于 `global_max_fast` 内存时，分配器遍历 unsorted bin，每次取最后的一个 unsorted chunk。
 
 1. 如果 unsorted chunk 满足以下四个条件，它就会被切割为一块满足申请大小的 chunk 和另一块剩下的 chunk，前者返回给程序，后者重新回到 unsorted bin。
-
+   
    - 申请大小属于 small bin 范围
    - unosrted bin 中只有该 chunk
    - 这个 chunk 同样也是 last remainder chunk
    - 切割之后的大小依然可以作为一个 chunk
 
 2. 否则，从 unsorted bin 中删除 unsorted chunk。
+   
    - 若 unsorted chunk 恰好和申请大小相同，则直接返回这个 chunk
    - 若 unsorted chunk 属于 small bin 范围，插入到相应 small bin
    - 若 unsorted chunk 属于 large bin 范围，则跳转到 3。
+
 3. 此时 unsorted chunk 属于 large bin 范围。
+   
    - 若对应 large bin 为空，直接插入 unsorted chunk，其 `fd_nextsize` 与 `bk_nextsize` 指向自身。
    - 否则，跳转到 4。
+
 4. 到这一步，我们需按大小降序插入对应 large bin。
+   
    - 若对应 large bin 最后一个 chunk 大于 unsorted chunk，则插入到最后
    - 否则，从对应 large bin 第一个 chunk 开始，沿 `fd_nextsize`（即变小）方向遍历，直到找到一个 chunk `fwd`，其大小小于等于 unsorted chunk 的大小
      - 若 `fwd` 大小等于 unsorted chunk 大小，则插入到 `fwd` 后面

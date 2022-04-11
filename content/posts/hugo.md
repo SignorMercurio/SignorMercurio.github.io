@@ -280,7 +280,7 @@ ALGOLIA_INDEX_FILE=public/index.json
       #  被 params.page 中的 hiddenFromHomePage 替代
       # 当你没有在文章前置参数中设置 "hiddenFromHomePage" 时的默认行为
       defaultHiddenFromHomePage = false
-      
+
   # 作者的社交信息设置
   [params.social]
     GitHub = "SignorMercurio"
@@ -521,6 +521,7 @@ KaTeX[^6] 虽然比 mathjax 好点，但在 Markdown 中依然面临着渲染问
 ### 补充代码类型
 
 原主题虽然能正确高亮汇编和 Dockerfile 代码，但并不会在代码类型上正确显示对应的类型。对此，我们可以新建 `/assets/css/_override.scss` 覆盖 `code-type-map` 变量：
+
 ```scss
 // Code type map
 $code-type-map: (
@@ -594,6 +595,7 @@ $code-font-family: JuliaMono, Monaco, Fira Code, Jetbrains Mono, Hack, Noto Mono
 ### 图片圆角化
 
 在 `/assets/css/_custom.scss` 中添加：
+
 ```scss
 img {
   border-radius: 0.5rem;
@@ -652,4 +654,3 @@ jobs:
 [^7]: [Hugo/Katex failed to render multi-line Latex](https://github.com/dillonzq/LoveIt/issues/402)
 [^8]: [常用数学公式排版KaTex语法总结](https://kissingfire123.github.io/2022/02/18_%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8Fkatex%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95%E6%80%BB%E7%BB%93/)
 [^9]: [Hugo系列(3.2) - LoveIt主题美化与博客功能增强 · 第三章](https://lewky.cn/posts/hugo-3.2.html/)
-

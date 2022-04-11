@@ -23,19 +23,25 @@ MD4 是将任意长度的消息压缩为 128bit 的一种单向散列函数。MD
 
 为了阐释 MD4 压缩函数的步骤，首先定义三个函数：
 
-$$ F(X,Y,Z) = (X\land Y)\lor (\lnot X\land Z) $$
-$$ G(X,Y,Z) = (X\land Y)\lor (X\land Z)\lor (Y\land Z) $$
-$$ H(X,Y,Z) = X\oplus Y\oplus Z $$
+$$
+F(X,Y,Z) = (X\land Y)\lor (\lnot X\land Z)\\\\ 
+G(X,Y,Z) = (X\land Y)\lor (X\land Z)\lor (Y\land Z)\\\\ 
+H(X,Y,Z) = X\oplus Y\oplus Z
+$$
 
 其中 X,Y,Z 都是 32bit 的字（**注意到在 C++ 中，`unsigned int` 可以很好地表示它们**）。压缩函数共 3 轮，每轮有 16 步操作，每次操作都会更新**链接变量** a,b,c,d 之一。更新时需要用到这三个函数：
 
-$$ \phi_0(a,b,c,d,m_k,s) = ((a + F(b,c,d) + m_k)\ mod\ 2^{32})\lll s $$
-$$ \phi_1(a,b,c,d,m_k,s) = ((a + G(b,c,d) + m_k + 0x5a827999)\ mod\ 2^{32})\lll s $$
-$$ \phi_2(a,b,c,d,m_k,s) = ((a + H(b,c,d) + m_k + 0x6ed9eba1)\ mod\ 2^{32})\lll s $$
+$$
+\phi_0(a,b,c,d,m_k,s) = ((a + F(b,c,d) + m_k)\ mod\ 2^{32})\lll s\\\\ 
+\phi_1(a,b,c,d,m_k,s) = ((a + G(b,c,d) + m_k + 0x5a827999)\ mod\ 2^{32})\lll s\\\\ 
+\phi_2(a,b,c,d,m_k,s) = ((a + H(b,c,d) + m_k + 0x6ed9eba1)\ mod\ 2^{32})\lll s
+$$
 
 而 a,b,c,d 的初始值定义为：
 
-$$ (a,b,c,d) = (0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476) $$
+$$
+(a,b,c,d) = (0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476)
+$$
 
 这里的 4 个 16 进制数，以及上面 $\phi_1$ 和 $\phi_2$ 式中的 2 个 16 进制数，都是可以任意选取的。
 
@@ -45,18 +51,22 @@ $$ (a,b,c,d) = (0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476) $$
 
 压缩函数的主体是三轮，或者说 48 步运算：
 
-$$ \text{For\ j = 0,1,2\ and\ i = 0,1,2,3} $$
-$$ a = \phi_j(a,b,c,d,w_{j,4i},s_{j,4i}) $$
-$$ d = \phi_j(d,a,b,c,w_{j,4i+1},s_{j,4i+1}) $$
-$$ c = \phi_j(c,d,a,b,w_{j,4i+2},s_{j,4i+2}) $$
-$$ b = \phi_j(b,c,d,a,w_{j,4i+3},s_{j,4i+3}) $$
+$$
+\text{For\ j = 0,1,2\ and\ i = 0,1,2,3}\\\\ 
+a = \phi_j(a,b,c,d,w_{j,4i},s_{j,4i})\\\\ 
+d = \phi_j(d,a,b,c,w_{j,4i+1},s_{j,4i+1})\\\\ 
+c = \phi_j(c,d,a,b,w_{j,4i+2},s_{j,4i+2})\\\\ 
+b = \phi_j(b,c,d,a,w_{j,4i+3},s_{j,4i+3})
+$$
 
 这里的 w 是消息字，s 是循环左移的位数。压缩函数的最后一步意外简单，将**计算得到的链接变量 a,b,c,d** 加到**输入的链接变量 aa,bb,cc,dd** 上：
 
-$$ aa = (a + aa)\ mod\ 2^{32} $$
-$$ bb = (b + bb)\ mod\ 2^{32} $$
-$$ cc = (c + cc)\ mod\ 2^{32} $$
-$$ dd = (d + dd)\ mod\ 2^{32} $$
+$$
+aa = (a + aa)\ mod\ 2^{32}\\\\ 
+bb = (b + bb)\ mod\ 2^{32}\\\\ 
+cc = (c + cc)\ mod\ 2^{32}\\\\ 
+dd = (d + dd)\ mod\ 2^{32}
+$$
 
 如果这里的 $M$ 是最后一个消息块，那么 $H(\bar{M}) = aa|bb|cc|dd$，否则用 $(aa,bb,cc,dd)$ 作为下一个消息块的输入链接变量。
 
@@ -70,20 +80,26 @@ $$ dd = (d + dd)\ mod\ 2^{32} $$
 
 ### F 函数引理
 
-$$ F(x,y,z) = F(\lnot x,y,z)\ iff\ y=z $$
-$$ F(x,y,z) = F(x,\lnot y,z)\ iff\ x=0 $$
-$$ F(x,y,z) = F(x,y,\lnot z)\ iff\ x=1 $$
+$$
+F(x,y,z) = F(\lnot x,y,z)\ \text{iff}\ y=z\\\\ 
+F(x,y,z) = F(x,\lnot y,z)\ \text{iff}\ x=0\\\\ 
+F(x,y,z) = F(x,y,\lnot z)\ \text{iff}\ x=1
+$$
 
 ### G 函数引理
 
-$$ G(x,y,z) = G(\lnot x,y,z)\ iff\ y=z $$
-$$ G(x,y,z) = G(x,\lnot y,z)\ iff\ x=z $$
-$$ G(x,y,z) = G(x,y,\lnot z)\ iff\ x=y $$
+$$
+G(x,y,z) = G(\lnot x,y,z)\ \text{iff}\ y=z\\\\ 
+G(x,y,z) = G(x,\lnot y,z)\ \text{iff}\ x=z\\\\ 
+G(x,y,z) = G(x,y,\lnot z)\ \text{iff}\ x=y
+$$
 
 ### H 函数引理
 
-$$ H(x,y,z) = \lnot H(\lnot x,y,z) = \lnot H(x,\lnot y,z) = \lnot H(x,y,\lnot z) $$
-$$ H(x,y,z) = H(\lnot x,\lnot y,z) = H(x,\lnot y,\lnot z) = H(\lnot x,y,\lnot z) $$
+$$
+H(x,y,z) = \lnot H(\lnot x,y,z) = \lnot H(x,\lnot y,z) = \lnot H(x,y,\lnot z)\\\\ 
+H(x,y,z) = H(\lnot x,\lnot y,z) = H(x,\lnot y,\lnot z) = H(\lnot x,y,\lnot z)
+$$
 
 ### 记号
 
@@ -93,11 +109,15 @@ $$ H(x,y,z) = H(\lnot x,\lnot y,z) = H(x,\lnot y,\lnot z) = H(\lnot x,y,\lnot z)
 
 在原文中，为了说明这种方法作者举了一个简单的例子，对于：
 
-$$ \Delta c_2 = c_2'- c_2 = -2^{18} + 2^{21} $$
+$$
+\Delta c_2 = c_2'- c_2 = -2^{18} + 2^{21}
+$$
 
 用刚才的记号表示，就是 $c_2'= c_2[-19,22]$。在一些特定的差分路径上需要将其中的**单 bit 差分扩展成多 bit 差分**，这就需要一种等价转换方法。显然这里 $-2^{18}=2^{18}+2^{19}-2^{20}$，也就是说 $c_2[-19] = c_2[19,20,-21]$。综上：
 
-$$ c_2'= c_2[19,20,-21,22] $$
+$$
+c_2'= c_2[19,20,-21,22]
+$$
 
 ## MD4 碰撞攻击
 
@@ -111,9 +131,11 @@ $$ c_2'= c_2[19,20,-21,22] $$
 
 构造 M 与 M'，使得：
 
-$$ \Delta M = M'- M = (\Delta m_0, \Delta m_1, ..., \Delta m_{15}) $$
-$$ \Delta m_1 = 2^{31},\ \ \Delta m_2 = 2^{31}-2^{28},\ \ \Delta m_{12} = -2^{16} $$
-$$ \Delta m_i = 0,\ \ 0\le i\le 15,\ \ i\ne 1,2,12 $$
+$$
+\Delta M = M'- M = (\Delta m_0, \Delta m_1, ..., \Delta m_{15})\\\\ 
+\Delta m_1 = 2^{31},\ \ \Delta m_2 = 2^{31}-2^{28},\ \ \Delta m_{12} = -2^{16}\\\\ 
+\Delta m_i = 0,\ \ 0\le i\le 15,\ \ i\ne 1,2,12
+$$
 
 接下来就是寻找碰撞差分，并根据 F/G/H 函数的上述引理，生成使得差分性质能够被满足的一系列充分条件。只需要尽可能保证这些充分条件成立，即可大幅提高产生碰撞的概率。在论文中，作者在表 5 中给出了碰撞差分的特征，在表 6 中给出了所有充分条件，由于表格较长这里不再搬运。
 
@@ -121,12 +143,16 @@ $$ \Delta m_i = 0,\ \ 0\le i\le 15,\ \ i\ne 1,2,12 $$
 
 对于如下变换（表 5 中的第 9 步）：
 
-$$ (b_2[-13,-14,15], c_2[19,20,-21,-22], d_2[14], a_2) $$
-$$ \to (a_3[17], b_2[-13,-14,15], c_2[19,20,-21,22], d_2[14]) $$
+$$
+(b_2[-13,-14,15], c_2[19,20,-21,-22], d_2[14], a_2)\\\\ 
+\to (a_3[17], b_2[-13,-14,15], c_2[19,20,-21,22], d_2[14])
+$$
 
 我们已经知道：
 
-$$ a_3 = ((a_2 + F(b_2, c_2, d_2) + m_8)\ mod\ 2^{32}) \lll 3 $$
+$$
+a_3 = ((a_2 + F(b_2, c_2, d_2) + m_8)\ mod\ 2^{32}) \lll 3
+$$
 
 1. 由**F 函数引理 1**，为了让 $b_2$ 第 13 位和 15 位上的变化不影响 $a_3$，我们可以令 $c_2$ 和 $d_2$ 在第 13 和 15 位上相等。
 
@@ -148,8 +174,10 @@ $$ a_3 = ((a_2 + F(b_2, c_2, d_2) + m_8)\ mod\ 2^{32}) \lll 3 $$
 
 作者给的例子是关于 $m_1$ 的修改：
 
-$$ d_1\gets d_1\oplus (d_{1,7} \lll 6)\oplus ((d_{1,8}\oplus a_{1,8})\lll 7)\oplus ((d_{1,11}\oplus a_{1,11})\lll 10) $$
-$$ m_1\gets (d_1\ggg 7) - d_0 - F(a_1, b_0, c_0) $$
+$$
+d_1\gets d_1\oplus (d_{1,7} \lll 6)\oplus ((d_{1,8}\oplus a_{1,8})\lll 7)\oplus ((d_{1,11}\oplus a_{1,11})\lll 10)\\\\ 
+m_1\gets (d_1\ggg 7) - d_0 - F(a_1, b_0, c_0)
+$$
 
 注意此处的 $d_{1,7}$ 指的是：最低位为 $d_1$ 的第 7 位，前 31 位全为 0 的串，也因此需要左移 6 位（似乎不需要循环左移？）。
 

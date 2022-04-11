@@ -248,21 +248,21 @@ error_reporting(0);
 include "flag.php";
 $user=$_POST['user'];
 function encrypt($text){
-	global $key;
-	return md5($key.$text);
+    global $key;
+    return md5($key.$text);
 }
 
 if (encrypt($user)===$_COOKIE['verify']) {
-	if(is_numeric(strpos($user,'root'))){
-		die($flag);
-	}
-	else{
-		die('not root！！！');
-	}
+    if(is_numeric(strpos($user,'root'))){
+        die($flag);
+    }
+    else{
+        die('not root！！！');
+    }
 }
 else{
-	setcookie("verify",encrypt("guest"),time()+60*60*24);
-	setcookie("len",strlen($key),time()+60*60*24);
+    setcookie("verify",encrypt("guest"),time()+60*60*24);
+    setcookie("len",strlen($key),time()+60*60*24);
 }
 //show_source(__FILE__);
 ```

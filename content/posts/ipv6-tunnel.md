@@ -19,6 +19,7 @@ categories:
 接下来，在 `Example Configurations` 中选择自己服务器的 OS，并根据提示在服务器上完成相应配置即可。Debian 和 Ubuntu 有自己的选项，CentOS 及其它常用 Linux 系统可以选择 `Linux-net-tools`。
 
 至此，服务器已经可以通过 IPv6 访问谷歌了，测试：
+
 ```shell
 $ ping6 ipv6.google.com
 ```

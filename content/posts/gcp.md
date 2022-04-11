@@ -37,11 +37,11 @@ featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GCP/0.png
 
 ### Project 标识符
 
-| 标识符         | 唯一性   | 标识符来源 | 可变性 |
-| -------------- | -------- | ---------- | ------ |
-| Project ID     | 全局唯一 | 用户可指定 | 不可变 |
-| Project name   | 无需唯一 | 用户可指定 | 可变   |
-| Project number | 全局唯一 | GCP 分配   | 不可变 |
+| 标识符            | 唯一性  | 标识符来源  | 可变性 |
+| -------------- | ---- | ------ | --- |
+| Project ID     | 全局唯一 | 用户可指定  | 不可变 |
+| Project name   | 无需唯一 | 用户可指定  | 可变  |
+| Project number | 全局唯一 | GCP 分配 | 不可变 |
 
 ## IAM 策略
 
@@ -85,6 +85,7 @@ IAM 策略可以应用到任何资源节点，并且会自顶向下继承。比�
 可以看到，发生冲突时，一个 IAM 策略是否生效与其所在层级无关，仅与其是否更为宽松有关。
 
 ## 云上虚拟机
+
 ### Virtual Private Cloud Network
 
 VPC 用于在虚拟机（Compute Engine）之间构建网络，例如进行网段划分、防火墙设置、静态路由设置等。值得注意的是，VPC 是全局资源，是可以跨区域的，而 VPC 中创建的子网也可以跨地域。
@@ -431,11 +432,11 @@ Network 内部的 DNS 是为了确保虚拟机内部 IP 变化时，对虚拟机
 
 Shared VPC 可以连接多个不同 Project 的计算资源，使得计算资源之间可以通过内网 IP 通信。类似地，VPC Network Peering 可以跨 Organiztion 连接计算资源，实现点对点的连接。两者最大的区别在于，网络管理是否是中心化的。
 
-|                           | Shared VPC | VPC Network Peering |
-| ------------------------- | ---------- | ------------------- |
-| 跨 Organization           | ❎          | ✅                   |
+|                   | Shared VPC | VPC Network Peering |
+| ----------------- | ---------- | ------------------- |
+| 跨 Organization    | ❎          | ✅                   |
 | 连接同一 Project 内的资源 | ❎          | ✅                   |
-| 网络管理模式              | 中心化     | 去中心化            |
+| 网络管理模式            | 中心化        | 去中心化                |
 
 ## 负载均衡
 

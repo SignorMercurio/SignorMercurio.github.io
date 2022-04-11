@@ -164,8 +164,8 @@ kind: Job
 metadata:
   name: pi
 spec:
-	completions: 4
-	parallelism: 2
+    completions: 4
+    parallelism: 2
   template: # pod template
     spec:
       containers:

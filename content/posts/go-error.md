@@ -134,7 +134,7 @@ Go 1.13 的 `errors` 标准库中引入了 `Is` 和 `As` 方法，只要错误�
 
 不停地写 `if err != nil` 挺烦的，所以我们想尽量少写点。比如在下面这个例子中，我们想要统计文件行数：
 
-```go 
+```go
 func CountLine(r io.Reader) (int, error) {
   var (
     br = bufio.NewReader(r)

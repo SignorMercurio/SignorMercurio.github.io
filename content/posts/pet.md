@@ -158,8 +158,8 @@ def test_on_curve():
     assert is_point_on_curve(a, b, p, gx, gy)
 
     assert is_point_on_curve(a, b, p, None, None)
-    
-    
+
+
 def is_point_on_curve(a, b, p, x, y):
     """
     Check that a point (x, y) is on the curve defined by a,b and prime p.
@@ -188,9 +188,12 @@ def is_point_on_curve(a, b, p, x, y):
 ```
 
 随后，对于 $(x_r,y_r)=(x_p,y_p)+(x_q,y_q)$，我们有：
-$$ \lambda=(y_q-y_p)(x_q-x_p)^{-1}\ (mod\ p) $$
-$$ x_r=\lambda^2-x_p-x_q\ (mod\ p) $$
-$$ y_r=\lambda(x_p-x_r)-y_p\ (mod\ p) $$
+
+$$
+\lambda=(y_q-y_p)(x_q-x_p)^{-1}\ (mod\ p)\\\\ 
+x_r=\lambda^2-x_p-x_q\ (mod\ p)\\\\ 
+y_r=\lambda(x_p-x_r)-y_p\ (mod\ p)
+$$
 
 ```python
 @pytest.mark.task3
@@ -242,8 +245,8 @@ def test_point_addition():
     with raises(Exception) as excinfo:
         point_add(a, b, p, gx0, gy0, gx0, gy0)
     assert 'EC Points must not be equal' in str(excinfo.value)
-    
-    
+
+
 @pytest.mark.task3
 def test_point_addition_check_inf_result():
     """
@@ -263,8 +266,8 @@ def test_point_addition_check_inf_result():
     x, y = point_add(a, b, p, gx0, gy0, gx1, gy1)
     assert is_point_on_curve(a, b, p, x, y)
     assert (x, y) == (None, None)
-    
-    
+
+
 def point_add(a, b, p, x0, y0, x1, y1):
     """Define the "addition" operation for 2 EC Points.
 
@@ -305,9 +308,12 @@ def point_add(a, b, p, x0, y0, x1, y1):
 ```
 
 特别地，当两个加数相同时：
-$$ \lambda=(3x_p^2+a)(2y_p)^{-1}\ (mod\ p) $$
-$$ x_r=\lambda^2-2x_p\ (mod\ p) $$
-$$ y_r=\lambda(x_p-x_r)-y_p\ (mod\ p) $$
+
+$$
+\lambda=(3x_p^2+a)(2y_p)^{-1}\ (mod\ p)\\\\ 
+x_r=\lambda^2-2x_p\ (mod\ p)\\\\ 
+y_r=\lambda(x_p-x_r)-y_p\ (mod\ p)
+$$
 
 ```python
 @pytest.mark.task3
@@ -332,8 +338,8 @@ def test_point_doubling():
     x2, y2 = point_double(a, b, p, None, None)
     assert is_point_on_curve(a, b, p, x2, y2)
     assert x2 is None and y2 is None
-    
-    
+
+
 def point_double(a, b, p, x, y):
     """Define "doubling" an EC point.
      A special case, when a point needs to be added to itself.
@@ -383,8 +389,8 @@ def test_point_scalar_mult_double_and_add():
     assert is_point_on_curve(a, b, p, x2, y2)
     assert gx2 == x2
     assert gy2 == y2
-    
-    
+
+
 def point_scalar_multiplication_double_and_add(a, b, p, x, y, scalar):
     """
     Implement Point multiplication with a scalar:
@@ -461,8 +467,8 @@ def test_check_fail():
     sig = ecdsa_sign(group, priv, msg)
 
     assert not ecdsa_verify(group, pub, msg2, sig)
-    
-    
+
+
 def ecdsa_key_gen():
     """ Returns an EC group, a random private key for signing 
         and the corresponding public key for verification"""
@@ -590,8 +596,8 @@ def test_fails():
         encrypted = (iv, ciphertext, tag, (Bn(100), Bn(200)))
         dh_decrypt(dh_priv_bob, dh_pub_alice, encrypted, alice_ver)
     assert 'verification failed' in str(excinfo.value)
-    
-    
+
+
 def dh_get_key():
     """ Generate a DH key pair """
     group = EcGroup()
@@ -714,8 +720,8 @@ def point_scalar_multiplication_montgomerry_ladder(a, b, p, x, y, scalar):
             R1 = point_double(a, b, p, R1[0], R1[1])
 
     return R0
-  
-  
+
+
 def time_montgomery(times):
     for _ in range(times):
         r, time_montgomery = time_scalar_mul(
@@ -772,7 +778,7 @@ def aes_ctr_enc_dec(key, iv, message):
 
     return output
 
-  
+
 # This is the type of messages destined for the one-hop mix
 OneHopMixMessage = namedtuple('OneHopMixMessage', ['ec_public_key',
                                                    'hmac',
@@ -1318,10 +1324,13 @@ Tor 节点将 IP、公钥等信息公开到 Directory Authorities 上，后者�
 一种方法是同态加密，即对密文的运算等同于对明文的运算，此时可以在不知道明文的情况下计算出经过运算的明文所对应的密文。以 ElGamal 为例，我们选择群 $G$ 中的两个元素 $g,h$，随机生成 $x\in(0,ord(G))$ 作为私钥，那么公钥就是 $g^x$。随后再选择随机的 $k\in(0,ord(G))$，计算密文 $E(m,k)=(g^k,g^{xk}h^m)$。
 
 解密时，对于密文 $(a,b)$，只需计算 $m=log_h(b(a^x)^{-1})$。然而离散对数问题是困难的，因此可以先离线计算一张 $log_h$ 表格（这就要求明文空间不能太大）。正确性易证，同态性则包含加法和常数乘法同态：
-$$ E(m_0,k_0)=(a_0,b_0) $$
-$$ E(m_1,k_1)=(a_1,b_1) $$
-$$ E(m_0+m_1,k_0+k_1)=(a_0a_1,b_0b_1)=(g^{k0+k1},g^{x(k0+k1)}h^{m0+m1}) $$
-$$ E(cm_0, ck_0)=((a_0)^c,(b_0)^c) $$
+
+$$
+E(m_0,k_0)=(a_0,b_0)\\\\ 
+E(m_1,k_1)=(a_1,b_1)\\\\ 
+E(m_0+m_1,k_0+k_1)=(a_0a_1,b_0b_1)=(g^{k0+k1},g^{x(k0+k1)}h^{m0+m1})\\\\ 
+E(cm_0, ck_0)=((a_0)^c,(b_0)^c)
+$$
 
 > 只满足常数乘法同态，不满足乘法同态。
 
@@ -1349,8 +1358,8 @@ def test_decrypt():
     assert decrypt(params, priv, encrypt(params, pub, 2)) == 2
     assert decrypt(params, priv, encrypt(params, pub, -2)) == -2
     assert decrypt(params, priv, encrypt(params, pub, 99)) == 99
-    
-    
+
+
 def setup():
     """Generates the Cryptosystem Parameters."""
     G = EcGroup(nid=713)
@@ -1456,8 +1465,8 @@ def test_mul():
         Ex = encrypt(params, pub, x)
         E2x = mul(params, pub, Ex, 20)
         assert decrypt(params, priv, E2x) == 20 * x
-        
-        
+
+
 def add(params, pub, c1, c2):
     """ Given two ciphertexts compute the ciphertext of the 
         sum of their plaintexts.
@@ -1499,8 +1508,8 @@ def test_groupKey():
     # Check it is valid
     priv = (priv1 + priv2) % o
     assert decrypt(params, priv, encrypt(params, pub, 0)) == 0
-    
-    
+
+
 def groupKey(params, pubKeys=None):
     """ Generate a group public key from a list of public keys """
     if pubKeys is None:
@@ -1532,8 +1541,8 @@ def test_partial():
     cprime = partialDecrypt(params, priv1, c)
     m = partialDecrypt(params, priv2, cprime, True)
     assert m == 0
-    
-    
+
+
 def partialDecrypt(params, priv, ciphertext, final=False):
     """ Given a ciphertext and a private key, perform partial decryption. 
         If final is True, then return the plaintext. """
@@ -1572,8 +1581,8 @@ def test_badpub():
     # Check that the corrupt authority can decrypt a message
     # encrypted under the group key with its secret only.
     assert decrypt(params, x, encrypt(params, pub, 0)) == 0
-    
-    
+
+
 def corruptPubKey(params, priv, OtherPubKeys=None):
     """ Simulate the operation of a corrupt decryption authority. 
         Given a set of public keys from other authorities return a
@@ -1740,15 +1749,15 @@ def test_provekey_incorrect():
     priv2, pub2 = keyGen(params)
     proof2 = proveKey(params, priv2, pub2)
     assert not verifyKey(params, pub, proof2)
-    
-    
+
+
 def to_challenge(elements):
     """ Generates a Bn challenge by hashing a number of EC points """
     Cstring = b",".join([hexlify(x.export()) for x in elements])
     Chash = sha256(Cstring).digest()
     return Bn.from_binary(Chash)
 
-  
+
 def proveKey(params, priv, pub):
     """ Uses the Schnorr non-interactive protocols produce a proof 
         of knowledge of the secret priv such that pub = priv * g.
@@ -1805,8 +1814,8 @@ def test_proveCommit_incorrect():
     proof2 = proveCommitment(params, C2, r2, secrets2)
     assert not verifyCommitments(params, C, proof2)
     assert not verifyCommitments(params, C2, proof)
-    
-    
+
+
 def commit(params, secrets):
     """ Produces a commitment C = r * g + Sum xi * hi, 
         where secrets is a list of xi of length 4.
@@ -1892,8 +1901,8 @@ def test_proveEquality_incorrect():
     proof = proveDLEquality(params, x, K, L)
 
     assert not verifyDLEquality(params, K, L2, proof)
-    
-    
+
+
 def gen2Keys(params):
     """ Generate two related public keys K = x * g and L = x * h0. """
     G, g, (h0, h1, h2, h3), o = params
@@ -1974,18 +1983,21 @@ def verifyDLEquality(params, K, L, proof):
 ### 涉及技术
 
 - 安全性
-
+  
   - 同态加密
+  
   - 表示为有限域上的多项式
+    
     - $p(x)=\Sigma_{i=1}^d(x-s_i)\ for\ S=\{s_1,...,s_d\}$
     - 多项式的根即集合元素，多项式之和的根即为交集（或求 GCD）
     - 对于 d 次多项式 $p_A,p_B$（代表 $S^{(A)},S^{(B)}$），以及随机的 d 次多项式 $\gamma_A,\gamma_B$，令 $\theta=\gamma_A\cdot p_A+\gamma_B\cdot p_B=\mu\cdot gcd(p_A,p_B)$，$\mu$ 为随机多项式，此时 $\theta$ 仅包含 $S^{(A)}\cap S^{(B)}$ 的信息而不包含任一集合其余元素的信息
-
+  
   - 哈希函数
-
+  
   - 伪随机函数
 
 - 性能
+  
   - 数据结构
     - 哈希表：将集合元素哈希到表中，在表上计算
     - 布隆过滤器：状态压缩后进行传输和计算
@@ -2060,7 +2072,7 @@ Algebraic MAC 提供了两个很好的性质：
 
 首先需要一个素群 G，生成元 g 和 h，随后生成私钥 $sk=\{x_0,x_1,...,x_k\}$，其中 k 是要编码的属性个数。随后公布 Issuer 参数 $\texttt{iparams=}\{X_i=h^{x_i}\} \texttt{ for }i>0$。
 
-Algebraic MAC 以私钥和 k 个属性 $m=\{m_i\}\texttt{ for }1<=i<=k$，选择一个 $u\in G/\{1\}$,计算 $u'=u^{H_{sk}(m)}$，其中 $H_{sk}(m)=x_0+\Sigma m_ix_i$。最后输出 tag：$(u,u')$。
+Algebraic MAC 以私钥和 k 个属性 $m=\{m_i\}\texttt{ for }1<=i<=k$，选择一个 $u\in G/\{1\}$,计算 $u'=u^{H_{sk}(m)}$，其中 $H_{sk}(m)=x_0+\Sigma m_ix_i$。最后输出 tag：$(u,u')$
 
 验证的过程则是反过来，验证 $u'$ 是否等于 $u^{H_{sk}(m)}$。这里可以注意到，MAC 的生成和验证都需要私钥。
 

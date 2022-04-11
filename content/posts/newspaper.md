@@ -51,7 +51,6 @@ categories:
 
 给出两例代码，分别适用于社会发展学院与传播学院网站。
 
-
 ```python
 # Newspaper-soci.py
 from bs4 import BeautifulSoup, SoupStrainer

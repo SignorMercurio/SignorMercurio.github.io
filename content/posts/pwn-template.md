@@ -13,6 +13,7 @@ categories:
 <!--more-->
 
 ## 依赖
+
 - 必需
   - pwntools
   - gdb
@@ -25,6 +26,7 @@ categories:
   - glibc-all-in-one
 
 ## 说明
+
 - `leak_libc` 函数可以选择使用指定 ELF 文件或是利用 LibcSearcher 搜寻 libc
 - 使用不同于系统版本的 libc 时，需要用到 patchelf 工具
 - 增删改查功能的序号以及发送内容的逻辑，请根据具体题目修改
@@ -49,18 +51,18 @@ uu64 = lambda data: u64(data.ljust(8,'\0'))
 leak = lambda name,addr: log.success('{} = {:#x}'.format(name, addr))
 
 def leak_libc(func,addr,elf=None):
-	if elf:
-		libc = elf
-		base = addr-libc.sym[func]
-		leak('base',base)
-		system = base+libc.sym['system']
-	else:
-		libc = LibcSearcher(func,addr)
-		base = addr-libc.dump(func)
-		leak('base',base)
-		system = base+libc.dump('system')
+    if elf:
+        libc = elf
+        base = addr-libc.sym[func]
+        leak('base',base)
+        system = base+libc.sym['system']
+    else:
+        libc = LibcSearcher(func,addr)
+        base = addr-libc.dump(func)
+        leak('base',base)
+        system = base+libc.dump('system')
 
-	return (base,libc,system)
+    return (base,libc,system)
 
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
 parser.add_argument('-b',help='binary file',required=True,metavar='BINARY')
@@ -75,42 +77,42 @@ binary = args.b
 context.binary = binary
 elf = ELF(binary,checksec=False)
 if not args.d:
-	context.log_level = 'DEBUG'
+    context.log_level = 'DEBUG'
 
 path_dict = {
-	'23': '/lib/x86_64-linux-gnu/libc.so.6',
-	'27': './glibc-all-in-one/libs/2.27-3ubuntu1_amd64/libc-2.27.so',
-	'29': './glibc-all-in-one/libs/2.29-0ubuntu2_amd64/libc-2.29.so'
+    '23': '/lib/x86_64-linux-gnu/libc.so.6',
+    '27': './glibc-all-in-one/libs/2.27-3ubuntu1_amd64/libc-2.27.so',
+    '29': './glibc-all-in-one/libs/2.29-0ubuntu2_amd64/libc-2.29.so'
 }
 libc_path = path_dict.get(args.l, args.l)
 libc = ELF(libc_path,checksec=False)
 if args.p:
-	p = remote(args.r, args.p)
+    p = remote(args.r, args.p)
 else:
-	p = process(binary,env={'LD_PRELOAD':libc_path})
+    p = process(binary,env={'LD_PRELOAD':libc_path})
 
 def dbg():
-	gdb.attach(p)
-	pause()
+    gdb.attach(p)
+    pause()
 
 _add,_free,_edit,_show = 1,4,2,3
 def add(index,content='a'*8):
-	sla(':',_add)
-	sla(':',index)
-	sa(':',content)
+    sla(':',_add)
+    sla(':',index)
+    sa(':',content)
 
 def free(index):
-	sla(':',_free)
-	sla(':',index)
+    sla(':',_free)
+    sla(':',index)
 
 def edit(index,content):
-	sla(':',_edit)
-	sla(':',index)
-	sa(':',content)
+    sla(':',_edit)
+    sla(':',index)
+    sa(':',content)
 
 def show(index):
-	sla(':',_show)
-	sla(':',index)
+    sla(':',_show)
+    sla(':',index)
 
 # start
 
@@ -118,4 +120,3 @@ def show(index):
 
 p.interactive()
 ```
-

