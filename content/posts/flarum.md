@@ -336,7 +336,11 @@ white-space: normal !important;
 
 ### 插件开发
 
-对于一些可复用的较复杂的样式，可以提取出来写成插件并发布到社区。Flarum 提供了 flarum-cli[^11] 来快速创建插件模版，只需运行 `flarum init`，随后根据插件涉及的更改选择需要的模版项即可，十分方便。一个最简单的插件[^12]可以只修改前台样式，也就是只编写 `less/forum.less` 文件；而复杂的插件可以修改前/后台的样式、组件、JS 代码、以及后端的 PHP 代码等等。关于插件开发，可以参考 Flarum 插件开发文档[^13]。
+对于一些可复用的较复杂的样式，可以提取出来写成插件并发布到社区。Flarum 提供了 flarum-cli[^11] 来快速创建插件模版，只需运行 `flarum init`，随后根据插件涉及的更改选择需要的模版项即可，十分方便。
+
+> 注意手动修改 README，以及 `composer.json` 里的 `keywords`,`extra.flarum-extension.category` 和 `extra.flarum-extension.icon`。
+
+一个最简单的插件[^12]可以只修改前台样式，也就是只编写 `less/forum.less` 文件；而复杂的插件可以修改前/后台的样式、组件、JS 代码、以及后端的 PHP 代码等等。关于插件开发，可以参考 Flarum 插件开发文档[^13]。
 
 ## 参考资料
 
