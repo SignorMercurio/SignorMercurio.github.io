@@ -25,7 +25,10 @@ $ sudo apt install php-fpm php-mbstring php-curl php-dom php-gd php-json php-mys
 
 ### 安装 Composer
 
-> 后来部署到了香港服务器上，可直接运行 `curl -sS https://getcomposer.org/installer | php`.
+> 更新：目前部署到了香港服务器上，可直接运行 
+>
+> ```shell
+> $ curl -sS https://getcomposer.org/installer | php
 
 因为要部署在国内服务器上，可以使用国内的安装脚本镜像[^1]：
 
@@ -128,7 +131,7 @@ $ sudo systemctl restart apache2
 
 ### 自定义域名
 
-修改 `/path/to/flarum/config.php`，设置 `url` 字段。错误设置会导致请求被 CORS 拦截。
+将域名指向 Flarum 地址，然后修改 `/path/to/flarum/config.php`，设置 `url` 字段。错误设置会导致请求被 CORS 拦截。
 
 ### 中文语言包[^4]
 
@@ -141,6 +144,8 @@ $ php flarum cache:clear
 
 ### 验证邮件
 
+> 更新：目前已采用阿里邮件推送服务，通过 SMTP 发信。配置方法也是类似的。
+
 这里选择通过 mailgun 发送验证邮件，首先需要安装插件：
 
 ```shell
@@ -151,6 +156,8 @@ $ composer require guzzlehttp/guzzle:^7.0
 
 ### 图片上传
 
+> 更新：目前已采用腾讯云 COS 作为图床[^6]，基于 AWS S3 协议，因此需要插件 `league/flysystem-aws-s3-v3`。
+
 imgur 和 Amazon S3 在国内都较难访问，因此采用七牛云存储图片。先安装插件，其中后者是七牛云存储需要的插件[^5]：
 
 ```shell
@@ -159,8 +166,6 @@ $ composer require overtrue/flysystem-qiniu:^1.0
 ```
 
 随后配置允许的 MIME 类型的正则，例如只允许图片：`^image\/.*`。在“存储设置”中填写七牛的 CDN 地址，然后在“七牛存储设置”中填写 AK、SK 和空间名。
-
-更新：目前已采用腾讯云 COS 作为图床[^6]，基于 AWS S3 协议，因此需要插件 `league/flysystem-aws-s3-v3`。
 
 ## 站点数据迁移
 
@@ -258,57 +263,97 @@ $ sudo systemctl restart apache2
 
 ## 实用插件记录
 
-来自 Extiverse[^8]：
+来自 Extiverse[^8]，插件下的二级列表记录了已知的 bug 和论坛自用的一些 tweaks：
 
 - 移动端底部导航 `acpl/mobile-tab`
+  - iOS 微信浏览器底部 Safe Area 显示异常
+
 - 论坛统计小部件 `afrux/forum-stats-widget`
 - 论坛公告小部件 `afrux/news-widget`
+  - tweak：取消了闪烁动画
+
 - 论坛自动管理 `askvortsov/flarum-auto-moderator`
-- 管理员警告 `askvortsov/flarum-moderator-warnings`
+  - 条件满足时，有时不会触发动作
+
+- 支持插入表格 `askvortsov/flarum-markdown-tables`
+- 站务警告 `askvortsov/flarum-moderator-warnings`
+- 所见即所得的富文本编辑器 `askvortsov/flarum-rich-text`
 - 用户组头像框 `clarkwinkelmann/flarum-ext-circle-groups`
 - Emoji 选择框 `clarkwinkelmann/flarum-ext-emojionearea`
 - 个人资料卡展示被点赞次数 `clarkwinkelmann/flarum-ext-likes-received`
 - 链接预览 `datlechin/flarum-link-preview`
+  - B 站某些链接在预览时无法加载预览图，因为 Safari 默认不自动升级 HTTP 请求为 HTTPS
+  - 会尝试预览邮件，产生错误导致后续 js 无法运行
+  - 会尝试加载非网页链接，例如大文件链接
+  - 无法预览的网址也无法打开
+  - 对预览内容没有字数限制，容易占用过大空间
+
 - 图片 Fancybox `darkle/fancybox`
+  - 戳表情会触发 fancybox
+
 - 楼主标识 `dem13n/topic-starter-label`
+  - 没有 i18n
+  - 进入主题后一楼不显示楼主标识，但刷新后显示
+  - 一楼被删除后二楼变成了楼主
+
+- 炫酷的后台管理面板 `ecnu-im/asirem-admin`
 - 固定可滚动的标签导航 `ecnu-im/sticky-sidenav`
 - 基于 Extiverse 的插件版本管理 `extiverse/mercury`
 - 简体中文语言包 `flarum-lang/chinese-simplified`
 - FoF 系列 `fof/`
   - 私密主题 `byobu`
+  - 草稿 `drafts`
   - 关注标签 `follow-tags`
   - 链接自动转图片 `formatting`
   - 导航栏链接 `links`
   - 扩展个人资料字段 `masquerade`
   - 合并主题 `merge-discussions`
   - 日间/夜间模式切换 `nightmode`
+    - 注意调整论坛 Logo 适配夜间模式
   - 自定义页面 `pages`
+    - 直接写 Markdown 行距过大
   - 发起投票 `polls`
+    - “暂无投票”字体颜色未适配夜间模式
   - 戳表情 `reactions`
-  - 注册验证码 `recaptcha`，不支持 recaptcha v3
+  - 注册验证码 `recaptcha`
+    - 不支持 recaptcha v3
   - 注册时勾选同意服务条款 `terms`
   - 文件上传 `upload`
   - 个性签名 `user-bio`
 - 邮件发送 `guzzlehttp/guzzle`
 - 自定义 HTML `<head>` 标签 `ianm/html-head`
 - 信息流显示主题摘要 `ianm/synopsis`
+  - tweak：增加摘要字体颜色对比度
+
 - 登录可见 `jslirola/flarum-ext-login2seeplus`
 - 热门主题 `justoverclock/hot-discussions`
+  - 在移动端也会显示
+
 - 设置 OpenGraph `<meta>` 标签 `justoverclock/og-meta-tag`
 - AWS S3 协议支持 `league/flysystem-aws-s3-v3`
 - 图片布局 `malago/flarum-ext-fancybox`
 - 主题浏览次数统计 `michaelbelgium/flarum-discussion-views`
+  - 移动端浏览次数未适配夜间模式
+
+- 禁止给自己点赞 `nearata/flarum-ext-no-self-likes`
 - 注册时确认密码 `nearata/flarum-ext-signup-confirm-password`
 - 自动加载更多 `noriods/auto-more`
 - 邮件黑白名单过滤 `nyu8/flarum-email-filter`
 - slug 统一使用 id `pipecraft/flarum-ext-id-slug`
 - 超级置顶 `the-turk/flarum-stickiest`
+- 用户徽章 `v17development/flarum-user-badges`
+  - 拖动徽章时容易出现小问题
+
 - 卡片主题 `yannisme/oxotheme`
-- 发布主题时预览 `zerosonesfun/composer-preview`
+  - tweak：减小头像字体大小至正常值
+  - tweak：去除帖子内容卡片
+
 - 在新标签页中打开外部链接 `zerosonesfun/elint`
 - “回到顶部”按钮 `zerosonesfun/flarum-up` 
 
 ## 自定义样式
+
+这里给出两个简单的例子，更多调整都可以通过类似方法改 CSS/Less 实现。
 
 ### 自定义页面 CSS 调整
 
@@ -322,9 +367,9 @@ white-space: normal !important;
 </style>
 ```
 
-### “回到顶部”按钮 CSS 调整
+### “回到顶部”按钮 Less 调整
 
-在 `外观->自定义样式` 中写 CSS[^10]：
+在 `外观->自定义样式` 中写 Less[^10]：
 
 ```css
 #Up {
