@@ -4,7 +4,7 @@ date: 2021-10-18 11:04:07
 lastmod: 2022-03-10 12:16:42
 tags:
   - Linux
-  - 分布式
+  - 分布式系统
 categories:
   - 探索
 math: true
@@ -50,7 +50,7 @@ Brad Karp 老师讲解清晰又不失风趣，硬是把线上课上出了线下�
 
 ### OS 相关
 
-这个部分基本是本科《操作系统》课和 Pwn 的内容，记录时顺便复习下。
+这个部分基本是本科《操作系统》课的内容，记录时顺便复习下。
 
 #### Syscall
 
@@ -70,13 +70,13 @@ TRAP 实际上做的是：
 ```c
 XP <- PC
 // switch to kernel address space
-// set privileged flag (to enter high privlege mode)
+// set privileged flag (to enter high privilege mode)
 PC <- address of kernel trap handler
 ```
 
 这里的 XP 是某个用来暂时存放 PC 的寄存器。我们容易想到，之后就要在内核中运行代码了，这其实是十分危险的操作。怎么保证应用不会在内核里乱搞呢？答案是 Protected Transfer 机制。
 
-为了避免用户在内核里随便运行代码，只有通过 kernel entrypoint 进入内核才能运行代码，而这个 entrypoint 就是 trap handler。至于具体跳到内核的什么位置则由硬件决定，而不能由应用来指定。这个具体位置则只能通过在启动时运行的内核态代码来决定，确保了用户态程序无法随意跳转到内核任意位置。
+为了避免用户在内核里随便运行代码，只有通过 kernel entrypoint 进入内核才能运行代码，而这个 entrypoint 就是 trap handler。至于具体跳到内核的什么位置则由硬件决定，而不能由应用来指定。这个具体位置则**只能通过在启动时运行的内核态代码来决定**，确保了用户态程序无法随意跳转到内核任意位置。
 
 接着，在内核的 trap handler 中：
 
@@ -120,7 +120,7 @@ PC <- XP
 - 进程间本身就相互隔离，不会互相影响
 - （如果有多个 CPU）同时还自动获得了 CPU 并发
 
-不过 CPU 并发没有 IO 并发那么重要，相对 IO 并发而言更难实现，两者对速度的提升也是 2 倍和 100 倍的数量级。此时，氪金多买几台机器显然是更好的选择。
+不过 CPU 并发没有 IO 并发那么重要，且相对 IO 并发而言更难实现，两者对速度的提升也是 2 倍和 100 倍的数量级。此时，氪金多买几台机器显然是更好的选择。
 
 然而，多进程也有缺点：
 
@@ -190,6 +190,8 @@ sys_read(fd, user_buffer, n) {
 
 总的来说，可能只有对性能有苛刻要求的情况下才会使用用户线程，以节省掉用户态 / 内核态切换的开销。
 
+> 现在有 goroutine 了。
+
 ## NFS
 
 这里主要讨论 NFS v2。
@@ -242,7 +244,7 @@ sequenceDiagram
 
 重试导致的结果是，同一个请求可能被 Server 执行多次，如果是类似删除文件等请求，就会出现奇怪的结果。后来，NFS 通过让 Server 维护一个 transaction ID 和 reply cache 来避免这一问题，不过 reply cache 就会在重启后失效了。换而言之，如果 Client 在 Server 正常时删除了文件，Server 重启后再次删除，依然会得到“文件不存在”的错误，但这种情况已经是小概率事件了。
 
-如果使用一种更健全的方案，就需要持久化到磁盘上这会带来很大的开销和实现复杂度。NFS 选择不这么做，就是为了确保系统的内部实现足够简单，同时保持了无状态的特性。这种为了实现简单而有意牺牲一小部分正确性、一致性和完备性的做法正是 [Worse is Better](https://www.jwz.org/doc/worse-is-better.html) 的设计思想。
+如果使用一种更健全的方案，就需要持久化到磁盘上，这会带来很大的开销和实现复杂度。NFS 选择不这么做，就是为了确保系统的内部实现足够简单，同时保持了无状态的特性。这种为了实现简单而有意牺牲一小部分正确性、一致性和完备性的做法正是 [Worse is Better](https://www.jwz.org/doc/worse-is-better.html) 的设计思想。
 
 ### 扩展 Unix 文件系统
 
@@ -252,7 +254,7 @@ vnode 提供的接口使得开发者无需关心操作的文件来自哪里，�
 
 例如，当应用程序调用 `open` 系统调用时，会通过 `File syscall layer->Vnode layer->Client->Server->Vnode layer->File system` 的路径一步步 `LOOKUP` 并最终打开文件。
 
- Client 也会对最近使用的 vnode 进行缓存以减少 RPC 请求。然而，多个 Client 缓存了同一个文件时，就会缓存一致性的问题。
+Client 也会对最近使用的 vnode 进行缓存以减少 RPC 请求。然而，多个 Client 缓存了同一个文件时，就会出现缓存一致性的问题。
 
 ### 缓存一致性
 
@@ -296,11 +298,11 @@ IDL 所做的事不外乎两件：
 
 在 NFS 中，Client 本质上就是针对文件 syscall 的一个 RPC stub。此时，syscall 的参数、返回值都没有受到影响，提供了一定程度的透明性。
 
-然而，这种透明性仅仅是形式上的。如果只有形式上的透明性而没有语义上的透明性，现有的代码尽管能够运行，却会产生错误的结果。所谓语义透明性，即同样的调用是否在 NFS 和 Unix 本地文件系统上表现一致。显然，NFS 没能提供这种语义透明性：
+然而，这种透明性仅仅是形式上的。如果只有形式上的透明性而没有语义上的透明性，现有的代码尽管能够运行，却会产生错误的结果。所谓语义透明性，即同样的调用是否在 NFS 和 Unix 本地文件系统上表现一致。显然，NFS 没能完全提供这种语义透明性：
 
 - 在 Unix 上，只有文件不存在时 `open()` 才会失败；在 NFS 上，如果服务器宕机，`open()` 也会失败，甚至可能一直挂起
-- 在 Unix 上，`close()` 不可能失败；在 NFS 上，调用 `close()` 时会触发批量写操作（也就是含有隐性的 `write()` ），在 Server 空间不足时可能失败
-- 在 NFS 上，假如 Client 发送重命名请求，Server 完成了重命名但未能发送响应就宕机了，那么在 Server 恢复后 Client 的重传会得到“文件不存在”的响应，这在 Unix 上不可能发生
+- 在 Unix 上，`close()` 不可能失败；在 NFS 上，调用 `close()` 时会触发批量写操作（也就是含有隐式的 `write()` ），在 Server 空间不足时可能失败
+- 在 NFS 上，假如 Client 发送重命名请求，Server 完成了重命名但未能发送响应就宕机了，那么在 Server 恢复后 Client 的重传会得到“文件不存在”的响应；这在 Unix 上不可能发生
 - 在 Unix 上，如果 A 打开文件后该文件被 B 删除，A 依然能继续读文件；在 NFS 上，A 则无法再读该文件
 
 第一个问题并不是 NFS 特有的，而是分布式系统均面临的问题；而后三个问题虽然可以修复以提升语义透明性，但都需要付出性能的代价。同理，提升性能也常常需要牺牲一部分一致性，例如上文提及的 close-to-open consistency，并不是什么时候都能提供足够强的一致性。
@@ -349,21 +351,21 @@ Ivy 就采用了类似的思想，用中心化的 Manager 管理页的分配，�
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ❎    | W      | ✅     |
-| CPU1   | ❎    | nil    | ❎     |
-| CPU2   | ❎    | nil    | ❎     |
+| CPU0   |     | W      | ✅     |
+| CPU1   |     | nil    |      |
+| CPU2   |     | nil    |      |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager | ❎    | {}       | CPU0  |
+| Manager |     | {}       | CPU0  |
 
 现在，CPU1 想要读取该页。于是它首先 lock 了自己 ptable 中对应的行，向 Manager 发送 read query。Manager 接收后，lock 自己 info 中对应的行，将 CPU1 加入 `copy_set`。
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ❎    | W      | ✅     |
-| CPU1   | ✅    | nil    | ❎     |
-| CPU2   | ❎    | nil    | ❎     |
+| CPU0   |     | W      | ✅     |
+| CPU1   | ✅    | nil    |      |
+| CPU2   |     | nil    |      |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
@@ -374,8 +376,8 @@ Ivy 就采用了类似的思想，用中心化的 Manager 管理页的分配，�
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
 | CPU0   | ✅    | R      | ✅     |
-| CPU1   | ✅    | nil    | ❎     |
-| CPU2   | ❎    | nil    | ❎     |
+| CPU1   | ✅    | nil    |      |
+| CPU2   |     | nil    |      |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
@@ -385,13 +387,13 @@ Ivy 就采用了类似的思想，用中心化的 Manager 管理页的分配，�
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ❎    | R      | ✅     |
-| CPU1   | ❎    | R      | ❎     |
-| CPU2   | ❎    | nil    | ❎     |
+| CPU0   |     | R      | ✅     |
+| CPU1   |     | R      |      |
+| CPU2   |     | nil    |      |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager | ❎    | {CPU1}   | CPU0  |
+| Manager |     | {CPU1}   | CPU0  |
 
 #### CPU2 写 CPU0 的页
 
@@ -399,9 +401,9 @@ Ivy 就采用了类似的思想，用中心化的 Manager 管理页的分配，�
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ❎    | R      | ✅     |
-| CPU1   | ✅    | nil    | ❎     |
-| CPU2   | ✅    | nil    | ❎     |
+| CPU0   |     | R      | ✅     |
+| CPU1   | ✅    | nil    |      |
+| CPU2   | ✅    | nil    |      |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
@@ -411,9 +413,9 @@ Ivy 就采用了类似的思想，用中心化的 Manager 管理页的分配，�
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ❎    | R      | ✅     |
-| CPU1   | ❎    | nil    | ❎     |
-| CPU2   | ✅    | nil    | ❎     |
+| CPU0   |     | R      | ✅     |
+| CPU1   |     | nil    |      |
+| CPU2   | ✅    | nil    |      |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
@@ -423,9 +425,9 @@ CPU0 接收后，lock ptable，将 `access` 设为 `nil` 并放弃 Owner 身份�
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ✅    | nil    | ❎     |
-| CPU1   | ❎    | nil    | ❎     |
-| CPU2   | ✅    | nil    | ❎     |
+| CPU0   | ✅    | nil    |      |
+| CPU1   |     | nil    |      |
+| CPU2   | ✅    | nil    |      |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
@@ -435,9 +437,9 @@ CPU0 接收后，lock ptable，将 `access` 设为 `nil` 并放弃 Owner 身份�
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ❎    | nil    | ❎     |
-| CPU1   | ❎    | nil    | ❎     |
-| CPU2   | ❎    | W      | ✅     |
+| CPU0   |     | nil    |      |
+| CPU1   |     | nil    |      |
+| CPU2   |     | W      | ✅     |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
@@ -447,17 +449,37 @@ Manager 接收后，将 `owner` 设为 CPU2，最后 unlock info。
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ❎    | nil    | ❎     |
-| CPU1   | ❎    | nil    | ❎     |
-| CPU2   | ❎    | W      | ✅     |
+| CPU0   |     | nil    |      |
+| CPU1   |     | nil    |      |
+| CPU2   |     | W      | ✅     |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager | ❎    | {}       | CPU2  |
+| Manager |     | {}       | CPU2  |
 
 可以注意到，ptable 的锁的存在本质上防止了并发写的发生，使得写操作必须是原子的。
 
 我们也可以将 `copy_set` 移动至每个 CPU 上而不是放在 Manager 上，使得 confirm 类的消息不需要再被发送。此外，还可以使用分布式 Manager 进一步提升性能。
+
+#### 两个 CPU 同时写同一页
+
+根据上面的写操作流程，不难发现同时写同一页是不被允许的（例如，不能有两个 Owner / copy_set 一致性等等），因此写操作必须是原子的。这种原子性实际上得益于 Ivy 的循序一致性。
+
+### 循序一致性
+
+所谓满足循序一致性，即在多 CPU 环境下存在一种包含所有 CPU 的指令的序列使得：
+
+- 所有 CPU 看到的结果与序列的顺序是一致的，例如对一个地址的读操作一定会读取到对该地址最近一次写操作所写入的值；
+- 在序列中，每个 CPU 的指令维持原顺序
+
+这两个要求都十分符合直觉。如果上面的定义不便于理解，可以简单理解为在一个 CPU 上的多个线程的预期行为，两者是类似的。
+
+Lamport 则证明，只要满足以下两个条件，就能满足循序一致性：
+
+- 每个 CPU 按指令顺序，依次执行读写指令
+- 对内存中的每个位置的读写指令，也按指令顺序依次执行
+
+根据这两个条件，我们可以发现 Ivy 是满足循序一致性的。
 
 ### 与 RPC 对比
 
@@ -546,11 +568,21 @@ NFS 和 Ivy 都没有处理系统中节点故障的问题。在一些场景下�
 
 由于可能出现网络丢包和网络分区，单纯的互 ping 来确定哪些节点存活是行不通的。为此，Paxos 引入了 Leader 机制。当一个节点决定成为 Leader 后，它会向包括自身在内的所有节点广播一个 proposal，其中包含一个 proposal 序号 n 和相应的值 value（在这个例子里，是存活节点集合，下不赘述）。n 必须是全局唯一的，一般取目前存在的最大的 n 的值 + 1。
 
-我们用 `n_a`表示节点之前已经 accept 过的 proposal 中最大的 n，然后用 `v_a` 表示对应 proposal 的 value。再用 `n_h` 记录节点所收到的 proposal 中最大的 n。当节点收到一个 proposal，并发现其序号 n 大于 `n_h` 时，就将 `n_h` 设为 n，并向 Leader 回复 `(n_a, v_a)`。
+每个节点维护三个变量：
+- `n_a` 表示节点**已经接受过的** proposal 中最大的 n
+- `v_a` 表示 `n_a` 对应 proposal 的 value
+- `n_h` 记录节点所收到的 proposal 中最大的 n
 
-Leader 收到了超过半数的这样的消息后，就可以查看其中是否有某个 `v_a` 非空。如果所有 `v_a` 都是空的，那么就自己选择一个值作为 value；否则，就选择 `n_a` 最大的那个消息中的 `v_a` 作为 value。随后，向这次回复过自己的节点广播 `(n = 最大的 n_a, v = 选择的 value)`。
+当节点收到一个 proposal，并发现其序号 `n'` 大于 `n_h` 时，就将 `n_h` 设为 `n'`，并向 Leader 回复 `(n_a, v_a)`。
 
-节点收到后，如果发现 `n` 大于等于 `n_h`，那就接收这个 proposal。所谓接收 proposal，就是设置 `n_h = n_a = n`，`v_a = v` 来更新这几条记录，随后回复一条没有内容的消息。
+Leader 收到了超过半数的这样的消息后，就可以查看其中是否有某个 `v_a` 非空：
+
+- 如果所有 `v_a` 都是空的，那么就自己选择一个值作为 value
+- 否则，就选择 `n_a` 最大的那个消息中的 `v_a` 作为 value
+
+随后，向**这次回复过自己的节点**广播 `(n = 最大的 n_a, v = 选择的 value)`。
+
+节点收到后，如果发现 `n` 大于等于 `n_h`，那就接受这个 proposal。所谓接受 proposal，就是设置 `n_h = n_a = n`，`v_a = v` 来更新这几条记录，随后回复一条没有内容的消息。
 
 Leader 收到超过半数的这样的消息后，就可以认为节点达成了共识，并向这次回复过自己的节点广播一条没有内容的消息，表示共识已达成。节点收到消息后，就知道最终达成的共识的值为 `v_a`。在选 primary 的例子里，`v_a` 集合里序号最小的节点就是公认的 primary 了。
 
@@ -560,17 +592,54 @@ Leader 收到超过半数的这样的消息后，就可以认为节点达成了�
 
 Paxos 能保证 Safety 的关键在于：
 
-- 任何节点收到一个 `n < n_h` 的消息后，都会直接无视，这使得即使出现多个 Leader，节点最终也只会 accept 那个序号最大的 proposal（注意 n 是全局唯一的）
-- 任意两个“超过半数”的集合之间必定存在交集，这是由“超过半数”的定义得来的。这使得即使出现多个 Leader，并且都几乎获得了超过半数的支持，最终也会由这个交集中的节点（哪怕只有一个）决定要 accept 的 proposal
+- 任何节点收到一个 `n' < n_h` 的消息后，都会直接无视，这使得即使出现多个 Leader，节点最终也只会接受那个序号最大的 proposal（注意 n 是全局唯一的）
+- 任意两个“超过半数”的集合之间必定存在交集，这是由“超过半数”的定义得来的。这使得即使出现多个 Leader，并且都几乎获得了超过半数的支持，最终也会由这个交集中的节点（哪怕只有一个）决定要接受的 proposal
 - 新的 proposal 会沿用现存的 `n_a` 最大的 proposal 对应的 value，这使得不同 Leader 发起的处于不同阶段的 proposal，无法影响到最终达成共识的 value
+
+## Lamport Clock
+
+### 定义
+
+Lamport Clock 主要用于在没有物理时钟的情况下决定事件发生的顺序。由于没有物理时钟，不存在一个大家都认可的时间标准，因此只能使用相对的时间。Lamport 首先定义了“在……之前发生”的偏序关系，用 $\rightarrow$ 表示：
+
+- 如果 $a$ 和 $b$ 是同一进程中的不同事件，且 $a$ 在 $b$ 之前发生，那么 $a\rightarrow b$
+- 如果 $a$ 是一个进程发送某消息的事件，而 $b$ 是另一进程接收该消息的事件，那么 $a\rightarrow b$
+- 如果 $a\rightarrow b$ 且 $b\rightarrow c$，那么 $a\rightarrow c$
+- 对 $\forall a$，有 $a\nrightarrow a$
+- 如果 $a\nrightarrow b$ 且 $b\nrightarrow a$，那么称 $a$ 和 $b$ 是并发的
+
+随后，对于进程 $P_i$，定义其逻辑时钟 $C_i$。事件 $a$ 发生的时间可以表示为 $C_i\langle a\rangle$ 或 $C\langle a\rangle$。对于 $\forall a,b$，逻辑时钟定义为：如果 $a\rightarrow b$，那么 $C\langle a\rangle < C\langle b\rangle$。注意因为并发事件的存在，其逆命题不成立。
+
+为了让时钟系统满足逻辑时钟的定义，每个进程 $P_i$ 都需要在事件发生时让 $C_i$ 加一。同时，我们要求 $P_i$ 发送的消息（发送事件为 $a$）中带有时间戳 $T_m=C_i\langle a\rangle$，而 $P_j$ 收到消息后，将 $C_j$ 设为 $max(C_j,T_m+1)$，从而使得在 $T_m$ 大于等于本地时钟时间时重新同步本地时钟（同步为 $T_m+1$，因为接收消息也是需要耗时的事件）。
+
+有了逻辑时钟，我们就可以决定事件发生的顺序，也就是定义“在……之前发生”的全序关系，记作 $\Rightarrow$。对于进程 $P_i$ 和 $P_j$，事件 $a$ 和 $b$，如果 $C_i\langle a\rangle < C_j\langle b\rangle$，那么 $a\Rightarrow b$；如果 $C_i\langle a\rangle = C_j\langle b\rangle$，我们进一步比较 $P_i$ 和 $P_j$，此时只需要有一个固定的顺序即可。例如，我们可以定义 pid 小的进程中的事件优先发生，那么假如 $P_i$ 的 pid 小于 $P_j$，则 $a\Rightarrow b$。
+
+### 实例
+
+我们可以使用 Lamport Clock 来解决分布式系统中的诸多问题。例如，假设有一种资源被一系列进程共享，且同一时间只能有一个进程获得该资源，那么我们自然希望：
+
+- 获得资源的进程必须释放资源。释放后，其他进程才能获得该资源
+- 进程按请求资源的顺序依次获得资源
+- 如果每个获得资源的进程最终都释放了资源，那么所有对资源的请求最终都能被满足
+
+这里第二点的“依次”尤为重要，这也导致中心化管理机制在这里失效，因为无法准确判断请求到达的先后顺序。为了满足上述三个条件，我们可以利用 Lamport Clock 设计算法：
+
+- 每个进程维护自己的请求队列
+- 请求资源时，$P_i$ 向所有进程发送 $T_m:P_i$ 请求消息，并将其放入请求队列
+- $P_j$ 收到请求消息后，将其放入请求队列并向 $P_i$ 回复一个 ACK
+- 释放资源时，$P_i$ 将所有 $T_m:P_i$ 请求消息从请求队列中移除，并向所有进程发送 $T_m:P_i$ 释放消息
+- $P_j$ 收到释放消息后，将所有 $T_m:P_i$ 请求消息从请求队列中移除
+- $P_i$ 只有在满足如下两个条件时会获得资源：
+  - 请求队列中存在一个 $T_m:P_i$ 请求消息，并排在所有其他消息前（按全序关系 $\Rightarrow$ 排序）
+  - $P_i$ 已经从所有其他进程接收了时间戳大于 $T_m$ 的 ACK
 
 ## Bayou
 
-Bayou 是为了移动设备构建成的分布式系统设计的，而移动设备经常会遇到没有网络或者网络质量差的情况，这使得很多问题，比如数据一致性，看起来非常困难甚至不可解。Bayou 解决这些问题的手段主要是通过节点间通信，比如通过蓝牙之类的协议使得两部手机交换数据来达成一致性。这是因为 Bayou 主要想解决的问题就是严重网络分区情况下的数据读写可用性。
+Bayou 是为了移动设备构建成的分布式系统设计的，而移动设备经常会遇到没有网络或者网络质量差的情况，这使得很多问题，比如数据一致性，看起来非常困难甚至不可解。Bayou 解决这些问题的手段主要是通过节点间通信，比如通过蓝牙之类的协议使得两部手机交换数据来达成一致性。这是因为 Bayou 主要想解决的问题就是**严重网络分区**情况下的数据读写可用性。
 
 ### 🌰 会议室预订系统
 
-Bayou 使用了一个会议室预订系统来说明协议的运作原理和场景。最终，系统需要确保同一时间段同一会议室不会被两个用户预订。为此，需要一种自动解决冲突的机制，使得不同节点上的数据同步之后能像 git 那样 merge 掉冲突。为了实现这个机制，需要节点维护一个更新操作的有序列表，并确保节点收到的更新操作是一致的、以及确保节点会按相同的顺序逐个应用这些更新操作。这样一来，数据同步就只需要像归并排序那样，合并两个有序列表即可。
+Bayou 使用了一个会议室预订系统的例子来说明协议的运作原理和场景。最终，系统需要确保同一时间段同一会议室不会被两个用户预订。为此，需要一种自动解决冲突的机制，使得不同节点上的数据同步之后能像 git 那样 merge 掉冲突。为了实现这个机制，需要节点维护一个更新操作的有序列表，并确保节点收到的更新操作是一致的、以及确保节点会按相同的顺序逐个应用这些更新操作。这样一来，数据同步就只需要像归并排序那样，合并两个有序列表即可。
 
 ### 冲突合并
 
@@ -592,7 +661,7 @@ merge_proc = ......
 
 ### 判断稳定状态
 
-那么，Bayou 服务器如何确定一个写操作是否已经稳定了呢？一种办法是用 Lamport Clock 里的 timestamp，如果一个写操作的 timestamp 已经小于任何服务器收到的新的写操作的 timstamp，那说明在这个写操作之前已经没有其他写操作了，所以一定是稳定的。但是，如果一个服务器长期断线，那么它上线的时候就会导致大量写操作重新执行。
+那么，Bayou 服务器如何确定一个写操作是否已经稳定了呢？一种办法是用 Lamport Clock 里的 timestamp，如果一个写操作的 timestamp 已经小于任何服务器收到的新的写操作的 timestamp，那说明在这个写操作之前已经没有其他写操作了，所以一定是稳定的。但是，如果一个服务器长期断线，那么它上线的时候就会导致大量写操作重新执行。
 
 Bayou 采用的方法是 primary commit 方法。因为 commited 排在 tentative 前面，我们可以说一个写操作被 commit 之后，只要节点已经获得了之前所有 commited 的写操作（必然成立，这是由 Bayou 按顺序传播写操作的机制决定的），那么这次就是已经是稳定的了。primary commit 即选择一个服务器作为 primary，由它来执行 commit 的操作，并将数据同步给其他服务器。这样做的好处有：
 
@@ -600,7 +669,7 @@ Bayou 采用的方法是 primary commit 方法。因为 commited 排在 tentativ
 - 即使某些节点长期断线，也不影响 commit，因为只有 primary 能 commit。
 - 节点接收到来自 primary 的数据同步后，就不再需要最新 commit 之前的任何记录了，因为那些记录都不可能再改变了。
 
-最后，必须注意的是，primary 在决定 commit 顺序的时候，对于来自同一节点的若干次写操作，其顺序必须被保留。如果在某个节点上先执行了 create，然后执行 modify，那么让 modify 在 create 前面 commit 是毫无意义的。
+最后，必须注意的是，primary 在决定 commit 顺序的时候，对于来自同一节点的若干次写操作，其原顺序必须被保留。如果在某个节点上先执行了 create，然后执行 modify，那么让 modify 在 create 前面 commit 是毫无意义的。
 
 可以看到，Bayou 的问题主要在于实现依赖检查和合并算法，很大程度上增加了开发 / 使用一个应用的复杂度，也并不是对所有应用都适合用这种办法。
 
@@ -1279,6 +1348,7 @@ movq (%rbx,%rax,1), %rbx
 - [Design and Implementation of the Sun Network Filesystem](https://inst.eecs.berkeley.edu/~cs262/sp02/Papers/nfs.pdf)
 - [Memory coherence in shared virtual memory systems](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.14.3607&rep=rep1&type=pdf)
 - [Paxos Made Simple](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf)
+- [Time, Clocks, and the Ordering of Events in a Distributed System](https://lamport.azurewebsites.net/pubs/time-clocks.pdf)
 - [Managing Update Conflicts in Bayou, a Weakly Connected Replicated Storage System](https://people.cs.umass.edu/~mcorner/courses/691M/papers/terry.pdf)
 - [The Google File System](https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/gfs-sosp2003.pdf)
 - [Eliminating Receive Livelock in an Interrupt-driven Kernel](https://web.stanford.edu/class/cs240/readings/p217-mogul.pdf)

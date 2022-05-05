@@ -202,7 +202,7 @@ CLIPPER_PORT=41184
 
 ## 自建 Joplin Server 进行云同步
 
-参考 [官方文档](https://github.com/laurent22/joplin/tree/dev/packages/server) 和[这篇文章](https://zhuanlan.zhihu.com/p/352413230)，既可以用其内置 SQLite 的 docker 来测试，又可以用 docker-compose 同时启动 PostgreSQL 和 Joplin Server。
+参考 [官方文档](https://github.com/laurent22/joplin/tree/dev/packages/server) 和 [这篇文章](https://zhuanlan.zhihu.com/p/352413230)，既可以用其内置 SQLite 的 docker 来测试，又可以用 docker-compose 同时启动 PostgreSQL 和 Joplin Server。
 
 `.env` 文件：
 
