@@ -877,7 +877,7 @@ Kerberos 采用当时依然安全的 DES-CBC 加密，如今 DES 已经不再安
 
 ### 主体名称
 
-每个主体在认证时都有自己的名称，格式形如：`$p rimaryName.$instance@$realm`，例如 `rlogin.priam@ATHENA.MIT.EDU`。
+每个主体在认证时都有自己的名称，格式形如：`$primaryName.$instance@$realm`，例如 `rlogin.priam@ATHENA.MIT.EDU`。
 
 `primaryName` 是用户或服务的名称，`instance` 一般表示该用户在哪台服务器上操作、或是该服务在哪台服务器上运行。`realm` 则表示维护认证信息的管理实体，比如一个组织、一个部门等。
 
@@ -888,7 +888,7 @@ Kerberos 采用当时依然安全的 DES-CBC 加密，如今 DES 已经不再安
 1. 请求一个用于请求其他服务的 credential
 2. 用这个 credential 请求对应的服务
 
-credential 又分为 ticket 和 authenticator。ticket 用于传递关于用户的认证信息，而authenticator 用于传递关于用户所处客户端的认证信息。一个 ticket 通常长这样：
+credential 又分为 ticket 和 authenticator。ticket 用于传递关于用户的认证信息，而 authenticator 用于传递关于用户所处客户端的认证信息。一个 ticket 通常长这样：
 
 $$
 \\{s,c,addr,timestamp,ttl,K_{s,c}\\}K_s
@@ -989,24 +989,24 @@ TAOS 的论文中提供了一种基于公钥密码体制和证书的分布式认
 
 ### 符号
 
-- $A\ says\ S$：表示主体 $A$ 支持声明 $S$
-- $A\Rightarrow B$ 或 $A\ speaks\ for\ B$：表示主体 $A$ 发布的任意声明都可以认为是 $B$ 发布的
-- 也就是说，如果 $A\Rightarrow B$ 且 $A\ says\ S$，那么 $B\ says\ S$
+- $A\ \texttt{says}\ S$：表示主体 $A$ 支持声明 $S$
+- $A\Rightarrow B$ 或 $A\ \texttt{speaks for}\ B$：表示主体 $A$ 发布的任意声明都可以认为是 $B$ 发布的
+- 也就是说，如果 $A\Rightarrow B$ 且 $A\ \texttt{says}\ S$，那么 $B\ \texttt{says}\ S$
 
 这里的主体包括：
 
 - 简单主体：如用户和机器等。
-- 信道：指网络地址和加密密钥。如果声明 $S$ 出现在了信道 $C$ 上，那么 $C\ says\ S$；如果用 $K$ 签名一张包含 $S$ 的证书，那么 $K\ says\ S$。需要注意，只有信道可以直接发布一个声明，因为声明只能出现在信道上。
+- 信道：指网络地址和加密密钥。如果声明 $S$ 出现在了信道 $C$ 上，那么 $C\ \texttt{says}\ S$；如果用 $K$ 签名一张包含 $S$ 的证书，那么 $K\ \texttt{says}\ S$。需要注意，只有信道可以直接发布一个声明，因为声明只能出现在信道上。
 - 组：一组主体。如果 $A$ 在组 $G$ 中，那么 $A\Rightarrow G$。
-- 代表某一角色的主体：例如 $Bob$ 以 $Admin$ 的身份执行操作时，我们说 $Bob\ as\ Admin$。此时 $Bob\Rightarrow (Bob\ as\ Admin)$。
+- 代表某一角色的主体：例如 $Bob$ 以 $Admin$ 的身份执行操作时，我们说 $Bob\ \texttt{as}\ Admin$。此时 $Bob\Rightarrow (Bob\ \texttt{as}\ Admin)$。
 - 主体的逻辑与。
-- 引用某一主体的主体：我们用 $B|A$ 表示 $B$ 引用了 $A$，即 $B\ says\ A\ says\ S$ 等于 $(B|A)\ says\ S$。
-- 代表某一主体的主体：我们用 $B\ for\ A$ 表示 $B$ 代表了 $A$，这比 $B|A$ 更强，因为此时 $B$ 已经获得了 $A$ 的授权。
+- 引用某一主体的主体：我们用 $B|A$ 表示 $B$ 引用了 $A$，即 $B\ \texttt{says}\ A\ \texttt{says}\ S$ 等于 $(B|A)\ \texttt{says}\ S$。
+- 代表某一主体的主体：我们用 $B\ \texttt{for}\ A$ 表示 $B$ 代表了 $A$，这比 $B|A$ 更强，因为此时 $B$ 已经获得了 $A$ 的授权。
 
 ### 公理
 
-1. handoff 公理：如果 $A\ says\ (B\Rightarrow A)$，那么 $B\Rightarrow A$。
-2. delegation 公理：如果 $A\ says\ ((B|A)\Rightarrow (B\ for\ A))$，那么 $(B|A)\Rightarrow (B\ for\ A)$。
+1. handoff 公理：如果 $A\ \texttt{says}\ (B\Rightarrow A)$，那么 $B\Rightarrow A$。
+2. delegation 公理：如果 $A\ \texttt{says}\ ((B|A)\Rightarrow (B\ \texttt{for}\ A))$，那么 $(B|A)\Rightarrow (B\ \texttt{for}\ A)$。
 
 注意到 delegation 和 handoff 看起来差不多，但重要的是在 delegation 中额外记录了被授权的主体 $B$。如果 $B$ 发布的声明出现了问题，这一特性结合日志审计使得我们不必再向很可能是无辜的 $A$ 追责，而是直接向 $B$ 追责。
 
@@ -1017,7 +1017,7 @@ TAOS 的论文中提供了一种基于公钥密码体制和证书的分布式认
 $Vax4$ 启动时，用私钥签名一个启动证书，将权限移交给新生成的节点公钥 $K_{ws}$。这个证书可以表示为：
 
 $$
-(K_{vax4}\ as\ OS)\ says\ (K_{ws}\Rightarrow(K_{vax4}\ as\ OS))\tag{1}
+(K_{vax4}\ \texttt{as}\ OS)\ \texttt{says}\ (K_{ws}\Rightarrow(K_{vax4}\ \texttt{as}\ OS))\tag{1}
 $$
 
 > 1. 为什么不直接使用 $K_{vax4}$？
@@ -1037,50 +1037,50 @@ $$
 登陆操作可以看作一种特殊的 delegation。$Bob$ 登陆时，用自己的私钥 $K_{bob}^{-1}$ 签名一个 delegation 证书，将权限委托给 $WS$：
 
 $$
-K_{bob}\ says\ ((K_{ws}|K_{bob})\Rightarrow(K_{ws}\ for\ K_{bob}))\tag{2}
+K_{bob}\ \texttt{says}\ ((K_{ws}|K_{bob})\Rightarrow(K_{ws}\ \texttt{for}\ K_{bob}))\tag{2}
 $$
 
 现在，需要向 $FS$ 发送请求。首先需要一个发送请求的信道 $C_{bob}$，以及请求本身 $RQ$。发送请求可以写作：
 
 $$
-C_{bob}\ says\ RQ\tag{3}
+C_{bob}\ \texttt{says}\ RQ\tag{3}
 $$
 
 并且 $WS$ 需要签名一个信道证书，将权限移交给信道：
 
 $$
-(K_{ws}|K_{bob})\ says\ (C_{bob}\Rightarrow(K_{ws}|K_{bob}))\tag{4}
+(K_{ws}|K_{bob})\ \texttt{says}\ (C_{bob}\Rightarrow(K_{ws}|K_{bob}))\tag{4}
 $$
 
 结合 (4) 和 (2)，使用 delegation，$FS$ 可以推出：
 
 $$
-(K_{ws}\ for\ K_{bob})\ says\ (C_{bob}\Rightarrow(K_{ws}\ for\ K_{bob}))\tag{5}
+(K_{ws}\ \texttt{for}\ K_{bob})\ \texttt{says}\ (C_{bob}\Rightarrow(K_{ws}\ \texttt{for}\ K_{bob}))\tag{5}
 $$
 
 结合 (5) 和 (3)，使用 handoff，$FS$ 可以推出：
 
 $$
-(K_{ws}\ for\ K_{bob})\ says\ RQ\tag{6}
+(K_{ws}\ \texttt{for}\ K_{bob})\ \texttt{says}\ RQ\tag{6}
 $$
 
 结合 (6) 和 (1)，使用 handoff，$FS$ 可以推出：
 
 $$
-((K_{vax4}\ as\ OS)\ for\ K_{bob})\ says\ RQ\tag{7}
+((K_{vax4}\ \texttt{as}\ OS)\ \texttt{for}\ K_{bob})\ \texttt{says}\ RQ\tag{7}
 $$
 
 最后，$FS$ 还需要证明 $K_{vax4}$ 和 $K_{bob}$ 确实代表了 $Vax4$ 和 $Bob$。为此，必须引入受信任的第三方机构 $CA$，也就是说相信 $K_{ca}\Rightarrow$ 任意的主体。因此，$FS$ 可以使用如下证书：
 
 $$
-K_{ca}\ says\ (K_{vax4}\Rightarrow Vax4)\\\\ 
-K_{ca}\ says\ (K_{bob}\Rightarrow Bob)
+K_{ca}\ \texttt{says}\ (K_{vax4}\Rightarrow Vax4)\\\\ 
+K_{ca}\ \texttt{says}\ (K_{bob}\Rightarrow Bob)
 $$
 
 结合 (7)，使用 handoff，最终得到：
 
 $$
-((Vax4\ as\ OS)\ for\ Bob)\ says\ RQ
+((Vax4\ \texttt{as}\ OS)\ \texttt{for}\ Bob)\ \texttt{says}\ RQ
 $$
 
 其语义是：$FS$ 得知运行着 $OS$ 的机器 $Vax4$ 代表用户 $Bob$ 发送了请求 $RQ$。
@@ -1089,7 +1089,7 @@ $$
 
 在讲 ASLR 前讲了关于栈溢出漏洞和格式化字符串漏洞的利用，因为已经比较熟悉了，也没什么记录的必要。
 
-在 Ret2Shellcode、Ret2Libc 等攻击中，一个必要的条件是攻击者必须知道栈地址、 libc 基地址、写入的字符串地址等等。ASLR 尝试随机化进程的地址空间来阻止这些利用，使得程序直接崩溃。主要随机化的内存区域包括：
+在 ret2Shellcode、ret2Libc 等攻击中，一个必要的条件是攻击者必须知道栈地址、 libc 基地址、写入的字符串地址等等。ASLR 尝试随机化进程的地址空间来阻止这些利用，使得程序直接崩溃。主要随机化的内存区域包括：
 
 - 可执行区域，如 text 段等，随机化 16 bits
 - mapped 区域，如堆、动态链接库等，随机化 16 bits
@@ -1097,7 +1097,7 @@ $$
 
 mapped 区域只能随机化 16 bits，因为第 28-31 bits 如果随机，会影响 `mmap()` 申请大块内存；0-11 bits 如果随机，会影响 `mmap()` 申请到的页的对齐。
 
-由于 16 bits 并不多，ASLR 的随机化是可以被暴力猜解的。在攻击 ASLR 的论文中使用了猜测的 `usleep()` 地址覆盖返回地址。这样，如果猜对了，就会产生非常明显的延迟；而如果猜错了，程序会立即崩溃。成功猜到随机偏移后，就是正常的 Ret2Libc 流程了。
+由于 16 bits 并不多，ASLR 的随机化是可以被暴力猜解的。在攻击 ASLR 的论文中使用了猜测的 `usleep()` 地址覆盖返回地址。这样，如果猜对了，就会成功调用 `usleep()`，产生非常明显的延迟；而如果猜错了，程序会立即崩溃。成功猜到随机偏移后，就是正常的 ret2Libc 流程了。
 
 > 这里传入给 `usleep()` 的参数是 `0x01010101`，也就是最小的不包括 `0x00` 字节的数字，大约等于 16 秒。
 
@@ -1111,9 +1111,9 @@ TaintCheck 则提供了一种无需源码，直接作用于二进制文件的漏
 
 为了直接作用于二进制文件，TaintCheck 使用 Valgrind 来将程序的指令翻译成 UCode，随后插入用于标记污点的代码，并将 UCode 翻译回去。这个过程是针对每个基本块执行的，因此在 `jmp` / `ret` / `call` 等指令前都会检查要跳转的地址是否有污点。
 
-对存在污点的内存区域，TaintCheck 维护了一份 shadow memory 来记录污点状态。Fast 模式下，对于每个内存中的字节只使用 1 bit 来记录是否有污点；Detailed 模式下，则使用 4 字节的指针，指向一个污点的结构体，记录了详细的 syscall、栈 等信息，用于追踪漏洞利用数据流。
+对存在污点的内存区域，TaintCheck 维护了一份 shadow memory 来记录污点状态。Fast 模式下，对于每个内存中的字节只使用 1 bit 来记录是否有污点；Detailed 模式下，则使用 4 字节的指针，指向一个污点的结构体，记录了详细的 syscall、栈等信息，用于追踪漏洞利用数据流。
 
-不过，TaintCheck 并不会为 condition flags 加污点，即使它会直接收到用户输入影响。这么做是因为这会极大提高假阳性率，但这样做也导致了一些假阴性的情况出现，例如：
+不过，TaintCheck 并不会为 condition flags 加污点，即使它会直接受到用户输入影响。这么做是因为这会极大提高假阳性率，但这样做也导致了一些假阴性的情况出现，例如：
 
 ```c
 if (x == 0)
@@ -1304,7 +1304,7 @@ Meltdown 的目标则和上述目标不同：我们想要在一个用户态非 r
 同样利用 Flush + Reload：
 
 - 分配 256 页（1 MB）进程地址空间，清空其对应的缓存
-- 让 OS 不要在发生段错误的时候 kill 掉自己，比如可以自己捕获 SIGSEGV
+- 让 OS 不要在发生段错误的时候 kill 掉自己，这可以通过自己捕获 SIGSEGV 来做到
 - 根据想要读取的另一个进程地址空间中的目标地址，计算出内核地址空间中对应的目标地址并读取（当 CPU 发现读取的地址非法时，会触发段错误，停止执行后续指令）
 - 根据上面读取的结果计算出合法的、位于进程地址空间中的地址并读取（由于乱序执行，此时可能还没有触发段错误）
 - 最后，我们依次读每一页，其中有一页上的读取速度比其他页都快，说明该页的序号就是第三步中读取到的内核地址上的值
@@ -1326,11 +1326,11 @@ movq (%rbx,%rax,1), %rbx
 
 首先将 `rax` 置 0，接着尝试从 `rcx` 中读取一字节到 `al`，也就是 `rax` 低位。这一步最终一定会引发段错误，但由于乱序执行的存在，CPU 此时可能还没有意识到问题的严重性。CPU 按顺序执行第三行和第四行，但第四行可能在第三行之前执行完。
 
-在第四行，我们执行 `rax = rax<<12`，就是将读取到的地址乘以页的大小 4K。如果运气不好，在执行第四行前就段错误了，那么就会在第五行 `jz` 到前面重试，最终一定能成功。
+在第四行，我们执行 `rax = rax<<12`，就是将读取到的字节乘以页的大小 4K。如果运气不好，在执行第四行前就段错误了，那么就会在第五行 `jz` 到前面重试，最终一定能成功。
 
 到了第六行，我们先计算 `rbx + rax`，这是第 `rax` 页的起始地址；然后从这个地址上读取一个值给 `rbx`，为的就是让这一页进入缓存。第四行和第六行对应了上文的第四步。
 
-最后，只要依次读每一页，在缓存里的那页必定会快很多，从而可以由其序号推出 `rax>>12` 的值，也就是 `rcx` 的值，也就是我们想读的地址上存放的值。
+最后，只要依次读每一页，在缓存里的那页必定会快很多，从而可以由其序号推出 `rax>>12` 的值，也就是地址 `rcx` 上被读取的那一字节的值。
 
 ### Bit-at-a-Time
 
