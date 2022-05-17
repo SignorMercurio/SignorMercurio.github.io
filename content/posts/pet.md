@@ -2067,8 +2067,8 @@ Apple 使用 PSI 技术来检测用户的 iCloud 中是否存储了非法的儿�
 
 Algebraic MAC 提供了两个很好的性质：
 
-- 在可行时间里证明 MAC 的生成
-- 在可行时间里证明 MAC 的持有
+- 在可行时间里证明 MAC 的正确生成（Issuing）
+- 在可行时间里证明 MAC 的持有（Showing）
 
 首先需要一个素群 G，生成元 g 和 h，随后生成私钥 $sk=\{x_0,x_1,...,x_k\}$，其中 k 是要编码的属性个数。随后公布 Issuer 参数 $\texttt{iparams=}\{X_i=h^{x_i}\} \texttt{ for }i>0$。
 
@@ -2087,7 +2087,7 @@ Algebraic MAC 以私钥和 k 个属性 $m=\{m_i\}\texttt{ for }1<=i<=k$，选择
 
 在 CredKeyGen 中，首先初始化 aMAC 的参数，随后在 $Z_p$ 中随机选择 $o_{xo}$，计算 Commitment $C_{xo}=g^{x_0}h^{o_{xo}}$。输出公钥 $(\texttt{iparams}, C_{xo})$，私钥 $(sk,o_{xo})$。
 
-Credential Issuance 中 Issuer 将属性编码成消息 $m_i$，计算 $Tag(u,u')=MAC(sk,\{m_i\})$，然后计算证明 $\pi_0=NIZK\{(sk,o_{xo}):u',C_{xo},X_i\}$。Prover 获得 $(u,u')$ 后，验证 $\pi_0$。
+Credential Issuance 中 Issuer 将属性编码成消息 $m_i$，计算 $Tag(u,u')=MAC(sk,\{m_i\})$，然后计算证明 $\pi_0=NIZK\\{(sk,o_{xo}):u',C_{xo},X_i\\}$。Prover 获得 $(u,u')$ 后，验证 $\pi_0$。
 
 Credential Showing 中 Prover 在 $Z_p$ 中随机选择 $a,z_i,r$，计算：
 
@@ -2095,7 +2095,7 @@ Credential Showing 中 Prover 在 $Z_p$ 中随机选择 $a,z_i,r$，计算：
 - $C_{mi}=u^{m_i}h^{z_i}$
 - $C_{u'}=u_a'g^r$
 
-随后产生证明 $\pi_1=NIZK{(z_i,r,m_i):C_{mi},V=g^{-r}\Pi X_i^{z_i}+...}$， `...` 处是其他关于属性的声明。输出 $(i_a,C_{mi}, C_{u'}),\pi_1$.
+随后产生证明 $\pi_1=NIZK\\{(z_i,r,m_i):C_{mi},V=g^{-r}\Pi X_i^{z_i}+...\\}$， `...` 处是其他关于属性的声明。输出 $(u_a,C_{mi}, C_{u'}),\pi_1$.
 
 > 选择这么多随机数都是为了让属性匿名化。
 
