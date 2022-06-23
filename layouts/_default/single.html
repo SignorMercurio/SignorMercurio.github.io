@@ -28,6 +28,7 @@
     </div>
     {{ end }}
     <div class="min-w-0 min-h-0 max-w-prose">
+      {{ if .Params.featuredImage }}
       <figure>
         <img
           class="my-0 rounded-md"
@@ -35,7 +36,7 @@
           alt="featuredImage"
         />
       </figure>
-      {{ .Content | emojify }}
+      {{ end }} {{ .Content | emojify }}
     </div>
   </section>
   <footer class="pt-8 max-w-prose print:hidden">
