@@ -27,7 +27,16 @@
       </div>
     </div>
     {{ end }}
-    <div class="min-w-0 min-h-0 max-w-prose">{{ .Content | emojify }}</div>
+    <div class="min-w-0 min-h-0 max-w-prose">
+      <figure>
+        <img
+          class="my-0 rounded-md"
+          src="{{ .Params.featuredImage }}"
+          alt="featuredImage"
+        />
+      </figure>
+      {{ .Content | emojify }}
+    </div>
   </section>
   <footer class="pt-8 max-w-prose print:hidden">
     {{ partial "author.html" . }} {{ partial "sharing-links.html" . }} {{
