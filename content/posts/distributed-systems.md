@@ -7,13 +7,14 @@ tags:
   - 分布式系统
 categories:
   - 探索
-math: true
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/DistributedSystems/0.png
 ---
 
 COMP0133《分布式系统与安全》是我从本科到硕士期间最有价值的课。
 
 <!--more-->
+
+{{< katex >}}
 
 ## 序
 

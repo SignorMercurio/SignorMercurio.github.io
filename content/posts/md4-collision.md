@@ -4,14 +4,15 @@ date: 2019-03-06 14:01:28
 tags:
   - Hash
   - 位运算
-categories: 
+categories:
   - 密码学
-math: true
 ---
 
 重复了王小云教授 14 年前的工作，RIPEMD/MD5/SHA 家族碰撞原理类似。
 
 <!--more-->
+
+{{< katex >}}
 
 课程《Hash 函数安全性分析》要求我们基于王小云教授在 2005 年欧密会上发表的 [Cryptanalysis of the Hash Functions MD4 and RIPEMD](https://link.springer.com/content/pdf/10.1007%2F11426639_1.pdf)，实现对 MD4 函数的碰撞攻击。所谓 [MD4 函数](https://zh.wikipedia.org/zh-hans/MD4)，就是大名鼎鼎的 MD5 函数的前身，后者相较于前者更为安全（尽管也同样被王小云教授找到了碰撞攻击的方法）。值得一提的是，MD4 和 MD5 的发明者是 Ronald Rivest，也就是 RSA 中的‘R’。
 
@@ -24,16 +25,16 @@ MD4 是将任意长度的消息压缩为 128bit 的一种单向散列函数。MD
 为了阐释 MD4 压缩函数的步骤，首先定义三个函数：
 
 $$
-F(X,Y,Z) = (X\land Y)\lor (\lnot X\land Z)\\\\ 
-G(X,Y,Z) = (X\land Y)\lor (X\land Z)\lor (Y\land Z)\\\\ 
+F(X,Y,Z) = (X\land Y)\lor (\lnot X\land Z)\\\\
+G(X,Y,Z) = (X\land Y)\lor (X\land Z)\lor (Y\land Z)\\\\
 H(X,Y,Z) = X\oplus Y\oplus Z
 $$
 
 其中 X,Y,Z 都是 32bit 的字（**注意到在 C++ 中，`unsigned int` 可以很好地表示它们**）。压缩函数共 3 轮，每轮有 16 步操作，每次操作都会更新**链接变量** a,b,c,d 之一。更新时需要用到这三个函数：
 
 $$
-\phi_0(a,b,c,d,m_k,s) = ((a + F(b,c,d) + m_k)\ mod\ 2^{32})\lll s\\\\ 
-\phi_1(a,b,c,d,m_k,s) = ((a + G(b,c,d) + m_k + 0x5a827999)\ mod\ 2^{32})\lll s\\\\ 
+\phi_0(a,b,c,d,m_k,s) = ((a + F(b,c,d) + m_k)\ mod\ 2^{32})\lll s\\\\
+\phi_1(a,b,c,d,m_k,s) = ((a + G(b,c,d) + m_k + 0x5a827999)\ mod\ 2^{32})\lll s\\\\
 \phi_2(a,b,c,d,m_k,s) = ((a + H(b,c,d) + m_k + 0x6ed9eba1)\ mod\ 2^{32})\lll s
 $$
 
@@ -52,19 +53,19 @@ $$
 压缩函数的主体是三轮，或者说 48 步运算：
 
 $$
-\text{For\ j = 0,1,2\ and\ i = 0,1,2,3}\\\\ 
-a = \phi_j(a,b,c,d,w_{j,4i},s_{j,4i})\\\\ 
-d = \phi_j(d,a,b,c,w_{j,4i+1},s_{j,4i+1})\\\\ 
-c = \phi_j(c,d,a,b,w_{j,4i+2},s_{j,4i+2})\\\\ 
+\text{For\ j = 0,1,2\ and\ i = 0,1,2,3}\\\\
+a = \phi_j(a,b,c,d,w_{j,4i},s_{j,4i})\\\\
+d = \phi_j(d,a,b,c,w_{j,4i+1},s_{j,4i+1})\\\\
+c = \phi_j(c,d,a,b,w_{j,4i+2},s_{j,4i+2})\\\\
 b = \phi_j(b,c,d,a,w_{j,4i+3},s_{j,4i+3})
 $$
 
 这里的 w 是消息字，s 是循环左移的位数。压缩函数的最后一步意外简单，将**计算得到的链接变量 a,b,c,d** 加到**输入的链接变量 aa,bb,cc,dd** 上：
 
 $$
-aa = (a + aa)\ mod\ 2^{32}\\\\ 
-bb = (b + bb)\ mod\ 2^{32}\\\\ 
-cc = (c + cc)\ mod\ 2^{32}\\\\ 
+aa = (a + aa)\ mod\ 2^{32}\\\\
+bb = (b + bb)\ mod\ 2^{32}\\\\
+cc = (c + cc)\ mod\ 2^{32}\\\\
 dd = (d + dd)\ mod\ 2^{32}
 $$
 
@@ -81,23 +82,23 @@ $$
 ### F 函数引理
 
 $$
-F(x,y,z) = F(\lnot x,y,z)\ \text{iff}\ y=z\\\\ 
-F(x,y,z) = F(x,\lnot y,z)\ \text{iff}\ x=0\\\\ 
+F(x,y,z) = F(\lnot x,y,z)\ \text{iff}\ y=z\\\\
+F(x,y,z) = F(x,\lnot y,z)\ \text{iff}\ x=0\\\\
 F(x,y,z) = F(x,y,\lnot z)\ \text{iff}\ x=1
 $$
 
 ### G 函数引理
 
 $$
-G(x,y,z) = G(\lnot x,y,z)\ \text{iff}\ y=z\\\\ 
-G(x,y,z) = G(x,\lnot y,z)\ \text{iff}\ x=z\\\\ 
+G(x,y,z) = G(\lnot x,y,z)\ \text{iff}\ y=z\\\\
+G(x,y,z) = G(x,\lnot y,z)\ \text{iff}\ x=z\\\\
 G(x,y,z) = G(x,y,\lnot z)\ \text{iff}\ x=y
 $$
 
 ### H 函数引理
 
 $$
-H(x,y,z) = \lnot H(\lnot x,y,z) = \lnot H(x,\lnot y,z) = \lnot H(x,y,\lnot z)\\\\ 
+H(x,y,z) = \lnot H(\lnot x,y,z) = \lnot H(x,\lnot y,z) = \lnot H(x,y,\lnot z)\\\\
 H(x,y,z) = H(\lnot x,\lnot y,z) = H(x,\lnot y,\lnot z) = H(\lnot x,y,\lnot z)
 $$
 
@@ -132,8 +133,8 @@ $$
 构造 M 与 M'，使得：
 
 $$
-\Delta M = M'- M = (\Delta m_0, \Delta m_1, ..., \Delta m_{15})\\\\ 
-\Delta m_1 = 2^{31},\ \ \Delta m_2 = 2^{31}-2^{28},\ \ \Delta m_{12} = -2^{16}\\\\ 
+\Delta M = M'- M = (\Delta m_0, \Delta m_1, ..., \Delta m_{15})\\\\
+\Delta m_1 = 2^{31},\ \ \Delta m_2 = 2^{31}-2^{28},\ \ \Delta m_{12} = -2^{16}\\\\
 \Delta m_i = 0,\ \ 0\le i\le 15,\ \ i\ne 1,2,12
 $$
 
@@ -144,7 +145,7 @@ $$
 对于如下变换（表 5 中的第 9 步）：
 
 $$
-(b_2[-13,-14,15], c_2[19,20,-21,-22], d_2[14], a_2)\\\\ 
+(b_2[-13,-14,15], c_2[19,20,-21,-22], d_2[14], a_2)\\\\
 \to (a_3[17], b_2[-13,-14,15], c_2[19,20,-21,22], d_2[14])
 $$
 
@@ -175,7 +176,7 @@ $$
 作者给的例子是关于 $m_1$ 的修改：
 
 $$
-d_1\gets d_1\oplus (d_{1,7} \lll 6)\oplus ((d_{1,8}\oplus a_{1,8})\lll 7)\oplus ((d_{1,11}\oplus a_{1,11})\lll 10)\\\\ 
+d_1\gets d_1\oplus (d_{1,7} \lll 6)\oplus ((d_{1,8}\oplus a_{1,8})\lll 7)\oplus ((d_{1,11}\oplus a_{1,11})\lll 10)\\\\
 m_1\gets (d_1\ggg 7) - d_0 - F(a_1, b_0, c_0)
 $$
 

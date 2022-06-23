@@ -8,12 +8,13 @@ tags:
 categories:
   - 密码学
 featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PET/0.png
-math: true
 ---
 
 Privacy Enhancing Technologies (PET)，实际上还是密码学。
 
 <!--more-->
+
+{{< katex >}}
 
 ## 隐私与隐私侵犯
 
@@ -190,8 +191,8 @@ def is_point_on_curve(a, b, p, x, y):
 随后，对于 $(x_r,y_r)=(x_p,y_p)+(x_q,y_q)$，我们有：
 
 $$
-\lambda=(y_q-y_p)(x_q-x_p)^{-1}\ (mod\ p)\\\\ 
-x_r=\lambda^2-x_p-x_q\ (mod\ p)\\\\ 
+\lambda=(y_q-y_p)(x_q-x_p)^{-1}\ (mod\ p)\\\\
+x_r=\lambda^2-x_p-x_q\ (mod\ p)\\\\
 y_r=\lambda(x_p-x_r)-y_p\ (mod\ p)
 $$
 
@@ -310,8 +311,8 @@ def point_add(a, b, p, x0, y0, x1, y1):
 特别地，当两个加数相同时：
 
 $$
-\lambda=(3x_p^2+a)(2y_p)^{-1}\ (mod\ p)\\\\ 
-x_r=\lambda^2-2x_p\ (mod\ p)\\\\ 
+\lambda=(3x_p^2+a)(2y_p)^{-1}\ (mod\ p)\\\\
+x_r=\lambda^2-2x_p\ (mod\ p)\\\\
 y_r=\lambda(x_p-x_r)-y_p\ (mod\ p)
 $$
 
@@ -470,7 +471,7 @@ def test_check_fail():
 
 
 def ecdsa_key_gen():
-    """ Returns an EC group, a random private key for signing 
+    """ Returns an EC group, a random private key for signing
         and the corresponding public key for verification"""
     group = EcGroup()
     priv_sign = group.order().random()
@@ -607,7 +608,7 @@ def dh_get_key():
 
 
 def dh_encrypt(pub, message, alice_sig=None):
-    """ Assume you know the public key of someone else (Bob), 
+    """ Assume you know the public key of someone else (Bob),
     and wish to Encrypt a message for them.
         - Generate a fresh DH key for this message.
         - Derive a fresh shared key.
@@ -632,7 +633,7 @@ def dh_encrypt(pub, message, alice_sig=None):
 
 
 def dh_decrypt(priv, pub, ciphertext, alice_ver=None):
-    """ Decrypt a received message encrypted using your public key, 
+    """ Decrypt a received message encrypted using your public key,
     of which the private key is provided.
     Optionally verify the message came from Alice using her verification
     key."""
@@ -764,10 +765,10 @@ Alice 用 Mix 公钥加密消息后发送给 Mix，随后 Mix 解密并发送给
 
 ```python
 def aes_ctr_enc_dec(key, iv, message):
-    """ A helper function that implements AES Counter (CTR) Mode encryption and decryption. 
+    """ A helper function that implements AES Counter (CTR) Mode encryption and decryption.
     Expects a key (16 byte), and IV (16 bytes) and an input plaintext / ciphertext.
 
-    If it is not obvious convince yourself that CTR encryption and decryption are in 
+    If it is not obvious convince yourself that CTR encryption and decryption are in
     fact the same operations.
     """
     aes = Cipher("AES-128-CTR")
@@ -787,7 +788,7 @@ OneHopMixMessage = namedtuple('OneHopMixMessage', ['ec_public_key',
 
 
 def mix_server_one_hop(private_key, message_list):
-    """ Implements the decoding for a simple one-hop mix. 
+    """ Implements the decoding for a simple one-hop mix.
 
         Each message is decoded in turn:
         - A shared key is derived from the message public key and the mix private_key.
@@ -847,10 +848,10 @@ def mix_server_one_hop(private_key, message_list):
 ```python
 def mix_client_one_hop(public_key, address, message):
     """
-    Encode a message to travel through a single mix with a set public key. 
+    Encode a message to travel through a single mix with a set public key.
     The maximum size of the final address and the message are 256 bytes and 1000 bytes respectively.
     Returns an 'OneHopMixMessage' with four parts: a public key, an HMAC (20 bytes),
-    an address ciphertext (256 + 2 bytes) and a message ciphertext (1002 bytes). 
+    an address ciphertext (256 + 2 bytes) and a message ciphertext (1002 bytes).
     """
 
     G = EcGroup()
@@ -950,7 +951,7 @@ def test_simple_client_part_type(encode_Alice_message):
 def test_simple_client_decode(encode_Alice_message):
     private_key, Alice_message = encode_Alice_message
 
-    # Ensure the mix can decode the message correctly    
+    # Ensure the mix can decode the message correctly
     res1 = mix_server_one_hop(private_key, [Alice_message])
 
     assert len(res1) == 1
@@ -974,7 +975,7 @@ def test_simple_client_decode_many():
         m = mix_client_one_hop(public_key, urandom(256), urandom(1000))
         messages += [m]
 
-    # Ensure the mix can decode the message correctly    
+    # Ensure the mix can decode the message correctly
     res1 = mix_server_one_hop(private_key, messages)
 
     assert len(res1) == 100
@@ -998,14 +999,14 @@ NHopMixMessage = namedtuple('NHopMixMessage', ['ec_public_key',
 
 def mix_server_n_hop(private_key, message_list, final=False):
     """ Decodes a NHopMixMessage message and outputs either messages destined
-    to the next mix or a list of tuples (address, message) (if final=True) to be 
+    to the next mix or a list of tuples (address, message) (if final=True) to be
     sent to their final recipients.
 
-    Broadly speaking the mix will process each message in turn: 
-        - it derives a shared key (using its private_key), 
+    Broadly speaking the mix will process each message in turn:
+        - it derives a shared key (using its private_key),
         - checks the first hmac,
         - decrypts all other parts,
-        - either forwards or decodes the message. 
+        - either forwards or decodes the message.
     """
 
     G = EcGroup()
@@ -1086,10 +1087,10 @@ def mix_server_n_hop(private_key, message_list, final=False):
 
 def mix_client_n_hop(public_keys, address, message):
     """
-    Encode a message to travel through a sequence of mixes with a sequence public keys. 
+    Encode a message to travel through a sequence of mixes with a sequence public keys.
     The maximum size of the final address and the message are 256 bytes and 1000 bytes respectively.
     Returns an 'NHopMixMessage' with four parts: a public key, a list of hmacs (20 bytes each),
-    an address ciphertext (256 + 2 bytes) and a message ciphertext (1002 bytes). 
+    an address ciphertext (256 + 2 bytes) and a message ciphertext (1002 bytes).
 
     """
     G = EcGroup()
@@ -1249,9 +1250,9 @@ def generate_trace(number_of_users, threshold_size, number_of_rounds, targets_fr
 
 ```python
 def analyze_trace(trace, target_number_of_friends, target=0):
-    """ 
-    Given a trace of traffic, and a given number of friends, 
-    return the list of receiver identifiers that are the most likely 
+    """
+    Given a trace of traffic, and a given number of friends,
+    return the list of receiver identifiers that are the most likely
     friends of the target.
     """
     max_users = 100
@@ -1326,9 +1327,9 @@ Tor 节点将 IP、公钥等信息公开到 Directory Authorities 上，后者�
 解密时，对于密文 $(a,b)$，只需计算 $m=log_h(b(a^x)^{-1})$。然而离散对数问题是困难的，因此可以先离线计算一张 $log_h$ 表格（这就要求明文空间不能太大）。正确性易证，同态性则包含加法和常数乘法同态：
 
 $$
-E(m_0,k_0)=(a_0,b_0)\\\\ 
-E(m_1,k_1)=(a_1,b_1)\\\\ 
-E(m_0+m_1,k_0+k_1)=(a_0a_1,b_0b_1)=(g^{k0+k1},g^{x(k0+k1)}h^{m0+m1})\\\\ 
+E(m_0,k_0)=(a_0,b_0)\\\\
+E(m_1,k_1)=(a_1,b_1)\\\\
+E(m_0+m_1,k_0+k_1)=(a_0a_1,b_0b_1)=(g^{k0+k1},g^{x(k0+k1)}h^{m0+m1})\\\\
 E(cm_0, ck_0)=((a_0)^c,(b_0)^c)
 $$
 
@@ -1468,7 +1469,7 @@ def test_mul():
 
 
 def add(params, pub, c1, c2):
-    """ Given two ciphertexts compute the ciphertext of the 
+    """ Given two ciphertexts compute the ciphertext of the
         sum of their plaintexts.
     """
     assert isCiphertext(params, c1)
@@ -1482,7 +1483,7 @@ def add(params, pub, c1, c2):
 
 
 def mul(params, pub, c1, alpha):
-    """ Given a ciphertext compute the ciphertext of the 
+    """ Given a ciphertext compute the ciphertext of the
         product of the plaintext time alpha """
     assert isCiphertext(params, c1)
 
@@ -1544,7 +1545,7 @@ def test_partial():
 
 
 def partialDecrypt(params, priv, ciphertext, final=False):
-    """ Given a ciphertext and a private key, perform partial decryption. 
+    """ Given a ciphertext and a private key, perform partial decryption.
         If final is True, then return the plaintext. """
     assert isCiphertext(params, ciphertext)
 
@@ -1584,7 +1585,7 @@ def test_badpub():
 
 
 def corruptPubKey(params, priv, OtherPubKeys=None):
-    """ Simulate the operation of a corrupt decryption authority. 
+    """ Simulate the operation of a corrupt decryption authority.
         Given a set of public keys from other authorities return a
         public key for the corrupt authority that leads to a group
         public key corresponding to a private key known to the
@@ -1759,7 +1760,7 @@ def to_challenge(elements):
 
 
 def proveKey(params, priv, pub):
-    """ Uses the Schnorr non-interactive protocols produce a proof 
+    """ Uses the Schnorr non-interactive protocols produce a proof
         of knowledge of the secret priv such that pub = priv * g.
         Outputs: a proof (c, r)
                  c (a challenge)
@@ -1817,7 +1818,7 @@ def test_proveCommit_incorrect():
 
 
 def commit(params, secrets):
-    """ Produces a commitment C = r * g + Sum xi * hi, 
+    """ Produces a commitment C = r * g + Sum xi * hi,
         where secrets is a list of xi of length 4.
         Returns the commitment (C) and the opening (r).
     """
@@ -1830,10 +1831,10 @@ def commit(params, secrets):
 
 
 def proveCommitment(params, C, r, secrets):
-    """ Prove knowledge of the secrets within a commitment, 
+    """ Prove knowledge of the secrets within a commitment,
         as well as the opening of the commitment.
 
-        Args: C (the commitment), r (the opening of the 
+        Args: C (the commitment), r (the opening of the
                 commitment), and secrets (a list of secrets).
         Returns: a challenge (c) and a list of responses.
     """
@@ -1915,7 +1916,7 @@ def gen2Keys(params):
 
 
 def proveDLEquality(params, x, K, L):
-    """ Generate a ZK proof that two public keys K, L have the same secret private key x, 
+    """ Generate a ZK proof that two public keys K, L have the same secret private key x,
         as well as knowledge of this private key. """
     G, g, (h0, h1, h2, h3), o = params
     w = o.random()
@@ -1983,21 +1984,21 @@ def verifyDLEquality(params, K, L, proof):
 ### 涉及技术
 
 - 安全性
-  
+
   - 同态加密
-  
+
   - 表示为有限域上的多项式
-    
+
     - $p(x)=\Sigma_{i=1}^d(x-s_i)\ for\ S=\{s_1,...,s_d\}$
     - 多项式的根即集合元素，多项式之和的根即为交集（或求 GCD）
     - 对于 d 次多项式 $p_A,p_B$（代表 $S^{(A)},S^{(B)}$），以及随机的 d 次多项式 $\gamma_A,\gamma_B$，令 $\theta=\gamma_A\cdot p_A+\gamma_B\cdot p_B=\mu\cdot gcd(p_A,p_B)$，$\mu$ 为随机多项式，此时 $\theta$ 仅包含 $S^{(A)}\cap S^{(B)}$ 的信息而不包含任一集合其余元素的信息
-  
+
   - 哈希函数
-  
+
   - 伪随机函数
 
 - 性能
-  
+
   - 数据结构
     - 哈希表：将集合元素哈希到表中，在表上计算
     - 布隆过滤器：状态压缩后进行传输和计算
@@ -2061,7 +2062,7 @@ Apple 使用 PSI 技术来检测用户的 iCloud 中是否存储了非法的儿�
 
 这里介绍一种基于 MAC 的方案，该方案假设 Issuer 和 Verifier 是同一主体。
 
-传统方式中，Prover 将断言发给 Verifier 时由于用到了 MAC，无法破坏完整性，但 MAC 并不提供机密性。但如果加入零知识证明和匿名通信机制，那么Prover 就可以通过匿名通信信道和 Verifier 交互，并通过零知识证明来证明断言、以及对应的 MAC。
+传统方式中，Prover 将断言发给 Verifier 时由于用到了 MAC，无法破坏完整性，但 MAC 并不提供机密性。但如果加入零知识证明和匿名通信机制，那么 Prover 就可以通过匿名通信信道和 Verifier 交互，并通过零知识证明来证明断言、以及对应的 MAC。
 
 ### Algebraic MAC
 

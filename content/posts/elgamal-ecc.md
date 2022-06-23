@@ -5,12 +5,13 @@ tags:
   - 公钥密码学
 categories:
   - 密码学
-math: true
 ---
 
 抽代课的上机练习。
 
 <!--more-->
+
+{{< katex >}}
 
 ## 方案简述
 

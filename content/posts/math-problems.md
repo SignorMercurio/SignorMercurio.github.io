@@ -5,12 +5,13 @@ tags:
   - 数学
 categories:
   - 算法
-math: true
 ---
 
 总是让人头疼又令人着迷的数学问题。
 
 <!--more-->
+
+{{< katex >}}
 
 ## 求 $n!$ 首位数
 

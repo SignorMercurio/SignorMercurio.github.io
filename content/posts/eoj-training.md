@@ -8,12 +8,13 @@ tags:
   - Hash
 categories:
   - 算法
-math: true
 ---
 
 记录了新生训练上遇到的一些奇怪题，主要是 Week2 遇到的。
 
 <!--more-->
+
+{{< katex >}}
 
 ## Week 2
 

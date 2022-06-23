@@ -5,12 +5,13 @@ tags:
   - 古典密码与编码
 categories:
   - 密码学
-math: true
 ---
 
 《密码学基础》小作业。
 
 <!--more-->
+
+{{< katex >}}
 
 ## 背景
 
