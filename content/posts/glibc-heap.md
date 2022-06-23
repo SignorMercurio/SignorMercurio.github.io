@@ -86,7 +86,7 @@ free(buffer);
 - ASLR 关闭时，两者指向 data/bss 段的末尾，也就是 `end_data`
 - ASLR 开启时，两者指向 data/bss 段的末尾加上一段随机 brk 偏移
 
-![图 1｜Process Virtual Memory Layout]({{< param cdnPrefix >}}/GLibcHeap/1.png)
+![图 1｜Process Virtual Memory Layout](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GLibcHeap/1.png)
 
 > 注：注意与 `sbrk()` 的区别，后者是 C 语言库函数，`malloc` 源码中的 `MORECORE` 就是调用的 `sbrk()`。
 
@@ -200,11 +200,11 @@ struct malloc_state
 
 对于 `arena` 中只有单个堆的情况：
 
-![图 2｜Single Heap]({{< param cdnPrefix >}}/GLibcHeap/2.png)
+![图 2｜Single Heap](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GLibcHeap/2.png)
 
 对于 `non_main_arena` 中有多个堆的情况：
 
-![图 3｜Multiple Heap]({{< param cdnPrefix >}}/GLibcHeap/3.png)
+![图 3｜Multiple Heap](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GLibcHeap/3.png)
 
 注意到有多个堆的情况下，旧的堆的 Top chunk 会被认为是普通的空闲块。
 
@@ -239,7 +239,7 @@ typedef struct malloc_chunk* mchunkptr;
 
 ### Allocated chunk
 
-![图 4｜Allocated chunk]({{< param cdnPrefix >}}/GLibcHeap/4.png)
+![图 4｜Allocated chunk](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GLibcHeap/4.png)
 
 第一个部分（32 位上 4B，64 位上 8B）叫做 `prev_size`，只有在前一个 chunk 空闲时才表示前一个块的大小，否则这里就是无效的，可以被前一个块征用（存储用户数据）。
 
@@ -367,7 +367,7 @@ musable (void *mem)
 
 ### Free chunk
 
-![图 5｜Free chunk]({{< param cdnPrefix >}}/GLibcHeap/5.png)
+![图 5｜Free chunk](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GLibcHeap/5.png)
 
 首先，`prev_size` 必定存储上一个块的用户数据，因为 Free chunk 的上一个块必定是 Allocated chunk，否则会发生合并。
 
@@ -417,7 +417,7 @@ bin 是实现了空闲链表的数据结构，用来存储空闲 chunk，可分�
 
 chunk 大小（含 chunk 头部）：0x10-0x40（64 位 0x20-0x80）B，相邻 bin 存放的大小相差 0x8（0x10）B。
 
-![图 6｜fast bins]({{< param cdnPrefix >}}/GLibcHeap/6.png)
+![图 6｜fast bins](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GLibcHeap/6.png)
 
 > 注：加入 fast bins 的 chunk，它的 `IN_USE` 位（准确地说，是下一个 chunk 的 `PREV_INUSE` 位）依然是 1。这就是为什么相邻的 “空闲”chunk 不会被合并，因为它们根本不会被认为是空闲的。
 
@@ -438,30 +438,30 @@ chunk 大小（含 chunk 头部）：0x10-0x40（64 位 0x20-0x80）B，相邻 b
 非常像缓冲区 buffer，大小超过 fast bins 阈值的 chunk 被释放时会加入到这里，这使得 ptmalloc2 可以复用最近释放的 chunk，从而提升效率。
 
 unsorted bin 是一个双向循环链表，chunk 大小：大于 `global_max_fast`。
-![图 7｜unsorted bin]({{< param cdnPrefix >}}/GLibcHeap/0.png)
+![图 7｜unsorted bin](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GLibcHeap/0.png)
 
 当程序申请大于 `global_max_fast` 内存时，分配器遍历 unsorted bin，每次取最后的一个 unsorted chunk。
 
 1. 如果 unsorted chunk 满足以下四个条件，它就会被切割为一块满足申请大小的 chunk 和另一块剩下的 chunk，前者返回给程序，后者重新回到 unsorted bin。
-   
+
    - 申请大小属于 small bin 范围
    - unosrted bin 中只有该 chunk
    - 这个 chunk 同样也是 last remainder chunk
    - 切割之后的大小依然可以作为一个 chunk
 
 2. 否则，从 unsorted bin 中删除 unsorted chunk。
-   
+
    - 若 unsorted chunk 恰好和申请大小相同，则直接返回这个 chunk
    - 若 unsorted chunk 属于 small bin 范围，插入到相应 small bin
    - 若 unsorted chunk 属于 large bin 范围，则跳转到 3。
 
 3. 此时 unsorted chunk 属于 large bin 范围。
-   
+
    - 若对应 large bin 为空，直接插入 unsorted chunk，其 `fd_nextsize` 与 `bk_nextsize` 指向自身。
    - 否则，跳转到 4。
 
 4. 到这一步，我们需按大小降序插入对应 large bin。
-   
+
    - 若对应 large bin 最后一个 chunk 大于 unsorted chunk，则插入到最后
    - 否则，从对应 large bin 第一个 chunk 开始，沿 `fd_nextsize`（即变小）方向遍历，直到找到一个 chunk `fwd`，其大小小于等于 unsorted chunk 的大小
      - 若 `fwd` 大小等于 unsorted chunk 大小，则插入到 `fwd` 后面
@@ -512,7 +512,7 @@ large bins 是 63 个双向循环链表，插入和删除可以发生在任意�
 
 我觉得这类复杂的流程比较需要靠流程图来理解，因此我画了一下：
 
-![图 8｜Procedure of malloc()]({{< param cdnPrefix >}}/GLibcHeap/7.png)
+![图 8｜Procedure of malloc()](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GLibcHeap/7.png)
 
 相关宏：
 
@@ -537,7 +537,7 @@ large bins 是 63 个双向循环链表，插入和删除可以发生在任意�
 
 ## 内存释放流程
 
-![图 9｜Procedure of free()]({{< param cdnPrefix >}}/GLibcHeap/8.png)
+![图 9｜Procedure of free()](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GLibcHeap/8.png)
 
 ## 参考资料
 

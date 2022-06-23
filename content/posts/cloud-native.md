@@ -134,7 +134,7 @@ FaaS 中的函数实例都活不了太久，有的执行完就被销毁了，而
 
 K8s 用来管理容器集群，它的好处在 [官方文档](https://kubernetes.io/zh/docs/concepts/overview/what-is-kubernetes/#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-kubernetes-%E5%AE%83%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88) 里已经写得很清楚了，而它的原理大致可以概括为一张架构图：
 
-![图 1｜K8s 架构]({{< param cdnPrefix >}}/CloudNative/1.png)
+![图 1｜K8s 架构](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CloudNative/1.png)
 
 通过 CLI 工具 kubectl，我们可以访问到运行在 K8s Master Node 上的 API Server，也是整个集群的核心。Node 实际上是对计算资源的一种抽象，每个 Node 上运行一个或多个 Pod，即应用实例。一般情况下，一个 Pod 上推荐运行一个容器。
 
@@ -167,7 +167,7 @@ $ sudo install minikube-darwin-amd64 /usr/local/bin/minikube
 
 `brew install kubectl`，没了。
 
-然而需要注意的是，kubectl 版本和 K8s 集群版本之间相差不能超过 *0.0.2*，否则容易出现不兼容的情况。例如，如果用 Docker Desktop 安装的 1.21.4 版本的集群，则需要手动安装：
+然而需要注意的是，kubectl 版本和 K8s 集群版本之间相差不能超过 _0.0.2_，否则容易出现不兼容的情况。例如，如果用 Docker Desktop 安装的 1.21.4 版本的集群，则需要手动安装：
 
 ```shell
 $ curl -LO "https://dl.k8s.io/release/v1.21.4/bin/darwin/arm64/kubectl"
@@ -281,7 +281,7 @@ $ mv istio-1.11.2/bin/istioctl /usr/local/bin
 $ istioctl install --set profile=demo -y
 ```
 
-令人痛心的是，Istio 官方 [并不支持](https://github.com/istio/istio/issues/30829)、也 [不打算支持](https://github.com/istio/istio/issues/29596)  ARM 架构，因此在 M1 下安装时不能直接使用最后一行命令自动化安装，而需要借助 [这个社区版镜像](https://github.com/querycap/istio)，自己编写 Operator 进行安装：
+令人痛心的是，Istio 官方 [并不支持](https://github.com/istio/istio/issues/30829)、也 [不打算支持](https://github.com/istio/istio/issues/29596) ARM 架构，因此在 M1 下安装时不能直接使用最后一行命令自动化安装，而需要借助 [这个社区版镜像](https://github.com/querycap/istio)，自己编写 Operator 进行安装：
 
 ```yaml
 apiVersion: install.istio.io/v1alpha1

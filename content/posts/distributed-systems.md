@@ -22,7 +22,7 @@ COMP0133《分布式系统与安全》是我从本科到硕士期间最有价值
 Brad Karp 老师讲解清晰又不失风趣，硬是把线上课上出了线下课的体验。尽管才上了两周的课，我相信这门课会让我受益匪浅。
 
 > 一开始给我留下比较好的印象的就是老师摒弃了学校的课程平台 Moodle，转而使用 GitHub Classroom 和 Piazza。众所周知，所谓学校的课程平台并不会给师生带来什么好的体验。
-> 
+>
 > 此外，GitHub Classroom 还能自动测试和批改作业，很有意思，使用体验也很好。
 
 这门课是没有教材的，这实际上对老师的水平提出了很高的要求：他必须自己四处收集资源备课、讲述自己的理解，而非将教材上的内容略作修改、照本宣科。取而代之的阅读材料是一系列经典论文。
@@ -219,20 +219,20 @@ NFS Client 使用 mounter 将远程目录挂载到本地目录。mounter 向指�
 
 {{< mermaid >}}
 sequenceDiagram
-    participant A as Application
-    participant C as Client
-    participant S as Server
-    A->>C: OPEN("f",0)
-    C->>S: LOOKUP(dirfh,"f")
-    S->>S: Look up "f" in directory dirfh
-    S->>C: fh and file attributes
-    C->>A: fd
-    A->>C: READ(fd,buf,n)
-    C->>S: READ(fh,0,n)
-    S->>S: Read from fh
-    S->>C: Data and file attributes
-    C->>A: Data
-    A->>C: CLOSE(fd)
+participant A as Application
+participant C as Client
+participant S as Server
+A->>C: OPEN("f",0)
+C->>S: LOOKUP(dirfh,"f")
+S->>S: Look up "f" in directory dirfh
+S->>C: fh and file attributes
+C->>A: fd
+A->>C: READ(fd,buf,n)
+C->>S: READ(fh,0,n)
+S->>S: Read from fh
+S->>C: Data and file attributes
+C->>A: Data
+A->>C: CLOSE(fd)
 {{< /mermaid >}}
 
 图中的 `fh` 指 file handler，并且默认 Application 之前已经获得了目录的 file handler 即 `dirfh`。
@@ -351,49 +351,49 @@ Ivy 就采用了类似的思想，用中心化的 Manager 管理页的分配，�
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   |     | W      | ✅     |
-| CPU1   |     | nil    |      |
-| CPU2   |     | nil    |      |
+| CPU0   |      | W      | ✅    |
+| CPU1   |      | nil    |       |
+| CPU2   |      | nil    |       |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager |     | {}       | CPU0  |
+| Manager |      | {}       | CPU0  |
 
 现在，CPU1 想要读取该页。于是它首先 lock 了自己 ptable 中对应的行，向 Manager 发送 read query。Manager 接收后，lock 自己 info 中对应的行，将 CPU1 加入 `copy_set`。
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   |     | W      | ✅     |
-| CPU1   | ✅    | nil    |      |
-| CPU2   |     | nil    |      |
+| CPU0   |      | W      | ✅    |
+| CPU1   | ✅   | nil    |       |
+| CPU2   |      | nil    |       |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager | ✅    | {CPU1}   | CPU0  |
+| Manager | ✅   | {CPU1}   | CPU0  |
 
 随后，Manager 向 Owner 也就是 CPU0 发送 read forward。CPU0 接收后，lock ptable，将 `access` 改为 `R`。
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ✅    | R      | ✅     |
-| CPU1   | ✅    | nil    |      |
-| CPU2   |     | nil    |      |
+| CPU0   | ✅   | R      | ✅    |
+| CPU1   | ✅   | nil    |       |
+| CPU2   |      | nil    |       |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager | ✅    | {CPU1}   | CPU0  |
+| Manager | ✅   | {CPU1}   | CPU0  |
 
 随后，CPU0 向 CPU1 发送 read data 后 unlock ptable。CPU1 接收后，向 Manager 发送 read confirm，并将 `access` 改为 `R`，最后 unlock ptable。Manager 收到后，也 unlock info。
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   |     | R      | ✅     |
-| CPU1   |     | R      |      |
-| CPU2   |     | nil    |      |
+| CPU0   |      | R      | ✅    |
+| CPU1   |      | R      |       |
+| CPU2   |      | nil    |       |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager |     | {CPU1}   | CPU0  |
+| Manager |      | {CPU1}   | CPU0  |
 
 #### CPU2 写 CPU0 的页
 
@@ -401,61 +401,61 @@ Ivy 就采用了类似的思想，用中心化的 Manager 管理页的分配，�
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   |     | R      | ✅     |
-| CPU1   | ✅    | nil    |      |
-| CPU2   | ✅    | nil    |      |
+| CPU0   |      | R      | ✅    |
+| CPU1   | ✅   | nil    |       |
+| CPU2   | ✅   | nil    |       |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager | ✅    | {CPU1}   | CPU0  |
+| Manager | ✅   | {CPU1}   | CPU0  |
 
 随后，CPU1 向 Manager 发送 invalidate confirm 并 unlock ptable。Manager 接收后，从 `copy_set` 中移除 CPU1，向 Owner 即 CPU0 发送 write forward。
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   |     | R      | ✅     |
-| CPU1   |     | nil    |      |
-| CPU2   | ✅    | nil    |      |
+| CPU0   |      | R      | ✅    |
+| CPU1   |      | nil    |       |
+| CPU2   | ✅   | nil    |       |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager | ✅    | {}       | CPU0  |
+| Manager | ✅   | {}       | CPU0  |
 
 CPU0 接收后，lock ptable，将 `access` 设为 `nil` 并放弃 Owner 身份，最后向 CPU2 发送 write data。
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   | ✅    | nil    |      |
-| CPU1   |     | nil    |      |
-| CPU2   | ✅    | nil    |      |
+| CPU0   | ✅   | nil    |       |
+| CPU1   |      | nil    |       |
+| CPU2   | ✅   | nil    |       |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager | ✅    | {}       | CPU0  |
+| Manager | ✅   | {}       | CPU0  |
 
 随后，CPU0 unlock ptable。CPU2 接收后，将 `access` 设为 `W` 并成为新的 Owner，最后向 Manager 发送 write confirm 并 unlock ptable。
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   |     | nil    |      |
-| CPU1   |     | nil    |      |
-| CPU2   |     | W      | ✅     |
+| CPU0   |      | nil    |       |
+| CPU1   |      | nil    |       |
+| CPU2   |      | W      | ✅    |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager | ✅    | {}       | CPU0  |
+| Manager | ✅   | {}       | CPU0  |
 
 Manager 接收后，将 `owner` 设为 CPU2，最后 unlock info。
 
 | ptable | lock | access | owner |
 | ------ | ---- | ------ | ----- |
-| CPU0   |     | nil    |      |
-| CPU1   |     | nil    |      |
-| CPU2   |     | W      | ✅     |
+| CPU0   |      | nil    |       |
+| CPU1   |      | nil    |       |
+| CPU2   |      | W      | ✅    |
 
 | info    | lock | copy_set | owner |
 | ------- | ---- | -------- | ----- |
-| Manager |     | {}       | CPU2  |
+| Manager |      | {}       | CPU2  |
 
 可以注意到，ptable 的锁的存在本质上防止了并发写的发生，使得写操作必须是原子的。
 
@@ -562,13 +562,14 @@ NFS 和 Ivy 都没有处理系统中节点故障的问题。在一些场景下�
 
 一个很自然的想法是给每个节点预先编号，当前存活的节点中编号最小的当选。这就需要所有节点对“当前存活的节点集合”这个值达成共识。然而未必所有节点都能够正常地给出自己的反馈，因此只需要某个值被**超过半数**节点同意，我们就认为节点关于这个值达成了共识。
 
->  这实际上表明，Paxos 能成功执行必须要至少半数以上的节点存活。
+> 这实际上表明，Paxos 能成功执行必须要至少半数以上的节点存活。
 
 ### 共识协商
 
 由于可能出现网络丢包和网络分区，单纯的互 ping 来确定哪些节点存活是行不通的。为此，Paxos 引入了 Leader 机制。当一个节点决定成为 Leader 后，它会向包括自身在内的所有节点广播一个 proposal，其中包含一个 proposal 序号 n 和相应的值 value（在这个例子里，是存活节点集合，下不赘述）。n 必须是全局唯一的，一般取目前存在的最大的 n 的值 + 1。
 
 每个节点维护三个变量：
+
 - `n_a` 表示节点**已经接受过的** proposal 中最大的 n
 - `v_a` 表示 `n_a` 对应 proposal 的 value
 - `n_h` 记录节点所收到的 proposal 中最大的 n
@@ -711,7 +712,7 @@ Chunk 一般会在若干个 Chunkserver 上保存一份冗余，默认是 3 个�
 
 ### 读操作
 
-![图 1｜读操作流程]({{< param cdnPrefix >}}/DistributedSystems/1.png)
+![图 1｜读操作流程](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/DistributedSystems/1.png)
 
 1. 客户端向 Master 发送 read 请求，包含文件名和 Chunk index
 2. Master 回复元数据：Chunk ID、Chunk 版本号以及副本所处的位置
@@ -722,7 +723,7 @@ Chunk 一般会在若干个 Chunkserver 上保存一份冗余，默认是 3 个�
 
 ### 写操作
 
-![图 2｜写操作流程]({{< param cdnPrefix >}}/DistributedSystems/2.png)
+![图 2｜写操作流程](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/DistributedSystems/2.png)
 
 对于每个 Chunk 来说，某个存放了该 Chunk 副本的 Chunkserver 会成为 primary（其余均为 secondary），由 Master 向 primary 提供 60s 的租约（并更新 Chunk 版本号）。租约通过心跳信息延续，也可以被 Master 主动取消。
 
@@ -756,11 +757,11 @@ record append 操作的流程和写操作基本一致，在 primary 的逻辑上
 
 根据这两个指标，我们可以得到：
 
-|        | Write                 | Record Append                          |
-| ------ | --------------------- | -------------------------------------- |
+|              | Write                 | Record Append                          |
+| ------------ | --------------------- | -------------------------------------- |
 | 串行修改成功 | defined               | defined interspersed with inconsistent |
 | 并行修改成功 | consistent, undefined | defined interspersed with inconsistent |
-| 修改失败   | inconsistent          | Inconsistent                           |
+| 修改失败     | inconsistent          | Inconsistent                           |
 
 对于成功的并行写操作，尽管 GFS 可以保证文件区域内容一致，但由于 primary 对并行操作的排序未必和实际发起操作的顺序一致，客户端未必能看到一致的修改操作记录，因此 defined 是无法保证的。因此 GFS 设计者不建议使用 concurrent write。
 
@@ -826,7 +827,7 @@ record append 操作的流程和写操作基本一致，在 primary 的逻辑上
 
 当一个网络包到达网卡时，会产生一个高 IPL 的中断。对应的 ISR 查看以太网包头后就放入 input queue 并返回。这是因为高 IPL 的中断不能花费太多时间，否则会影响其他正常任务的运行。之后，一个较低 IPL 的软件中断会从 input queue 中读取数据包并处理 IP / TCP / UDP 包头，再将数据包放入 socket buffer 供目标应用程序使用。而目标应用程序运行在用户态，通过 `read()` 系统调用读取数据包，因此拥有更低的 IPL。
 
-![图 3｜网络 IO 机制]({{< param cdnPrefix >}}/DistributedSystems/3.png)
+![图 3｜网络 IO 机制](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/DistributedSystems/3.png)
 
 而发送数据包时，大致就是相反的流程，只不过 input queue 变成了 output queue，而 传输包的 IPL 是略低于接收包的 IPL 的。可以看到，这种设计将接收数据包放在最优先的位置，这是因为早期网卡缓冲区较小，如果不尽快接收数据包，缓冲区满后就会丢弃后续到达的数据包。
 
@@ -894,15 +895,15 @@ $$
 \\{s,c,addr,timestamp,ttl,K_{s,c}\\}K_s
 $$
 
-| 符号           | 含义                   |
-| ------------ | -------------------- |
+| 符号         | 含义                         |
+| ------------ | ---------------------------- |
 | s            | 服务器（的名称）             |
 | c            | 客户端（的名称）             |
-| addr         | 客户端 IP 地址            |
-| timestamp    | 时间戳                  |
-| ttl          | ticket 有效时长          |
-| $K_{s,c}$    | s 和 c 的 session key  |
-| $K_s$        | s 的密钥                |
+| addr         | 客户端 IP 地址               |
+| timestamp    | 时间戳                       |
+| ttl          | ticket 有效时长              |
+| $K_{s,c}$    | s 和 c 的 session key        |
+| $K_s$        | s 的密钥                     |
 | $\\{abc\\}K$ | 用 $K$ 加密 $abc$ 得到的密文 |
 
 ticket 颁发后能被用多次，但 authenticator 只能用一次；ticket 由服务器生成，而 authenticator 由客户端生成。一个 authenticator 通常长这样：
@@ -919,9 +920,9 @@ $$
 c,tgs
 $$
 
-| 符号  | 含义                       |
-| --- | ------------------------ |
-| tgs | ticket-granting 服务器（的名称） |
+| 符号 | 含义                             |
+| ---- | -------------------------------- |
+| tgs  | ticket-granting 服务器（的名称） |
 
 表示想要使用 ticket-granting 服务器上的服务。Kerberos 系统检查 c 后生成 c 和 tgs 的 session key。随后回复：
 
@@ -929,8 +930,8 @@ $$
 \\{\ K_{c,tgs},\\{T_{c,tgs}\\}K_{tgs}\ \\}K_c
 $$
 
-| 符号          | 含义                  |
-| ----------- | ------------------- |
+| 符号        | 含义                     |
+| ----------- | ------------------------ |
 | $T_{c,tgs}$ | c 使用 tgs 服务的 ticket |
 
 用户收到后，输入密码。此时密码被转化为密钥并解密这个消息。这样，用户就可以访问 tgs 了。
@@ -943,8 +944,8 @@ $$
 s,\\{T_{c,tgs}\\}K_{tgs},\\{A_c\\}K_{c,tgs}
 $$
 
-| 符号    | 含义                |
-| ----- | ----------------- |
+| 符号  | 含义               |
+| ----- | ------------------ |
 | $A_c$ | c 的 authenticator |
 
 tgs 随后解密并检查 ticket 和 authenticator，并生成 c 和 s 的 session key。随后回复：
@@ -971,7 +972,7 @@ $$
 \\{timestamp+1\\}K_{c,s}
 $$
 
-![图 4｜Kerberos 认证过程]({{< param cdnPrefix >}}/DistributedSystems/4.png)
+![图 4｜Kerberos 认证过程](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/DistributedSystems/4.png)
 
 ### 局限性
 
@@ -1021,15 +1022,15 @@ $$
 $$
 
 > 1. 为什么不直接使用 $K_{vax4}$？
->    
+>
 >    一方面，我们不希望机器私钥被窃取；另一方面，我们也**不希望这些涉及的声明在机器重启后依然有效**。
-> 
+>
 > 2. 那为什么不直接使用 $K_{ws}$ 作为机器的标识？
->    
+>
 >    因为我们**希望机器的标识在重启后依然有效**。
-> 
+>
 > 3. 所以到底为什么需要机器的标识？
->    
+>
 >    因为我们希望 $Bob$ 能将权限委托给特定的机器。
 
 因此，启动后 $WS$ 获得了启动证书、节点私钥 $K_{ws}^{-1}$，但无法知道 $K_{vax4}^{-1}$。
@@ -1073,7 +1074,7 @@ $$
 最后，$FS$ 还需要证明 $K_{vax4}$ 和 $K_{bob}$ 确实代表了 $Vax4$ 和 $Bob$。为此，必须引入受信任的第三方机构 $CA$，也就是说相信 $K_{ca}\Rightarrow$ 任意的主体。因此，$FS$ 可以使用如下证书：
 
 $$
-K_{ca}\ \texttt{says}\ (K_{vax4}\Rightarrow Vax4)\\\\ 
+K_{ca}\ \texttt{says}\ (K_{vax4}\Rightarrow Vax4)\\\\
 K_{ca}\ \texttt{says}\ (K_{bob}\Rightarrow Bob)
 $$
 
@@ -1256,7 +1257,7 @@ Meltdown 是存在于 CPU 硬件层面的漏洞，使得恶意程序可以读取
 
 ### 存储层级
 
-![图 5｜存储层级示意图]({{< param cdnPrefix >}}/DistributedSystems/5.png)
+![图 5｜存储层级示意图](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/DistributedSystems/5.png)
 
 计算机中的存储单元分为多个层级，其中速度越快的单元容量越小，CPU 则优先从高速单元中读取数据。这种多级缓存的思想大概是计算机存储中最基本的原则之一。
 
@@ -1264,7 +1265,7 @@ Meltdown 是存在于 CPU 硬件层面的漏洞，使得恶意程序可以读取
 
 ### 物理内存映射
 
-![图 6｜物理内存映射]({{< param cdnPrefix >}}/DistributedSystems/6.png)
+![图 6｜物理内存映射](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/DistributedSystems/6.png)
 
 我们知道，每个进程的虚拟地址空间中都包含了进程地址空间和内核地址空间两部分。对于进程来说，只能访问前者。进程所看到的虚拟地址空间仿佛是整个物理内存，尽管实际上并非如此。内核会将虚拟地址映射到不同的物理地址上。
 

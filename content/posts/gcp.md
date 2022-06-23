@@ -31,17 +31,17 @@ featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GCP/0.png
 
 ## GCP 资源层级树
 
-![图 1｜资源层级树]({{< param cdnPrefix >}}/GCP/1.png)
+![图 1｜资源层级树](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GCP/1.png)
 
 每个 GCP 计算资源（Resource）属于且仅属于一个项目（Project）。若干个项目可以组成文件夹（Folder），而文件夹通过层级树结构（和文件系统类似）从属于一个组织（Organization）。创建文件夹和组织并不是必须的，但创建文件夹前需要先创建组织。
 
 ### Project 标识符
 
-| 标识符            | 唯一性  | 标识符来源  | 可变性 |
-| -------------- | ---- | ------ | --- |
-| Project ID     | 全局唯一 | 用户可指定  | 不可变 |
-| Project name   | 无需唯一 | 用户可指定  | 可变  |
-| Project number | 全局唯一 | GCP 分配 | 不可变 |
+| 标识符         | 唯一性   | 标识符来源 | 可变性 |
+| -------------- | -------- | ---------- | ------ |
+| Project ID     | 全局唯一 | 用户可指定 | 不可变 |
+| Project name   | 无需唯一 | 用户可指定 | 可变   |
+| Project number | 全局唯一 | GCP 分配   | 不可变 |
 
 ## IAM 策略
 
@@ -149,7 +149,7 @@ curl http://my-vm-1.us-central1-a/
 
 常见的对象存储，上传文件，返回一个唯一的 URL。上传的文件按桶（bucket）组织，一旦上传便不可修改（但可以更新），访问权限则由 Cloud IAM 或更细粒度的 ACL 来控制。
 
-![图 2｜Cloud Storage Classes]({{< param cdnPrefix >}}/GCP/2.jpg)
+![图 2｜Cloud Storage Classes](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GCP/2.jpg)
 
 ### Cloud Bigtable & Cloud Datastore
 
@@ -163,7 +163,7 @@ Cloud SQL 提供基于 MySQL 或 PostgreSQL 的 SQL 数据库服务，并配有�
 
 ### 对比
 
-![图 3｜GCP 存储服务对比]({{< param cdnPrefix >}}/GCP/3.png)
+![图 3｜GCP 存储服务对比](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GCP/3.png)
 
 BigQuery 主要用于数据处理而不是数据存储，会在下文介绍。
 
@@ -203,7 +203,7 @@ gsutil ls gs://$DEVSHELL_PROJECT_ID
 ```
 
 6. 在控制台创建和 blogpost 同区域的 Cloud SQL，命名为 blog-db，并设置 root 密码；创建完毕后，新建一个用户，设置用户名和密码。
-7. 接下来，要让我们的 blog-db 只能被  blogpost 访问。为此，先查看 blogpost 的公网 IP，然后在 blog-db 配置面板的 Connections 选项卡里新建一个 Authorized Network，并填入这个 IP。由于要求 CIDR 格式而我们只想要单个机器能访问，填入 `x.x.x.x/32` 即可。
+7. 接下来，要让我们的 blog-db 只能被 blogpost 访问。为此，先查看 blogpost 的公网 IP，然后在 blog-db 配置面板的 Connections 选项卡里新建一个 Authorized Network，并填入这个 IP。由于要求 CIDR 格式而我们只想要单个机器能访问，填入 `x.x.x.x/32` 即可。
 8. 随后要让 blogpost 去使用 blog-db。SSH 到 blogpost，编写 `/var/www/html/index.php`：
 
 ```php+HTML
@@ -257,7 +257,7 @@ Standard 模式运行在沙箱中，因此存在一些限制：
 
 Flexible 模式不受沙箱限制，因为这种模式实际上是在 Compute Engine 上运行用户自定义的容器。这会导致启动速度变慢，但应用对底层的访问更宽松，当然价格上也不存在免费额度了。
 
-![图 4｜App Engine 两种模式对比]({{< param cdnPrefix >}}/GCP/4.png)
+![图 4｜App Engine 两种模式对比](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GCP/4.png)
 
 ### App Engine 实践
 
@@ -289,7 +289,7 @@ gcloud app deploy ./index.yaml ./app.yaml
 - Cloud Functions，也就是 GCP 中的云函数，这种方式目前可以说是对一个应用而言最高层面的抽象
 - Cloud Endpoint，也就是 GCP 中用于维护 API 的服务
 
-![图 5｜应用部署抽象层级的对比]({{< param cdnPrefix >}}/GCP/5.png)
+![图 5｜应用部署抽象层级的对比](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GCP/5.png)
 
 ### 云上部署
 
@@ -326,20 +326,20 @@ resources:
       machineType: zones/us-central1-a/machineTypes/n1-standard-1
       metadata:
         items:
-        - key: startup-script
-          value: "apt-get update"
+          - key: startup-script
+            value: "apt-get update"
       disks:
-      - deviceName: boot
-        type: PERSISTENT
-        boot: true
-        autoDelete: true
-        initializeParams:
-          sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20180806
+        - deviceName: boot
+          type: PERSISTENT
+          boot: true
+          autoDelete: true
+          initializeParams:
+            sourceImage: https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20180806
       networkInterfaces:
-      - network: https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-dcdf854d278b50cd/global/networks/default
-        accessConfigs:
-        - name: External NAT
-          type: ONE_TO_ONE_NAT
+        - network: https://www.googleapis.com/compute/v1/projects/qwiklabs-gcp-dcdf854d278b50cd/global/networks/default
+          accessConfigs:
+            - name: External NAT
+              type: ONE_TO_ONE_NAT
 ```
 
 4. 部署：
@@ -432,11 +432,11 @@ Network 内部的 DNS 是为了确保虚拟机内部 IP 变化时，对虚拟机
 
 Shared VPC 可以连接多个不同 Project 的计算资源，使得计算资源之间可以通过内网 IP 通信。类似地，VPC Network Peering 可以跨 Organiztion 连接计算资源，实现点对点的连接。两者最大的区别在于，网络管理是否是中心化的。
 
-|                   | Shared VPC | VPC Network Peering |
-| ----------------- | ---------- | ------------------- |
-| 跨 Organization    | ❎          | ✅                   |
-| 连接同一 Project 内的资源 | ❎          | ✅                   |
-| 网络管理模式            | 中心化        | 去中心化                |
+|                           | Shared VPC | VPC Network Peering |
+| ------------------------- | ---------- | ------------------- |
+| 跨 Organization           | ❎         | ✅                  |
+| 连接同一 Project 内的资源 | ❎         | ✅                  |
+| 网络管理模式              | 中心化     | 去中心化            |
 
 ## 负载均衡
 
@@ -446,4 +446,4 @@ HTTP(S) 负载均衡器将用户请求发送至 HTTP(S) 代理，随后转发给
 
 可以通过如下流程图来选择合适的负载均衡器：
 
-![图 6｜选择合适的负载均衡器]({{< param cdnPrefix >}}/GCP/6.png)
+![图 6｜选择合适的负载均衡器](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GCP/6.png)

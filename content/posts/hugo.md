@@ -1,6 +1,7 @@
 ---
 title: 乔迁新居：Hugo 博客的配置与部署
 date: 2022-03-11T13:10:42Z
+lastmod: 2022-06-23
 tags:
   - 实践记录
   - CI/CD
@@ -115,7 +116,7 @@ theme = "LoveIt"
   cdnPrefix = "https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn"
 ```
 
-随后是一系列参数的设置，这里额外设置了 `cdnPrefix`，这样在文章里就可以通过 shortcode 形式插入图片了[^3]。例如，图片链接可以写成： `{{< param cdnPrefix >}}/blabla/0.png`。
+随后是一系列参数的设置，这里额外设置了 `cdnPrefix`，这样在文章里就可以通过 shortcode 形式插入图片了[^3]。
 
 ### 应用图标配置
 
@@ -345,7 +346,7 @@ ALGOLIA_INDEX_FILE=public/index.json
       enable = true
       # Disqus 评论系统设置
       [params.page.comment.disqus]
-        # 
+        #
         enable = false
         # Disqus 的 shortname，用来在文章中启用 Disqus 评论系统
         shortname = ""
@@ -526,56 +527,56 @@ KaTeX[^6] 虽然比 mathjax 好点，但在 Markdown 中依然面临着渲染问
 // Code type map
 $code-type-map: (
   // Custom code type
-  language-asm: 'Assembly',
-  language-bash: 'Bash',
-  language-c: 'C',
-  language-cs: 'C#',
-  language-cpp: 'C++',
-  language-clojure: 'Clojure',
-  language-coffeescript: 'CoffeeScript',
-  language-css: 'CSS',
-  language-dart: 'Dart',
-  language-diff: 'Diff',
-  language-dockerfile: 'Dockerfile',
-  language-erlang: 'Erlang',
-  language-go: 'Go',
-  language-go-html-template: 'Go HTML Template',
-  language-groovy: 'Groovy',
-  language-haskell: 'Haskell',
-  language-html: 'HTML',
-  language-http: 'HTTP',
-  language-xml: 'XML',
-  language-java: 'Java',
-  language-js: 'JavaScript',
-  language-javascript: 'JavaScript',
-  language-json: 'JSON',
-  language-kotlin: 'Kotlin',
-  language-latex: 'LaTeX',
-  language-less: 'Less',
-  language-lisp: 'Lisp',
-  language-lua: 'Lua',
-  language-makefile: 'Makefile',
-  language-markdown: 'Markdown',
-  language-matlab: 'Matlab',
-  language-objectivec: 'Objective-C',
-  language-php: 'PHP',
-  language-perl: 'Perl',
-  language-python: 'Python',
-  language-r: 'R',
-  language-ruby: 'Ruby',
-  language-rust: 'Rust',
-  language-scala: 'Scala',
-  language-scss: 'Scss',
-  language-shell: 'Shell',
-  language-sql: 'SQL',
-  language-swift: 'Swift',
-  language-tex: 'TeX',
-  language-toml: 'TOML',
-  language-ts: 'TypeScript',
-  language-typescript: 'TypeScript',
-  language-vue: 'Vue',
-  language-yml: 'YAML',
-  language-yaml: 'YAML'
+  language-asm: "Assembly",
+  language-bash: "Bash",
+  language-c: "C",
+  language-cs: "C#",
+  language-cpp: "C++",
+  language-clojure: "Clojure",
+  language-coffeescript: "CoffeeScript",
+  language-css: "CSS",
+  language-dart: "Dart",
+  language-diff: "Diff",
+  language-dockerfile: "Dockerfile",
+  language-erlang: "Erlang",
+  language-go: "Go",
+  language-go-html-template: "Go HTML Template",
+  language-groovy: "Groovy",
+  language-haskell: "Haskell",
+  language-html: "HTML",
+  language-http: "HTTP",
+  language-xml: "XML",
+  language-java: "Java",
+  language-js: "JavaScript",
+  language-javascript: "JavaScript",
+  language-json: "JSON",
+  language-kotlin: "Kotlin",
+  language-latex: "LaTeX",
+  language-less: "Less",
+  language-lisp: "Lisp",
+  language-lua: "Lua",
+  language-makefile: "Makefile",
+  language-markdown: "Markdown",
+  language-matlab: "Matlab",
+  language-objectivec: "Objective-C",
+  language-php: "PHP",
+  language-perl: "Perl",
+  language-python: "Python",
+  language-r: "R",
+  language-ruby: "Ruby",
+  language-rust: "Rust",
+  language-scala: "Scala",
+  language-scss: "Scss",
+  language-shell: "Shell",
+  language-sql: "SQL",
+  language-swift: "Swift",
+  language-tex: "TeX",
+  language-toml: "TOML",
+  language-ts: "TypeScript",
+  language-typescript: "TypeScript",
+  language-vue: "Vue",
+  language-yml: "YAML",
+  language-yaml: "YAML"
 );
 ```
 
@@ -588,8 +589,7 @@ $code-type-map: (
 ```scss
 // Font family of the code
 $code-font-family: JuliaMono, Monaco, Fira Code, Jetbrains Mono, Hack, Noto Mono,
-  Menlo, Droid Sans Mono, DejaVu Sans Mono, Consolas, monospace,
-  $global-font-family;
+  Menlo, Droid Sans Mono, DejaVu Sans Mono, Consolas, monospace, $global-font-family;
 ```
 
 ### 图片圆角化
@@ -600,6 +600,22 @@ $code-font-family: JuliaMono, Monaco, Fira Code, Jetbrains Mono, Hack, Noto Mono
 img {
   border-radius: 0.5rem;
 }
+```
+
+### 图片无法使用 lightgallery 浏览 bug
+
+参考了别人的做法[^10]，在 `layouts/_default/_markup/render-image.html` 中添加：
+
+```html
+{{ $figcap := or .Title .Text }} {{ $caption := or .Text " " }} {{- if eq
+$figcap $caption -}} {{ $caption = " " }} {{- end -}} {{- if $figcap -}}
+<figure>
+  {{- dict "Src" .Destination "Title" $figcap "Caption" $caption "Linked" true
+  "Resources" .Page.Resources | partial "plugin/img.html" -}}
+  <figcaption class="image-caption">{{- $figcap | safeHTML -}}</figcaption>
+</figure>
+{{- else -}} {{- dict "Src" .Destination "Title" (path.Base .Destination)
+"Resources" .Page.Resources | partial "plugin/img.html" -}} {{- end -}}
 ```
 
 ## 自动化部署到 GitHub Pages
@@ -627,7 +643,7 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
-          hugo-version: 'latest'
+          hugo-version: "latest"
           extended: true
 
       - name: Build
@@ -647,10 +663,11 @@ jobs:
 
 [^1]: [Hugo 文档](https://gohugo.io/documentation/)
 [^2]: [LoveIt 主题文档](https://hugoloveit.com/zh-cn/posts/)
-[^3]: [Hugo系列(3.0) - LoveIt主题美化与博客功能增强 · 第一章](https://lewky.cn/posts/hugo-3.html)
+[^3]: [Hugo 系列(3.0) - LoveIt 主题美化与博客功能增强 · 第一章](https://lewky.cn/posts/hugo-3.html)
 [^4]: [Favicon Generator](https://realfavicongenerator.net/)
 [^5]: [atomic-algolia](https://github.com/chrisdmacrae/atomic-algolia)
 [^6]: [Supported Functions - KaTeX](https://katex.org/docs/supported.html)
 [^7]: [Hugo/Katex failed to render multi-line Latex](https://github.com/dillonzq/LoveIt/issues/402)
-[^8]: [常用数学公式排版KaTex语法总结](https://kissingfire123.github.io/2022/02/18_%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8Fkatex%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95%E6%80%BB%E7%BB%93/)
-[^9]: [Hugo系列(3.2) - LoveIt主题美化与博客功能增强 · 第三章](https://lewky.cn/posts/hugo-3.2.html/)
+[^8]: [常用数学公式排版 KaTex 语法总结](https://kissingfire123.github.io/2022/02/18_%E6%95%B0%E5%AD%A6%E5%85%AC%E5%BC%8Fkatex%E5%B8%B8%E7%94%A8%E8%AF%AD%E6%B3%95%E6%80%BB%E7%BB%93/)
+[^9]: [Hugo 系列(3.2) - LoveIt 主题美化与博客功能增强 · 第三章](https://lewky.cn/posts/hugo-3.2.html/)
+[^10]: [Hugo 系列(4) - 从 Hexo 迁移至 Hugo 以及使用 LoveIt 主题的踩坑记录](https://lewky.cn/posts/hugo-4.html/)

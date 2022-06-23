@@ -249,13 +249,13 @@ int main(int argc, char *argv[])
 2. 目标文件中引入相关依赖，链接为可执行文件（ELF）
 3. 可执行文件载入内存并运行
 
-![图 1]({{< param cdnPrefix >}}/BinaryExp/1.png)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/1.png)
 
 编译一个程序非常简单，如果你的源代码是 `1.c`，那么只需要 `gcc 1.c` 就能生成一个叫做 `a.out` 的 ELF 文件，你也可以用 `-o` 选项来设置 ELF 文件的名字。
 
 我们所要研究的就是 ELF 文件中究竟有什么。首先是 ELF 文件头，包含了 ELF 文件的许多元数据，我们可以用 `readelf -h a.out` 来查看：
 
-![图 2]({{< param cdnPrefix >}}/BinaryExp/2.png)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/2.png)
 
 ELF 文件的内容则是由一个个段 (segment) 组成的，如：
 
@@ -272,17 +272,17 @@ ELF 文件的内容则是由一个个段 (segment) 组成的，如：
 
 `objdump -s a.out` 可以帮助我们查看这些段的信息：
 
-![图 3]({{< param cdnPrefix >}}/BinaryExp/3.png)
+![图 3](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/3.png)
 
 而如果要查看其中的汇编代码，就需要靠 `objdump -d a.out` 了：
 
-![图 4]({{< param cdnPrefix >}}/BinaryExp/4.png)
+![图 4](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/4.png)
 
 我们注意到，上图中 `put@plt` 的地址是 `ff ff`，这是因为程序还没有进行第二步——链接。现在的 C 程序默认采用动态链接的方式，是因为传统静态链接容易造成重复链接比较浪费，同时也十分难维护。而动态链接会在运行时才进行链接。
 
 最后，当我们 `./a.out` 运行程序时，可执行文件会被载入内存，不同的段将被分配不同的虚拟地址，并映射到对应的物理地址。当程序计数器指向了代码段的起始位置之后，我们的程序也就准备好开始运行了。
 
-![图 5]({{< param cdnPrefix >}}/BinaryExp/5.png)
+![图 5](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/5.png)
 
 上图展示了虚拟地址是如何映射到物理地址的，同时也展示出 ELF 文件中的两个特殊的段：`heap` 段与 `stack` 段的生长方式。可以看到，堆是从低地址向高地址生长的，而栈是从高地址向低地址生长。但是，数据的存储却是从低地址向高地址存储，这也是我们能够实施栈溢出攻击的基础。
 
@@ -290,19 +290,19 @@ ELF 文件的内容则是由一个个段 (segment) 组成的，如：
 
 C 程序运行过程中，会持续地维护这个 `stack` 段也就是栈，用来控制函数调用的流程。当发生函数调用时，栈的主要任务是保存调用者函数 caller 的状态，并创建被调用函数 callee 的状态，这里的 “状态” 在栈上被称为栈帧，每个栈帧之间是相互独立的。
 
-![图 6]({{< param cdnPrefix >}}/BinaryExp/6.png)
+![图 6](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/6.png)
 
 ### 调用
 
 在调用一个函数时，首先会将函数的参数**按倒序**压入栈中：
 
-![图 7]({{< param cdnPrefix >}}/BinaryExp/7.png)
+![图 7](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/7.png)
 
 注意图中栈是向下生长的，下面的 `esp` 寄存器指向**栈顶**，而上面的 `ebp` 寄存器指向当前运行函数的栈帧的**底部**，也就是栈帧开始的地方。
 
 接下来压入函数返回地址。当函数调用结束后，函数必定需要返回到调用它的语句的下一句处，但是它怎么知道它要返回到哪里？这只能由我们告诉他，方式就是存储到栈上。
 
-![图 8]({{< param cdnPrefix >}}/BinaryExp/8.png)
+![图 8](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/8.png)
 
 这里存储到栈上的值实际上就是 caller 的 `eip`。`eip` 寄存器保存了 CPU 当前执行的指令的**下一条指令**的地址。
 
@@ -310,17 +310,17 @@ C 程序运行过程中，会持续地维护这个 `stack` 段也就是栈，用
 
 最后就是压入局部变量了，这一步没有太多可以解释的。
 
-![图 9]({{< param cdnPrefix >}}/BinaryExp/0.png)
+![图 9](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/0.png)
 
 ### 返回
 
 函数返回的第一步就是弹出局部变量，依然很简单：
 
-![图 10]({{< param cdnPrefix >}}/BinaryExp/9.png)
+![图 10](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/9.png)
 
 第二步，我们要取出 caller 的 `ebp` 值并赋值给 `ebp`：
 
-![图 11]({{< param cdnPrefix >}}/BinaryExp/10.png)
+![图 11](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/10.png)
 
 这里就可以很清晰地看到，我们在调用时为何要保存这个值了，如果不保存，那么返回的时候 `ebp` 不知道应该返回到哪里。而保存了 caller 的 `ebp` 实际上就是保存了 `caller` 栈帧的基址。
 
@@ -450,8 +450,11 @@ C 程序运行过程中，会持续地维护这个 `stack` 段也就是栈，用
 汇编语言是 Intel 推出的一系列汇编的指令集合，有两种语法：
 
 1. Intel 语法：`operand destination, source`
+
 - `mov eax, 5`
+
 2. AT&T 语法：`operand source, destination`
+
 - `mov $5, %eax`
 
 本课程将使用更简单的 Intel 语法（CSAPP 使用 AT&T 语法）。
@@ -467,7 +470,7 @@ C 程序运行过程中，会持续地维护这个 `stack` 段也就是栈，用
   - CF 运算结果最高有效位发生进位或借位时置 1
   - SF 运算结果为负时置 1
 
-![图 12]({{< param cdnPrefix >}}/BinaryExp/11.png)
+![图 12](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/11.png)
 
 ### 数据操作
 
@@ -576,7 +579,7 @@ return len;
 ## x86-64 汇编
 
 再放一次这张图。
-![图 13]({{< param cdnPrefix >}}/BinaryExp/11.png)
+![图 13](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/11.png)
 
 64 位架构下，新增了寄存器 `r8-r15`，用 `xmm0-xmm7` 存储浮点参数，同时原来的 `eax` 变成了 `rax` 等。但最重要的，还是传参方式的变化：函数前 6 个参数会被依次存储在寄存器 rdi, rsi, rdx, rcx, r8, r9 中，之后的参数才遵循栈上约定。
 
@@ -612,11 +615,11 @@ return len;
 
 我们以 Hello World 程序的 `puts` 函数调用为例，调用语句是 `call <puts@plt>`。我们假设 `.plt` 结构如下：
 
-![图 14]({{< param cdnPrefix >}}/BinaryExp/12.png "图 14")
+![图 14](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/12.png "图 14")
 
 称 `.plt` 开头的三条指令为 `.plt[0]`，`puts` 的 PLT 表是 `.plt[1]`，那么第一次调用 `puts` 时会访问 `puts@plt` 也就是 `.plt[1]`。`.plt[1]` 会跳转到 `puts` 对应的 GOT 表条目 `.got.plt[3]`。为什么下标是 3？这是因为 `.got.plt` 段是长这样的：
 
-![图 15]({{< param cdnPrefix >}}/BinaryExp/13.png "图 15")
+![图 15](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BinaryExp/13.png "图 15")
 
 可以看到，`.got.plt` 的前三条指令不属于任何函数，他们分别存储着：
 

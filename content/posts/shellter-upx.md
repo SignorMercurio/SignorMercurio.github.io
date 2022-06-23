@@ -26,7 +26,7 @@ $ dpkg --add-architecture i386 && apt-get update && apt-get install wine32
 ## 通过 Shellter 篡改 exe 文件
 
 随意取一个 exe 文件作为我们要加入后门的可执行文件。首先启动 shellter，会看到：
-![图 1]({{< param cdnPrefix >}}/ShellterUpx/0.jpg)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ShellterUpx/0.jpg)
 
 输入 `A` 选择自动模式，随后输入 exe 文件所在路径，程序便会自动运行，分析原文件并插入恶意代码。这个过程大约持续不到一分钟。
 
@@ -96,7 +96,7 @@ exploit
 其中 `rhost` 需要改为目标主机的内网 IP。
 
 这样以后，就可以获取会话，并执行任意命令了（会话的作用不局限于执行 shell 命令）：
-![图 2]({{< param cdnPrefix >}}/ShellterUpx/1.jpg)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ShellterUpx/1.jpg)
 
 需要注意的是，一旦用户关闭 exe 文件，会话也将随之关闭。因此实际场景中常常配合持久化提权工具使用。
 

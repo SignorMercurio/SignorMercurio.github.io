@@ -45,7 +45,7 @@ deploy:
 
 也就是说把我的 repo 地址 `https://github.com/SignorMercurio/SignorMercurio.github.io.git` 填上去就好了。多亏 VS Code 提醒，我才发现 yml 的冒号后面必须要加空格。然而，当我 deploy 时，却得到了这样的错误信息：
 
-![图 1｜错误信息]({{< param cdnPrefix >}}/Hexo/1.jpg)
+![图 1｜错误信息](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hexo/1.jpg)
 
 大概是说发送 http 请求的时候出错了，我猜原因是采用 http 方式时，需要从标准输入读取 GitHub 用户名和密码信息，而在这里没能成功从标准输入中读取。
 
@@ -193,11 +193,11 @@ search:
 
 GitHub 十分良心地提供了 Student Pack，通过学生认证后就可以享受许多学生专有的福利，对于各种开发来说都十分方便。这里我用到了 Student Pack 中的 Namecheap 一年免费 .me 域名以及一年免费 Positive SSL 证书。下单后，需要对域名进行配置。
 
-![图 2｜Namecheap]({{< param cdnPrefix >}}/Hexo/2.jpg)
+![图 2｜Namecheap](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hexo/2.jpg)
 
 点击 MANAGE 后选择 Advanced DNS，添加 Host Record。受到网上教程的误导，我添加了错误的 Host Record 导致一段时间内我的域名无法正确解析，也影响到了下面升级到 https 的操作。最终，查看了 [官方帮助文档](https://www.namecheap.com/support/knowledgebase/article.aspx/9645/2208/how-do-i-link-my-domain-to-github-pages) 后，才得知 GitHub Pages 的 IP 地址已经更新了…… 最终配置如下：
 
-![图 3｜配置信息]({{< param cdnPrefix >}}/Hexo/3.jpg)
+![图 3｜配置信息](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hexo/3.jpg)
 
 然后在网站根目录下添加 `CNAME` 文件，就一行 `signormercurio.me`。
 

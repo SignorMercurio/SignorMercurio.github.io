@@ -22,7 +22,7 @@ categories:
 
 ### 获取小程序后端域名
 
-进入小程序后点右上角 `···` -> 点击小程序名 -> 继续右上角 `···` -> ` 更多资料 ` 即可看到域名。假设为 `example.com`。
+进入小程序后点右上角 `···` -> 点击小程序名 -> 继续右上角 `···` -> `更多资料` 即可看到域名。假设为 `example.com`。
 
 ### 解析后端真实 IP
 
@@ -45,4 +45,4 @@ categories:
 
 ## 原理
 
-![图 1｜原理示意图]({{< param cdnPrefix >}}/MiniCapture/1.png)
+![图 1｜原理示意图](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/MiniCapture/1.png)

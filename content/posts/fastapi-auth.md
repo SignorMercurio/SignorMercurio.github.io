@@ -355,6 +355,6 @@ python3 -m uvicorn app.main:app --reload
 
 随后访问 http://localhost:8000/docs 即可看到 swagger 文档。
 
-![图 1]({{< param cdnPrefix >}}/FastAPIAuth/1.png)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/1.png)
 
-![图 2]({{< param cdnPrefix >}}/FastAPIAuth/2.png)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/FastAPIAuth/2.png)

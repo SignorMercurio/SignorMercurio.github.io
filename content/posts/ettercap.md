@@ -63,9 +63,9 @@ traceroute to baidu.com (123.125.114.144), 30 hops max, 60 byte packets
 
 结果：
 
-![图 1]({{< param cdnPrefix >}}/Ettercap/0.jpg)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Ettercap/0.jpg)
 
-![图 2]({{< param cdnPrefix >}}/Ettercap/1.jpg)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Ettercap/1.jpg)
 
 或者，我们照常转发流量（这个操作由 Ettercap 自动完成），但是将数据包中的图片存储下来：
 
@@ -84,7 +84,7 @@ $ ettercap -i eth0 -Tq -M arp:remote /// ///
 
 这时，同网段主机访问了一个 http 网站并进行登录。我们可以在命令行看到：
 
-![图 3]({{< param cdnPrefix >}}/Ettercap/2.jpg)
+![图 3](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Ettercap/2.jpg)
 
 由于帐号和密码是明文传输的，我们可以轻易得到帐号 `10175101282` 和密码 `aaaaaa`。
 
@@ -118,7 +118,7 @@ dns_spoof: A [aaa.ecnu.edu.cn] spoofed to [192.168.159.135]
 
 结果：
 
-![图 4]({{< param cdnPrefix >}}/Ettercap/3.jpg)
+![图 4](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Ettercap/3.jpg)
 
 ## 小结
 

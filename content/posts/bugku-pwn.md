@@ -81,7 +81,7 @@ int sub_400751()
 
 这里给了 `system` 函数，我们只需要让他的参数为 `/bin/sh` 就行了。我们搜索下字符串：
 
-![图 1]({{< param cdnPrefix >}}/BugkuPwn/1.png)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BugkuPwn/1.png)
 
 这里有一堆没有意义但显然是人为添加的字符串，可以猜想我们需要的东西肯定在里面。观察到其中一个字符串末尾是 `$0`，这就是我们需要的 shell 的别名了。
 
@@ -141,7 +141,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 
 注意到 `printf(&s, &s);`，说明这里有一个格式化字符串漏洞。通过 gdb 调试后发现，我们可以泄露 `__libc_start_main` 地址来得到 `system` 和 `/bin/sh` 的地址。
 
-![图 2]({{< param cdnPrefix >}}/BugkuPwn/0.png)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/BugkuPwn/0.png)
 
 而 `__libc_start_main` 和我们的输入在栈上相差 `0x28`，换算成偏移量就是 `0x28 / 8 = 0x05`，此外还需要考虑 64 位下的六个传参寄存器，因此总偏移为 `0xb`。我们输入 `%11$p` 即可泄露 `__libc_start_main` 地址 `0x7ffff7a2d830`。
 

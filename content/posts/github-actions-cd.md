@@ -72,7 +72,7 @@ jobs:
 
 至此，`build.yaml` 写完了，我们可以尝试 `push` 一下，然后在 Actions 页面就能看到已经自动运行的 `build` 流程了。
 
-![图 1｜Actions 页面]({{< param cdnPrefix >}}/GitHubActionsCD/0.png)
+![图 1｜Actions 页面](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/GitHubActionsCD/0.png)
 
 如果遇到了问题，也可以直接展开每一步来查看命令行的输出。
 

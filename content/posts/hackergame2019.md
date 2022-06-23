@@ -114,11 +114,11 @@ if __name__ == '__main__':
 
 一直以为是要对 websocket 做手脚，实际上并不能成功。这里我们提升攻击力的唯一途径就是去买鸡吃，我们在买鸡的时候 F12 一下：
 
-![图 1]({{< param cdnPrefix >}}/Hackergame2019/0.png)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/0.png)
 
 发现这里的 `option` 的 `value` 是可以修改的，再看 js 代码：
 
-![图 2]({{< param cdnPrefix >}}/Hackergame2019/1.png)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/Hackergame2019/1.png)
 
 这里直接将 `option` 的 `value` 填进去了，并没有检验其合法性，因此我们可以修改这个 `value` 使得其变成一个很大的数，但是这会导致我们钱不够买不了。
 

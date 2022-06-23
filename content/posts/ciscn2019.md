@@ -24,27 +24,27 @@ featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/0.p
 
 下载文件后解压得到 saleae.logicdata，因此我们用 Logic 打开该文件，得到四信道的波形图：
 
-![图 1]({{< param cdnPrefix >}}/CISCN2019/1.png)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/1.png)
 
 由于题目提示该波形图来自 U 盘，而且共有四个信道，因此猜想可能采用了 SPI 协议。在右侧 Analyzer 里新建分析器：
 
-![图 2]({{< param cdnPrefix >}}/CISCN2019/2.png)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/2.png)
 
 这里主要需要确定的是四个信道是如何对应 SPI 协议的四信道的。观察波形：
 
-![图 3]({{< param cdnPrefix >}}/CISCN2019/3.png)
+![图 3](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/3.png)
 
 可以看到 Channel0 波形周期十分稳定，比较可能是 Clock；Channel1 持续低电平，可能是 Enable，或者 MOSI/MISO 二者之一。
 
-![图 4]({{< param cdnPrefix >}}/CISCN2019/4.png)
+![图 4](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/4.png)
 
 Channel2 波形较不规律，则必定是 MOSI/MISO 二者之一；Channel3 对应 Channel2 的那一段，两端恰好发生跳变，因此很有可能是 Enable。于是我们推出 Channel1 只能是 MOSI/MISO 二者之一。
 
 最终，我们发现这样的信道分配可以给出有用的信息：
 
-![图 5]({{< param cdnPrefix >}}/CISCN2019/5.png)
+![图 5](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/5.png)
 
-![图 6]({{< param cdnPrefix >}}/CISCN2019/6.png)
+![图 6](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/6.png)
 
 拼接成字符串即可得到 flag。
 
@@ -116,19 +116,19 @@ Time[s],AnalyzerName,DecodedProtocolResult
 
 下载文件后解压得到 usbasp.logicdata，因此我们用 Logic 打开该文件，得到四信道的波形图。由于共有四个信道，因此猜想可能采用了 SPI 协议。在右侧 Analyzer 里新建分析器：
 
-![图 7]({{< param cdnPrefix >}}/CISCN2019/7.png)
+![图 7](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/7.png)
 
 这里主要需要确定的是四个信道是如何对应 SPI 协议的四信道的。观察波形：
 
-![图 8]({{< param cdnPrefix >}}/CISCN2019/8.png)
+![图 8](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/8.png)
 
 可以看到 Channel2 波形周期十分稳定，比较可能是 Clock；Channel0 和 Channel1 没有特定的规律，因此应该分别是 MISO/MOSI 之一。于是 Channel3 应该是 Enable。
 
 此外，观察 Channel3，可以发现应该是高电平触发。最终，我们发现这样的信道分配和设置可以给出有用的信息：
 
-![图 9]({{< param cdnPrefix >}}/CISCN2019/9.png)
+![图 9](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/9.png)
 
-![图 10]({{< param cdnPrefix >}}/CISCN2019/10.png)
+![图 10](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/10.png)
 
 拼接成字符串即可得到 flag。
 
@@ -138,7 +138,7 @@ Time[s],AnalyzerName,DecodedProtocolResult
 
 （图片来自队友）
 
-![图 11]({{< param cdnPrefix >}}/CISCN2019/11.png)
+![图 11](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/11.png)
 
 其实就是变种 RSA，明白了这一点就容易了，但是坑点在于 python 中 `long` 和 `bytes` 互转的问题，推荐 python2 写：
 
@@ -200,15 +200,15 @@ print flag
 
 对于 `index.php` 也同理：`?file=php://filter/convert.base64-encode/resource=index.php`。
 
-![图 12]({{< param cdnPrefix >}}/CISCN2019/0.png)
+![图 12](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/0.png)
 
 得到 index.php：
 
-![图 13]({{< param cdnPrefix >}}/CISCN2019/12.png)
+![图 13](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/12.png)
 
 以及 hint.php：
 
-![图 14]({{< param cdnPrefix >}}/CISCN2019/13.png)
+![图 14](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/13.png)
 
 从 `hint.php` 可以看出，Flag 类的 `getFlag` 函数最终会打印 flag，而该函数由 `Handle` 类调用。再审查 `index.php`，发现需要先 include 一下 `hint.php`，过滤后反序列化 payload。
 
@@ -277,11 +277,11 @@ $ ./hash_extender --data admin123 --secret 10 --append admin123 --signature e718
 
 得到：
 
-![图 15]({{< param cdnPrefix >}}/CISCN2019/14.jpg)
+![图 15](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/14.jpg)
 
 最后，用 URL 解码后的 `New string` 作为 `user` 参数的值，用 `New signature` 替换 `verify` 的值，即可得到 `flag`：
 
-![图 16]({{< param cdnPrefix >}}/CISCN2019/15.jpg)
+![图 16](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/15.jpg)
 
 ### web3
 
@@ -336,6 +336,6 @@ setcookie("hash_key", md5($bisskey . urldecode("admin123"."admin123")), time() +
 
 这里接收 `username` 和 `passwd` 参数，并要求 `MyIdentity` 非空的情况下 `username` 强等于 `admin123` 且 `passwd` 经过 URL 解码不等于 `admin123`。最后一层 `if` 是要求 `MyIdentity` 的值等于未知的长度为 10 的 `bisskey` 连接上 `username` 和 `passwd` 的 `md5` 值，显然这个我们也很难计算，但是类似 `web6`，我们可以用哈希扩展攻击的方法得到 flag：
 
-![图 17]({{< param cdnPrefix >}}/CISCN2019/16.jpg)
+![图 17](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CISCN2019/16.jpg)
 
 > 剩余的一些做出来的题，感觉记录的意义不大就没有记录下来。

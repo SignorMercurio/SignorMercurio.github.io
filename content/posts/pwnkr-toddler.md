@@ -233,7 +233,7 @@ $ python
 需要注意的是，`scanf` 的时候接收 `%d`，因此需要 `str` 一下转成十进制字符串。
 
 > 注：
-> 
+>
 > 1. GLIBC 函数的 GOT 地址，在 pwntools 中可以用类似 `elf.got['fflush']` 的方法获得，更加方便
 > 2. 如果开启了 PIE 则需要 leak 出 GOT 地址。
 
@@ -1000,7 +1000,7 @@ int main(int argc, char* argv[]){
 
 首先我们尝试找到 `Man` 的虚函数表。在 `main` 中找到 `Man` 构造函数的地址：
 
-![图 1]({{< param cdnPrefix >}}/PwnkrToddler/1.png)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PwnkrToddler/1.png)
 
 注意到对象被放到 `rbx` 里，我们在构造函数执行后下断点，可以查看 `Man` 的对象：
 
@@ -1028,7 +1028,7 @@ $1 = 0x1fe8c50
 
 接下来用 IDA 分析，可以看到输入 `1` 的时候执行：
 
-![图 2]({{< param cdnPrefix >}}/PwnkrToddler/2.png)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PwnkrToddler/2.png)
 
 也就是两个 `introduce`，那么这里的 `v12` 和 `v13` 就可以确定是对应于 `m` 和 `w` 的虚指针了，之后转换为指针再 + 8，正好就是调用 `vtable + 8` 处的函数即 `introduce`。那么如果我们想让它执行位于 `vtable + 0` 的 `give_shell`，只需要在这句执行前让 `vtable` 的值减少 8 就行了。
 
@@ -1042,7 +1042,7 @@ $1 = 0x1fe8c50
 
 那么只剩下一个问题了，就是我们要分配多大的空间给 `data`，这在 IDA 中很容易发现：
 
-![图 3]({{< param cdnPrefix >}}/PwnkrToddler/3.png)
+![图 3](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PwnkrToddler/3.png)
 
 `0x18` 字节，也就是 24 字节。最终 payload（注意地址是三十二位的）：
 
@@ -1201,7 +1201,7 @@ int main(void){
 
 显然这里是要求目的地址是 16 字节对齐的，换句话说它的十六进制末尾是 0。gdb 调试一下，全部输入最小的合法数据：
 
-![图 4]({{< param cdnPrefix >}}/PwnkrToddler/4.png)
+![图 4](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PwnkrToddler/4.png)
 
 可以看到段错误的时候，目的寄存器 `edx` 的末尾并不是 0，因此产生了错误。这不难理解：`malloc` 进行堆分配时，对于 `8` 而言分配了 `0x8+0x8=0x10` 字节，是对齐的；对 `16` 而言分配了 `0x8+0x10=0x18` 字节，于是不对齐了，我们可以给它 + 8 来对齐。对于 `32`，分配 `0x8+0x20=0x28` 字节，同样不对齐，我们也作同样的 padding 处理，于是我们可以输入数据：
 
@@ -1408,7 +1408,7 @@ int main(int argc, char* argv[]){
 然而，尽管 `P->fd->bk` 和 `P->bk->fd` 会被检查合法性，这两句赋值语句中的 `P->fd` 和 `P->bk` 都不会被检查，换句话说我们可以用这个特性使右边的地址覆盖掉左边地址。
 
 > 再简单一点，注意到 `->fd` 等于 `+0x0`，`->bk` 等于 `+0x4`，也就是：
-> 
+>
 > ```
 > [P]+0x4 = P+0x4
 > [P+0x4] = P

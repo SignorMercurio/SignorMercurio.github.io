@@ -17,7 +17,7 @@ featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/H1veDeploy/0.
 
 ## 技术架构
 
-![图 1｜技术架构]({{< param cdnPrefix >}}/H1veDeploy/1.png)
+![图 1｜技术架构](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/H1veDeploy/1.png)
 
 盗了张图，这里是 BUUCTF 的架构，与 H1ve 搭建的架构类似，仅仅是将 CTFd-Whale 替换成了 CTFd-Owl（前者使用 docker-swarm 而后者使用 docker-compose）。
 
@@ -112,7 +112,7 @@ COPY pwn /pwn/pwn
 然后编写 `docker-compose.yaml`：
 
 ```yaml
-version: '2'
+version: "2"
 services:
   service:
     build: .
@@ -120,7 +120,7 @@ services:
     ports:
       - 9999:10000
     volumes:
-      - '$PWD/flag:/pwn/flag'
+      - "$PWD/flag:/pwn/flag"
     tty: true
     networks:
       - net
@@ -136,7 +136,7 @@ networks:
 web 的话就不能偷懒了，需要自己写 `Dockerfile`。随后编写 `docker-compose.yaml`，这里放一个官方的例子：
 
 ```yaml
-version: '2'
+version: "2"
 services:
   # 基本环境
   service: # 容器名字
@@ -148,8 +148,8 @@ services:
       - 9999:80
     volumes:
       # 挂载的 Flag
-      - '$PWD/flag:/var/www/html/include/flag:ro'
-      - '$PWD/apache2.conf:/etc/apache2/apache2.conf'
+      - "$PWD/flag:/var/www/html/include/flag:ro"
+      - "$PWD/apache2.conf:/etc/apache2/apache2.conf"
     tty: true
     networks:
       - net

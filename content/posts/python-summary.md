@@ -21,8 +21,8 @@ featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary
 
 首先我们学习了 Python3 的安装与配置。过程非常简单：从官网下载安装包，配好环境变量后在命令行验证即可。编写和运行 Python 程序也极其简单：课上的第一个例子便是输出 Hello World 语句。为此，老师提供了两种方法，一是 Python 交互模式下直接输入 `print(‘Hello World’)` 并回车；二是在一个形如 `1.py` 文件中输入上述语句，并在命令行中输入 `python 1.py` 来执行。
 
-![图 1]({{< param cdnPrefix >}}/PythonSummary/0.png)
-![图 2]({{< param cdnPrefix >}}/PythonSummary/1.png)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/0.png)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/1.png)
 
 一般来说，后一种方法使用较多。因此，我们需要称手的代码编辑器。老师推荐我们使用 Sublime Text 和 VS Code。实际操作中，我发现对于体积稍大一点的程序（例如上百行），使用 IDE 是更为明智的选择。因此，对于短小的代码我是用 VS Code 来编辑，而较长的代码我选择了用 PyCharm 编辑。
 
@@ -394,7 +394,7 @@ tkroot.mainloop()
 为了让控件能响应事件，使用 bind 方法，第一个参数表示事件类型，可以有 `<Button-1>(鼠标左键), <Button-2>(鼠标中键), <Button-3>(鼠标右键), <Double-1>(左键双击), <B1-Motion>(左键拖动), <Key-Press>, <Up>, <Return>` 等等; 第二个参数是检测到事件发生时的行为，用一个函数名表示（类似 Java 的 EventListener）。该函数的参数是一个 `event` 对象，其属性 `widget` 表示事件作用的控件，`x` 和 `y` 表示坐标（如果有的话）。
 
 最后，这里用 `focus` 方法设置焦点，`mainloop` 使窗体开始循环等待，也就是真正运行起来。运行效果：
-![图 3]({{< param cdnPrefix >}}/PythonSummary/2.jpg)
+![图 3](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/2.jpg)
 
 这里用的控件是 Label，对于其它控件同理，如 Button, Frame, Entry, Checkbutton, Radiobutton, Scale 等等。
 
@@ -470,7 +470,7 @@ master.mainloop()
 
 效果：
 
-![图 4]({{< param cdnPrefix >}}/PythonSummary/3.jpg)
+![图 4](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/3.jpg)
 
 需要注意的是，pack 布局管理器与 grid 布局管理器不应在一个窗口中混合使用。
 
@@ -493,9 +493,9 @@ win.mainloop()
 
 tkinter 同样支持 listbox 控件，下拉菜单与窗体菜单，带滚动条的文本框等等, 他们的方法多样，但也有许多相似之处。下面是两个简单的示例：
 
-![图 5]({{< param cdnPrefix >}}/PythonSummary/4.png)
+![图 5](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/4.png)
 
-![图 6]({{< param cdnPrefix >}}/PythonSummary/5.png)
+![图 6](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/PythonSummary/5.png)
 
 第一个是菜单栏的测试，第二个是一个简单的文本编辑器。
 

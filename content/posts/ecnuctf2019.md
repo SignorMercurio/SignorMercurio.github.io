@@ -26,7 +26,7 @@ featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/0
 
 等待网站恢复时发现**第三题题面的图片**很有趣，看起来像是帮助解题的关键线索：
 
-![图 1]({{< param cdnPrefix >}}/ECNUCTF2019/1.jpg)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/1.jpg)
 
 通过 Google 图片搜索，我在 [这里](http://www.wikiwand.com/zh/%E4%B8%AD%E6%96%87%E7%94%B5%E7%A0%81) 发现了相关介绍，不过后来事实证明这跟解题一点关系也没有。
 
@@ -34,7 +34,7 @@ featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/0
 
 ## 1. 土肥原贤二
 
-![图 2]({{< param cdnPrefix >}}/ECNUCTF2019/2.png)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/2.png)
 
 显然这里可以查询数据库，考虑 SQL 注入攻击。输入 1 查询后发现 payload 可以构造为 `gid=1`，然后 Kali 下运行 sqlmap 可以直接得到 flag。
 
@@ -50,7 +50,7 @@ $ sqlmap -u 'http://47.103.43.235:81/quest/web/a/index.php?gid=1' -D luozhen -T 
 
 ## 2. 吴佩孚
 
-![图 3]({{< param cdnPrefix >}}/ECNUCTF2019/3.png)
+![图 3](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/3.png)
 
 网页内的字符串符合典型的 Base64 编码的格式，解码得到 jsfuck 代码，在浏览器 Console 中运行即得到 flag。
 
@@ -58,7 +58,7 @@ $ sqlmap -u 'http://47.103.43.235:81/quest/web/a/index.php?gid=1' -D luozhen -T 
 
 坑题，题面和音频疯狂暗示摩斯电码，但实际上跟摩斯电码根本没有关系。听音频听不到什么有用的信息，于是用 Cool Edit Pro 打开并查看频谱图：
 
-![图 4]({{< param cdnPrefix >}}/ECNUCTF2019/4.jpg)
+![图 4](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/4.jpg)
 
 然而尝试提交后发现不是 flag。
 
@@ -72,7 +72,7 @@ $ sqlmap -u 'http://47.103.43.235:81/quest/web/a/index.php?gid=1' -D luozhen -T 
 
 网页中的内容明显是 Base64 编码，进行多次解码（第一次解码无输出，尝试结尾加一个 / 两个等号就可以解码了）并 Unescape 后，重新排列得到的字符串，获得 flag。
 
-![图 5]({{< param cdnPrefix >}}/ECNUCTF2019/5.png)
+![图 5](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/5.png)
 
 ## 5. 飞虎队
 
@@ -117,7 +117,7 @@ print(flag.text)
 
 对我来说有点难的 Misc 题。一开始以为是 web，但是根本没办法通过解析二维码得到什么有用的信息。只能下载图片，binwalk 一下，果然有压缩包：
 
-![图 6]({{< param cdnPrefix >}}/ECNUCTF2019/6.jpg)
+![图 6](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/6.jpg)
 
 根据密码是管理员 qq 号的线索，fcrackzip 跑半小时爆破 zip 密码…… 得到 flag。
 
@@ -176,11 +176,11 @@ with open("fllllllag.txt", "rb") as f:
 
 难题。用 IDA 观察了很久很久，唯一有点线索的是这个**sub_8048580**：
 
-![图 7]({{< param cdnPrefix >}}/ECNUCTF2019/7.png)
+![图 7](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/7.png)
 
 （此处省略了一部分代码）
 
-![图 8]({{< param cdnPrefix >}}/ECNUCTF2019/8.png)
+![图 8](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/8.png)
 
 看到了显眼的 **48 和 97**，猜测是根据输入字符的 ASCII 码判断密码是否正确，将上面的代码（只截了一部分）仔细整理成表格查看，可以得到这样一张表（已对第二列去重）：
 
@@ -210,49 +210,49 @@ Correct!
 ## 11. 晴气庆胤
 
 查看源代码发现：
-![图 9]({{< param cdnPrefix >}}/ECNUCTF2019/9.png)
+![图 9](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/9.png)
 
 说明要构造两个不同的字符串且它们的 md5 值相同，因此在 Burp/Postman 中发送 POST 请求：
 
-![图 10]({{< param cdnPrefix >}}/ECNUCTF2019/10.png)
+![图 10](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/10.png)
 
 ## 12. 梅津美治郎
 
 在 IDA 中打开 Auth.exe，观察 `_main` 函数，在函数末尾发现：
 
-![图 11]({{< param cdnPrefix >}}/ECNUCTF2019/11.png)
+![图 11](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/11.png)
 
 可以立即得到第一关密码 “r0b0RUlez!“。对于第二关密码，可以确定的是依然会调用 `strcmp` 函数，因此我们需要找到 `call strcmp` 语句并设置断点，此时第二关需要的密码应该可以在栈中找到。首先查找 `strcmp`:
 
-![图 12]({{< param cdnPrefix >}}/ECNUCTF2019/12.png)
+![图 12](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/12.png)
 
 设置断点并调试：
 
-![图 13]({{< param cdnPrefix >}}/ECNUCTF2019/13.png)
+![图 13](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/13.png)
 
 查看 `EAX`：
 
-![图 14]({{< param cdnPrefix >}}/ECNUCTF2019/14.png)
+![图 14](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/14.png)
 
 得到疑似第二关密码：
 
-![图 15]({{< param cdnPrefix >}}/ECNUCTF2019/0.png)
+![图 15](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/0.png)
 
 输入后发现密码错误，因此我们需要回去看一下，我们忽略了什么环节。在上图的 `_main` 伪代码中，我们看到 "You passed level1!" 后就没有看下去了，然而下面的 `sub_4015EA` 却是第二关的关键：
 
-![图 16]({{< param cdnPrefix >}}/ECNUCTF2019/15.png)
+![图 16](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/15.png)
 
 这里发生了异常跳转。我们查找它的外部引用，进入了 `sub_40157F`:
 
-![图 17]({{< param cdnPrefix >}}/ECNUCTF2019/16.png)
+![图 17](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/16.png)
 
 见到了老朋友 `scanf` 函数，下一步当然是跟踪进 `sub_401547`：
 
-![图 18]({{< param cdnPrefix >}}/ECNUCTF2019/17.png)
+![图 18](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/17.png)
 
 答案很明了了。原来这个函数对我们刚才得到的 “第二关密码” 又进行了按位异或 2。于是我们作同样计算后得到第二关密码：
 
-![图 19]({{< param cdnPrefix >}}/ECNUCTF2019/18.png)
+![图 19](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/18.png)
 
 Flag 只需要用下划线拼接两关密码即可。
 
@@ -262,13 +262,13 @@ Flag 只需要用下划线拼接两关密码即可。
 
 多次尝试后得出结论：本题过滤了等号、空格、union、select、or 等关键字，因此采用双写绕过、十六进制绕过、注释绕过等手段改写 SQL 语句实现注入。这里 sqlmap 就很难帮到我们了。
 
-![图 20]({{< param cdnPrefix >}}/ECNUCTF2019/19.png)
+![图 20](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/19.png)
 
 ## 14. 作战计划
 
 网站唯一的注入点位于搜索框，查阅有关 seacms 漏洞的资料来构造 payload：
 
-[http://47.103.43.235:84/search.php?searchtype=5&tid=&area=eval($_POST[cmd])](#)
+[http://47.103.43.235:84/search.php?searchtype=5&tid=&area=eval($\_POST[cmd])](#)
 
 并连接菜刀 / 蚁剑，拿到网站 shell 后可以在根目录发现 flag.txt。
 
@@ -298,7 +298,7 @@ if (isset($_POST['name']) and isset($_POST['password'])){
 
 可以看到这里要求：name 和 password 不同，且 sha1 值相同。由于 php 中的 sha1 漏洞会使任意两个数组的 sha1 值相同，因此构造 payload：
 
-![图 21]({{< param cdnPrefix >}}/ECNUCTF2019/20.png)
+![图 21](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/ECNUCTF2019/20.png)
 
 ## 总结
 

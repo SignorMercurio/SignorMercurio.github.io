@@ -54,12 +54,12 @@ Platform for Attacking Swiftly & Smoothly With Defending
 首先是登录功能（注册比较简单），后端采用 HTTP Basic Auth 配合 jwt 进行认证。因此我使用 axios 模块 `config` 中的 `auth` 这个字段来设置 Basic Auth 内容。那么登录时的代码就类似：
 
 ```js
-this.$axios.get('token', {
+this.$axios.get("token", {
   auth: {
     username: this.username,
     password: sha256(this.password),
   },
-})
+});
 ```
 
 这里对密码进行了哈希后发送，方便直接存储到数据库，同时避免明文传输。
@@ -69,25 +69,25 @@ this.$axios.get('token', {
 ```js
 // http basic auth
 Vue.prototype.$token = () => {
-  let state = JSON.parse(sessionStorage.getItem('store'))
+  let state = JSON.parse(sessionStorage.getItem("store"));
   if (state) {
-    let info = state.userInfo
+    let info = state.userInfo;
     if (info) {
-      return 'Basic' + Base64.encode(info.token + ':')
+      return "Basic" + Base64.encode(info.token + ":");
     }
-    return ''
+    return "";
   }
-}
+};
 
 Vue.prototype.$axios.interceptors.request.use(
   config => {
-    config.headers.Authorization = Vue.prototype.$token()
-    return config
+    config.headers.Authorization = Vue.prototype.$token();
+    return config;
   },
   err => {
-    Promise.reject(err)
+    Promise.reject(err);
   }
-)
+);
 ```
 
 这里维护登录状态的方式一如既往，将 `store` 整个存入 `sessionStorage`，页面刷新时取回。
@@ -102,7 +102,7 @@ Vue.prototype.$axios.interceptors.request.use(
 
 首先遇到的问题是，由于设置了表单验证，在填写 ssh 信息时如果空着会触发提示，就像这样：
 
-![图 1]({{< param cdnPrefix >}}/pAssWD/1.png)
+![图 1](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/pAssWD/1.png)
 
 然而文本框内部右侧多出来的警告图标会导致文本框的长度被改变，从而改变同一行内其它元素的位置。我的解决方案是设置小于原宽度的 `max-width`，使得文本框长度固定。
 
@@ -110,7 +110,7 @@ Vue.prototype.$axios.interceptors.request.use(
 
 然后需要对靶机信息进行增删改查，界面大概是这样的：
 
-![图 2]({{< param cdnPrefix >}}/pAssWD/2.png)
+![图 2](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/pAssWD/2.png)
 
 这里的问题在于当点击保存后，有可能向数据库插入所有数据，即使其中有一部分已经存在。因此后端多发送了一个 `id` 字段，前端点击保存发送数据时，如果某条数据没有 `id`，说明不在数据库中，是新增的数据；否则就是已有数据，正在进行修改。
 
@@ -120,11 +120,11 @@ Vue.prototype.$axios.interceptors.request.use(
 
 接下来花了很长时间做浏览器端的 ssh，经过一段时间的选型最终决定后端采用基于 tornado 的 webssh，前端采用 xterm.js 来进行交互，协议是 websocket。连接 webssh 的过程比较复杂，因此我画了一张图来让自己理解：
 
-![图 3]({{< param cdnPrefix >}}/pAssWD/3.png)
+![图 3](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/pAssWD/3.png)
 
 在这个部分上我们花了如此多的时间，以至于最后看到这个界面时，我们都长舒了一口气：
 
-![图 4]({{< param cdnPrefix >}}/pAssWD/4.png)
+![图 4](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/pAssWD/4.png)
 
 本来还以为要用别的办法来连接 ssh 了。这都要感谢 webssh 项目支持通过 api 方式登录。
 
@@ -168,19 +168,19 @@ Vue.prototype.$axios.interceptors.request.use(
 ```js
 // get current gameboxes
 Vue.prototype.$getTargets = async function () {
-  let curComp = await this.$axios.get('get_current_game').then(res => {
+  let curComp = await this.$axios.get("get_current_game").then(res => {
     if (res) {
-      return res.data.data
+      return res.data.data;
     }
-  })
+  });
 
-  if (!curComp) return []
+  if (!curComp) return [];
   return this.$axios.get(`get_ssh/game/${curComp}`).then(res => {
     if (res) {
-      return res.data.data
+      return res.data.data;
     }
-  })
-}
+  });
+};
 ```
 
 顺便学了下 `async/await` 用法。之前对 `await` 有些误解，实际上这里的 `await` 仅仅保证 `curComp` 在后续使用时已经接收到了 `Promise` 对象 `resolve` 的值，异步调用依然是异步调用。
@@ -199,7 +199,7 @@ Vue.prototype.$getTargets = async function () {
 
 之后就是在 Logging 页面通过 API 获取日志列表。其中 `message`，`param`，`data` 三项由于各种原因（长度过长、格式变化太多），我选择在每条日志的最后让用户点击按钮自行查看 json 格式的数据。如图：
 
-![图 5]({{< param cdnPrefix >}}/pAssWD/5.png)
+![图 5](https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/pAssWD/5.png)
 
 中间出现了一些沟通上的问题，大多围绕数据格式、数据获取方式等问题。主要是因为我不熟悉后端的实现、后端也不熟悉前端的一些原理导致的。
 
