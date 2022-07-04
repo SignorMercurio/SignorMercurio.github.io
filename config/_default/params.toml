@@ -8,14 +8,21 @@
 colorScheme = "indigo"
 defaultAppearance = "light" # valid options: light or dark
 autoSwitchAppearance = true
-showAppearanceSwitcher = true
 
 enableSearch = true
 enableCodeCopy = true
 
 # mainSections = ["section1", "section2"]
 # robots = ""
-showScrollToTop = true
+
+[header]
+  layout = "basic"
+
+[footer]
+  showCopyright = true
+  showThemeAttribution = true
+  showAppearanceSwitcher = true
+  showScrollToTop = true
 
 [homepage]
   layout = "profile" # valid options: page, profile, custom
@@ -37,6 +44,7 @@ showScrollToTop = true
   showTableOfContents = true
   showTaxonomies = true
   showWordCount = true
+  showComments = true
   # sharingLinks = ["facebook", "twitter", "pinterest", "reddit", "linkedin", "email"]
 
 [list]
