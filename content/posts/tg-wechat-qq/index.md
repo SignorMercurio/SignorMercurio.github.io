@@ -22,23 +22,26 @@ categories:
 - 可以在 PC 上卸载微信和 QQ 客户端，在手机上卸载 QQ 客户端并大幅减少打开微信的频率；同时微信也不再需要常驻后台
 - 天下苦微信久矣。但相比完全不使用微信，这种方式能给自己和他人带来更少麻烦
 - 在 Telegram 上获得更好的使用体验
+- 对消息的管理更便捷，例如可以将多个微信群的消息转发到同一个 Telegram 群组中（随后可以选择静音群组）
 - 将所有消息聚合至同一软件，减少切换，方便管理和查看
 
 ## 背景
 
-早期大部分微信用户可以顺畅地登录和使用微信网页版，因此以 itchat[^1] 为代表的一系列利用微信 Web API 实现个人账号自动化的框架十分火热。但好景不长，微信很快限制了绝大部分用户登录网页版的能力，致使 Web API 近乎等同于失效。
+早期大部分微信用户可以顺畅地登录和使用微信网页版，因此以 [itchat](https://itchat.readthedocs.io/zh/latest/) 为代表的一系列利用微信 Web API 实现个人账号自动化的框架十分火热。但好景不长，微信很快限制了绝大部分用户登录网页版的能力，致使 Web API 近乎等同于失效。
 
-随后开发者发现 UOS 版的微信是微信网页版套了 Electron 的壳，因此使用 UOS 版微信作为 UA 可以绕过这一限制[^2]。然而这一举措随着 UOS 微信无法登录再次失效。遭受同样命运的还有利用文件传输助手登录网页版微信的办法[^3]。但近期出于未知原因，UOS 版微信登录突然恢复了[^4]，使得网页版微信再次成为可能。
+随后开发者发现 UOS 版的微信是微信网页版套了 Electron 的壳，因此使用 UOS 版微信作为 UA 可以绕过这一限制[^1]。然而这一举措随着 UOS 微信无法登录再次失效。遭受同样命运的还有利用文件传输助手登录网页版微信的办法[^2]。但近期出于未知原因，UOS 版微信登录突然恢复了[^3]，使得网页版微信再次成为可能。
 
-QQ 也曾出现过类似的大规模封禁 QQ 机器人的事件，但相比微信更开放的生态催生了诸如 mirai[^5]、go-cqhttp[^6] 这样的优秀自动化框架，能让我们轻松许多。
+此外，还存在多种利用 Windows hook 的方式，如 [可爱猫](http://www.keaimao.com/dev/guide/#%E8%BD%AF%E4%BB%B6%E7%AE%80%E4%BB%8B) 等。但利用此类框架收发消息需要 Windows VPS，成本较高。
+
+QQ 也曾出现过类似的大规模封禁 QQ 机器人的事件，但相比微信更开放的生态催生了诸如 [mirai](https://github.com/mamoe/mirai)、[go-cqhttp](https://github.com/Mrs4s/go-cqhttp) 这样的优秀自动化框架，能让我们轻松许多。
 
 ## 原理
 
-调研初期，预期的目标仅仅是尽可能减少对微信客户端的依赖。而经过调研，目前最为成熟（且免费）的方案是使用 ehForwarderBot[^7] 将消息转发至 Telegram。 其原理大致如图：
+调研初期，预期的目标仅仅是尽可能减少对微信客户端的依赖。而经过调研，目前最为成熟（且免费）的方案是使用 ehForwarderBot[^4] 将消息转发至 Telegram。 其原理大致如图：
 
 ![](1.png)
 
-可以看到，我们首先需要一个 Telegram Bot 作为前端，并在自己的服务器上启动 EH Forwarder Bot 作为后端。根据配置文件它会启动 Telegram Master[^8] 用于和 EH Forwarder Bot 直接通信，而 Telegram Master 则会和两个 Slave 通信。Wechat Slave[^9] 利用 UOS 版请求头与微信 API 交互，而 QQ Slave[^10] 则通过另外启动的 QQ 客户端来访问 QQ 的 API。这里的 QQ 客户端当然不是我们平时使用的桌面版 GUI 客户端，而是类似 mirai、go-cqhttp 这样的交互框架。这个例子里我们使用更轻量的 go-cqhttp。
+可以看到，我们首先需要一个 Telegram Bot 作为前端，并在自己的服务器上启动 EH Forwarder Bot 作为后端。根据配置文件它会启动 Telegram Master[^5] 用于和 EH Forwarder Bot 直接通信，而 Telegram Master 则会和两个 Slave 通信。Wechat Slave[^6] 利用 UOS 版请求头与微信 API 交互，而 QQ Slave[^7] 则通过另外启动的 QQ 客户端来访问 QQ 的 API。这里的 QQ 客户端当然不是我们平时使用的桌面版 GUI 客户端，而是类似 mirai、go-cqhttp 这样的交互框架。这个例子里我们使用更轻量的 go-cqhttp。
 
 ## 实现
 
@@ -56,11 +59,11 @@ QQ 也曾出现过类似的大规模封禁 QQ 机器人的事件，但相比微�
 - efb-wechat-slave v2.0.7
 - efb-qq-slave v2.0.1
 - go-cqhttp v1.0.0-rc3
-- efb-qq-plugin-go-cqhttp[^11] @master
+- efb-qq-plugin-go-cqhttp[^8] @master
 
 ### 参考步骤
 
-手动安装并不复杂[^12][^13]，但使用自动脚本更简单，注意这一自动脚本仅仅设置微信转发：
+手动安装并不复杂[^9] [^10]，但使用自动脚本更简单，注意这一自动脚本仅仅设置微信转发：
 
 ```shell
 $ wget https://raw.githubusercontent.com/hookjk100/efb-install/main/install.sh -O install.sh && chmod +x install.sh && bash install.sh
@@ -105,7 +108,7 @@ $ pip install git+https://github.com/XYenon/efb-qq-plugin-go-cqhttp
 
 这里比较重要的是 `/link` 命令和 `/chat` 命令。前者可以将来自同一联系人的消息分流到同一个 Telegram Group 或 Channel 中，后者则能新发起一个对话。利用 `/update_info` ，甚至可以将原群组的名称、头像和成员列表同步过来。
 
-保存 Bot 的 token，并写入 Telegram Master 的配置[^8] `~/.ehforwarderbot/profiles/default/blueset.telegram/config.yaml`：
+保存 Bot 的 token，并写入 Telegram Master 的配置[^5] `~/.ehforwarderbot/profiles/default/blueset.telegram/config.yaml`：
 
 ```yaml
 token: "your bot token"
@@ -113,7 +116,7 @@ admins:
 - your Telegram ID
 ```
 
-`admins` 决定了哪些用户能管理 Bot，即利用 Bot 收发消息，这里的 Telegram ID 可以通过现有的许多 Bot 获得。然后修改 `~/.ehforwarderbot/profiles/default/config.yaml`，即 EH Forwarder Bot 本身的配置[^7]：
+`admins` 决定了哪些用户能管理 Bot，即利用 Bot 收发消息，这里的 Telegram ID 可以通过现有的许多 Bot 获得。然后修改 `~/.ehforwarderbot/profiles/default/config.yaml`，即 EH Forwarder Bot 本身的配置[^4]：
 
 ```yaml
 # ===================================
@@ -154,16 +157,15 @@ flags:
   message_muted_on_slave: silent
 ```
 
-有兴趣的话还可以添加中间件。类似地，可以配置 Wechat Slave 的 `~/.ehforwarderbot/profiles/default/blueset.wechat/config.yaml`[^9]，这里仅仅是我的配置：
+有兴趣的话还可以添加中间件。类似地，可以配置 Wechat Slave 的 `~/.ehforwarderbot/profiles/default/blueset.wechat/config.yaml`[^6]，这里仅仅是我的配置：
 
 ```yaml
 flags:
-  first_link_only: true
   max_quote_length: 60
   delete_on_edit: true
 ```
 
-至此，微信转发已经配置完毕。同理配置 QQ Slave 的 `~/.ehforwarderbot/profiles/default/milkice.qq/config.yaml`[^10][^13]：
+至此，微信转发已经配置完毕。同理配置 QQ Slave 的 `~/.ehforwarderbot/profiles/default/milkice.qq/config.yaml`[^7] [^10]：
 
 ```yaml
 Client: GoCQHttp
@@ -175,7 +177,7 @@ GoCQHttp:
     port: 8000
 ```
 
-随后，就可以运行 `go-cqhttp` 作为我们的 QQ 客户端了，首次运行会在同目录生成配置文件，需要修改的包括[^13]：
+随后，就可以运行 `go-cqhttp` 作为我们的 QQ 客户端了，首次运行会在同目录生成配置文件，需要修改的包括[^10]：
 
 ```yaml
 account: # 账号相关
@@ -208,7 +210,7 @@ servers:
           secret: ''
 ```
 
-修改后，再次运行 go-cqhttp，可以使用 screen 也可以作为守护进程。此时，终于可以启动 `ehforwarderbot` 并登录，最后就能在 Telegram bot 中收到相应的信息。
+修改后，再次运行 `go-cqhttp`，可以使用 `screen` 也可以作为守护进程。此时，终于可以启动 `ehforwarderbot` 并登录，最后就能在 Telegram bot 中收到相应的信息。
 
 经测试，部分情况下甚至会比客户端更快收到消息。
 
@@ -219,23 +221,42 @@ servers:
 然而更好的体验同样伴随着一定代价：
 
 - 手机上代理需要常驻开启
-- 除纯文字消息外的消息都会或多或少受到影响，更不用提更高级的功能了，因此不能在移动端完全脱离微信
+- 除纯文字消息外的消息都会或多或少受到影响，更不用提更高级的功能了，因此不能在移动端完全脱离微信（基础聊天功能影响不大，如图片、视频、语音等）
 - 其他可能存在的未知问题
 
 对于此类社交工具的轻度使用者，我认为这是可以接受的。
 
+## 附录：利用 Telegram 整合其他信息
+
+### Slack 消息
+
+可以借助自动化平台 [Make](https://www.make.com/) 自建 Scenario 实现，不过免费版限额比较少，仅适合用于消息不多的群组/频道。经测试，通知较为及时、交互体验良好且调试十分方便。
+
+Make 没有官方 Telegram Bot，但也只需要用上文的方法自建一个，随后提供 token 即可。
+
+### GitHub 通知
+
+如果只需要关注单个仓库的通知，那么选择很多，比如 [@GitHubBot](https://t.me/GitHubBot)，还有相应的 GitHub Actions Workflow。但如果需要接收所有的通知并转发到 Telegram，目前仅发现通过 [IFTTT](https://ifttt.com) 自建 Applet 可以支持，不过免费版同样限制只能使用 5 个 Applet，且每小时轮询一次，通知延时比较大。
+
+目前发现的最佳解决方案还是 [Gitify](https://www.gitify.io) 和 [Neat](https://neat.run) 这类菜单栏 GitHub 通知软件。
+
+### Gmail 邮件
+
+有官方 Telegram Bot [@GmailBot](https://t.me/GmailBot)。
+
+### RSS 订阅
+
+利用 [RSSHub](https://docs.rsshub.app) 生成订阅源，随后可以通过 [@RSStT_Bot](https://t.me/RSStT_Bot) 接收消息。这两个服务都可以自建以获得更好的体验。
+
 ## 参考资料
 
-[^1]: [itchat](https://itchat.readthedocs.io/zh/latest/)
-[^2]: [UOS Patch, itchat can work just like before](https://github.com/littlecodersh/ItChat/pull/935)
-[^3]: [微信网页版恢复了](https://hostloc.com/thread-946732-1-2.html)
-[^4]: [重磅：使用UOS微信桌面版协议登录，wechaty免费版web协议重放荣光](https://wechaty.js.org/2021/04/13/wechaty-uos-web/)
-[^5]: [mamoe/mirai](https://github.com/mamoe/mirai)
-[^6]: [Mrs4s/go-cqhttp](https://github.com/Mrs4s/go-cqhttp)
-[^7]: [ehForwarderBot/ehForwarderBot](https://github.com/ehForwarderBot/ehForwarderBot)
-[^8]: [ehForwarderBot/efb-telegram-master](https://github.com/ehForwarderBot/efb-telegram-master)
-[^9]: [ehForwarderBot/efb-wechat-slave](https://github.com/ehForwarderBot/efb-wechat-slave)
-[^10]: [ehForwarderBot/efb-qq-slave](https://github.com/ehForwarderBot/efb-qq-slave)
-[^11]: [ehForwarderBot/efb-qq-plugin-go-cqhttp](https://github.com/ehForwarderBot/efb-qq-plugin-go-cqhttp)
-[^12]: [安装并使用 EFB：在 Telegram 收发微信消息](https://blog.1a23.com/2017/01/09/EFB-How-to-Send-and-Receive-Messages-from-WeChat-on-Telegram-zh-CN/)
-[^13]: [安装并使用EFB：在 Telegram 收发QQ 消息](https://milkice.me/2018/09/17/efb-how-to-send-and-receive-messages-from-qq-on-telegram/)](https://milkice.me/2018/09/17/efb-how-to-send-and-receive-messages-from-qq-on-telegram/)
+[^1]: [UOS Patch, itchat can work just like before](https://github.com/littlecodersh/ItChat/pull/935)
+[^2]: [微信网页版恢复了](https://hostloc.com/thread-946732-1-2.html)
+[^3]: [重磅：使用UOS微信桌面版协议登录，wechaty免费版web协议重放荣光](https://wechaty.js.org/2021/04/13/wechaty-uos-web/)
+[^4]: [ehForwarderBot/ehForwarderBot](https://github.com/ehForwarderBot/ehForwarderBot)
+[^5]: [ehForwarderBot/efb-telegram-master](https://github.com/ehForwarderBot/efb-telegram-master)
+[^6]: [ehForwarderBot/efb-wechat-slave](https://github.com/ehForwarderBot/efb-wechat-slave)
+[^7]: [ehForwarderBot/efb-qq-slave](https://github.com/ehForwarderBot/efb-qq-slave)
+[^8]: [ehForwarderBot/efb-qq-plugin-go-cqhttp](https://github.com/ehForwarderBot/efb-qq-plugin-go-cqhttp)
+[^9]: [安装并使用 EFB：在 Telegram 收发微信消息](https://blog.1a23.com/2017/01/09/EFB-How-to-Send-and-Receive-Messages-from-WeChat-on-Telegram-zh-CN/)
+[^10]: [安装并使用EFB：在 Telegram 收发QQ 消息](https://milkice.me/2018/09/17/efb-how-to-send-and-receive-messages-from-qq-on-telegram/)](https://milkice.me/2018/09/17/efb-how-to-send-and-receive-messages-from-qq-on-telegram/)
