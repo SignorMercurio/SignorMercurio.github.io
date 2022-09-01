@@ -214,6 +214,8 @@ servers:
 
 经测试，部分情况下甚至会比客户端更快收到消息。
 
+> 查看日志：`journalctl -f -u efb.service`
+
 ## 结果
 
 经过这番折腾，基本达到了预期目标。目前使用下来非常稳定，且一次登录后不需要再重复登录。即使因为修改配置需要重启 EFB，也依然不需要额外的操作。
@@ -259,4 +261,4 @@ Make 没有官方 Telegram Bot，但也只需要用上文的方法自建一个�
 [^7]: [ehForwarderBot/efb-qq-slave](https://github.com/ehForwarderBot/efb-qq-slave)
 [^8]: [ehForwarderBot/efb-qq-plugin-go-cqhttp](https://github.com/ehForwarderBot/efb-qq-plugin-go-cqhttp)
 [^9]: [安装并使用 EFB：在 Telegram 收发微信消息](https://blog.1a23.com/2017/01/09/EFB-How-to-Send-and-Receive-Messages-from-WeChat-on-Telegram-zh-CN/)
-[^10]: [安装并使用EFB：在 Telegram 收发QQ 消息](https://milkice.me/2018/09/17/efb-how-to-send-and-receive-messages-from-qq-on-telegram/)](https://milkice.me/2018/09/17/efb-how-to-send-and-receive-messages-from-qq-on-telegram/)
+[^10]: [安装并使用EFB：在 Telegram 收发QQ 消息](https://milkice.me/2018/09/17/efb-how-to-send-and-receive-messages-from-qq-on-telegram/)
