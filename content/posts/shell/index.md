@@ -149,6 +149,12 @@ awk 中，`$0` 表示整行内容，`$1` 到 `$n` 表示该行的第 n 个区域
 $ cat ssh.log | sed -E 's/.*Disconnected from (invalid |authenticating )?user (.*) [^ ]+ port [0-9]+( \[preauth\])?$/\2/' | sort | uniq -c | awk '$1 != 1 { print $1 }' | paste -sd+ | bc -l
 ```
 
+杀死指定进程：
+
+```shell
+$ ps -ef | grep [key] | awk '{print $2}' | xargs kill -9
+```
+
 ## 非预装工具
 
 - 语法错误检查 [shellcheck](https://github.com/koalaman/shellcheck)
