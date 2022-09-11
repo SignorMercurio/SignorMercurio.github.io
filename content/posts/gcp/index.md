@@ -1,7 +1,6 @@
 ---
 title: 高枕无忧：Google Cloud Platform 基础
 date: 2021-09-23 10:03:42
-lastmod: 2022-01-12 10:03:42
 tags:
   - GCP
   - 网络

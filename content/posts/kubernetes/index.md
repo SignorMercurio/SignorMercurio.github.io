@@ -1,7 +1,6 @@
 ---
 title: 乘风破浪：Kubernetes 笔记
 date: 2021-10-10 16:31:41
-lastmod: 2021-12-21 16:31:41
 tags:
   - Kubernetes
 categories:

@@ -1,7 +1,6 @@
 ---
 title: HITCON Training 练习记录
 date: 2020-02-16 20:32:19
-lastmod: 2020-05-18 20:32:19
 tags:
   - 栈漏洞
   - fsb

@@ -1,7 +1,6 @@
 ---
 title: how2heap 学习
 date: 2019-12-09 14:36:48
-lastmod: 2020-2-25 14:36:48
 tags:
   - 堆漏洞
 categories:

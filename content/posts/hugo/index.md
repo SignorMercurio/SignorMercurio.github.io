@@ -1,7 +1,6 @@
 ---
 title: 乔迁新居：Hugo 博客的配置与部署
 date: 2022-03-11T13:10:42Z
-lastmod: 2022-06-23
 tags:
   - 实践记录
   - CI/CD

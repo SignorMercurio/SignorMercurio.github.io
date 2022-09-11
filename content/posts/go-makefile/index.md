@@ -18,11 +18,11 @@ Makefile 功能强大但语法复杂，而且通常会和语法同样令人困�
 ## 基础规则
 
 ```makefile
-targets: prerequisites
+targets: prerequisites ｜ order-only-prerequisites
 	commands
 ```
 
-这表示构建 targets 需要先满足 prerequisites，因此如果 prerequisites 如果未满足/未被构建，则会先尝试构建 prerequisites，满足后才会执行 commands来构建 targets。
+这表示构建 targets 需要先满足 prerequisites，因此如果 prerequisites 如果未满足/未被构建，则会先尝试构建 prerequisites，满足后才会执行 commands来构建 targets。order-only-prerequisites 则只有在第一次构建 targets 时才会被构建。
 
 在 Go 项目中，我们通常不直接通过 Makefile 的 targets 构建目标文件，而是利用上述语法容易建立依赖关系的特性进行项目管理。因此通常会使用 `.PHONY` 来表示需要构建一个伪目标而非实际的目标文件：
 
@@ -41,7 +41,7 @@ clean:
 	@-rm -vrf $(OUTPUT_DIR)
 ```
 
-这里用 `@` 开头避免输出命令本身，`-rm` 防止在没有目标目录的情况下报错。`$(OUTPUT_DIR)` 引用 Makefile 中定义的变量，通常通过 `OUTPUT_DIR=/path/to/_output` 的形式定义。同时也存在一些预定义的变量，例如 `$(MAKE)` 就指向 `make` 的二进制文件。
+这里用 `@` 开头避免输出命令本身，`-rm` 防止在没有目标目录的情况下报错中止。`$(OUTPUT_DIR)` 引用 Makefile 中定义的变量，通常通过 `OUTPUT_DIR=/path/to/_output` 的形式定义。同时也存在一些预定义的变量，例如 `$(MAKE)` 就指向 `make` 的二进制文件。
 
 变量定义根据这里等号的不同，赋值方式也有所不同[^1]：
 
@@ -49,6 +49,8 @@ clean:
 - `:=` 直接赋值，引用变量的值在赋值时计算，比较类似常规编程语言的用法
 - `?=` 如果变量没有值才会赋值，在用户自定义配置时很常用
 - `+=` 在后面追加赋值，同样类似常规编程语言的 `+=`
+
+需要注意，Makefile 中定义的变量只在当前 Makefile 有效，若要暴露给其他 Makefile 则需要 `export` 出来。
 
 ## 常见管理内容
 

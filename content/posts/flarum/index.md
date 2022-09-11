@@ -1,7 +1,6 @@
 ---
 title: 又见 LAMP：用 Flarum 搭建功能强大的在线论坛
 date: 2022-03-13T18:28:09Z
-lastmod: 2022-04-11 19:55:00
 tags:
   - PHP
   - 实践记录

@@ -47,6 +47,8 @@ $ docker inspect [docker id] | grep pid
 $ nsenter -t [pid] -n [cmd]
 ```
 
+容器实际上仅仅是设置了 Namespace 的特殊进程，这使得它不存在虚拟化带来的性能损耗，但也使得不同容器必须共享一个宿主机 OS 内核。
+
 ### Cgroups
 
 Cgroups 对进程使用的计算资源进行管控，对不同类型的资源采用不同子系统，并在子系统中采用层级树结构（`/sys/fs/cgroup`）。
@@ -68,15 +70,17 @@ $ echo [pid] > cgroup.procs
 $ echo 25000 > cpu.cfs_quota_us
 ```
 
+然而，如果在容器内执行 `top` 等系统监控命令，由于会读取 `/proc` 下的信息，实际获取的是宿主机的指标。这一问题可以通过 lxcfs 解决。
+
 ### UnionFS
 
 顾名思义，UnionFS 可以对文件系统 “取并集”，也就是将不同目录挂载到同一个虚拟文件系统下。
 
-经典的 Linux 系统中，使用 bootfs 中的 BootLoader 引导加载 Kernel 到内存中，然后 `umount` 掉 bootfs。Kernel 加载完成后，就会使用我们熟悉的 rootfs 文件系统。启动时先将 rootfs 设为 readonly 进行检查，随后再设为 readwrite 供使用。
+经典的 Linux 系统中，使用 bootfs 中的 BootLoader 引导加载 Kernel 到内存中，然后 `umount` 掉 bootfs。Kernel 加载完成后，就会使用我们熟悉的 rootfs 文件系统（`/`）。启动时先将 rootfs 设为 readonly 进行检查，随后再设为 readwrite 供使用。
 
 而在 Docker 启动时，检查完 readonly 的 rootfs 后会再 union mount 一个 readwrite 的文件系统，称为一个 FS 层。后续会继续添加 readwrite 的 FS 层，每次添加时将当前最顶层的 FS 层设为 readonly。这实际上就是 `docker build` 根据 Dockerfile 中每一行的指令堆叠 FS 层的过程。
 
-那么如果要修改下层 readonly FS 层的文件怎么办呢？只需要 Copy-on-Write，将文件复制到可写的顶层并修改即可。这样能成功是因为 Docker 采用的 OverlayFS 在合并上下层同名文件时，优先选择上层文件。
+那么如果要修改下层 readonly FS 层的文件怎么办呢？只需要 Copy-on-Write，将文件复制到可写的顶层并修改即可。如果是删除，则需要在可写的顶层创建 `.wh.` 开头的文件用来 whiteout 下层的同名文件。这样能成功是因为 Docker 采用的 OverlayFS 在合并上下层同名文件时，优先选择上层文件。
 
 最后，FS 层可以在不同镜像之间复用，节省镜像构建时间和硬盘占用。
 
