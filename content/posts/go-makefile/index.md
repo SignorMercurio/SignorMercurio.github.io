@@ -120,7 +120,7 @@ help: Makefile
 	@echo "$$USAGE_OPTIONS"
 ```
 
-这里的 `USAGE_OPTIONS` 需要通过 `define` 定义并 `export` 到全局，随后就能全局通过 `$$USAGE_OPTIONS` 引用，其中可以添加一些支持用户自定义的配置说明。可以参考这个 `USAGE_OPTIONS`：
+这里的 `USAGE_OPTIONS` 需要通过 `define` 定义（本质上是多行变量）并 `export` 到全局，随后就能全局通过 `$$USAGE_OPTIONS` 引用，其中可以添加一些支持用户自定义的配置说明。可以参考这个 `USAGE_OPTIONS`：
 
 ```makefile
 define USAGE_OPTIONS
