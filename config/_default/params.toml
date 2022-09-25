@@ -40,10 +40,10 @@ enableCodeCopy = true
   showHeadingAnchors = true
   showPagination = true
   invertPagination = true
-  showReadingTime = true
+  showReadingTime = false
   showTableOfContents = true
   showTaxonomies = true
-  showWordCount = true
+  showWordCount = false
   showComments = true
   # sharingLinks = ["facebook", "twitter", "pinterest", "reddit", "linkedin", "email"]
 
