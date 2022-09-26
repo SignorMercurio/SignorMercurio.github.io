@@ -6,13 +6,12 @@ tags:
   - 实践记录
 categories:
   - 探索
+featuredImage: 0.png
 ---
 
 和毒瘤软件说再见。
 
 <!--more-->
-
-![](0.png)
 
 ## 动机
 

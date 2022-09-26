@@ -1,11 +1,11 @@
 ---
 title: 冲云破雾：Tailscale 原理简述
-draft: true
 date: 2022-09-23T20:51:55+08:00
 tags:
   - 网络
 categories:
   - 探索
+featuredImage: 0.png
 ---
 
 组建自己的私有零信任网络。
@@ -51,6 +51,87 @@ Tailscale 则通过一个中心化的控制面来解决上述问题。我们稍�
 ### 其他功能
 
 Tailscale 还支持设置全局的 ACL 和流量审计功能，这都是因为其中心化的控制面的存在。子网路由功能则让已连接的节点成为 VPN 网关（此时是 Hub-and-spoke 架构），让其同网段的其余机器也能被其他节点访问，使得增量部署成为可能。
+
+例如，在我的组网中将设备分为 trusted、server 和 untrusted 三类，利用 ACL Tags 区分。我设定了 trusted 设备可以访问任意设备的任意端口；server 设备可以访问其他 server 设备的任意端口、以及 trusted 设备的应用端口；untrusted 设备可以访问 trusted 设备和 server 设备的应用端口。并且，还可以添加测试用例来确保 ACL 规则设置符合预期。
+
+```json
+{
+	"tagOwners": {
+		"tag:trusted":   ["SignorMercurio@github"],
+		"tag:server":    ["SignorMercurio@github"],
+		"tag:untrusted": ["SignorMercurio@github"],
+	},
+	"acls": [
+		// Match absolutely everything.
+		// Comment this section out if you want to define specific restrictions.
+		// {"action": "accept", "src": ["*"], "dst": ["*:*"]},
+
+		// Trusted devices can access everything.
+		{
+			"action": "accept",
+			"src":    ["tag:trusted"],
+			"dst":    ["*:*"],
+		},
+		// Server can access other servers.
+		{
+			"action": "accept",
+			"src":    ["tag:server"],
+			"dst":    ["tag:server:*"],
+		},
+		// Server can access user applications on trusted devices.
+		{
+			"action": "accept",
+			"src":    ["tag:server"],
+			"dst":    ["tag:trusted:1024-65535"],
+		},
+		// Untrusted devices can access user applications on trusted devices and servers.
+		{
+			"action": "accept",
+			"src":    ["tag:untrusted"],
+			"dst":    ["tag:trusted:1024-65535", "tag:server:1024-65535"],
+		},
+	],
+	"tests": [
+		{
+			"src": "tag:trusted",
+			"accept": [
+				"tag:trusted:22",
+				"tag:trusted:8080",
+				"tag:server:22",
+				"tag:server:8080",
+				"tag:untrusted:22",
+				"tag:untrusted:8080",
+			],
+		},
+		{
+			"src": "tag:server",
+			"accept": [
+				"tag:server:22",
+				"tag:server:8080",
+				"tag:trusted:8080",
+			],
+			"deny": [
+				"tag:trusted:22",
+				"tag:untrusted:22",
+				"tag:untrusted:8080",
+			],
+		},
+		{
+			"src": "tag:untrusted",
+			"accept": [
+				"tag:trusted:8080",
+				"tag:server:8080",
+			],
+			"deny": [
+				"tag:trusted:22",
+				"tag:server:22",
+				"tag:untrusted:22",
+				"tag:untrusted:8080",
+			],
+		},
+	],
+}
+```
 
 ## NAT 穿透
 
@@ -198,6 +279,47 @@ Tailscale 所做的就是测试本地网关是否支持这三种协议之一，�
 ### 大整合
 
 现在我们实现了所有这些防火墙穿透和 NAT 穿透技巧，那我们怎么判断什么情况下用什么技巧呢？答案来自一个同样和电话相关（STUN 也是）的协议——[ICE](https://www.rfc-editor.org/rfc/rfc8445)（Interactive Connectivity Establishment）。简单来说，就是把能试的都是一遍，然后选最好的那个。
+
+更详细地说，首先我们需要获取一个本地 socket 可能的地址列表，包含了所有其他设备可能能访问到的本机的 `IP:port` 地址，至少应包括：
+
+- IPv6 的 `IP:port`
+- IPv4 内网 `IP:port`
+- IPv4 公网 `IP:port`（获取自 STUN）
+- IPv4 公网 `IP:port`（通过端口映射协议获取）
+- 手动设置的 endpoint 地址（如静态端口转发）
+
+随后，我们与对端通过 out-of-band 信道交换这一列表，并开始逐一探测对方列表中的项。这些探测包既是用来穿透防火墙和 NAT 的，又能作为健康检查的消息。最后，我们选择一个“最佳”（根据特定的指标）的路径作为我们的穿透方案。
+
+ICE 的指标是预先设定的 LAN > WAN > WAN+NAT，而 Tailscale 则基于 round-trip 延时，最终的顺序通常也是 LAN > WAN > WAN+NAT，但无需预先设定这一顺序。ICE 需要先进入探测阶段随后再进入通信阶段，但 Tailscale 中没有这一顺序限制。上文已经提过，Tailscale 优先建立 DERP 连接使得连接立即可用，同时并行地进行路径发现；一旦发现更优路径，连接就可以自动、透明地升级。
+
+需要注意的是，我们需要确保连接往返的路径是一致的，否则路径上的防火墙可能会因为会话超时而关闭对应端口的访问。方法很简单，持续发送 ping/pong 消息即可。如果追求更强的健壮性，我们还需要检测目前的路径是否可用，如果不可用则切换到另一条路径。考虑到路径不可用的情况较为罕见，一个简单的处理办法是直接降级为 relay，然后重新开始路径发现。
+
+最后，通信的安全性则由上层协议保证，如 QUIC 使用 TLS 证书、WireGuard 采用公钥密码等。而当动态切换路径时，显然基于 IP 地址的安全防护策略没有意义。总之，上层协议至少要保证端到端加密和认证。
+
+如果上层协议安全，那么 ping/pong 消息即使能被伪造也没关系，因为最坏情况下攻击者也只能将你的流量导向他所控制的服务器，但端到端加密决定了攻击者无法获取任何消息内容。当然，我们也可以对这类路径发现包进行加密和认证以进一步提高安全性。
+
+## 总结
+
+可以看到，NAT 穿透问题其实相当复杂——解决大部分情况下的 NAT 穿透比较简单，但对于各类少见情况的处理引入了极大的复杂度。但研究这一问题不仅有趣，而且是值得的：建立 peer-to-peer 连接后，我们能实现许多传统架构下不能做的事。回顾前文，我们可以总结出实现健壮的 NAT 穿透所需要的准备：
+
+- 一个基于 UDP 的协议
+- 对收发数据包的 socket 的直接控制权
+- 一个与对端设备在未建立连接时通信的 out-of-band 信道
+- 若干个 STUN 服务器
+- 一系列后备中转服务器
+
+随后，我们需要：
+
+- 枚举当前 socket 的所有的 `IP:port` 地址
+- 查询 STUN 服务器获取公网 `IP:port` 地址以及所处的 NAT 类型
+- 尝试端口映射协议以获取更多公网 `IP:port`
+- 检测 NAT64 的存在，并通过它获取另一个公网 `IP:port`
+- 将所有获取的地址与密钥和对端通过 out-of-band 信道交换
+- 与对端通过后备中转服务器建立连接并进行通信
+- 尝试与对端的 `IP:port` 建立连接并检测连接质量，必要的话使用穿透 hard NAT 的技巧
+- 发现更优连接线路后，透明地升级到该线路上继续通信
+- 如果当前线路停止工作，降级以保持连接不中断
+- 确保端到端加密和认证
 
 ## 参考资料
 
