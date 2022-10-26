@@ -78,6 +78,8 @@ categories:
     description: Preparing dev environment
 ```
 
+> 注意在 shell 脚本（非交互式环境）中使用别名需要运行 `shopt -s expand_aliases` 来扩展别名。
+
 dotbot 还支持更多细粒度的配置，可以参考 [dotbot 的 README](https://github.com/anishathalye/dotbot)。
 
 ## 差异化配置
