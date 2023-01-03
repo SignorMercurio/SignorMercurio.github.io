@@ -46,7 +46,7 @@ QQ 也曾出现过类似的大规模封禁 QQ 机器人的事件，但相比微�
 
 ### 环境
 
-- 能够同时访问微信、QQ、Telegram 的 API 的服务器（如果不能访问 Telegram API 则需要在服务器上额外配置代理）
+- 能够同时访问微信、QQ、Telegram 的 API 的服务器（如果不能访问 Telegram API 则需要在服务器上额外配置代理或使用境外服务器反代）
 - Python 3.6+
 
 - 可正常使用的 Telegram 账号

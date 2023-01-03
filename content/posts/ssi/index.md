@@ -12,7 +12,7 @@ featuredImage: 0.png
 
 <!--more-->
 
-自主身份（Self-Sovereign Identity）是一种以用户为中心的数字身份机制，允许用户和组织完全控制他们的身份信息。因此，SSI 能让任何人可靠地分享和证明其身份，同时不牺牲隐私[^1]。
+自主身份（Self-Sovereign Identity）是一种以用户为中心的数字身份机制，允许用户和组织完全控制他们的身份信息。因此，SSI 能让任何人可靠地分享和证明其身份，同时不牺牲隐私。
 
 ## 基本原理
 
@@ -26,7 +26,7 @@ SSI 能让我们像在现实中用纸质文件和卡片一样建立自己的数�
 
 ## 技术概念
 
-首先需要了解一些核心概念[^2]：
+首先需要了解一些核心概念：
 
 - Registries - 提供共享的、可信的特定信息，可以认为是可信数据源
 - 密钥 - 通过密码学控制和处理数字身份信息，例如加密和认证
@@ -41,11 +41,11 @@ SSI 的这些核心概念构成了整个技术栈：
 
 技术栈中的每个模块都可以采用不同的技术来实现，于是会诞生不同类型的 SSI 系统。因此，在构建 SSI 系统时，技术和服务选型是需要考虑的重要问题。
 
-![](3.png)
+![](2.png)
 
 完整的身份认证过程则如下图所示，Issuers 首先创建身份信息并签名，随后签发给 Holders。Holders 负责管理这些身份信息，并向 Verifiers 出示合适的身份信息。Verifiers 对其进行验证，通过后提供服务。整个过程依赖于可信的 Registry，并且均涉及对 DID 的读写。
 
-![](2.png)
+![](3.png)
 
 ## 技术细节
 
@@ -64,7 +64,7 @@ SSI 系统中的所有参与者都可以信任 Registries，因此 Registries �
 
 ### Decentralized Identifiers (DIDs)
 
-DID 是 W3C 标准化的一种唯一标识符[^3]，用于构建 DPKI 使得参与者能发现彼此，并认证、加密、签名和验证数据。
+DID 是 W3C 标准化的一种唯一标识符，用于构建 DPKI 使得参与者能发现彼此，并认证、加密、签名和验证数据。
 
 DID 存在多种不同实现，也各有优劣。许多实现依赖于 Registries，例如 did:ebsi 依赖 EBSI、did:web 依赖 DNS，但一些新的实现并不需要 Registries 因为其分发机制基于 peer-to-peer 的交互，例如 did:key。
 
@@ -97,7 +97,7 @@ DID 存在多种不同实现，也各有优劣。许多实现依赖于 Registrie
 
 ### Verifiable Credentials (VCs)
 
-实际的身份数据就存储在 VC 和 VP 中[^4]。VC 由 Issuers 签发，通常至少包含：
+实际的身份数据就存储在 VC 和 VP 中。VC 由 Issuers 签发，通常至少包含：
 
 - Issuer 的 DID
 - 接收者（Holder）的 DID
@@ -239,7 +239,7 @@ VC 和 VP 的传输需要一个安全的协议，通常参与者间的通信建�
 - DIDComm：Decentralized Identity Foundation（DIF）专为 SSI 设计的新协议
 - Credential Handler API：将用户的身份信息连接到 web 应用的浏览器扩展
 
-## 技术实践[^5]
+## 技术实践
 
 以 walt.id 的 SSI Kit 为例，首先构建 SSI Kit（需要 JDK 16+，并会安装 Gradle 7）：
 
@@ -348,7 +348,7 @@ $ ssikit vc verify -p TrustedIssuerDidPolicy -p TrustedSubjectDidPolicy -p JsonS
 
 需要注意的是，`-p` 参数设置的验证规则顺序很重要。在上述命令中，Verifier 会先检查 Issuer 和 Holder 的 DID，只有验证通过后两者的公钥才会被导入，随后才能用 `SignaturePolicy` 检查签名。
 
-## 使用场景[^6]
+## 使用场景
 
 SSI 技术在身份认证相关领域有着广泛的用途，例如：
 
@@ -360,9 +360,9 @@ SSI 技术在身份认证相关领域有着广泛的用途，例如：
 
 ## 参考资料
 
-[^1]: [SSI | Basics](https://docs.walt.id/v/ssikit/ssi-kit/what-is-ssi/ssi-or-basics)
-[^2]: [Technologies & Concepts](https://docs.walt.id/v/ssikit/ssi-kit/what-is-ssi/technologies-and-concepts)
-[^3]: [Decentralized Identifiers (DIDs) v1.0](https://www.w3.org/TR/did-core/)
-[^4]: [Verifiable Credentials Data Model v1.1](https://www.w3.org/TR/vc-data-model/)
-[^5]: [Build end-to-end use cases](https://docs.walt.id/v/ssikit/usage-examples/usage-examples/build-end-to-end-use-cases)
-[^6]: [Use cases](https://docs.walt.id/v/ssikit/ssi-kit/ssi-kit/use-cases)
+1. [SSI | Basics](https://docs.walt.id/v/ssikit/ssi-kit/what-is-ssi/ssi-or-basics)
+1. [Technologies & Concepts](https://docs.walt.id/v/ssikit/ssi-kit/what-is-ssi/technologies-and-concepts)
+1. [Decentralized Identifiers (DIDs) v1.0](https://www.w3.org/TR/did-core/)
+1. [Verifiable Credentials Data Model v1.1](https://www.w3.org/TR/vc-data-model/)
+1. [Build end-to-end use cases](https://docs.walt.id/v/ssikit/usage-examples/usage-examples/build-end-to-end-use-cases)
+1. [Use cases](https://docs.walt.id/v/ssikit/ssi-kit/ssi-kit/use-cases)

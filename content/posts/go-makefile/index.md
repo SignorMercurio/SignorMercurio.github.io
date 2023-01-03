@@ -43,7 +43,7 @@ clean:
 
 这里用 `@` 开头避免输出命令本身，`-rm` 防止在没有目标目录的情况下报错中止。`$(OUTPUT_DIR)` 引用 Makefile 中定义的变量，通常通过 `OUTPUT_DIR=/path/to/_output` 的形式定义。同时也存在一些预定义的变量，例如 `$(MAKE)` 就指向 `make` 的二进制文件。
 
-变量定义根据这里等号的不同，赋值方式也有所不同[^1]：
+变量定义根据这里等号的不同，赋值方式也有所不同：
 
 - `=` 直接赋值，但引用变量的值会在使用时才计算
 - `:=` 直接赋值，引用变量的值在赋值时计算，比较类似常规编程语言的用法
@@ -69,7 +69,7 @@ clean:
 - 添加 license（add-license）、检查 license（verify-license）
 - 关于本 Makefile 如何使用的帮助（help）
 
-## 常用函数[^2]
+## 常用函数
 
 作为 Makefile 语法的一部分，函数能实现许多巧妙的操作，我们会在后文看到这一点。
 
@@ -341,6 +341,6 @@ tools.install: $(addprefix tools.install., $(BUILD_TOOLS) $(RELEASE_TOOLS))
 
 ## 参考资料
 
-[^1]: [Makefile Tutorial By Example](https://makefiletutorial.com/#top)
-[^2]: [跟我一起写 Makefile](https://seisman.github.io/how-to-write-makefile/functions.html)
+1. [Makefile Tutorial By Example](https://makefiletutorial.com/#top)
+1. [跟我一起写 Makefile](https://seisman.github.io/how-to-write-makefile/functions.html)
 

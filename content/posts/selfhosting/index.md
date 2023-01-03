@@ -47,9 +47,9 @@ Host ninja
 
 > 相关资料：
 >
-> - [Use Taildrop](https://tailscale.com/kb/1106/taildrop/)
-> - [Use auth keys](https://tailscale.com/kb/1085/auth-keys/)
-> - [Mouse and Keyboard Isn't Working Correctly When Connected](https://support.parsec.app/hc/en-us/articles/115002623892-Mouse-and-Keyboard-Isn-t-Working-Correctly-When-Connected)
+> 1. [Use Taildrop](https://tailscale.com/kb/1106/taildrop/)
+> 1. [Use auth keys](https://tailscale.com/kb/1085/auth-keys/)
+> 1. [Mouse and Keyboard Isn't Working Correctly When Connected](https://support.parsec.app/hc/en-us/articles/115002623892-Mouse-and-Keyboard-Isn-t-Working-Correctly-When-Connected)
 
 ### 初始化与备份
 
@@ -182,8 +182,8 @@ services:
 
 > 相关资料：
 >
-> - [AList 官方文档](https://alist.nn.ci/zh/)
-> - [Enabling HTTPS](https://tailscale.com/kb/1153/enabling-https/)
+> 1. [AList 官方文档](https://alist.nn.ci/zh/)
+> 1. [Enabling HTTPS](https://tailscale.com/kb/1153/enabling-https/)
 
 ## 反向代理 - Caddy v2
 
@@ -351,8 +351,8 @@ $ docker exec -w /etc/caddy caddy caddy reload
 
 > 相关资料：
 >
-> - [Caddy v2 官方文档](https://caddyserver.com/docs/)
-> - [Best Practice: Use a Docker network](https://nginxproxymanager.com/advanced-config/#best-practice-use-a-docker-network)
+> 1. [Caddy v2 官方文档](https://caddyserver.com/docs/)
+> 1. [Best Practice: Use a Docker network](https://nginxproxymanager.com/advanced-config/#best-practice-use-a-docker-network)
 
 ## 密码管理 - Vaultwarden
 
@@ -407,7 +407,7 @@ ninja.tailnet-48a5.ts.net:8443 {
 
 > 相关资料：
 >
-> - [Vaultwarden Wiki](https://github.com/dani-garcia/vaultwarden/wiki)
+> 1. [Vaultwarden Wiki](https://github.com/dani-garcia/vaultwarden/wiki)
 
 ## Docker 管理 - Portainer
 
@@ -448,9 +448,9 @@ volumes:
 
 > 相关资料：
 >
-> - [Portainer 官方文档](https://docs.portainer.io)
-> - [Does binding the docker socket in read-only mode affect how Traefik works?](https://www.reddit.com/r/Traefik/comments/g46lhh/does_binding_the_docker_socket_in_readonly_mode/)
-> - [What is the Docker security risk of /var/run/docker.sock?](https://stackoverflow.com/questions/40844197/what-is-the-docker-security-risk-of-var-run-docker-sock)
+> 1. [Portainer 官方文档](https://docs.portainer.io)
+> 1. [Does binding the docker socket in read-only mode affect how Traefik works?](https://www.reddit.com/r/Traefik/comments/g46lhh/does_binding_the_docker_socket_in_readonly_mode/)
+> 1. [What is the Docker security risk of /var/run/docker.sock?](https://stackoverflow.com/questions/40844197/what-is-the-docker-security-risk-of-var-run-docker-sock)
 
 ## 服务存活状态监控 - Uptime Kuma
 
@@ -544,9 +544,9 @@ $ sed -i 's/api.telegram.org/tg.example.org/g' /app/server/notification-provider
 
 > 相关资料：
 >
-> - [Uptime Kuma Wiki](https://github.com/louislam/uptime-kuma/wiki)
+> 1. [Uptime Kuma Wiki](https://github.com/louislam/uptime-kuma/wiki)
 >
-> - [搭建uptime-kuma及Ward服务监控面板](https://www.eula.club/blogs/%E6%90%AD%E5%BB%BAuptime-kuma%E5%8F%8AWard%E6%9C%8D%E5%8A%A1%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF.html)
+> 1. [搭建uptime-kuma及Ward服务监控面板](https://www.eula.club/blogs/%E6%90%AD%E5%BB%BAuptime-kuma%E5%8F%8AWard%E6%9C%8D%E5%8A%A1%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF.html)
 
 ## 文件多设备同步 - Syncthing
 
@@ -602,7 +602,7 @@ ninja.tailnet-48a5.ts.net:5443 {
 
 > 相关资料：
 >
-> - [Syncthing 官方文档](https://docs.syncthing.net)
+> 1. [Syncthing 官方文档](https://docs.syncthing.net)
 
 ## 私有 Git 仓库 - Gitea
 
@@ -670,7 +670,7 @@ Host gitea
 
 > 相关资料：
 >
-> - [Gitea 官方文档]()
+> 1. [Gitea 官方文档](https://docs.gitea.io/zh-cn/)
 
 ## Homelab 仪表盘 - Homepage
 
@@ -754,7 +754,7 @@ ninja.tailnet-48a5.ts.net:6443 {
 
 > 相关资料：
 >
-> - [Homepage 官方文档](https://gethomepage.dev/en/installation/)
+> 1. [Homepage 官方文档](https://gethomepage.dev/en/installation/)
 
 ## 代码编辑 - Code Server
 
@@ -820,7 +820,7 @@ ninja.tailnet-48a5.ts.net:1337 {
 
 > 相关资料：
 >
-> - [Code Server 官方文档](https://coder.com/docs/code-server/latest)
+> 1. [Code Server 官方文档](https://coder.com/docs/code-server/latest)
 
 ## 容器反向代理 - Traefik v2
 
@@ -972,8 +972,8 @@ services:
 
 > 相关资料：
 >
-> - [Traefik 官方文档](https://doc.traefik.io/traefik/)
-> - [Use Your Own Certificates with Traefik](https://medium.com/@clintcolding/use-your-own-certificates-with-traefik-a31d785a6441)
+> 1. [Traefik 官方文档](https://doc.traefik.io/traefik/)
+> 1. [Use Your Own Certificates with Traefik](https://medium.com/@clintcolding/use-your-own-certificates-with-traefik-a31d785a6441)
 
 ## 照片管理 - Immich
 
@@ -1191,9 +1191,9 @@ networks:
 
 > 相关资料：
 >
-> - [Immich 官方文档](https://immich.app/docs/overview/introduction)
-> - [Immich Issue #765](https://github.com/immich-app/immich/issues/765)
-> - [Immich Discussions#437](https://github.com/immich-app/immich/discussions/437)
+> 1. [Immich 官方文档](https://immich.app/docs/overview/introduction)
+> 1. [Immich Issue #765](https://github.com/immich-app/immich/issues/765)
+> 1. [Immich Discussions#437](https://github.com/immich-app/immich/discussions/437)
 
 
 ## Homelab 目前已知问题

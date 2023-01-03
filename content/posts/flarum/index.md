@@ -1,5 +1,5 @@
 ---
-title: 又见 LAMP：用 Flarum 搭建功能强大的在线论坛
+title: 昨日再现：用 Flarum 搭建功能强大的在线论坛
 date: 2022-03-13T18:28:09Z
 tags:
   - PHP
@@ -168,7 +168,7 @@ $ composer require overtrue/flysystem-qiniu:^1.0
 
 ## 站点数据迁移
 
-插件直接 composer 重装即可，数据方面主要包括两者：
+插件直接 composer 重装即可（顺便更新），数据方面主要包括两者：
 
 - 数据库数据
 - 静态资源
@@ -248,8 +248,6 @@ SSLSessionTickets Off
         </Directory>
     </VirtualHost>
 </IfModule>
-
-# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
 ```
 
 注意替换对应的域名和路径。最后打开 `ssl` 和 `headers` 模块即可。

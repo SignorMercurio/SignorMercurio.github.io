@@ -311,7 +311,7 @@ OTHER OPTIONS
       signature)
 ```
 
-其他工具有 [HashPump](https://www.cnblogs.com/pcat/p/5478509.html) 和[Hexpand](https://www.cnblogs.com/pcat/p/7668989.html)等，不过个人觉得不如 `hash_extender` 使用方便。
+其他工具有 [HashPump](https://www.cnblogs.com/pcat/p/5478509.html) 和 [Hexpand](https://www.cnblogs.com/pcat/p/7668989.html) 等，不过个人觉得不如 `hash_extender` 使用方便。
 
 ## 防御
 
@@ -326,5 +326,5 @@ HMAC 算法才是真正的解决之道，也就是将哈希值再哈希一次，
 
 ## 参考资料
 
-- [哈希长度拓展攻击 (Hash Length Extension Attacks)](https://xz.aliyun.com/t/2563)
-- [Everything you need to know about hash length extension attacks](https://blog.skullsecurity.org/2012/everything-you-need-to-know-about-hash-length-extension-attacks)
+1. [哈希长度拓展攻击 (Hash Length Extension Attacks)](https://xz.aliyun.com/t/2563)
+1. [Everything you need to know about hash length extension attacks](https://blog.skullsecurity.org/2012/everything-you-need-to-know-about-hash-length-extension-attacks)
