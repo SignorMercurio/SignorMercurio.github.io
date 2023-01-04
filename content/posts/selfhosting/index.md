@@ -3,6 +3,7 @@ title: 私有部署：打造自己的 Homelab
 date: 2022-12-30T16:43:18+08:00
 tags:
   - Docker
+  - 网络
   - 实践记录
 categories:
   - 探索

@@ -6,7 +6,6 @@ tags:
   - 实践记录
 categories:
   - 探索
-featuredImage: 0.png
 ---
 
 和毒瘤软件说再见。
@@ -112,7 +111,7 @@ $ pip install git+https://github.com/XYenon/efb-qq-plugin-go-cqhttp
 ```yaml
 token: "your bot token"
 admins:
-- your Telegram ID
+  - your Telegram ID
 ```
 
 `admins` 决定了哪些用户能管理 Bot，即利用 Bot 收发消息，这里的 Telegram ID 可以通过现有的许多 Bot 获得。然后修改 `~/.ehforwarderbot/profiles/default/config.yaml`，即 EH Forwarder Bot 本身的配置[^4]：
@@ -141,8 +140,8 @@ master_channel: blueset.telegram
 # to be enabled below.
 
 slave_channels:
-- blueset.wechat
-- milkice.qq
+  - blueset.wechat
+  - milkice.qq
 
 # Middlewares
 # -----------
@@ -169,11 +168,11 @@ flags:
 ```yaml
 Client: GoCQHttp
 GoCQHttp:
-    type: HTTP
-    access_token: your token
-    api_root: http://127.0.0.1:5700/
-    host: 127.0.0.1
-    port: 8000
+  type: HTTP
+  access_token: your token
+  api_root: http://127.0.0.1:5700/
+  host: 127.0.0.1
+  port: 8000
 ```
 
 随后，就可以运行 `go-cqhttp` 作为我们的 QQ 客户端了，首次运行会在同目录生成配置文件，需要修改的包括[^10]：
@@ -181,7 +180,7 @@ GoCQHttp:
 ```yaml
 account: # 账号相关
   uin: 123456789 # QQ账号
-  password: '' # 密码为空时使用扫码登录
+  password: "" # 密码为空时使用扫码登录
 
 message:
   # 上报数据类型
@@ -191,9 +190,8 @@ message:
   extra-reply-data: true
 
 # 默认中间件锚点
-default-middlewares: &default
-  # 访问密钥, 强烈推荐在公网的服务器设置
-  access-token: 'your token'
+default-middlewares: &default # 访问密钥, 强烈推荐在公网的服务器设置
+  access-token: "your token"
 
 # 连接服务列表
 servers:
@@ -204,9 +202,9 @@ servers:
   #- pprof: #性能分析服务器
 
   - http: # HTTP 通信设置
-      post:           # 反向HTTP POST地址列表
-        - url: 'http://127.0.0.1:8000'
-          secret: ''
+      post: # 反向HTTP POST地址列表
+        - url: "http://127.0.0.1:8000"
+          secret: ""
 ```
 
 修改后，再次运行 `go-cqhttp`，可以使用 `screen` 也可以作为守护进程。此时，终于可以启动 `ehforwarderbot` 并登录，最后就能在 Telegram bot 中收到相应的信息。
@@ -253,11 +251,11 @@ Make 没有官方 Telegram Bot，但也只需要用上文的方法自建一个�
 
 [^1]: [UOS Patch, itchat can work just like before](https://github.com/littlecodersh/ItChat/pull/935)
 [^2]: [微信网页版恢复了](https://hostloc.com/thread-946732-1-2.html)
-[^3]: [重磅：使用UOS微信桌面版协议登录，wechaty免费版web协议重放荣光](https://wechaty.js.org/2021/04/13/wechaty-uos-web/)
+[^3]: [重磅：使用 UOS 微信桌面版协议登录，wechaty 免费版 web 协议重放荣光](https://wechaty.js.org/2021/04/13/wechaty-uos-web/)
 [^4]: [ehForwarderBot/ehForwarderBot](https://github.com/ehForwarderBot/ehForwarderBot)
 [^5]: [ehForwarderBot/efb-telegram-master](https://github.com/ehForwarderBot/efb-telegram-master)
 [^6]: [ehForwarderBot/efb-wechat-slave](https://github.com/ehForwarderBot/efb-wechat-slave)
 [^7]: [ehForwarderBot/efb-qq-slave](https://github.com/ehForwarderBot/efb-qq-slave)
 [^8]: [ehForwarderBot/efb-qq-plugin-go-cqhttp](https://github.com/ehForwarderBot/efb-qq-plugin-go-cqhttp)
 [^9]: [安装并使用 EFB：在 Telegram 收发微信消息](https://blog.1a23.com/2017/01/09/EFB-How-to-Send-and-Receive-Messages-from-WeChat-on-Telegram-zh-CN/)
-[^10]: [安装并使用EFB：在 Telegram 收发QQ 消息](https://milkice.me/2018/09/17/efb-how-to-send-and-receive-messages-from-qq-on-telegram/)
+[^10]: [安装并使用 EFB：在 Telegram 收发 QQ 消息](https://milkice.me/2018/09/17/efb-how-to-send-and-receive-messages-from-qq-on-telegram/)

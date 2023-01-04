@@ -5,7 +5,6 @@ tags:
   - Go
 categories:
   - 编程语言
-featuredImage: 0.png
 ---
 
 底层包装、中层传递、顶层处理。

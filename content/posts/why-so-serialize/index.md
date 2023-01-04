@@ -11,8 +11,6 @@ categories:
 
 <!--more-->
 
-![](0.jpg)
-
 ## Abstract
 
 A brief and easy-to-understand introduction of deserialization vulnerability is presented in this article. Demonstrating with examples in PHP and Java programming language, the article shows how to achieve RCE by exploiting such vulnerabilities and several ways of defending, including language-specific methods and DXP.
@@ -25,7 +23,7 @@ An attacker can trigger RCE attacks through a dangerous, yet commonly-used techn
 
 **Serialization** is the process of turning some object into a data format that can be restored later. People often serialize objects in order to save them to storage, or to send as part of communications.
 
-Serialization is adapted as a cross-platform, language-independent technique to address the problem of data persistence as well as data transmission. In *RFC 1014*[^1], a standard was introduced where objects are serialized to bytes and vice versa.
+Serialization is adapted as a cross-platform, language-independent technique to address the problem of data persistence as well as data transmission. In _RFC 1014_[^1], a standard was introduced where objects are serialized to bytes and vice versa.
 
 On the other hand, **deserialization** is the reverse of that process, taking data structured from some format, and rebuilding it into an object. Today, the most popular data format for serializing data is JSON. Before that, it was XML.
 
@@ -35,7 +33,7 @@ Unfortunately, the features of these native deserialization mechanisms can be re
 
 ### RCE Attack
 
-RCE, namely *Remote Code Execution*, is one of the most common types of attacks towards web applications. By triggering RCE, an attacker is able to execute PHP, Python, Java or even OS-level code directly from the Internet. Therefore, the attacker basically controls the server behind the web application, which is surely critical.
+RCE, namely _Remote Code Execution_, is one of the most common types of attacks towards web applications. By triggering RCE, an attacker is able to execute PHP, Python, Java or even OS-level code directly from the Internet. Therefore, the attacker basically controls the server behind the web application, which is surely critical.
 
 ## Examples of Serialized Data
 
@@ -43,7 +41,7 @@ Here we present two examples of serialized data in PHP and Java.
 
 ### PHP
 
-For example, here is a PHP class `A` containing an integer and an array of strings. And `b` is an instance of class `A`. 
+For example, here is a PHP class `A` containing an integer and an array of strings. And `b` is an instance of class `A`.
 
 ```php
 <?php
@@ -71,7 +69,7 @@ Readers may find this rule of serialization easy to remember, because it uses on
 
 ### Java
 
-In Java, things are not as simple as in PHP. 
+In Java, things are not as simple as in PHP.
 
 ```java
 import java.io.Serializable;
@@ -160,7 +158,7 @@ class L {
 
 Here `merc` contains an attribute `test`, which is actually an instance of class `L`. It will call `goodbye()` function of class `L` when being destroyed, and everything seems normal.
 
-However, here is another class `Evil` with a `goodbye()` function containing one of the most dangerous functions `eval()`. 
+However, here is another class `Evil` with a `goodbye()` function containing one of the most dangerous functions `eval()`.
 
 ```php
 class Evil {
@@ -215,11 +213,11 @@ So after our modification, in the `goodbye()` function of `test` we'll execute `
 <?php
 class convent {
     var $warn = "No hacker.";
-    
+
     function __destruct() {
         eval($this->warn);
     }
-    
+
     function __wakeup() {
         foreach(get_object_vars($this) as $k => $v) {
             $this->$k = null;
@@ -280,9 +278,9 @@ Here is a simple example illustrating how we can maliciously override this funct
 ```java
 public class Evil implements Serializable {
     public String cmd;
-    
+
     private void readObject(java.io.ObjectInputStream stream) throws Exception {
-    
+
         stream.defaultReadObject();
         Runtime.getRuntime().exec(cmd);
     }
@@ -358,7 +356,7 @@ method.invoke(user, "merc");
 
 #### Executing Code
 
-Finally, to achieve RCE we need a general way to execute arbitrary code. Using the class `java.lang.Runtime` instead, we retrieve its static method `getRuntime()` and invoke it with `null` because it is *static*. Then we retrieve the `exec()` method and invoke it with the object `runtime` as well as a string `calc.exe`, starting the calculator to show that we have achieved RCE.
+Finally, to achieve RCE we need a general way to execute arbitrary code. Using the class `java.lang.Runtime` instead, we retrieve its static method `getRuntime()` and invoke it with `null` because it is _static_. Then we retrieve the `exec()` method and invoke it with the object `runtime` as well as a string `calc.exe`, starting the calculator to show that we have achieved RCE.
 
 ```java
 // java.lang.Runtime.getRuntime().exec("calc.exe");
@@ -366,7 +364,7 @@ Class runtimeClass = Class.forName("java.lang.Runtime");
 
 // getRuntime() is static
 Object runtime = runtimeClass.getMethod("getRuntime").invoke(null);
-        
+
 runtimeClass.getMethod("exec", String.class).invoke(runtime, "calc.exe");
 ```
 
@@ -380,7 +378,7 @@ For instance, suppose the target application blacklisted the word `Runtime`, lik
 
 ### Locating Vulnerability
 
-Now we will consider the problem from the defender's perspective. That is, how we can locate the deserialization vulnerabilities in our Java code. 
+Now we will consider the problem from the defender's perspective. That is, how we can locate the deserialization vulnerabilities in our Java code.
 
 First we can check out our source code, starting from the entrypoints of deserialization, like these methods involving deserializing actions[^8].
 
@@ -394,19 +392,19 @@ ObjectMapper.readValue
 JSON.parseObject
 ```
 
-Examining the libraries we have used also helps. For example, if we have used the library **CommonsCollections**, we have to pay extra attention to security issues. You may found tools like *ysoserial*[^9], *marshalsec*[^10] and *JavaDeserH2HC*[^11] quite helpful.
+Examining the libraries we have used also helps. For example, if we have used the library **CommonsCollections**, we have to pay extra attention to security issues. You may found tools like _ysoserial_[^9], _marshalsec_[^10] and _JavaDeserH2HC_[^11] quite helpful.
 
-Last but not least, remember that every class that can be serialized must implement the `Serializable` interface, so you just need to watch out for these classes. 
+Last but not least, remember that every class that can be serialized must implement the `Serializable` interface, so you just need to watch out for these classes.
 
 On the other hand, we can monitor the network traffic and look for specific bytes. `AC ED 00 05` often appears at the beginning of serialized data in Java, while `rO0AB` is its base64-encoded form[^3]. There are also special network protocols in Java like RMI and JMX that is completely based on serialization[^7]. Take care of them.
 
 ### Defending
 
-Once we have located the potential vulnerabilities, we naturally think about how to defend deserialization attacks. 
+Once we have located the potential vulnerabilities, we naturally think about how to defend deserialization attacks.
 
-Sanitize your data before deserializing is always a good choice, but there is no way to guarantee this in large projects. 
+Sanitize your data before deserializing is always a good choice, but there is no way to guarantee this in large projects.
 
-Alternatively, you may try to ban some dangerous classes, like `InvokerTransformer`. Luckily, tools like *SerialKiller*[^12] and *contrast-rO0*[^13] can help us with that. 
+Alternatively, you may try to ban some dangerous classes, like `InvokerTransformer`. Luckily, tools like _SerialKiller_[^12] and _contrast-rO0_[^13] can help us with that.
 
 What's more, you can also define a whitelist, so that only those classes on the whitelist can be deserialized.
 
@@ -418,7 +416,7 @@ protected Class<?> resolveClass(ObjectStreamClass desc) {
             "Unauthorized unserialization attempt",
             desc.getName());
     }
-    
+
     return super.resolveClass(desc);
 }
 ```
@@ -448,8 +446,8 @@ JSON on the other hand, now replaces XML with a simpler grammar indicating key-v
 ```json
 {
   "name": "Tom",
-  "Grade":1, 
-  "age":11, 
+  "Grade": 1,
+  "age": 11,
   "gender": "M"
 }
 ```

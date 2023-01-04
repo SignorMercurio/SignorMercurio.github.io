@@ -3,9 +3,9 @@ title: 自主身份：SSI 技术实践
 date: 2022-07-02T11:04:38+08:00
 tags:
   - 分布式系统
+  - 认证
 categories:
-  - 探索
-featuredImage: 0.png
+  - Web 安全
 ---
 
 更安全方便地管理、分享和验证身份信息。
@@ -72,26 +72,26 @@ DID 存在多种不同实现，也各有优劣。许多实现依赖于 Registrie
 
 ```json
 {
-    "@context": [
-        "https://w3id.org/did/v1"
-    ],
-    "authentication": [
-        "did:ebsi:2A9RkiYZJsBHT1nSB3HZAwYMNfgM7Psveyodxrr8KgFvGD5y#1a7514b2d58141c3982021a6323b99bf"
-    ],
-    "id": "did:ebsi:2A9RkiYZJsBHT1nSB3HZAwYMNfgM7Psveyodxrr8KgFvGD5y",
-    "verificationMethod": [{
-        "controller": "did:ebsi:2A9RkiYZJsBHT1nSB3HZAwYMNfgM7Psveyodxrr8KgFvGD5y",
-        "id": "did:ebsi:2A9RkiYZJsBHT1nSB3HZAwYMNfgM7Psveyodxrr8KgFvGD5y#1a7514b2d58141c3982021a6323b99bf",
-        "publicKeyJwk": {
-            "alg": "EdDSA",
-            "crv": "Ed25519",
-            "kid": "1a7514b2d58141c3982021a6323b99bf",
-            "kty": "OKP",
-            "use": "sig",
-            "x": "tqJADByHRU3YxswewQD4wQYXU9tB43j3PfjofsYEvqs"
-        },
-        "type": "Ed25519VerificationKey2018"
-    }]
+  "@context": ["https://w3id.org/did/v1"],
+  "authentication": [
+    "did:ebsi:2A9RkiYZJsBHT1nSB3HZAwYMNfgM7Psveyodxrr8KgFvGD5y#1a7514b2d58141c3982021a6323b99bf"
+  ],
+  "id": "did:ebsi:2A9RkiYZJsBHT1nSB3HZAwYMNfgM7Psveyodxrr8KgFvGD5y",
+  "verificationMethod": [
+    {
+      "controller": "did:ebsi:2A9RkiYZJsBHT1nSB3HZAwYMNfgM7Psveyodxrr8KgFvGD5y",
+      "id": "did:ebsi:2A9RkiYZJsBHT1nSB3HZAwYMNfgM7Psveyodxrr8KgFvGD5y#1a7514b2d58141c3982021a6323b99bf",
+      "publicKeyJwk": {
+        "alg": "EdDSA",
+        "crv": "Ed25519",
+        "kid": "1a7514b2d58141c3982021a6323b99bf",
+        "kty": "OKP",
+        "use": "sig",
+        "x": "tqJADByHRU3YxswewQD4wQYXU9tB43j3PfjofsYEvqs"
+      },
+      "type": "Ed25519VerificationKey2018"
+    }
+  ]
 }
 ```
 
@@ -115,10 +115,7 @@ DID 存在多种不同实现，也各有优劣。许多实现依赖于 Registrie
     "https://essif.europa.eu/schemas/eidas/2020/v1"
   ],
   "id": "education#higherEducation#3fea53a4-0432-4910-ac9c-69ah8da3c37f",
-  "type": [
-    "VerifiableCredential",
-    "VerifiableAttestation"
-  ],
+  "type": ["VerifiableCredential", "VerifiableAttestation"],
   "issuer": "did:ebsi:2757945549477fc571663bee12042873fe555b674bd294a3",
   "issuanceDate": "2019-06-22T14:11:44Z",
   "validFrom": "2019-06-22T14:11:44Z",
@@ -136,9 +133,7 @@ DID 存在多种不同实现，也各有优劣。许多实现依赖于 Registrie
   "evidence": [
     {
       "id": "https://essif.europa.eu/tsr-va/evidence/f2aeec97-fc0d-42bf-8ca7-0548192d5678",
-      "type": [
-        "DocumentVerification"
-      ],
+      "type": ["DocumentVerification"],
       "verifier": "did:ebsi:2962fb784df61baa267c8132497539f8c674b37c1244a7a",
       "evidenceDocument": "Passport",
       "subjectPresence": "Physical",
@@ -166,13 +161,8 @@ VP 则由 Holders 创建和签名，包含了来自一个或多个 VC 的身份�
 
 ```json
 {
-  "@context": [
-    "https://www.w3.org/2018/credentials/v1"
-  ],
-  "type": [
-    "VerifiableCredential",
-    "VerifiablePresentation"
-  ],
+  "@context": ["https://www.w3.org/2018/credentials/v1"],
+  "type": ["VerifiableCredential", "VerifiablePresentation"],
   "verifiableCredential": [
     {
       "@context": [
@@ -195,10 +185,7 @@ VP 则由 Holders 创建和签名，包含了来自一个或多个 VC 的身份�
         "type": "EcdsaSecp256k1Signature2019",
         "verificationMethod": "did:ebsi-eth:000001234#key-1"
       },
-      "type": [
-        "VerifiableCredential",
-        "VerifiableAuthorization"
-      ]
+      "type": ["VerifiableCredential", "VerifiableAuthorization"]
     },
     {
       "@context": [
@@ -209,10 +196,7 @@ VP 则由 Holders 创建和签名，包含了来自一个或多个 VC 的身份�
         "birthDate": "1958-08-17",
         "givenName": "JOHN",
         "id": "did:example:123",
-        "type": [
-          "PermanentResident",
-          "Person"
-        ]
+        "type": ["PermanentResident", "Person"]
       },
       "issuer": "did:example:456",
       "proof": {
@@ -222,10 +206,7 @@ VP 则由 Holders 创建和签名，包含了来自一个或多个 VC 的身份�
         "type": "Ed25519Signature2018",
         "verificationMethod": "did:example:456#key-1"
       },
-      "type": [
-        "VerifiableCredential",
-        "PermanentResidentCard"
-      ]
+      "type": ["VerifiableCredential", "PermanentResidentCard"]
     }
   ]
 }

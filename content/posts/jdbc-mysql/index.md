@@ -5,8 +5,7 @@ tags:
   - Java
   - 实践记录
 categories:
-  - 探索
-featuredImage: 0.jpg
+  - 后端
 ---
 
 大概是第二次被 MySQL 玩了，也可能是第三次。

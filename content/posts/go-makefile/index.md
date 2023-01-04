@@ -3,10 +3,9 @@ title: 步步为营：在 Go 项目中编写 Makefile
 date: 2022-06-22T15:09:26+08:00
 tags:
   - Go
-  - Makefile
+  - CI/CD
 categories:
   - 编程语言
-featuredImage: 0.png
 ---
 
 用古老的工具构建现代化的应用。
@@ -22,7 +21,7 @@ targets: prerequisites ｜ order-only-prerequisites
 	commands
 ```
 
-这表示构建 targets 需要先满足 prerequisites，因此如果 prerequisites 如果未满足/未被构建，则会先尝试构建 prerequisites，满足后才会执行 commands来构建 targets。order-only-prerequisites 则只有在第一次构建 targets 时才会被构建。
+这表示构建 targets 需要先满足 prerequisites，因此如果 prerequisites 如果未满足/未被构建，则会先尝试构建 prerequisites，满足后才会执行 commands 来构建 targets。order-only-prerequisites 则只有在第一次构建 targets 时才会被构建。
 
 在 Go 项目中，我们通常不直接通过 Makefile 的 targets 构建目标文件，而是利用上述语法容易建立依赖关系的特性进行项目管理。因此通常会使用 `.PHONY` 来表示需要构建一个伪目标而非实际的目标文件：
 
@@ -73,29 +72,29 @@ clean:
 
 作为 Makefile 语法的一部分，函数能实现许多巧妙的操作，我们会在后文看到这一点。
 
-| 函数名                                | 功能描述                                                     |
-| :------------------------------------ | :----------------------------------------------------------- |
+| 函数名                                | 功能描述                                                                                                                                                                         |
+| :------------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `$(origin <variable>)`                | 返回变量状态： undefined-未定义; default-默认的定义; environment-环境变量; file-被定义在 Makefile 中; command line-被命令行定义; override-被 override 定义; automatic-自动化变量 |
-| `$(addsuffix <suffix>,<names...>)`    | 把 `<suffix>` 加到 `<names>` 中的每个单词后面，并返回加过后缀的文件名序列 |
-| `$(addprefix <prefix>,<names...>)`    | 把 `<prefix>` 加到 `<names>` 中的每个单词前面，并返回加过前缀的文件名序列 |
-| `$(wildcard <pattern>)`               | 扩展通配符，例如 `$(wildcard *.go)` 能匹配所有 go 文件       |
-| `$(word <n>,<text>)`                  | 返回 `<text>` 的第 `<n>` 个单词。如 `<n>` 比 `<text>` 中的单词数要大，返回空字符串 |
-| `$(subst <from>,<to>,<text>)`         | 把 `<text>` 中的 `<from>` 替换成 `<to>` 并返回               |
-| `$(eval <text>)`                      | 将 `<text>` 的内容将作为 Makefile 的一部分而被 make 解析和执行 |
-| `$(firstword <text>)`                 | 返回 `<text>` 的第一个单词                                   |
-| `$(lastword <text>)`                  | 返回 `<text>` 的最后一个单词                                 |
-| `$(abspath <text>)`                   | 将 `<text>` 中的路径转换成绝对路径并返回                     |
-| `$(shell cat foo)`                    | 执行操作系统命令，并返回操作结果                             |
-| `$(info <text ...>)`                  | 输出一段信息                                                 |
-| `$(warning <text ...>)`               | 输出一段警告信息，但继续执行                                 |
-| `$(error <text ...>)`                 | 输出一段错误信息，并停止执行                                 |
-| `$(filter <pattern...>,<text>)`       | 以 `<pattern>` 过滤 `<text>` 中的单词，返回符合 `<pattern>` 的单词 |
-| `$(filter-out <pattern...>,<text>)`   | 以 `<pattern>` 过滤 `<text>` 中的单词，返回不符合 `<pattern>` 的单词 |
-| `$(dir <names...>)`                   | 从 `<names>` 中取出目录部分。目录部分是指最后一个 `/` 之前的部分。 |
-| `$(notdir <names...>)`                | 从 `<names>` 中取出非目录部分。                              |
-| `$(strip <text>)`                     | 去掉 `<text>` 中开头和结尾的空字符                           |
-| `$(suffix <names...>)`                | 返回 `<names>` 中各个文件名的后缀。如果文件名没有后缀，则返回空字串 |
-| `$(foreach <variable>,<list>,<text>)` | 把 `<list>` 中的单词逐一取出放到 `<variable>` 所指定的变量中，然后执行 `<text>`。每次 `<text>` 会返回一个字符串，返回循环结束后返回的字符串序列（以空格分隔）。 |
+| `$(addsuffix <suffix>,<names...>)`    | 把 `<suffix>` 加到 `<names>` 中的每个单词后面，并返回加过后缀的文件名序列                                                                                                        |
+| `$(addprefix <prefix>,<names...>)`    | 把 `<prefix>` 加到 `<names>` 中的每个单词前面，并返回加过前缀的文件名序列                                                                                                        |
+| `$(wildcard <pattern>)`               | 扩展通配符，例如 `$(wildcard *.go)` 能匹配所有 go 文件                                                                                                                           |
+| `$(word <n>,<text>)`                  | 返回 `<text>` 的第 `<n>` 个单词。如 `<n>` 比 `<text>` 中的单词数要大，返回空字符串                                                                                               |
+| `$(subst <from>,<to>,<text>)`         | 把 `<text>` 中的 `<from>` 替换成 `<to>` 并返回                                                                                                                                   |
+| `$(eval <text>)`                      | 将 `<text>` 的内容将作为 Makefile 的一部分而被 make 解析和执行                                                                                                                   |
+| `$(firstword <text>)`                 | 返回 `<text>` 的第一个单词                                                                                                                                                       |
+| `$(lastword <text>)`                  | 返回 `<text>` 的最后一个单词                                                                                                                                                     |
+| `$(abspath <text>)`                   | 将 `<text>` 中的路径转换成绝对路径并返回                                                                                                                                         |
+| `$(shell cat foo)`                    | 执行操作系统命令，并返回操作结果                                                                                                                                                 |
+| `$(info <text ...>)`                  | 输出一段信息                                                                                                                                                                     |
+| `$(warning <text ...>)`               | 输出一段警告信息，但继续执行                                                                                                                                                     |
+| `$(error <text ...>)`                 | 输出一段错误信息，并停止执行                                                                                                                                                     |
+| `$(filter <pattern...>,<text>)`       | 以 `<pattern>` 过滤 `<text>` 中的单词，返回符合 `<pattern>` 的单词                                                                                                               |
+| `$(filter-out <pattern...>,<text>)`   | 以 `<pattern>` 过滤 `<text>` 中的单词，返回不符合 `<pattern>` 的单词                                                                                                             |
+| `$(dir <names...>)`                   | 从 `<names>` 中取出目录部分。目录部分是指最后一个 `/` 之前的部分。                                                                                                               |
+| `$(notdir <names...>)`                | 从 `<names>` 中取出非目录部分。                                                                                                                                                  |
+| `$(strip <text>)`                     | 去掉 `<text>` 中开头和结尾的空字符                                                                                                                                               |
+| `$(suffix <names...>)`                | 返回 `<names>` 中各个文件名的后缀。如果文件名没有后缀，则返回空字串                                                                                                              |
+| `$(foreach <variable>,<list>,<text>)` | 把 `<list>` 中的单词逐一取出放到 `<variable>` 所指定的变量中，然后执行 `<text>`。每次 `<text>` 会返回一个字符串，返回循环结束后返回的字符串序列（以空格分隔）。                  |
 
 ## 生成帮助信息
 
@@ -343,4 +342,3 @@ tools.install: $(addprefix tools.install., $(BUILD_TOOLS) $(RELEASE_TOOLS))
 
 1. [Makefile Tutorial By Example](https://makefiletutorial.com/#top)
 1. [跟我一起写 Makefile](https://seisman.github.io/how-to-write-makefile/functions.html)
-

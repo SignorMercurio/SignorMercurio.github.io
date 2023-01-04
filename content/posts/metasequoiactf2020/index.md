@@ -10,7 +10,6 @@ tags:
   - JWT
 categories:
   - 比赛记录
-featuredImage: 0.png
 ---
 
 第一次出题，经验不足，感谢参赛选手海涵。

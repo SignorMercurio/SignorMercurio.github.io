@@ -2,7 +2,6 @@
 title: 实战 SSH 端口转发
 date: 2019-03-04 18:13:07
 tags:
-  - SSH
   - 网络
 categories:
   - 探索

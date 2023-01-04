@@ -5,7 +5,6 @@ tags:
   - 实践记录
 categories:
   - 前端
-featuredImage: 0.png
 ---
 
 关于这个网站是如何诞生的。

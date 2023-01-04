@@ -7,7 +7,6 @@ tags:
   - Hash
 categories:
   - 比赛记录
-featuredImage: 0.png
 ---
 
 打完比赛就回去必修课期末考，于是现在才整理。这里只记录了少数几题的 writeup。
@@ -200,7 +199,7 @@ print flag
 
 对于 `index.php` 也同理：`?file=php://filter/convert.base64-encode/resource=index.php`。
 
-![图 12](0.png)
+![图 12](feature.png)
 
 得到 index.php：
 

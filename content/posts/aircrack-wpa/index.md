@@ -7,7 +7,6 @@ tags:
   - 实践记录
 categories:
   - 安全工具
-featuredImage: 0.jpg
 ---
 
 《无线网络安全》作业。梦回大一。

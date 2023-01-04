@@ -10,7 +10,6 @@ tags:
   - 堆漏洞
 categories:
   - 二进制安全
-featuredImage: 0.jpg
 ---
 
 画风很可爱的 Pwn 题练习网站。

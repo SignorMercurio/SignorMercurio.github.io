@@ -5,8 +5,7 @@ tags:
   - Docker
   - 实践记录
 categories:
-  - 探索
-featuredImage: 0.png
+  - 后端
 ---
 
 最近 H1ve 平台开源了，这是我在 GitHub 上见到的目前完成度最高的带 AWD 模式的平台。尽管如此依然遇到了不少 bug，经修复后现在的版本还算稳定。

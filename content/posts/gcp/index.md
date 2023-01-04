@@ -7,7 +7,6 @@ tags:
   - 认证
 categories:
   - 云
-featuredImage: 0.png
 ---
 
 待更新。

@@ -6,7 +6,6 @@ tags:
   - 实践记录
 categories:
   - 自动化
-featuredImage: 0.png
 ---
 
 工作中写的一份指南文档。由于用的是测试环境，并没有需要脱敏的地方。

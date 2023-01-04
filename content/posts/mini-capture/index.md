@@ -8,7 +8,6 @@ tags:
   - 实践记录
 categories:
   - 安全工具
-featuredImage: 0.png
 ---
 
 以 Burpsuite 为例。
@@ -46,4 +45,4 @@ featuredImage: 0.png
 
 ## 原理
 
-![图 1｜原理示意图](0.png)
+![图 1｜原理示意图](feature.png)

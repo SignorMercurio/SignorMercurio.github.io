@@ -8,8 +8,7 @@ tags:
   - JWT
   - 项目
 categories:
-  - 探索
-featuredImage: 0.png
+  - 后端
 ---
 
 写 Pianoforte 时第一个遇到的可复用模块。

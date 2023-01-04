@@ -6,7 +6,6 @@ tags:
   - 堆漏洞
 categories:
   - 二进制安全
-featuredImage: 0.png
 ---
 
 The heap is a beautiful mess.
@@ -438,7 +437,7 @@ chunk 大小（含 chunk 头部）：0x10-0x40（64 位 0x20-0x80）B，相邻 b
 非常像缓冲区 buffer，大小超过 fast bins 阈值的 chunk 被释放时会加入到这里，这使得 ptmalloc2 可以复用最近释放的 chunk，从而提升效率。
 
 unsorted bin 是一个双向循环链表，chunk 大小：大于 `global_max_fast`。
-![图 7｜unsorted bin](0.png)
+![图 7｜unsorted bin](feature.png)
 
 当程序申请大于 `global_max_fast` 内存时，分配器遍历 unsorted bin，每次取最后的一个 unsorted chunk。
 

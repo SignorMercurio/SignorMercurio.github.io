@@ -10,7 +10,6 @@ tags:
   - 实践记录
 categories:
   - 云
-featuredImage: 0.png
 ---
 
 GitHub Actions 还可以配合 Issue 用来做开源社区的无聊小游戏，这就留到《三探 GitHub Actions》再说了。

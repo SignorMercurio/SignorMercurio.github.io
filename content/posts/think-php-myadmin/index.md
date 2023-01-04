@@ -5,7 +5,6 @@ tags:
   - PHP
 categories:
   - Web 安全
-featuredImage: 0.jpg
 ---
 
 包含 ThinkPHP 5.x RCE / ThinkPHP 5.0.23 RCE / ThinkPHP 2.x RCE / ThinkPHP 5.x SQL 注入导致敏感信息泄露 / phpMyAdmin 4.8.1 远程文件包含 / phpMyAdmin 4.0.x-4.6.2 认证用户 RCE / phpMyAdmin 2.x setup.php 反序列化

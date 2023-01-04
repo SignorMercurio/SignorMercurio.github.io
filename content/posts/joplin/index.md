@@ -5,7 +5,6 @@ tags:
   - 实践记录
 categories:
   - 探索
-featuredImage: 0.png
 ---
 
 折腾笔记软件。
@@ -228,3 +227,7 @@ $ docker run -d --name joplin_server -v joplin:/home/joplin --env-file ~/joplin/
 - 云同步接口不多
 - 剪藏墙外文章速度会有点慢，还没研究过怎么给它配代理
 - UI 可以更好看
+
+> 更新：
+>
+> 到目前为止的笔记软件探索之路：印象笔记->Joplin->语雀+Obsidian->语雀+Notion

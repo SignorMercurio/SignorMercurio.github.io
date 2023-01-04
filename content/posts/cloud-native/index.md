@@ -7,7 +7,6 @@ tags:
   - ARM
 categories:
   - 云
-featuredImage: 0.png
 ---
 
 精密而复杂。

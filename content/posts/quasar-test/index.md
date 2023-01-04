@@ -6,7 +6,6 @@ tags:
   - 实践记录
 categories:
   - 前端
-featuredImage: 0.png
 ---
 
 对 [Quasar 文档测试部分](https://next.quasar.dev/quasar-cli/testing-and-auditing#introduction) 和 [@quasar/testing 文档](https://testing.quasar.dev/) 部分内容进行了简单翻译，顺便记录了一些目前使用 Quasar 框架进行测试时存在的问题。
@@ -132,24 +131,24 @@ $ quasar ext add @quasar/testing-unit-jest
 `@quasar/testing` 是基于 Jest 26 和 `@vue/test-utils` 的，所以暂时不支持 Vue 3。编写测试时，首先需要用 `mountQuasar` 或者 `mountFactory` 提供一个 Quasar 框架的环境并挂载组件，然后在 `options` 参数中，指定组件需要用到的 Quasar 组件。比如测一个最简单的 404 页面：
 
 ```typescript
-import { mountFactory } from '@quasar/quasar-app-extension-testing-unit-jest'
-import { QBtn } from 'quasar'
-import Error404 from 'pages/Error404.vue'
+import { mountFactory } from "@quasar/quasar-app-extension-testing-unit-jest";
+import { QBtn } from "quasar";
+import Error404 from "pages/Error404.vue";
 
 const factory = mountFactory(Error404, {
   quasar: {
     components: { QBtn },
   },
-})
+});
 
-describe('Error404', () => {
-  test('shows correct info', () => {
-    const wrapper = factory()
-    const info = wrapper.get('[dt="info"]')
+describe("Error404", () => {
+  test("shows correct info", () => {
+    const wrapper = factory();
+    const info = wrapper.get('[dt="info"]');
 
-    expect(info.text()).toContain(' 页面找不到了')
-  })
-})
+    expect(info.text()).toContain(" 页面找不到了");
+  });
+});
 ```
 
 需要注意的是，在测试使用 QPage 组件时，需要提供原本由上层 QLayout 提供的一些参数。这里可以用 `qLayoutInjections` 来实现：
@@ -158,8 +157,8 @@ describe('Error404', () => {
 import {
   mountFactory,
   qLayoutInjections,
-} from '@quasar/quasar-app-extension-testing-unit-jest'
-import Login from 'pages/Login.vue'
+} from "@quasar/quasar-app-extension-testing-unit-jest";
+import Login from "pages/Login.vue";
 
 const factory = mountFactory(Login, {
   mount: {
@@ -167,7 +166,7 @@ const factory = mountFactory(Login, {
     // ...
   },
   // ...
-})
+});
 ```
 
 随后，对于一些 Vue 插件比如 VueRouter、Vuex 还有 VueCompositionApi 等等，可以通过 `plugins` 引入。前两者还需要在 `mount` 中指定给当前的 `localVue`（这种方式不需要 `createLocalVue`）。
@@ -176,13 +175,13 @@ const factory = mountFactory(Login, {
 import {
   mountFactory,
   qLayoutInjections,
-} from '@quasar/quasar-app-extension-testing-unit-jest'
-import VueCompositionApi from '@vue/composition-api'
-import VueRouter from 'vue-router'
-import Vuex from 'vuex'
-import Router from 'src/router'
-import Store from 'src/store'
-import Login from 'pages/Login.vue'
+} from "@quasar/quasar-app-extension-testing-unit-jest";
+import VueCompositionApi from "@vue/composition-api";
+import VueRouter from "vue-router";
+import Vuex from "vuex";
+import Router from "src/router";
+import Store from "src/store";
+import Login from "pages/Login.vue";
 
 const factory = mountFactory(Login, {
   plugins: [VueCompositionApi, VueRouter, Vuex],
@@ -193,7 +192,7 @@ const factory = mountFactory(Login, {
     // ...
   },
   // ...
-})
+});
 ```
 
 最后则是处理 `@quasar/testing` 的 [一个 bug](https://github.com/quasarframework/quasar-testing/issues/158)，将涉及到 Quasar Portal 的组件 mock 掉，否则会因为无法访问 `Vue` 实例上的 `$q` 而报 warning。
@@ -202,19 +201,19 @@ const factory = mountFactory(Login, {
 import {
   mountFactory,
   qLayoutInjections,
-} from '@quasar/quasar-app-extension-testing-unit-jest'
-import VueCompositionApi from '@vue/composition-api'
-import VueRouter from 'vue-router'
-import Vuex from 'vuex'
-import Router from 'src/router'
-import Store from 'src/store'
+} from "@quasar/quasar-app-extension-testing-unit-jest";
+import VueCompositionApi from "@vue/composition-api";
+import VueRouter from "vue-router";
+import Vuex from "vuex";
+import Router from "src/router";
+import Store from "src/store";
 import {
   // ...,
   Notify,
-} from 'quasar'
-import Login from 'pages/Login.vue'
+} from "quasar";
+import Login from "pages/Login.vue";
 
-Notify.create = jest.fn()
+Notify.create = jest.fn();
 
 const factory = mountFactory(Login, {
   plugins: [VueCompositionApi, VueRouter, Vuex],
@@ -229,9 +228,9 @@ const factory = mountFactory(Login, {
       // ...
     },
   },
-})
+});
 
-describe('Login', () => {
+describe("Login", () => {
   // ...
-})
+});
 ```

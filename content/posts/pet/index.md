@@ -7,7 +7,6 @@ tags:
   - 同态加密
 categories:
   - 密码学
-featuredImage: 0.png
 ---
 
 Privacy Enhancing Technologies (PET)，实际上还是密码学。
@@ -2100,7 +2099,7 @@ Credential Showing 中 Prover 在 $Z_p$ 中随机选择 $a,z_i,r$，计算：
 
 > 选择这么多随机数都是为了让属性匿名化。
 
-最后，Verifier 计算 $V=u_a^{x_0}\Pi C_{mi}^{x_i}/C_{u'}$，并利用 V 来验证 $\pi_1$.
+最后，Verifier 计算 $V=u_a^{x_0}\Pi C_{mi}^{x_i}/C_{u'}$，并利用 $V$ 来验证 $\pi_1$.
 
 ### 应用
 

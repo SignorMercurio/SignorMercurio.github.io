@@ -5,7 +5,6 @@ tags:
   - Kubernetes
 categories:
   - 云
-featuredImage: 0.png
 ---
 
 在了解了 Kubernetes 为什么叫 K8s 之后，才明白 internationalization 为什么叫 i18n。
@@ -96,18 +95,18 @@ Job 中配置的任务在容器中只会运行一次，完成之后容器就会�
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
-metadata:          # metadata for deployment
-  name: nginx      # required metadata
-spec:              # specification for deployment
+metadata: # metadata for deployment
+  name: nginx # required metadata
+spec: # specification for deployment
   selector:
     matchLabels:
       app: nginx
   replicas: 3
-  template:        # pod template
-    metadata:      # metadata for pod
+  template: # pod template
+    metadata: # metadata for pod
       labels:
         app: nginx # at least one label required
-    spec:          # specification for pod
+    spec: # specification for pod
       containers:
         - name: nginx
           image: nginx
@@ -125,14 +124,14 @@ kind: Service
 metadata:
   name: nginx-svc
 spec:
-  type: NodePort      # map to a port on the Node
+  type: NodePort # map to a port on the Node
   selector:
-    app: nginx        # select pods according to labels
+    app: nginx # select pods according to labels
   ports:
     - protocol: TCP
       nodePort: 30000 # Node:30000
-      port: 8080      # ClusterIP:8080
-      targetPort: 80  # pod:80
+      port: 8080 # ClusterIP:8080
+      targetPort: 80 # pod:80
 ```
 
 可以发现，Service 通过 `labels` 来筛选 Pod。同样地，Pod 也可以通过 `labels` 来筛选 Node：
@@ -188,7 +187,7 @@ Job 语法大同小异，`parallelism` 控制并行 Pod 数量，`completions` �
 ```yaml
 metadata:
   annotations:
-    sidecar.istio.io/inject: 'false'
+    sidecar.istio.io/inject: "false"
 ```
 
 ### CronJob
@@ -207,13 +206,13 @@ spec:
       template: # pod template
         spec:
           containers:
-          - name: hello
-            image: busybox
-            imagePullPolicy: IfNotPresent
-            command:
-            - /bin/sh
-            - -c
-            - date; echo Hello from the Kubernetes cluster
+            - name: hello
+              image: busybox
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/sh
+                - -c
+                - date; echo Hello from the Kubernetes cluster
           restartPolicy: OnFailure
 ```
 
@@ -249,7 +248,7 @@ spec:
             - cat
             - /tmp/healthy
         initialDelaySeconds: 10 # start probing after 10s
-        periodSeconds: 5        # probe every 5s
+        periodSeconds: 5 # probe every 5s
 ```
 
 这里就是通过 `exec` 了 `cat /tmp/healthy` 返回值是否为 0 来判断容器是否存活，如果三次探测均失败，则会认为发生了 `Failure`，触发 `OnFailure` 重启容器。可以查看日志确认这一点：
@@ -287,13 +286,13 @@ readinessProbe:
 
 我们知道，滚动更新过程中会逐步增加新的 Pod，删除旧的 Pod。`maxSurge` 和 `maxUnavailable` 分别是对这两个过程的量化。
 
-- `maxSurge` 控制 ` 副本总数 - 预期副本数 ` 的最大值
+- `maxSurge` 控制 `副本总数 - 预期副本数` 的最大值
   - 可以为具体数字
-  - 默认为 ` 预期副本数 ` 的 25% 向上取整
+  - 默认为 `预期副本数` 的 25% 向上取整
   - 确保不会增加太多新 Pod
-- `maxUnavailable` 控制 ` 不可用副本数 ` 的最大值
+- `maxUnavailable` 控制 `不可用副本数` 的最大值
   - 可以为具体数字
-  - 默认为 ` 预期副本数 ` 的 25% 向下取整
+  - 默认为 `预期副本数` 的 25% 向下取整
   - 确保不会删除太多旧 Pod
 
 这里的 `Unavailable`，便是通过 `readinessProbe` 来探测的。我们可以在 Deployment 的 `.spec` 下添加内容来自定义这两个值：
@@ -382,12 +381,12 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteOnce     # mount to a single node
+    - ReadWriteOnce # mount to a single node
   persistentVolumeReclaimPolicy: Recycle
   storageClassName: nfs # like label selector
   nfs:
     path: /nfs/pv1
-    server: 1.1.1.1     # nfs server
+    server: 1.1.1.1 # nfs server
 ```
 
 其中 `accessModes` 指定了访问模式为可读写且只能挂载到单个 Node 上，对应的还有 `ReadOnlyMany`、`ReadWriteMany` 等模式。`persistentVolumeReclaimPolicy` 指定了回收机制，`Retain` 需要手工回收，`Recycle` 会清除 PV 中所有数据，而 `Delete` 则会删除外部存储（一般是云平台）中的存储资源本身。
@@ -498,9 +497,9 @@ ConfigMap 与 Secret 的 YAML 格式非常相似，区别在于：
 
 ```yaml
 volumes:
-    - name: configmap-volume
-      configMap:
-        name: configmap
+  - name: configmap-volume
+    configMap:
+      name: configmap
 ```
 
 ```yaml
@@ -736,16 +735,16 @@ metadata:
   name: kube-scheduler
 spec:
   distinguisherMethod:
-    type: ByNamespace     # A FlowSchema and a distinguisher identify a flow
+    type: ByNamespace # A FlowSchema and a distinguisher identify a flow
   matchingPrecedence: 800 # rule priority
-  priorityLevelConfiguration: 
-    name: workload-high   # queue priority
+  priorityLevelConfiguration:
+    name: workload-high # queue priority
   rules:
     - resourceRules:
         - resources:
-            - '*'
+            - "*"
           verbs:
-            - '*'
+            - "*"
       subjects:
         - kind: User
           user:
@@ -764,9 +763,9 @@ spec:
     assuredConcurrencyShares: 20 # max concurrent requests allowed
     limitResponse:
       queuing:
-        handSize: 6              # number of queues per flow
-        queueLengthLimit: 50     # max queue length
-        queues: 128              # queue number
+        handSize: 6 # number of queues per flow
+        queueLengthLimit: 50 # max queue length
+        queues: 128 # queue number
       type: Queue
   type: Limited
 ```
@@ -834,13 +833,13 @@ spec:
   affinity:
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 1
-        preference:
-          matchExpressions:
-            - key: disktype
-              operator: In
-              values:
-                - ssd
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: disktype
+                operator: In
+                values:
+                  - ssd
 ```
 
 同理，可以用 `podAffinity` 和 `podAntiAffinity` 指定 Pod 间亲和性，即判断某一个范围内（由 `topologyKey` 指定）现有的 Pod 是否满足相应条件来进行调度。
@@ -1021,7 +1020,7 @@ kind: Ingress
 metadata:
   name: httpserver-gateway
   annotations:
-    kubernetes.io/ingress.allow-http: 'false'
+    kubernetes.io/ingress.allow-http: "false"
 spec:
   tls:
     - hosts:
@@ -1108,7 +1107,7 @@ node-problem-detector 是 Kubernetes 中检测节点异常信息并上报的工�
 readinessProbe:
   exec:
     command:
-    - /opt/rprobe.sh
+      - /opt/rprobe.sh
   failureThreshold: 3
   initialDelaySeconds: 30
   periodSeconds: 10
@@ -1198,7 +1197,7 @@ spec:
 $ k run -i --tty load-generator --rm --image=busybox --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
 ```
 
-此时 HPA 会在 Pod CPU 利用率达到 50% 时扩容，直到创建了10 个副本。停止加压一段时间后，副本数会慢慢下降，直至只剩一个。
+此时 HPA 会在 Pod CPU 利用率达到 50% 时扩容，直到创建了 10 个副本。停止加压一段时间后，副本数会慢慢下降，直至只剩一个。
 
 HPA 的动态调整是有效的，但是却存在滞后性，面对突发流量时从负载超出阈值到 HPA 完成扩容需要较长的时间，这是 HPA 的主要缺点。
 
@@ -1259,26 +1258,26 @@ metadata:
   name: reviews
 spec:
   hosts:
-  - reviews  # FQDN
+    - reviews # FQDN
   http:
-  - route:
-    - destination:
-        host: reviews
-        subset: v1
-      weight: 75
-    - destination:
-        host: reviews
-        subset: v2
-      weight: 25
-    timeout: 10s
-    retries: # retry if upstream server send 5xx
-      attempts: 3
-      perTryTimeout: 2s
-    fault:   # send 500 to 80% client
-      abort:
-        httpStatus: 500
-        percentage:
-          value: 80
+    - route:
+        - destination:
+            host: reviews
+            subset: v1
+          weight: 75
+        - destination:
+            host: reviews
+            subset: v2
+          weight: 25
+      timeout: 10s
+      retries: # retry if upstream server send 5xx
+        attempts: 3
+        perTryTimeout: 2s
+      fault: # send 500 to 80% client
+        abort:
+          httpStatus: 500
+          percentage:
+            value: 80
 ```
 
 一个常见的用法是配合 Gateway 发布服务：
@@ -1290,17 +1289,17 @@ metadata:
   name: simple
 spec:
   gateways:
-  - simple
+    - simple
   hosts:
-  - simple.com
+    - simple.com
   http:
-  - match:
-    - port: 80
-    route:
-    - destination:
-        host: simple.simple.svc.cluster.local
-        port:
-          number: 80
+    - match:
+        - port: 80
+      route:
+        - destination:
+            host: simple.simple.svc.cluster.local
+            port:
+              number: 80
 ---
 apiVersion: networking.istio.io/v1beta1
 kind: Gateway
@@ -1310,12 +1309,12 @@ spec:
   selector:
     istio: ingressgateway
   servers:
-  - hosts:
-    - simple.com
-    port:
-      name: http-simple
-      number: 80
-      protocol: HTTP
+    - hosts:
+        - simple.com
+      port:
+        name: http-simple
+        number: 80
+        protocol: HTTP
 ```
 
 或者使用条件规则，配合 `DestinationRule` 设置灵活的负载均衡策略：
@@ -1327,20 +1326,20 @@ metadata:
   name: canary
 spec:
   hosts:
-  - canary
+    - canary
   http:
-  - match: # if header["user"]=="merc", go to v2
-    - headers:
-        user:
-          exact: merc
-    route:
-    - destination:
-        host: canary
-        subset: v2
-  - route:
-    - destination:
-        host: canary
-        subset: v1
+    - match: # if header["user"]=="merc", go to v2
+        - headers:
+            user:
+              exact: merc
+      route:
+        - destination:
+            host: canary
+            subset: v2
+    - route:
+        - destination:
+            host: canary
+            subset: v1
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -1348,11 +1347,11 @@ metadata:
   name: canary
 spec:
   host: canary
-  trafficPolicy:     # default to RANDOM
+  trafficPolicy: # default to RANDOM
     loadBalancer:
       simple: RANDOM
   subsets:
-    - name: v1       # RANDOM inside v1
+    - name: v1 # RANDOM inside v1
       labels:
         version: v1
     - name: v2
@@ -1426,7 +1425,7 @@ spec:
     - min: 8000
       max: 8080
   volumes:
-    - '*'
+    - "*"
 ```
 
 最后，之前提到的 Taint 机制也可以用于集群节点间的安全隔离。
@@ -1450,23 +1449,23 @@ spec:
     - Egress
   ingress:
     - from:
-      - ipBlock:
-          cidr: 172.17.0.0/16
-          except:
-            - 172.17.1.0/24
-      - namespaceSelector:
-          matchLabels:
-            project: myproject
-      - podSelector:
-          matchLabels:
-            role: frontend
+        - ipBlock:
+            cidr: 172.17.0.0/16
+            except:
+              - 172.17.1.0/24
+        - namespaceSelector:
+            matchLabels:
+              project: myproject
+        - podSelector:
+            matchLabels:
+              role: frontend
       ports:
         - protocol: TCP
           port: 6379
   egress:
     - to:
-      - ipBlock:
-          cidr: 10.0.0.0/24
+        - ipBlock:
+            cidr: 10.0.0.0/24
       ports:
         - protocol: TCP
           port: 5978
@@ -1498,7 +1497,7 @@ spec:
         #   - 80             # single port
         #   - 6040:6050      # port range
         # destination:       # target address
-        selector: all()      # pod label selector
+        selector: all() # pod label selector
       icmp:
         type: 8 # Ping request
     - action: Allow
@@ -1584,10 +1583,10 @@ spec:
   action: ALLOW # default value: DENY
   rules:
     - from:
-      - source:
-          principals: ["cluster.local/ns/default/sa/sleep"]
-      - source:  # OR
-          namespaces: ["dev"]
+        - source:
+            principals: ["cluster.local/ns/default/sa/sleep"]
+        - source: # OR
+            namespaces: ["dev"]
       to:
         - operation:
             methods: ["GET"]

@@ -6,7 +6,6 @@ tags:
   - fsb
 categories:
   - 二进制安全
-featuredImage: 0.png
 ---
 
 Pwn 入门。
@@ -141,7 +140,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 
 注意到 `printf(&s, &s);`，说明这里有一个格式化字符串漏洞。通过 gdb 调试后发现，我们可以泄露 `__libc_start_main` 地址来得到 `system` 和 `/bin/sh` 的地址。
 
-![图 2](0.png)
+![图 2](feature.png)
 
 而 `__libc_start_main` 和我们的输入在栈上相差 `0x28`，换算成偏移量就是 `0x28 / 8 = 0x05`，此外还需要考虑 64 位下的六个传参寄存器，因此总偏移为 `0xb`。我们输入 `%11$p` 即可泄露 `__libc_start_main` 地址 `0x7ffff7a2d830`。
 

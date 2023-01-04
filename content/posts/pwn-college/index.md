@@ -9,7 +9,6 @@ tags:
   - 栈漏洞
 categories:
   - 二进制安全
-featuredImage: 0.png
 ---
 
 时隔许久，我居然又得做 pwn 题了。
@@ -482,7 +481,7 @@ execve(binary, argv, env);
 
 ### 72
 
-```sh
+```shell
 #!/bin/bash
 cd /tmp/ehpfci
 /challenge/$HOSTNAME < jysqyp
@@ -490,7 +489,7 @@ cd /tmp/ehpfci
 
 ### 73
 
-```sh
+```shell
 #!/bin/bash
 bash -c 'cd /tmp/wvliga && /challenge/$HOSTNAME'
 ```
@@ -1251,7 +1250,7 @@ s(payload, size)
 
 ### 5.0
 
-需要做一次乘法后得到溢出的结果，可以用 2 * 2147483648 得到。
+需要做一次乘法后得到溢出的结果，可以用 2 \* 2147483648 得到。
 
 ```python
 win = 0x4017eb

@@ -6,7 +6,6 @@ tags:
   - 实践记录
 categories:
   - 探索
-featuredImage: 0.jpg
 ---
 
 拖了很久才来尝鲜。

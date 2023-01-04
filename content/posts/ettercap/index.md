@@ -8,7 +8,6 @@ tags:
   - 网络
 categories:
   - 安全工具
-featuredImage: 0.jpg
 ---
 
 关于 Ettercap 的有趣例子。
@@ -63,7 +62,7 @@ traceroute to baidu.com (123.125.114.144), 30 hops max, 60 byte packets
 
 结果：
 
-![图 1](0.jpg)
+![图 1](feature.jpg)
 
 ![图 2](1.jpg)
 

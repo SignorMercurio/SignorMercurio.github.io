@@ -6,7 +6,6 @@ tags:
   - 实践记录
 categories:
   - 安全工具
-featuredImage: 0.png
 ---
 
 没有什么坑点。

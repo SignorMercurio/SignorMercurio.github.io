@@ -11,7 +11,6 @@ tags:
   - 古典密码与编码
 categories:
   - 比赛记录
-featuredImage: 0.png
 ---
 
 开拓眼界了。
@@ -114,7 +113,7 @@ if __name__ == '__main__':
 
 一直以为是要对 websocket 做手脚，实际上并不能成功。这里我们提升攻击力的唯一途径就是去买鸡吃，我们在买鸡的时候 F12 一下：
 
-![图 1](0.png)
+![图 1](feature.png)
 
 发现这里的 `option` 的 `value` 是可以修改的，再看 js 代码：
 

@@ -6,7 +6,6 @@ tags:
   - 实践记录
 categories:
   - 自动化
-featuredImage: 0.png
 ---
 
 定时任务相关的命令，使用起来坑非常多。

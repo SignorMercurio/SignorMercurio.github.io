@@ -7,7 +7,6 @@ tags:
   - 项目
 categories:
   - 自动化
-featuredImage: https://cdn.jsdelivr.net/gh/SignorMercurio/blog-cdn/CourseRobber/0.png
 ---
 
 用来在第三轮选课中抢课。

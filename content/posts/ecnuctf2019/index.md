@@ -7,7 +7,6 @@ tags:
   - RSA
 categories:
   - 比赛记录
-featuredImage: 0.png
 ---
 
 第二次参加 CTF，上次参加时还只知道古典密码。
@@ -236,7 +235,7 @@ Correct!
 
 得到疑似第二关密码：
 
-![图 15](0.png)
+![图 15](feature.png)
 
 输入后发现密码错误，因此我们需要回去看一下，我们忽略了什么环节。在上图的 `_main` 伪代码中，我们看到 "You passed level1!" 后就没有看下去了，然而下面的 `sub_4015EA` 却是第二关的关键：
 

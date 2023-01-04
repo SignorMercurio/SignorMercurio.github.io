@@ -5,7 +5,6 @@ tags:
   - 栈漏洞
 categories:
   - 二进制安全
-featuredImage: 0.png
 ---
 
 针对 ROP 学习了一下，就记录一下 64 位的做法，32 位同理。不知道为什么对这个网站特别有好感。

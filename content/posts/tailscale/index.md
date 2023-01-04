@@ -5,7 +5,6 @@ tags:
   - 网络
 categories:
   - 探索
-featuredImage: 0.png
 ---
 
 组建自己的私有零信任网络。
@@ -56,98 +55,98 @@ Tailscale 还支持设置全局的 ACL 和流量审计功能，这都是因为�
 
 ```json
 {
-	"tagOwners": {
-		"tag:trusted":   ["SignorMercurio@github"],
-		"tag:server":    ["SignorMercurio@github"],
-		"tag:untrusted": ["SignorMercurio@github"],
-	},
-	"acls": [
-		// Match absolutely everything.
-		// Comment this section out if you want to define specific restrictions.
-		// {"action": "accept", "src": ["*"], "dst": ["*:*"]},
+  "tagOwners": {
+    "tag:trusted": ["SignorMercurio@github"],
+    "tag:server": ["SignorMercurio@github"],
+    "tag:untrusted": ["SignorMercurio@github"]
+  },
+  "acls": [
+    // Match absolutely everything.
+    // Comment this section out if you want to define specific restrictions.
+    // {"action": "accept", "src": ["*"], "dst": ["*:*"]},
 
-		// Trusted devices can access everything.
-		{
-			"action": "accept",
-			"src":    ["tag:trusted"],
-			"dst":    ["*:*"],
-		},
-		// Server can access other servers.
-		{
-			"action": "accept",
-			"src":    ["tag:server"],
-			"dst":    ["tag:server:*"],
-		},
-		// Server can access user applications on trusted devices.
-		{
-			"action": "accept",
-			"src":    ["tag:server"],
-			"dst":    ["tag:trusted:80,443,1024-65535"],
-		},
-		// Untrusted devices can access user applications on trusted devices and servers.
-		{
-			"action": "accept",
-			"src":    ["tag:untrusted"],
-			"dst":    ["tag:trusted:80,443,1024-65535", "tag:server:80,443,1024-65535"],
-		},
-	],
-	"tests": [
-		{
-			"src": "tag:trusted",
-			"accept": [
-				"tag:trusted:22",
-				"tag:trusted:80",
-				"tag:trusted:443",
-				"tag:trusted:8080",
-				"tag:server:22",
-				"tag:server:80",
-				"tag:server:443",
-				"tag:server:8080",
-				"tag:untrusted:22",
-				"tag:untrusted:80",
-				"tag:untrusted:443",
-				"tag:untrusted:8080",
-			],
-		},
-		{
-			"src": "tag:server",
-			"accept": [
-				"tag:server:22",
-				"tag:server:80",
-				"tag:server:443",
-				"tag:server:8080",
-				"tag:trusted:80",
-				"tag:trusted:443",
-				"tag:trusted:8080",
-			],
-			"deny": [
-				"tag:trusted:22",
-				"tag:untrusted:22",
-				"tag:untrusted:80",
-				"tag:untrusted:443",
-				"tag:untrusted:8080",
-			],
-		},
-		{
-			"src": "tag:untrusted",
-			"accept": [
-				"tag:trusted:80",
-				"tag:trusted:443",
-				"tag:trusted:8080",
-				"tag:server:80",
-				"tag:server:443",
-				"tag:server:8080",
-			],
-			"deny": [
-				"tag:trusted:22",
-				"tag:server:22",
-				"tag:untrusted:22",
-				"tag:untrusted:80",
-				"tag:untrusted:443",
-				"tag:untrusted:8080",
-			],
-		},
-	],
+    // Trusted devices can access everything.
+    {
+      "action": "accept",
+      "src": ["tag:trusted"],
+      "dst": ["*:*"]
+    },
+    // Server can access other servers.
+    {
+      "action": "accept",
+      "src": ["tag:server"],
+      "dst": ["tag:server:*"]
+    },
+    // Server can access user applications on trusted devices.
+    {
+      "action": "accept",
+      "src": ["tag:server"],
+      "dst": ["tag:trusted:80,443,1024-65535"]
+    },
+    // Untrusted devices can access user applications on trusted devices and servers.
+    {
+      "action": "accept",
+      "src": ["tag:untrusted"],
+      "dst": ["tag:trusted:80,443,1024-65535", "tag:server:80,443,1024-65535"]
+    }
+  ],
+  "tests": [
+    {
+      "src": "tag:trusted",
+      "accept": [
+        "tag:trusted:22",
+        "tag:trusted:80",
+        "tag:trusted:443",
+        "tag:trusted:8080",
+        "tag:server:22",
+        "tag:server:80",
+        "tag:server:443",
+        "tag:server:8080",
+        "tag:untrusted:22",
+        "tag:untrusted:80",
+        "tag:untrusted:443",
+        "tag:untrusted:8080"
+      ]
+    },
+    {
+      "src": "tag:server",
+      "accept": [
+        "tag:server:22",
+        "tag:server:80",
+        "tag:server:443",
+        "tag:server:8080",
+        "tag:trusted:80",
+        "tag:trusted:443",
+        "tag:trusted:8080"
+      ],
+      "deny": [
+        "tag:trusted:22",
+        "tag:untrusted:22",
+        "tag:untrusted:80",
+        "tag:untrusted:443",
+        "tag:untrusted:8080"
+      ]
+    },
+    {
+      "src": "tag:untrusted",
+      "accept": [
+        "tag:trusted:80",
+        "tag:trusted:443",
+        "tag:trusted:8080",
+        "tag:server:80",
+        "tag:server:443",
+        "tag:server:8080"
+      ],
+      "deny": [
+        "tag:trusted:22",
+        "tag:server:22",
+        "tag:untrusted:22",
+        "tag:untrusted:80",
+        "tag:untrusted:443",
+        "tag:untrusted:8080"
+      ]
+    }
+  ]
 }
 ```
 
@@ -175,7 +174,7 @@ Tailscale 还支持设置全局的 ACL 和流量审计功能，这都是因为�
 
 但所谓的“传入”和“传出”只是为了易于理解，我们知道实际上所有连接都是双向的，仅仅单向地传递数据而收不到响应没有意义。对防火墙而言，看到的无非是飞来飞去的数据包，那它怎么知道哪些是“传入”的、哪些是“传出”的呢？
 
-这就是“有状态”的含义，防火墙会记住过去看到过的包，以此为依据判断如何处理新的包。对 UDP 来说，对于一个传入的包，如果之前出现过对应的传出的包，那么就可以放行。比如防火墙看到一个从  `2.2.2.2:1234` 到 `7.7.7.7:5678` 的包，那么会记住从 `7.7.7.7:5678` 到 `2.2.2.2:1234` 的包也是可以放行的。
+这就是“有状态”的含义，防火墙会记住过去看到过的包，以此为依据判断如何处理新的包。对 UDP 来说，对于一个传入的包，如果之前出现过对应的传出的包，那么就可以放行。比如防火墙看到一个从 `2.2.2.2:1234` 到 `7.7.7.7:5678` 的包，那么会记住从 `7.7.7.7:5678` 到 `2.2.2.2:1234` 的包也是可以放行的。
 
 > 有些宽松的防火墙一旦看到从 `2.2.2.2:1234` 传出的包，就会允许任意传入 `2.2.2.2:1234` 的包，这使得 NAT 穿透变得很容易。但这种情况很少见。
 
@@ -183,7 +182,7 @@ Tailscale 还支持设置全局的 ACL 和流量审计功能，这都是因为�
 
 #### 利用放行规则
 
-绕过这一限制也很简单，前面提到：防火墙看到一个从  `2.2.2.2:1234` 到 `7.7.7.7:5678` 的包，就会放行从 `7.7.7.7:5678` 到 `2.2.2.2:1234` 的包，这里的原因是因为前一个是请求而后一个通常是响应，为了正常交互要允许响应包通过。但并没有规定说后一个包必须是响应！因此，即使 `2.2.2.2:1234` 发送的包根本没有到达 `7.7.7.7:5678`，后者也可以发送一个*看起来像响应*的包回去，并且能通过防火墙。此时，对于 `7.7.7.7` 的防火墙而言，因为有传出的 `7.7.7.7:5678` 到 `2.2.2.2:1234` 的包，所以 `2.2.2.2:1234` 到 `7.7.7.7:5678` 的包也可以放行了，双向连接成功建立。
+绕过这一限制也很简单，前面提到：防火墙看到一个从 `2.2.2.2:1234` 到 `7.7.7.7:5678` 的包，就会放行从 `7.7.7.7:5678` 到 `2.2.2.2:1234` 的包，这里的原因是因为前一个是请求而后一个通常是响应，为了正常交互要允许响应包通过。但并没有规定说后一个包必须是响应！因此，即使 `2.2.2.2:1234` 发送的包根本没有到达 `7.7.7.7:5678`，后者也可以发送一个*看起来像响应*的包回去，并且能通过防火墙。此时，对于 `7.7.7.7` 的防火墙而言，因为有传出的 `7.7.7.7:5678` 到 `2.2.2.2:1234` 的包，所以 `2.2.2.2:1234` 到 `7.7.7.7:5678` 的包也可以放行了，双向连接成功建立。
 
 #### 时间同步
 
@@ -242,7 +241,7 @@ STUN 服务器所做的就是像这样告诉你“我看到你在哪”。由于
 | 1024         | 98%    |
 | 2048         | 99.9%  |
 
-可以看到，如果以 100 个包每秒的速度探测，两秒内成功的概率就能超过 50%；即使在运气差的情况下，20秒内几乎肯定能成功，此时只探测了约 3% 的端口。当然，这会让连接建立有所延迟，但是之前会先有 DERP 保底，所以还行。
+可以看到，如果以 100 个包每秒的速度探测，两秒内成功的概率就能超过 50%；即使在运气差的情况下，20 秒内几乎肯定能成功，此时只探测了约 3% 的端口。当然，这会让连接建立有所延迟，但是之前会先有 DERP 保底，所以还行。
 
 然而，如果两边都是 hard NAT，由于此时源端口也需要随机了，搜索空间就变成了原来的平方。这种情况下要达到 99.9% 的成功率需要 170000 次探测，以 100 个包每秒的速度需要 28 分钟；而 50% 的成功率则需要 54000 次探测和 9 分钟。而且，也并不是所有路由器都能维持这么多的会话和承受这样的负载。
 

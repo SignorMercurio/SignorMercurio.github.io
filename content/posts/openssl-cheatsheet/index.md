@@ -6,7 +6,6 @@ tags:
   - 公钥密码学
 categories:
   - 安全工具
-featuredImage: 0.png
 ---
 
 仅仅记录了一些较常用的命令实例，具体命令、选项与说明推荐查阅官方文档。

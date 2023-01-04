@@ -6,7 +6,6 @@ tags:
   - 项目
 categories:
   - 前端
-featuredImage: 0.png
 ---
 
 Platform for Attacking Swiftly & Smoothly With Defending
@@ -110,7 +109,7 @@ Vue.prototype.$axios.interceptors.request.use(
 
 然后需要对靶机信息进行增删改查，界面大概是这样的：
 
-![图 2](2.png)
+![图 2](feature.png)
 
 这里的问题在于当点击保存后，有可能向数据库插入所有数据，即使其中有一部分已经存在。因此后端多发送了一个 `id` 字段，前端点击保存发送数据时，如果某条数据没有 `id`，说明不在数据库中，是新增的数据；否则就是已有数据，正在进行修改。
 

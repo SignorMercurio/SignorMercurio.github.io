@@ -6,7 +6,6 @@ tags:
   - 实践记录
 categories:
   - 前端
-featuredImage: 0.png
 ---
 
 QTable 是 Quasar Framework 的组件之一，功能比较复杂。这篇文章介绍了如何配合服务端分页来使用 QTable 组件。

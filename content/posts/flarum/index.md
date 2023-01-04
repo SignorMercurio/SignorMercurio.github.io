@@ -6,7 +6,6 @@ tags:
   - 实践记录
 categories:
   - 探索
-featuredImage: 0.png
 ---
 
 完全出于巧合和心血来潮搭建的一个论坛。
@@ -24,10 +23,11 @@ $ sudo apt install php-fpm php-mbstring php-curl php-dom php-gd php-json php-mys
 
 ### 安装 Composer
 
-> 更新：目前部署到了香港服务器上，可直接运行 
+> 更新：目前部署到了香港服务器上，可直接运行
 >
 > ```shell
 > $ curl -sS https://getcomposer.org/installer | php
+> ```
 
 因为要部署在国内服务器上，可以使用国内的安装脚本镜像[^1]：
 
@@ -335,7 +335,7 @@ $ sudo systemctl restart apache2
   - tweak：减小头像字体大小至正常值
   - tweak：去除帖子内容卡片
 - 在新标签页中打开外部链接 `zerosonesfun/elint`
-- “回到顶部”按钮 `zerosonesfun/flarum-up` 
+- “回到顶部”按钮 `zerosonesfun/flarum-up`
 
 ## 自定义样式
 
@@ -347,9 +347,9 @@ $ sudo systemctl restart apache2
 
 ```html
 <style>
-.Pages-container {
-white-space: normal !important;
-}
+  .Pages-container {
+    white-space: normal !important;
+  }
 </style>
 ```
 
@@ -359,9 +359,9 @@ white-space: normal !important;
 
 ```css
 #Up {
-    position: fixed;
-    bottom: 30px;
-    right: 10px;
+  position: fixed;
+  bottom: 30px;
+  right: 10px;
 }
 ```
 
@@ -380,13 +380,10 @@ white-space: normal !important;
 [^3]: [Flarum 官方文档](https://docs.flarum.org/zh/install)
 [^4]: [Simplified Chinese Language Pack / 简体中文语言包 - Flarum Community](https://discuss.flarum.org/d/22690-simplified-chinese-language-pack)
 [^5]: [FoF 文件上传](https://discuss.flarum.org.cn/d/1292/150)
-[^6]: [Flarum 使用腾讯云COS对象存储](https://jacobruan.com/flarum-uses-tencent-cloud-cos-storage/)
+[^6]: [Flarum 使用腾讯云 COS 对象存储](https://jacobruan.com/flarum-uses-tencent-cloud-cos-storage/)
 [^7]: [How to enable HTTPS with Apache 2 on Ubuntu 20.04](https://www.arubacloud.com/tutorial/how-to-enable-https-protocol-with-apache-2-on-ubuntu-20-04.aspx#GettinganSSLCertificate)
-
 [^8]: [Extiverse](https://extiverse.com/)
-
 [^9]: [FriendsOfFlarum Pages: Page 21 - Flarum Community](https://discuss.flarum.org/d/18301-friendsofflarum-pages/413)
-
 [^10]: [Up (A back to top button) - Flarum Community](https://discuss.flarum.org/d/29223-up-a-back-to-top-button/5)
 [^11]: [flarum/cli](https://github.com/flarum/cli)
 [^12]: [ECNU-Forum/sticky-sidenav](https://github.com/ECNU-Forum/sticky-sidenav)

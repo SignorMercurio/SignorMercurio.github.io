@@ -6,7 +6,6 @@ tags:
   - CI/CD
 categories:
   - 前端
-featuredImage: 0.jpg
 ---
 
 博客从 Hexo 迁移到了 Hugo。在静态网站生成器中，Hugo 的优势主要在于其性能和简单易用的配置。
@@ -473,7 +472,7 @@ p
 
 ## 参考资料
 
-[^1]: r
+1. r
 ```
 
 如果文中含公式，则在 front matter 中加一行 `math: true` 即可。

@@ -6,8 +6,7 @@ tags:
   - FastAPI
   - 项目
 categories:
-  - 探索
-featuredImage: 0.png
+  - 后端
 ---
 
 参考了 [这个 repo](https://github.com/prostomarkeloff/fastapi-tortoise) 和 [官方文档](https://tortoise-orm.readthedocs.io/en/latest/)，踩了一些坑后觉得有必要记录下来。

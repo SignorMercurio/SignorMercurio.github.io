@@ -3,7 +3,7 @@
 # https://jpanther.github.io/congo/docs/getting-started/
 
 baseURL = "https://blog.sigmerc.top"
-defaultContentLanguage = "zh"
+defaultContentLanguage = "zh-cn"
 
 enableRobotsTXT = true
 paginate = 10

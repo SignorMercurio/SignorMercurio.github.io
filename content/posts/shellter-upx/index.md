@@ -6,7 +6,6 @@ tags:
   - 实践记录
 categories:
   - 安全工具
-featuredImage: 0.jpg
 ---
 
 记录一下最简单的挂后门和免杀方法，不怎么接触这块。
@@ -26,7 +25,7 @@ $ dpkg --add-architecture i386 && apt-get update && apt-get install wine32
 ## 通过 Shellter 篡改 exe 文件
 
 随意取一个 exe 文件作为我们要加入后门的可执行文件。首先启动 shellter，会看到：
-![图 1](0.jpg)
+![图 1](feature.jpg)
 
 输入 `A` 选择自动模式，随后输入 exe 文件所在路径，程序便会自动运行，分析原文件并插入恶意代码。这个过程大约持续不到一分钟。
 

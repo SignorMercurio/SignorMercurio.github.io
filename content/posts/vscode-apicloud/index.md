@@ -5,7 +5,6 @@ tags:
   - 实践记录
 categories:
   - 前端
-featuredImage: 0.jpg
 ---
 
 不是很懂为什么 APICloud 没有官方的 VSCode 插件。
@@ -28,7 +27,7 @@ featuredImage: 0.jpg
 
 **文件 -> 首选项 -> 设置 -> 扩展 ->APICloud** 中就能进行配置，首先是端口号，默认是 23456，可以不用改；后两个选项随意，最大的坑点在最后，一张图就能说明了：
 
-![图 1](1.jpg)
+![图 1](feature.jpg)
 
 因为我们后面要部署到 GitHub，所以我先**把所有文件转移到了新建的 widget 目录**，并删除了原来的 HelloAPICloud 目录。随后，当我在这一栏输入 `/widget` 并启动 wifi 全量更新时，控制台却提醒我当前目录不是一个有效的 APICloud 项目。这里显示的当前目录，并不是 widget 目录，而是它的上一级，也就是项目目录。
 
