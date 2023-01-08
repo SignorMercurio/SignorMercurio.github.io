@@ -336,6 +336,7 @@ $ docker exec -w /etc/caddy caddy caddy reload
 ### 备份
 
 - 将 `Caddyfile` 放在 `compose/caddy` 目录下一同备份
+- 如有必要，可以备份 Docker Volume
 
 ### 已知问题
 
@@ -399,6 +400,7 @@ ninja.tailnet-48a5.ts.net:8443 {
 ### 备份
 
 - “工具”-“导出密码库”-“.json(Encrypted)”，选择加密是因为要上传云端
+- 如有必要，可以备份 Docker Volume
 
 ### 同类服务
 
@@ -442,6 +444,7 @@ volumes:
 ### 备份
 
 - “Settings”-“Backup Portainer” 可以备份配置文件，同样建议开启密码保护
+- 如有必要，可以备份 Docker Volume
 
 ### 同类服务
 
@@ -535,7 +538,7 @@ $ sed -i 's/api.telegram.org/tg.example.org/g' /app/server/notification-provider
 ### 备份
 
 - “设置”-“备份”中可以进行配置备份
-- 也可以选择直接备份对应的 Docker Volume
+- 如有必要，可以备份 Docker Volume
 
 ### 同类服务
 
@@ -1196,6 +1199,249 @@ networks:
 > 1. [Immich Issue #765](https://github.com/immich-app/immich/issues/765)
 > 1. [Immich Discussions#437](https://github.com/immich-app/immich/discussions/437)
 
+## 监控与日志分析 - Prometheus+Grafana+Loki
+
+为了能对系统状态以及容器状态进行更细粒度的监控和分析，我们可以使用 Prometheus+Grafana+Loki 生态，方便数据可视化和日志集中分析。
+
+### Docker Compose 部署
+
+首先部署 Prometheus，同时使用 Node Exporter 输出系统状态信息，用 cAdvisor 输出容器状态信息，注意后两者都需要挂载一些特殊目录才能正常获取数据。
+
+```yaml
+version: "3"
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: always
+    networks:
+      - lab
+      - monitoring
+    volumes:
+      - $PWD/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --web.console.libraries=/etc/prometheus/console_libraries
+      - --web.console.templates=/etc/prometheus/consoles
+      - --web.enable-lifecycle
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.prometheus.rule=Host(`ninja.tailnet-48a5.ts.net`)
+      - traefik.http.routers.prometheus.entrypoints=prometheus
+      - traefik.http.services.prometheus.loadbalancer.server.port=9090
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: always
+    networks:
+      - monitoring
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - --path.procfs=/host/proc
+      - --path.rootfs=/rootfs
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: always
+    networks:
+      - monitoring
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+networks:
+  monitoring:
+  lab:
+    external: true
+    
+volumes:
+  prometheus_data:
+```
+
+这里的 `gcr.io/cadvisor/cadvisor` 由于镜像仓库在国内被墙，可以使用国内镜像下载后用 `docker tag` 修改一下镜像标签。和之前类似，我们依然给这三个服务设立一个单独的网络 `monitoring` ，并暴露 `prometheus` 服务本体到 `lab` 网络。实际上，由于后面会使用 Grafana 查看 Prometheus 的数据，不暴露 `prometheus` 服务也是可以的。
+
+挂载的 Prometheus 配置文件中，我们可以采集 Prometheus 自身、Node Exporter 以及 cAdvisor 三个服务的数据：
+
+```yaml
+global:
+  scrape_interval: 1m
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+    - targets: ["localhost:9090"]
+
+  - job_name: "node"
+    static_configs:
+    - targets: ["node-exporter:9100"]
+  
+  - job_name: "cadvisor"
+    static_configs:
+    - targets: ["cadvisor:8080"]
+```
+
+注意 Docker Compose 中使用 `prometheus_data` 持久化了 Prometheus 的数据，使得容器重启不会丢数据，也更方便后续备份。这一点对于 Grafana 也同理：
+
+```yaml
+version: "3"
+
+services:
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    restart: always
+    networks:
+      - lab
+      - loki
+    volumes:
+      - grafana_data:/var/lib/grafana
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.grafana.rule=Host(`ninja.tailnet-48a5.ts.net`)
+      - traefik.http.routers.grafana.entrypoints=grafana
+      - traefik.http.services.grafana.loadbalancer.server.port=3000
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: always
+    networks:
+      - loki
+    volumes:
+      - $PWD/loki-config.yml:/etc/loki/config.yml:ro
+    command: -config.file=/etc/loki/config.yml
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider <http://localhost:3100/ready> || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  promtail:
+    image: grafana/promtail:latest
+    container_name: promtail
+    restart: always
+    networks:
+      - loki
+    volumes:
+      - $PWD/promtail-config.yml:/etc/promtail/config.yml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command: -config.file=/etc/promtail/config.yml
+
+networks:
+  loki:
+  lab:
+    external: true
+
+volumes:
+  grafana_data:
+```
+
+Promtail 会负责收集容器的日志并发送给 Loki，Loki 可以对日志进行分析和查询并通过 Grafana 展示出来。Grafana 同时也可以展示 Prometheus 各个 metrics 的查询结果，或是更直观地通过 Dashboard 来展示重要的 metrics 绘制成的图表。
+
+这里挂载的两个配置文件需要在官网提供的配置文件上根据自己的需求进行修改，例如 Loki 的配置中我们额外设置了 `limits_config` 来解决启动后关于时间戳和流限速的报错：
+
+```yaml
+auth_enabled: false
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+
+common:
+  path_prefix: /tmp/loki
+  storage:
+    filesystem:
+      chunks_directory: /tmp/loki/chunks
+      rules_directory: /tmp/loki/rules
+  replication_factor: 1
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: inmemory
+
+query_range:
+  results_cache:
+    cache:
+      embedded_cache:
+        enabled: true
+        max_size_mb: 100
+
+schema_config:
+  configs:
+    - from: 2020-10-24
+      store: boltdb-shipper
+      object_store: filesystem
+      schema: v11
+      index:
+        prefix: index_
+        period: 24h
+
+limits_config:
+  reject_old_samples: false
+  per_stream_rate_limit: 5M
+
+# ...
+analytics:
+  reporting_enabled: false
+```
+
+Promtail 的配置如下，需要确保能与 Loki API 通信且能访问 Docker Socket（因为我们主要收集容器化服务的日志），并重命名一些我们需要的 label 来简化查询：
+
+```yaml
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: <http://loki:3100/loki/api/v1/push>
+
+scrape_configs:
+- job_name: container_scrape
+  docker_sd_configs:
+    - host: unix:///var/run/docker.sock
+      refresh_interval: 5s
+  relabel_configs:
+    - source_labels: ['__meta_docker_container_name']
+      regex: '/(.*)'
+      target_label: 'container'
+```
+
+之后就是配置 Grafana Dashboard 了。由于这一生态功能非常强大，其配置和查询语法也异常复杂，超出了本文讨论的范围。
+
+### 备份
+
+- 配置文件备份：在 `compose` 备份中完成
+- 如有必要，可以备份 Docker Volume
+
+### 同类服务
+
+- [Glances](https://nicolargo.github.io/glances/)
+- [Netdata](https://www.netdata.cloud/)
+- [ELK Stack](https://www.elastic.co/cn/what-is/elk-stack)
+
+> 相关资料：
+>
+> 1. [Prometheus 官方文档](https://prometheus.io/)
+> 2. [vegasbrianc/prometheus](https://github.com/vegasbrianc/prometheus)
+> 3. [Grafana 官方文档](https://grafana.com/docs/grafana/latest/)
+> 4. [Loki Issues#1923](https://github.com/grafana/loki/issues/1923)
+> 5. [Loki/Promtail : parsing timestamp that are too old](https://community.grafana.com/t/loki-promtail-parsing-timestamp-that-are-too-old/41934)
+> 6. [Loki 官方文档](https://grafana.com/docs/loki/latest/)
 
 ## Homelab 目前已知问题
 
