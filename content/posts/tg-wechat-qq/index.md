@@ -186,7 +186,7 @@ flags:
 Client: GoCQHttp
 GoCQHttp:
   type: HTTP
-  access_token: your token
+  access_token: 
   api_root: http://127.0.0.1:5700/
   host: 127.0.0.1
   port: 8000
@@ -199,7 +199,7 @@ GoCQHttp:
 ```yaml
 account: # 账号相关
   uin: 123456789 # QQ账号
-  password: "" # 密码为空时使用扫码登录
+  password: "xxxxxx" # 密码为空时使用扫码登录
 
 message:
   # 上报数据类型
@@ -207,10 +207,6 @@ message:
   post-format: array
   # 为Reply附加更多信息
   extra-reply-data: true
-
-# 默认中间件锚点
-default-middlewares: &default # 访问密钥, 强烈推荐在公网的服务器设置
-  access-token: "your token"
 
 # 连接服务列表
 servers:
@@ -222,9 +218,6 @@ servers:
 
   - http: # HTTP 通信设置
       address: 127.0.0.1:5700 # HTTP监听地址
-      long-polling:   # 长轮询拓展
-        enabled: true        # 是否开启
-        max-queue-size: 2000 # 消息队列大小，0 表示不限制队列大小，谨慎使用
       post: # 反向HTTP POST地址列表
         - url: "http://127.0.0.1:8000"
           secret: ""
@@ -274,21 +267,13 @@ esac
 
 #### 使用事件过滤器
 
-有时我们并不关心诸如有人加群/退群之类的消息，此时可以使用 go-cqhttp 提供的事件过滤器。首先在配置文件中开启 `middlewares.filter`：
+有时我们并不关心诸如有人加群/退群之类的消息，此时可以使用 go-cqhttp 提供的事件过滤器。首先在配置文件中开启 `default-middlewares.filter`：
 
 ```yaml
-- http: # HTTP 通信设置
-      address: 127.0.0.1:5700 # HTTP监听地址
-      timeout: 5      # 反向 HTTP 超时时间, 单位秒，<5 时将被忽略
-      long-polling:   # 长轮询拓展
-        enabled: true        # 是否开启
-        max-queue-size: 2000 # 消息队列大小，0 表示不限制队列大小，谨慎使用
-      middlewares:
-        <<: *default # 引用默认中间件
-        filter: filter.json
-      post:           # 反向HTTP POST地址列表
-        - url: 'http://127.0.0.1:8000'
-          secret: ''
+# 默认中间件锚点
+default-middlewares: &default
+  # 事件过滤器文件目录
+  filter: filter.json
 ```
 
 随后编写 `filter.json` 文件：
