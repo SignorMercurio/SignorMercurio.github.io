@@ -166,7 +166,7 @@ services:
 
 - 在管理界面自带配置备份功能，生成的 JSON 文件上传到云端保存
 
-- 文件备份则借助 VirtualBox 的系统快照实现，其中部分常用文件通过下文提到的 Syncthing 在多设备间同步
+- 文件备份则借助 VirtualBox 的系统快照以及加密上传到云盘实现，其中部分常用文件通过下文提到的 Syncthing 在多设备间同步
 - 所有 docker compose 文件放在同一目录 `compose` 内统一上传到云端保存，下文服务同理
 
 ### 已知问题
@@ -1186,7 +1186,7 @@ networks:
 
 - 部署配置备份：主要是 `.env` 文件，在 `compose` 备份中完成
 - 目前 Immich 应用配置十分简单，无需备份
-- 照片备份：照片文件同样位于 AList 本地存储根目录下，在 AList 文件备份中完成
+- 照片备份：我们可以设置 `${UPLOAD_LOCATION}` 使得照片文件同样位于 AList 本地存储根目录下，这样就能在 AList 文件备份中完成
 
 ### 同类服务
 
@@ -1442,6 +1442,26 @@ scrape_configs:
 > 4. [Loki Issues#1923](https://github.com/grafana/loki/issues/1923)
 > 5. [Loki/Promtail : parsing timestamp that are too old](https://community.grafana.com/t/loki-promtail-parsing-timestamp-that-are-too-old/41934)
 > 6. [Loki 官方文档](https://grafana.com/docs/loki/latest/)
+
+## 备份 Docker Volume
+
+我们以 Uptime Kuma 为例来介绍如何方便地备份和恢复 Docker Volume。根据 [官方文档中的说明](https://docs.docker.com/storage/volumes/#back-up-restore-or-migrate-data-volumes) 我们可以启动一个临时的容器、挂载要备份的 Volume、挂载当前目录到 `/backup`，最后打包 Volume 对应的目录到 `/backup` ：
+
+```bash
+$ docker run --rm --volumes-from <container_name> -v $(pwd):/backup alpine tar zcvf /backup/backup.tar.gz <volume_mount_dir>
+```
+
+在 Uptime Kuma 这个例子里就是：
+
+```bash
+$ docker run --rm --volumes-from uptime-kuma -v $(pwd):/backup alpine tar zcvf /backup/backup.tar.gz /app/data
+```
+
+恢复也是类似的，假设我们的新容器是 `uptime-kuma-ng`，同样挂载了一个 Volume 到 `/app/data`。此时可以启动一个临时容器、挂载 `uptime-kuma-ng` 的 Volume、挂载当前目录到 `/backup`，再将当前目录下的备份包 `backup.tar.gz` 解压到 `/app/data` 下就可以了：
+
+```bash
+$ docker run --rm --volumes-from uptime-kuma-ng -v $(pwd):/backup alpine /bin/sh -c "cd /app/data && tar zxvf /backup/backup.tar.gz --strip 1"
+```
 
 ## Homelab 目前已知问题
 
