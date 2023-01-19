@@ -1,11 +1,19 @@
-<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
-<div id="vcomments" class="mt-8 max-w-prose print:hidden"></div>
-<script>
-  new Valine({
-    el: "#vcomments",
-    appId: "RkxCznUcvfzFBgfMiMr0BAfd-gzGzoHsz",
-    appKey: "sw2sEPOl4haCAXKUFYiBFMrR",
-    avatar: "robohash",
-    requiredFields: ["nick"],
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline.css" />
+<link rel="stylesheet" href="https://unpkg.com/@waline/client@v2/dist/waline-meta.css" />
+<!-- <div id="vcomments" class="mt-8 max-w-prose print:hidden"></div> -->
+<div id="waline"></div>
+<script type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v2/dist/waline.mjs';
+
+  init({
+    el: '#waline',
+    serverURL: 'https://waline-merc.vercel.app',
+    emoji: [
+      '//unpkg.com/@waline/emojis@1.1.0/alus',
+      '//unpkg.com/@waline/emojis@1.1.0/tw-emoji',
+    ],
+    search: false,
+    reaction: true,
+    dark: 'auto',
   });
 </script>

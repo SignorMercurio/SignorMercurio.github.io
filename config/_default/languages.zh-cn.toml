@@ -14,9 +14,9 @@ dateFormat = "2006-01-02"
 
 [author]
   name = "Mercury"
-  image = "my_avatar.png"
-  headline = "A student"
-  bio = "A student"
+  image = "avatar.png"
+  headline = "InfoSec Engineer"
+  bio = "InfoSec Engineer"
   links = [
     { email = "mailto:signormercurio@gmail.com" },
   #   { link = "https://link-to-some-website.com/" },
