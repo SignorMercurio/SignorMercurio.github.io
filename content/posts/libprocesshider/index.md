@@ -1,5 +1,5 @@
 ---
-title: "隐名匿迹：libprocesshider 处置方案"
+title: "遁名匿迹：libprocesshider 处置方案"
 date: 2023-08-22
 tags:
   - 应急响应
@@ -78,23 +78,23 @@ if(get_dir_name(dirp, dir_name, sizeof(dir_name)) &&        \
 
 1. 将文件或文件哈希上传到威胁情报平台，通常很容易检出：
 
-![](0.png)
+![图 1](0.png)
 
 2. 通过 IDA 等静态分析工具对文件进行逆向，容易发现一些特征，例如在 Functions 部分内部的有效函数很少，通常只有 `get_dir_name`、`get_process_name`、`readdir64`、`readdir` 四个：
 
-![](1.png)
+![图 2](1.png)
 
 另外对 `readdir` 自身进行分析也可以发现同样的逻辑：
 
-![](feature.png)
+![图 3](feature.png)
 
 双击 `process_to_filter` 可以发现其字符串值：
 
-![](2.png)
+![图 4](2.png)
 
 3. 可以通过 irtk 中的 `lph.sh` 检查文件的 .rodata 段，如果存在形如 `/proc/self/fd/%d`、`/proc/%s/stat`、`%d (%[^)]s`、`readdir64`、`readdir` 等字符串则基本可以确定属于 libprocesshider，此时第一个字符串即被隐藏的进程：
 
-![](3.png)
+![图 5](3.png)
 
 另外，工具箱中的 unhide 也可以找出被隐藏的进程，只需运行 `unhide proc` 即可。
 

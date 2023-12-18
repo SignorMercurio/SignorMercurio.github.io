@@ -36,6 +36,6 @@ categories:
 - `gets` 的不安全性
 - `getline` 多次使用注意添加 `str = "\n"; getline(cin, str);`
 - EOJ 编译器对 `getchar(); ... gets();` 的支持似乎不太好？
-- 经常把 == 写成 =
+- 经常把 `==` 写成 `=`
 - 尽量避免使用非 C 标准库函数，如 `itoa`, `strlwr`, `strupr` 之类
 - RTE 主要原因：数组越界、指针越界、除以 0、栈溢出……

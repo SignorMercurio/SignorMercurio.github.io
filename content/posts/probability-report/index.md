@@ -1,6 +1,6 @@
 ---
 title: 概率论课程报告
-date: 2018-12-14 21:03:28
+date: 2018-12-14
 tags:
   - 数学
 categories:
@@ -74,7 +74,7 @@ categories:
 ---
 
 > 参考资料：
-> 
+>
 > - http://kskedlaya.org/putnam-archive/1992.pdf
 > - http://lsusmath.rickmabry.org/psisson/putnam/putnam-web.htm
 > - http://kskedlaya.org/putnam-archive/2005.pdf

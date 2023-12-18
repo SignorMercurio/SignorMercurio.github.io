@@ -1,6 +1,6 @@
 ---
 title: 《Python 编程技术》期末作业
-date: 2019-01-06 16:08:24
+date: 2019-01-06
 tags:
   - 项目
   - Python
