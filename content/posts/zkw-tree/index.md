@@ -1,6 +1,6 @@
 ---
 title: zkw 线段树
-date: 2018-03-08 21:52:21
+date: 2018-03-08
 tags:
   - 线段树
   - 模版
@@ -95,6 +95,7 @@ int main()
 ## EOJ 3389 线段树：点增加
 
 [http://acm.ecnu.edu.cn/problem/3389/](http://acm.ecnu.edu.cn/problem/3389/)
+
 微坑的模板题。
 
 ```cpp

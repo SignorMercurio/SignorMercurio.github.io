@@ -8,7 +8,7 @@ tags:
   - 堆漏洞
   - RSA
 categories:
-  - 二进制安全
+  - 系统安全
 ---
 
 近期做的一些简单 Pwn 题记录。题目来自 ADWorld 新手区、BJDCTF 2019、JarvisOJ。
@@ -573,7 +573,7 @@ sl(payload)
 
 题目主要漏洞有 2 处，首先是新建记录时存在 off-by-one，可以多读入一个字节，从而泄露后面相邻区域的内容。第二处漏洞就是常见的 `free` 后没有置空指针，造成了 `double free`。
 
-首先泄露 libc 地址和堆地址。创建 4 个小 chunk，删掉不相邻的 2 个（防止合并）。由于题目限制最小分配 0x80B，必定会先进入 unsorted bin；然后拿回来并写满 `fd` 的位置，从而打印出 `bk`。`chunk0` 的 `bk` 指向 `chunk2`，相隔一个索引表（0x1820B）和两个正常 chunk(2*0x90B)，因此可以算出堆地址。`chunk2` 的 `bk` 指向 `main_arena+88`，从而泄露 libc。
+首先泄露 libc 地址和堆地址。创建 4 个小 chunk，删掉不相邻的 2 个（防止合并）。由于题目限制最小分配 0x80B，必定会先进入 unsorted bin；然后拿回来并写满 `fd` 的位置，从而打印出 `bk`。`chunk0` 的 `bk` 指向 `chunk2`，相隔一个索引表（0x1820B）和两个正常 chunk(2\*0x90B)，因此可以算出堆地址。`chunk2` 的 `bk` 指向 `main_arena+88`，从而泄露 libc。
 
 随后伪造堆块，`heap+0x30` 是 `chunk0` 的 `ptr_heap` 的位置，`-0x18` 和 `-0x10` 分别指向其 `fd` 和 `bk`。随后继续伪造 `chunk1` 方便后续触发 `unlink(chunk0)`，再伪造 `chunk2` 防止与 top chunk 合并。删除 `chunk1`，即可导致 `unlink(chunk0)`。
 

@@ -7,7 +7,7 @@ tags:
   - fsb
   - 堆漏洞
 categories:
-  - 二进制安全
+  - 系统安全
 ---
 
 难题都没有做出来。题目来自 ACTF 2019、GYCTF 2019、VNCTF 2020。

@@ -6,7 +6,7 @@ tags:
   - fsb
   - 堆漏洞
 categories:
-  - 二进制安全
+  - 系统安全
 ---
 
 HITCON Training 更新完成，没咕咕。其中堆题真是很适合入门。

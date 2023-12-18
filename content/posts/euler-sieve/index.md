@@ -1,6 +1,6 @@
 ---
 title: 欧拉筛法求素数
-date: 2017-12-04 21:37:04
+date: 2017-12-04
 tags:
   - 数学
 categories:

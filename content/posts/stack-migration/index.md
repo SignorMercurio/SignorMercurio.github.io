@@ -4,7 +4,7 @@ date: 2020-03-04 16:32:06
 tags:
   - 栈漏洞
 categories:
-  - 二进制安全
+  - 系统安全
 ---
 
 参考 [CTF-Wiki](https://ctf-wiki.github.io/ctf-wiki/pwn/linux/stackoverflow/fancy-rop-zh/) 画的一些图。

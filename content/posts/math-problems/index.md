@@ -1,6 +1,6 @@
 ---
 title: 巧算数学问题
-date: 2017-11-08 11:59:16
+date: 2017-11-08
 tags:
   - 数学
 categories:

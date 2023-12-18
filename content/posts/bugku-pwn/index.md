@@ -5,7 +5,7 @@ tags:
   - 栈漏洞
   - fsb
 categories:
-  - 二进制安全
+  - 系统安全
 ---
 
 Pwn 入门。

@@ -5,7 +5,7 @@ tags:
   - Linux
   - 堆漏洞
 categories:
-  - 二进制安全
+  - 系统安全
 ---
 
 The heap is a beautiful mess.
