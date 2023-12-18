@@ -1,6 +1,6 @@
 ---
-title: 私有部署：打造自己的 Homelab
-date: 2022-12-30T16:43:18+08:00
+title: 私有部署：打造自己的简易 Homelab
+date: 2022-12-30
 tags:
   - Docker
   - 网络
@@ -384,7 +384,7 @@ volumes:
   vaultwarden:
 ```
 
-从这里开始，对于不怎么修改的挂载目录会尽量使用 单独的 Docker Volume 挂载。
+从这里开始，对于不怎么修改的挂载目录会尽量使用单独的 Docker Volume 挂载。
 
 ### 反向代理
 
@@ -431,12 +431,12 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - portainer:/data
-      
+
 networks:
   default:
     external: true
     name: lab
-    
+
 volumes:
   portainer:
 ```
@@ -492,32 +492,31 @@ Uptime Kuma 提供了 Telegram Bot 自动告警的功能，但 ninja 位于墙�
 const whitelist = ["/bot1111111111:"];
 const tg_host = "api.telegram.org";
 
-addEventListener('fetch', event => {
-    event.respondWith(handleRequest(event.request))
-})
+addEventListener("fetch", event => {
+  event.respondWith(handleRequest(event.request));
+});
 
 function validate(path) {
-    for (var i = 0; i < whitelist.length; i++) {
-        if (path.startsWith(whitelist[i]))
-            return true;
-    }
-    return false;
+  for (var i = 0; i < whitelist.length; i++) {
+    if (path.startsWith(whitelist[i])) return true;
+  }
+  return false;
 }
 
 async function handleRequest(request) {
-    var u = new URL(request.url);
-    u.host = tg_host;
-    if (!validate(u.pathname))
-        return new Response('Unauthorized', {
-            status: 403
-        });
-    var req = new Request(u, {
-        method: request.method,
-        headers: request.headers,
-        body: request.body
+  var u = new URL(request.url);
+  u.host = tg_host;
+  if (!validate(u.pathname))
+    return new Response("Unauthorized", {
+      status: 403,
     });
-    const result = await fetch(req);
-    return result;
+  var req = new Request(u, {
+    method: request.method,
+    headers: request.headers,
+    body: request.body,
+  });
+  const result = await fetch(req);
+  return result;
 }
 ```
 
@@ -550,7 +549,7 @@ $ sed -i 's/api.telegram.org/tg.example.org/g' /app/server/notification-provider
 >
 > 1. [Uptime Kuma Wiki](https://github.com/louislam/uptime-kuma/wiki)
 >
-> 1. [搭建uptime-kuma及Ward服务监控面板](https://www.eula.club/blogs/%E6%90%AD%E5%BB%BAuptime-kuma%E5%8F%8AWard%E6%9C%8D%E5%8A%A1%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF.html)
+> 1. [搭建 uptime-kuma 及 Ward 服务监控面板](https://www.eula.club/blogs/%E6%90%AD%E5%BB%BAuptime-kuma%E5%8F%8AWard%E6%9C%8D%E5%8A%A1%E7%9B%91%E6%8E%A7%E9%9D%A2%E6%9D%BF.html)
 
 ## 文件多设备同步 - Syncthing
 
@@ -588,10 +587,10 @@ networks:
 
 ```yml
 ninja.tailnet-48a5.ts.net:5443 {
-	import tls
-	reverse_proxy syncthing:8384 {
-		header_up host {upstream_hostport}
-	}
+import tls
+reverse_proxy syncthing:8384 {
+header_up host {upstream_hostport}
+}
 }
 ```
 
@@ -689,19 +688,21 @@ version: "3"
 
 services:
   homepage:
-    image: ghcr.io/benphelps/homepage:latest
+    image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage
     restart: always
     volumes:
-      - $PWD/config:/app/config:ro
+      - $PWD/config:/app/config
       - $PWD/icons:/app/public/icons:ro
       - /var/run/docker.sock:/var/run/docker.sock：ro
-      
+
 networks:
   default:
     external: true
     name: lab
 ```
+
+需要注意 `/app/config` 目录可能会被 homepage 应用修改，因此不能设为只读。
 
 ### 图标显示问题
 
@@ -731,18 +732,18 @@ Homepage 提供了 Portainer 相关的 Widgets，在 Portainer 界面生成 Acce
 
 ```yml
 (cors-allow-homepage) {
-	import cors https://ninja.tailnet-48a5.ts.net:6443
+import cors https://ninja.tailnet-48a5.ts.net:6443
 }
 
 ninja.tailnet-48a5.ts.net:9443 {
-	import tls
-	import cors-allow-homepage
-	reverse_proxy portainer:9000
+import tls
+import cors-allow-homepage
+reverse_proxy portainer:9000
 }
 
 ninja.tailnet-48a5.ts.net:6443 {
-	import tls
-	reverse_proxy homepage:3000
+import tls
+reverse_proxy homepage:3000
 }
 ```
 
@@ -780,7 +781,7 @@ services:
     volumes:
       - $HOME/.config:/home/coder/.config
       - $HOME:/home/coder
-      
+
 networks:
   default:
     external: true
@@ -846,7 +847,7 @@ services:
       - $HOME/certs:/etc/certs:ro
       - $PWD/traefik.yml:/etc/traefik/traefik.yml:ro
       - $PWD/certs-traefik.yml:/etc/traefik/dynamic/certs-traefik.yml:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro 
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     ports:
       - 8081:8080
       - 443:443
@@ -881,7 +882,7 @@ accessLog:
     statusCodes:
       - "400-499"
       - "500-599"
-      
+
 api:
   insecure: true
 
@@ -1065,7 +1066,7 @@ networks:
   default:
     external: true
     name: lab
-    
+
 volumes:
   pgdata:
 ```
@@ -1153,7 +1154,7 @@ services:
       - lab
       - default
     # ...
-    
+
   immich-web:
     image: altran1502/immich-web:release
     entrypoint: ["/bin/sh", "./entrypoint.sh"]
@@ -1169,7 +1170,7 @@ networks:
   lab:
     external: true
     name: lab
-# ... 
+# ...
 ```
 
 如果在上面 Traefik 的静态配置中没有指定 `provider.docker.network` 为 `lab`，那么 Traefik 就有可能将流量转发到 `immich-server` 和 `immich-web` 在 `immich` 网络上的网卡上，显然不可能成功。
@@ -1265,7 +1266,7 @@ networks:
   monitoring:
   lab:
     external: true
-    
+
 volumes:
   prometheus_data:
 ```
@@ -1281,15 +1282,15 @@ global:
 scrape_configs:
   - job_name: "prometheus"
     static_configs:
-    - targets: ["localhost:9090"]
+      - targets: ["localhost:9090"]
 
   - job_name: "node"
     static_configs:
-    - targets: ["node-exporter:9100"]
-  
+      - targets: ["node-exporter:9100"]
+
   - job_name: "cadvisor"
     static_configs:
-    - targets: ["cadvisor:8080"]
+      - targets: ["cadvisor:8080"]
 ```
 
 注意 Docker Compose 中使用 `prometheus_data` 持久化了 Prometheus 的数据，使得容器重启不会丢数据，也更方便后续备份。这一点对于 Grafana 也同理：
@@ -1323,7 +1324,11 @@ services:
       - $PWD/loki-config.yml:/etc/loki/config.yml:ro
     command: -config.file=/etc/loki/config.yml
     healthcheck:
-      test: [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider <http://localhost:3100/ready> || exit 1" ]
+      test:
+        [
+          "CMD-SHELL",
+          "wget --no-verbose --tries=1 --spider http://localhost:3100/ready || exit 1",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -1408,17 +1413,17 @@ positions:
   filename: /tmp/positions.yaml
 
 clients:
-  - url: <http://loki:3100/loki/api/v1/push>
+  - url: http://loki:3100/loki/api/v1/push
 
 scrape_configs:
-- job_name: container_scrape
-  docker_sd_configs:
-    - host: unix:///var/run/docker.sock
-      refresh_interval: 5s
-  relabel_configs:
-    - source_labels: ['__meta_docker_container_name']
-      regex: '/(.*)'
-      target_label: 'container'
+  - job_name: container_scrape
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      - source_labels: ["__meta_docker_container_name"]
+        regex: "/(.*)"
+        target_label: "container"
 ```
 
 之后就是配置 Grafana Dashboard 了。由于这一生态功能非常强大，其配置和查询语法也异常复杂，超出了本文讨论的范围。
@@ -1442,6 +1447,49 @@ scrape_configs:
 > 4. [Loki Issues#1923](https://github.com/grafana/loki/issues/1923)
 > 5. [Loki/Promtail : parsing timestamp that are too old](https://community.grafana.com/t/loki-promtail-parsing-timestamp-that-are-too-old/41934)
 > 6. [Loki 官方文档](https://grafana.com/docs/loki/latest/)
+
+## 容器镜像自动升级 - Watchtower
+
+由于许多容器镜像更新比较频繁，即使每次都使用一条简单的 `docker compose pull && docker compose up -d` 也是比较麻烦的操作，因此可以考虑部署一个容器镜像自动升级的服务。
+
+### Docker Compose 部署
+
+由于本身就是为容器而服务的应用，通过容器方式部署自然比较简单，相关配置可以放在环境变量中：
+
+```yaml
+version: "3"
+services:
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: always
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_HTTP_API_TOKEN=xxxx
+      - WATCHTOWER_HTTP_API_METRICS=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  default:
+    external: true
+    name: lab
+```
+
+根据 [官方文档](https://containrrr.dev/watchtower/arguments/#time_zone) 中的说明，我们可以挂载 `/etc/localtime` 来同步时区。
+
+### 备份
+
+- 在 `compose` 备份中完成
+
+### 同类服务
+
+- [What's up Docker?](https://fmartinou.github.io/whats-up-docker/#/introduction/)
+
+> 相关资料：
+>
+> 1. [Watchtower 官方文档](https://containrrr.dev/watchtower/)
 
 ## 备份 Docker Volume
 
@@ -1537,13 +1585,12 @@ Apple 生态下的 iCloud 是一个很方便的同步盘，Syncthing 则提供�
 部署私有服务是一件很有意思的事，但如果没有采用合理的手段进行维护，后续对各类服务的管理会很痛苦。前几天阅读了一篇 [Selfhosting lessons learned from over the years...](https://www.reddit.com/r/selfhosted/comments/lu0t3l/selfhosting_lessons_learned_from_over_the_years/)，其中的经验也的确是我在部署过程中有切身体会的：
 
 1. 简化配置：复杂的各类设置和 hack 技巧可能的确有用，但在几个月后进行维护的时候一定会让人头疼。复杂的设置往往需要高质量的文档，而简单的设置只需要一些简单的注释和链接就足够了。
-2. 没必要用企业硬件：老旧 CPU和功耗使得这一选项不太明智，不如购买更新、更低功耗的主机。
+2. 没必要用企业硬件：老旧 CPU 和功耗使得这一选项不太明智，不如购买更新、更低功耗的主机。
 3. 记录笔记、文档、在配置文件中写注释：不用多说，给未来的自己提供方便。
 4. 网上的教程良莠不一：在中文互联网上这种情况更为突出，最好的方法是阅读官方文档，教程只能作为参考使用，甚至很有可能已经过时了。
-5. 尽可能把所有服务放在防火墙/VPN后面：将服务暴露在公网不仅需要我们进行详尽的安全配置，还需要及时更新服务、了解 0-day 漏洞等等，非常耗费精力。
+5. 尽可能把所有服务放在防火墙/VPN 后面：将服务暴露在公网不仅需要我们进行详尽的安全配置，还需要及时更新服务、了解 0-day 漏洞等等，非常耗费精力。
 6. 反向代理很有用：在上文已经介绍了，反向代理能极大方便我们部署和管理多个服务，以及处理那些和证书相关的麻烦事。
 7. 搭建服务是为了有用而不是好玩：许多服务搭建起来可能就是吃灰，但服务搭建的越多维护成本就越高，应尽量精简服务，留下那些真正有用的。
 8. 备份：建立完备的备份方案，最好能在 Homelab 之外的地方（设备/物理位置）也有备份，主要备份的内容有配置文件、数据库、笔记和文档、系统快照等。
 
 掌控自己的数据，自然需要付出相应的精力和成本。
-

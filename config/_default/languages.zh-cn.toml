@@ -1,16 +1,15 @@
 languageCode = "zh-cn"
 languageName = "中文"
-displayName = ""
-isoCode = "zh"
+languageDirection = "ltr"
 weight = 1
-rtl = false
 
 title = "Lab on Mercury"
-# logo = "img/logo.jpg"
-description = "Lab on Mercury"
 # copyright = "Copy, _right?_ :thinking_face:"
 
-dateFormat = "2006-01-02"
+[params]
+  dateFormat = "2006-01-02"
+  description = "Lab on Mercury"
+  # mainSections = ["section1", "section2"]
 
 [author]
   name = "Mercury"

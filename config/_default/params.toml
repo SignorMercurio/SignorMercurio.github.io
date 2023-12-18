@@ -11,12 +11,12 @@ autoSwitchAppearance = true
 
 enableSearch = true
 enableCodeCopy = true
+enableImageLazyLoading = true
 
-# mainSections = ["section1", "section2"]
 # robots = ""
 
 [header]
-  layout = "basic"
+  layout = "hybrid"
 
 [footer]
   showCopyright = true

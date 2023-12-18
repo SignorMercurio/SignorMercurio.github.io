@@ -11,20 +11,35 @@
 # ordered by weight from lowest to highest.
 
 [[main]]
-  name = "文章"
+  name = "Posts"
   pageRef = "posts"
   weight = 10
 
 [[main]]
-  name = "分类"
+  name = "Categories"
   pageRef = "categories"
   weight = 20
 
 [[main]]
-  name = "标签"
+  name = "Tags"
   pageRef = "tags"
   weight = 30
 
+[[main]]
+  name = "GitHub"
+  url = "https://github.com/SignorMercurio/SignorMercurio.github.io"
+  weight = 40
+  [main.params]
+    icon = "github"
+    showName = false
+    target = "_blank"
+
+[[main]]
+  identifier = "search"
+  weight = 99
+  [main.params]
+    action = "search"
+    icon = "search"
 
 # -- Footer Menu --
 # The footer menu is displayed at the bottom of the page, just before
