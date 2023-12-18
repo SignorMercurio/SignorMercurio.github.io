@@ -14,8 +14,8 @@ title = "Lab on Mercury"
 [author]
   name = "Mercury"
   image = "avatar.png"
-  headline = "InfoSec Engineer"
-  bio = "InfoSec Engineer"
+  headline = "Security Engineer"
+  bio = "Security Engineer"
   links = [
     { email = "mailto:signormercurio@gmail.com" },
   #   { link = "https://link-to-some-website.com/" },
