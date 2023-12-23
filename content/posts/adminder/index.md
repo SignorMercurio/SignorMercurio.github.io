@@ -1,7 +1,8 @@
 ---
 title: “老有所得” 项目实践心得
-date: 2019-03-18 14:57:20
+date: 2019-03-18
 tags:
+  - Javascript
   - 项目
 categories:
   - 前端
@@ -26,18 +27,18 @@ categories:
 最后值得一提的就是 Vue.js 中的数据绑定问题，这类问题也是耗费我时间最久的一类。首先，在 Vue.js 中通过索引给数组元素赋值是无法触发视图更新的。因此我主要使用如下两种方式更新数组：
 
 ```js
-this.listData.push(ret.data[item]) // 1
-this.$set(this.replyTime, item, this.$calcTime(ret.data[item].creatime.time)) // 2
+this.listData.push(ret.data[item]); // 1
+this.$set(this.replyTime, item, this.$calcTime(ret.data[item].creatime.time)); // 2
 ```
 
 对于二维数组的更新，采用这种较为麻烦的变体：
 
 ```js
-const temp_list = this.listData[val].slice(0)
+const temp_list = this.listData[val].slice(0);
 for (let item in ret.data) {
-  temp_list.push(ret.data[item])
+  temp_list.push(ret.data[item]);
 }
-this.$set(this.listData, val, temp_list)
+this.$set(this.listData, val, temp_list);
 ```
 
 其次，诸如 `Mustache` 内部和 `v-bind` 系列的数据绑定中，不能直接使用函数的返回值，这一问题困扰了我非常之久，最后通过使用数组元素绑定，并通过函数获取数组内数据的方式绕过了这一限制。

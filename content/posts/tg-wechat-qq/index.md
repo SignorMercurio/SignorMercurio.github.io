@@ -1,6 +1,6 @@
 ---
 title: 去繁就简：用 Telegram 收发微信和 QQ 消息
-date: 2022-08-18T22:22:53+08:00
+date: 2022-08-18
 tags:
   - 微信
   - 实践记录
@@ -186,7 +186,7 @@ flags:
 Client: GoCQHttp
 GoCQHttp:
   type: HTTP
-  access_token: 
+  access_token:
   api_root: http://127.0.0.1:5700/
   host: 127.0.0.1
   port: 8000
@@ -271,8 +271,7 @@ esac
 
 ```yaml
 # 默认中间件锚点
-default-middlewares: &default
-  # 事件过滤器文件目录
+default-middlewares: &default # 事件过滤器文件目录
   filter: filter.json
 ```
 
@@ -280,16 +279,16 @@ default-middlewares: &default
 
 ```json
 {
-    ".not": {
-        ".or": [
-            {
-                "notice_type": "group_increase"
-            },
-            {
-                "notice_type": "group_decrease"
-            }
-        ]
-    }
+  ".not": {
+    ".or": [
+      {
+        "notice_type": "group_increase"
+      },
+      {
+        "notice_type": "group_decrease"
+      }
+    ]
+  }
 }
 ```
 

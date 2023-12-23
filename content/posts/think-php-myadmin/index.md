@@ -1,6 +1,6 @@
 ---
 title: ThinkPHP & phpMyAdmin 漏洞学习
-date: 2020-07-29 19:58:27
+date: 2020-07-29
 tags:
   - PHP
 categories:

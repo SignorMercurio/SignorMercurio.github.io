@@ -1,6 +1,6 @@
 ---
 title: 持戈试马：在 MacBook Pro M1 上运行 Windows 11
-date: 2021-08-26 22:57:42
+date: 2021-08-26
 tags:
   - ARM
   - 实践记录

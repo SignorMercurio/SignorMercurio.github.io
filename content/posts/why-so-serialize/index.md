@@ -1,8 +1,10 @@
 ---
 title: "Why So Serialize: From Deserialization to RCE"
-date: 2020-11-12T10:21:09+08:00
+date: 2020-11-12
 tags:
   - 反序列化
+  - Java
+  - PHP
 categories:
   - Web 安全
 ---

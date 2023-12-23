@@ -1,6 +1,6 @@
 ---
 title: 乘风破浪：Kubernetes 笔记
-date: 2021-10-10 16:31:41
+date: 2021-10-10
 tags:
   - Kubernetes
 categories:
@@ -11,7 +11,7 @@ categories:
 
 <!--more-->
 
-在 [云原生技术原理](/cloud-native) 一文中我记录了一些 K8s 基础知识和操作，这篇笔记里就不多赘述了。文章中涉及的资源名称、镜像名称、镜像标签等均为虚构。
+在 [云原生技术原理](https://blog.sigmerc.top/posts/cloud-native) 一文中我记录了一些 K8s 基础知识和操作，这篇笔记里就不多赘述了。文章中涉及的资源名称、镜像名称、镜像标签等均为虚构。
 
 ## 操作现有服务
 

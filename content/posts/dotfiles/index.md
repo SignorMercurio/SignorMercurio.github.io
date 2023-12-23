@@ -1,6 +1,6 @@
 ---
 title: 自动装弹：快速搭建通用命令行环境
-date: 2022-10-24T12:51:35+08:00
+date: 2022-10-24
 tags:
   - Linux
 categories:
@@ -33,15 +33,15 @@ categories:
 
 ```yaml
 - link:
-    ~/.config: 
-    ~/.shell: 
-    ~/.gitconfig: 
-    ~/.npmrc: 
+    ~/.config:
+    ~/.shell:
+    ~/.gitconfig:
+    ~/.npmrc:
     ~/.ssh/config: ssh_config
-    ~/.tmux.conf: 
-    ~/.vimrc: 
-    ~/.yarnrc: 
-    ~/.zshrc: 
+    ~/.tmux.conf:
+    ~/.vimrc:
+    ~/.yarnrc:
+    ~/.zshrc:
 ```
 
 不填时则默认映射到去除开头 `.` 的文件，如 `~/.zshrc` 映射到 `zshrc`。以上面的配置为例，dotfiles 仓库下的 `ssh_config` 文件会软链接到 `~/.ssh/config`。
@@ -56,7 +56,7 @@ categories:
       create: true
       relink: true
 
-- clean: ['~']
+- clean: ["~"]
 ```
 
 ## 安装工具
@@ -65,17 +65,17 @@ categories:
 
 ```yaml
 - shell:
-  - [git submodule update --init --recursive, Installing submodules]
+    - [git submodule update --init --recursive, Installing submodules]
 ```
 
 这样可以确保 dotbot 是最新的。接下来我们就可以自己编写脚本放到这里：
 
 ```yaml
 - shell:
-  - [git submodule update --init --recursive, Installing submodules]
-  - command: ~/.dotfiles/scripts/all.sh
-    stdout: true
-    description: Preparing dev environment
+    - [git submodule update --init --recursive, Installing submodules]
+    - command: ~/.dotfiles/scripts/all.sh
+      stdout: true
+      description: Preparing dev environment
 ```
 
 > 注意在 shell 脚本（非交互式环境）中使用别名需要运行 `shopt -s expand_aliases` 来扩展别名。
@@ -107,7 +107,7 @@ Include ~/.ssh/config_local
 
 在完成了配置以后，我们就可以在新机器上通过简单的命令来搭建环境了：
 
-```shell
+```bash
 $ git clone https://github.com/SignorMercurio/dotfiles.git
 $ mv dotfiles .dotfiles
 $ .dotfiles/install

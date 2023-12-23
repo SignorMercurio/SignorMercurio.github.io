@@ -1,6 +1,6 @@
 ---
 title: jQuery 踩坑记
-date: 2019-01-23 13:18:21
+date: 2019-01-23
 tags:
   - Javascript
   - 实践记录

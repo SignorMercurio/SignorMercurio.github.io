@@ -1,6 +1,6 @@
 ---
 title: 通过 JDBC 连接 MySQL
-date: 2019-03-25 23:11:05
+date: 2019-03-25
 tags:
   - Java
   - 实践记录

@@ -1,6 +1,6 @@
 ---
 title: Hackergame2019 比赛记录
-date: 2019-10-15 10:29:23
+date: 2019-10-15
 tags:
   - Javascript
   - 数学

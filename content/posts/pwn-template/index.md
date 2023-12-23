@@ -1,6 +1,6 @@
 ---
 title: Pwn 脚本模板
-date: 2020-04-26 22:03:39
+date: 2020-04-26
 tags:
   - Python
   - 模版

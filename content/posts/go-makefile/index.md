@@ -1,6 +1,6 @@
 ---
 title: 步步为营：在 Go 项目中编写 Makefile
-date: 2022-06-22T15:09:26+08:00
+date: 2022-06-22
 tags:
   - Go
   - CI/CD

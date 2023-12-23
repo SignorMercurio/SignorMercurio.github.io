@@ -1,6 +1,6 @@
 ---
 title: 实验吧 Web 练习记录
-date: 2019-07-26 21:15:13
+date: 2019-07-26
 tags:
   - Hash
   - SQLi
@@ -544,7 +544,7 @@ mysql_close($con);
 1' or 1 limit 1 offset 2#
 ```
 
-前两条都返回 ` 浜﹀彲璧涜墖锛�`，而第三条返回 ` 涓€棰楄禌鑹囷紒 `（这里的乱码是因为编码问题，懒得转换了），因此表里一共只有两条数据。那么怎么插入一条新的数据，使得其中的 `pwd` 为 `NULL` 呢？
+前两条都返回 ` 浜﹀彲璧涜墖锛�`，而第三条返回 `涓€棰楄禌鑹囷紒`（这里的乱码是因为编码问题，懒得转换了），因此表里一共只有两条数据。那么怎么插入一条新的数据，使得其中的 `pwd` 为 `NULL` 呢？
 
 我们可以利用 `rollup` 统计功能实现。构造 payload：
 
@@ -673,8 +673,8 @@ username=admin&password=a:2:{s:4:"user";b:1;s:4:"pass";b:1;}
 随便填个邮箱地址，在源代码中发现这样两行：
 
 ```html
-<meta name="admin"content="admin@simplexue.com"/>
-<meta name="editor"content="Vim"/>
+<meta name="admin" content="admin@simplexue.com" />
+<meta name="editor" content="Vim" />
 ```
 
 第二行的 `vim` 一般指 Vim 编辑器，容易联想到它产生的备份文件 `.swp`，可能在网站目录下存在这类文件。而第一行的邮箱显然就是我们需要的管理员邮箱了。

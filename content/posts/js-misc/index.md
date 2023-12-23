@@ -1,6 +1,6 @@
 ---
 title: 温故知新：Javascript 杂记
-date: 2021-07-29 23:26:26
+date: 2021-07-29
 tags:
   - Javascript
 categories:
@@ -16,20 +16,20 @@ categories:
 1. `typeof` 检查输入参数机器码后三位，`000` 代表 `object` 类型，而 `null` 恰好用全 0 表示。
 
 ```js
-typeof null // object
+typeof null; // object
 ```
 
 2. `typeof` 对于未实现 `[[Call]]` 方法的引用类型返回 `object` ，已实现该方法的则返回 `function`。
 
 ```js
-typeof Array // function
+typeof Array; // function
 ```
 
 3. 简单类型和作为 `object` 的复杂类型：
 
 ```js
-typeof 'hello' // string
-typeof new String('hello') // object
+typeof "hello"; // string
+typeof new String("hello"); // object
 ```
 
 4. `instanceof` 判断实例时向上追踪原型链。
@@ -42,15 +42,15 @@ typeof new String('hello') // object
 5. 比 `typeof` 更准确的类型判断：
 
 ```js
-Object.prototype.toString.call([]) // Array
+Object.prototype.toString.call([]); // Array
 ```
 
 6. 逻辑运算符与非布尔类型混用：
 
 ```js
-5 || 0 // 5
-0 || 'a' // 'a'
-5 && 0 // 0
+5 || 0; // 5
+0 || "a"; // 'a'
+5 && 0; // 0
 ```
 
 7. 拆箱时调用 `toPrimitive()` 方法：
@@ -72,7 +72,7 @@ Object.prototype.toString.call([]) // Array
 ```js
 {
 }
-;+[] // 0
++[]; // 0
 ```
 
 ## 深浅拷贝
@@ -83,14 +83,14 @@ Object.prototype.toString.call([]) // Array
 
 ```js
 for (var i in origin) {
-  clone[i] = origin[i]
+  clone[i] = origin[i];
 }
 ```
 
 2. `Object.create`，实际会拷贝到 `clone` 的 `_proto_` 上：
 
 ```js
-clone = Object.create(origin)
+clone = Object.create(origin);
 ```
 
 ### 深拷贝
@@ -98,13 +98,13 @@ clone = Object.create(origin)
 1. 借助 JSON：
 
 ```js
-clone = JSON.parse(JSON.stringify(origin))
+clone = JSON.parse(JSON.stringify(origin));
 ```
 
 2. `Object.assign`，与空对象合并：
 
 ```js
-clone = Object.assign({}, origin)
+clone = Object.assign({}, origin);
 ```
 
 ## 编码
@@ -120,15 +120,15 @@ clone = Object.assign({}, origin)
 
 ```js
 function foo() {
-  var a = 2
+  var a = 2;
   function bar() {
-    console.log(a)
+    console.log(a);
   }
-  return bar
+  return bar;
 }
 
-var baz = foo()
-baz() // 2
+var baz = foo();
+baz(); // 2
 ```
 
 3. 一个经典例子，`timer` 访问到的 `i` 是循环结束后的全局作用域中的 `i`：
@@ -136,8 +136,8 @@ baz() // 2
 ```js
 for (var i = 1; i <= 5; ++i) {
   setTimeout(function timer() {
-    console.log(i)
-  }, i * 1000)
+    console.log(i);
+  }, i * 1000);
 } // 6 6 6 6 6
 ```
 
@@ -147,11 +147,11 @@ for (var i = 1; i <= 5; ++i) {
 
 ```js
 for (var i = 1; i <= 5; ++i) {
-  ;(function (j) {
+  (function (j) {
     setTimeout(function timer() {
-      console.log(j)
-    }, j * 1000)
-  })(i)
+      console.log(j);
+    }, j * 1000);
+  })(i);
 } // 1 2 3 4 5
 ```
 
@@ -160,15 +160,15 @@ for (var i = 1; i <= 5; ++i) {
 ```js
 for (let i = 1; i <= 5; ++i) {
   setTimeout(function timer() {
-    console.log(i)
-  }, i * 1000)
+    console.log(i);
+  }, i * 1000);
 } // 1 2 3 4 5
 ```
 
 4. 类数组转为 `Array`：
 
 ```js
-arr = Array.prototype.slice.apply(args)
+arr = Array.prototype.slice.apply(args);
 ```
 
 实际上，调用 `apply`、`call`、`bind` 等方法均会对 `this` 进行显式绑定。
@@ -180,14 +180,14 @@ var a = {
   b: 1,
   getB: function () {
     function c() {
-      console.log(this.b) // undefined
+      console.log(this.b); // undefined
     }
-    c() // window.c()
-    console.log(this.b) // 1（隐式绑定）
+    c(); // window.c()
+    console.log(this.b); // 1（隐式绑定）
   },
-}
+};
 
-a.getB()
+a.getB();
 ```
 
 同理，回调函数也常常会丢失 `this`。
@@ -205,6 +205,6 @@ a.getB()
 1. `sort` 默认将元素转为字符串后升序排序。
 
 ```js
-var arr = [2, 13, 3, 11, 5, 7]
-arr.sort() // [11,13,2,3,5,7]
+var arr = [2, 13, 3, 11, 5, 7];
+arr.sort(); // [11,13,2,3,5,7]
 ```

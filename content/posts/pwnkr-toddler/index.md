@@ -1,6 +1,6 @@
 ---
 title: Pwnable.kr Toddler's Bottle 练习记录
-date: 2019-10-09 21:19:11
+date: 2019-10-09
 tags:
   - Linux
   - C/C++

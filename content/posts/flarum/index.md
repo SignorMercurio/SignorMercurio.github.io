@@ -1,9 +1,9 @@
 ---
 title: 昨日再现：用 Flarum 搭建功能强大的在线论坛
-date: 2022-03-13T18:28:09Z
+date: 2022-03-13
 tags:
   - PHP
-  - 实践记录
+  - 项目
 categories:
   - 探索
 ---

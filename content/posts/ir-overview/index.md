@@ -3,7 +3,6 @@ title: "十万火急：云上应急响应概述"
 date: 2023-06-13
 tags:
   - 应急响应
-  - Linux
 categories:
   - 云
 ---

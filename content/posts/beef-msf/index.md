@@ -1,6 +1,6 @@
 ---
 title: Beef 加载 Metasploit 插件 & Metasploit 连接 PostgreSQL
-date: 2019-07-21 12:17:14
+date: 2019-07-21
 tags:
   - Kali
   - 实践记录

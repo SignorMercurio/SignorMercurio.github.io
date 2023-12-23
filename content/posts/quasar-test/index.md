@@ -1,7 +1,8 @@
 ---
 title: 胸有成竹：Quasar Testing 指南
-date: 2021-03-21 11:36:12
+date: 2021-03-21
 tags:
+  - Javascript
   - Quasar
   - 实践记录
 categories:

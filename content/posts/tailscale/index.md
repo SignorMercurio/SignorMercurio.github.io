@@ -1,6 +1,6 @@
 ---
 title: 冲云破雾：Tailscale 原理简述
-date: 2022-09-23T20:51:55+08:00
+date: 2022-09-23
 tags:
   - 网络
 categories:
@@ -343,5 +343,4 @@ ICE 的指标是预先设定的 LAN > WAN > WAN+NAT，而 Tailscale 则基于 ro
 ## 参考资料
 
 1. [How Tailscale works](https://tailscale.com/blog/how-tailscale-works/)
-
 1. [How NAT traversal works](https://tailscale.com/blog/how-nat-traversal-works/)

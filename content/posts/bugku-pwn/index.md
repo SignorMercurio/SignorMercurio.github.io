@@ -1,6 +1,6 @@
 ---
 title: Bugku Pwn 练习记录
-date: 2019-10-29 15:40:03
+date: 2019-10-29
 tags:
   - 栈漏洞
   - fsb

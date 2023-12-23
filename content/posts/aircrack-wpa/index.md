@@ -1,6 +1,6 @@
 ---
-title: 窥间伺隙：Aircrack 套件破解 WPA/WPA2 密码
-date: 2020-10-18 13:24:01
+title: 窥间伺隙：Aircrack 套件破解 WPA2 密码
+date: 2020-10-18
 tags:
   - Kali
   - 网络

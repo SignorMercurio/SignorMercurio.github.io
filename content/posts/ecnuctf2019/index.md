@@ -1,6 +1,6 @@
 ---
 title: ECNUCTF2019 初赛 writeup
-date: 2019-03-31 12:58:34
+date: 2019-03-31
 tags:
   - SQLi
   - 古典密码与编码

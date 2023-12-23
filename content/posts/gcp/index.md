@@ -1,6 +1,6 @@
 ---
 title: 高枕无忧：Google Cloud Platform 基础
-date: 2021-09-23 10:03:42
+date: 2021-09-23
 tags:
   - GCP
   - 网络
@@ -9,7 +9,7 @@ categories:
   - 云
 ---
 
-待更新。
+通过 GCP 认识云服务。
 
 <!--more-->
 

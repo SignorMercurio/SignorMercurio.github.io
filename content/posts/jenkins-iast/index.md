@@ -1,6 +1,6 @@
 ---
 title: 稳中求进：Jenkins 集成 IAST 全流程
-date: 2020-07-28 15:28:05
+date: 2020-07-28
 tags:
   - CI/CD
   - 实践记录

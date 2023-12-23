@@ -1,6 +1,6 @@
 ---
 title: 迷途知返：Go Error 处理
-date: 2021-09-08 08:50:13
+date: 2021-09-08
 tags:
   - Go
 categories:

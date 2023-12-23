@@ -1,6 +1,6 @@
 ---
 title: 再探 GitHub Actions：从 Dockerfile 到 GKE
-date: 2021-09-25 18:44:35
+date: 2021-09-25
 tags:
   - Docker
   - GCP
@@ -12,13 +12,13 @@ categories:
   - 云
 ---
 
-GitHub Actions 还可以配合 Issue 用来做开源社区的无聊小游戏，这就留到《三探 GitHub Actions》再说了。
+GitHub Actions 还可以配合 Issue 用来做开源社区的无聊小游戏，这就要留到《三探 GitHub Actions》（如果有的话）再说了。
 
 <!--more-->
 
 ## 背景
 
-和 [上回](/github-actions-cd) 类似，我这次又遇到了一些机械重复的操作。当我写完一个 Go 应用，想发布在公网上供访问、同时保证高可用性时，我需要：
+和 [上回](https://blog.sigmerc.top/posts/github-actions-cd) 类似，我这次又遇到了一些机械重复的操作。当我写完一个 Go 应用，想发布在公网上供访问、同时保证高可用性时，我需要：
 
 1. 运行 `go build`，附带一堆参数
 2. 运行 `docker build` 打包 Docker 镜像

@@ -1,7 +1,8 @@
 ---
 title: pAssWD 开发记录
-date: 2020-06-27 18:57:14
+date: 2020-06-27
 tags:
+  - Javascript
   - Quasar
   - 项目
 categories:

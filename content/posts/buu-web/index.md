@@ -1,6 +1,6 @@
 ---
 title: BUUCTF Web 练习记录
-date: 2019-11-29 18:36:25
+date: 2019-11-29
 tags:
   - SQLi
   - 文件上传
@@ -95,7 +95,7 @@ $_page = mb_substr(
 ?file=hint.php?../../../../../ffffllllaaaagggg
 ```
 
-## [强网杯 2019] 随便注
+## [强网杯 2019]随便注
 
 单引号可以发现存在注入，但尝试注入时页面返回
 
@@ -223,21 +223,21 @@ return preg_match("/select|update|delete|drop|insert|where|\./i",$inject);
 首页可以发现 js 代码，也就是自定义的 waf：
 
 ```js
-$('#calc').submit(function(){
-    $.ajax({
-        url:"calc.php?num="+encodeURIComponent($("#content").val()),
-        type:'GET',
-        success:function(data){
-            $("#result").html(`<div class="alert alert-success">
+$("#calc").submit(function () {
+  $.ajax({
+    url: "calc.php?num=" + encodeURIComponent($("#content").val()),
+    type: "GET",
+    success: function (data) {
+      $("#result").html(`<div class="alert alert-success">
         <strong> 答案:</strong>${data}
         </div>`);
-        },
-        error:function(){
-            alert(" 这啥? 算不来!");
-        }
-    })
-    return false;
-})
+    },
+    error: function () {
+      alert(" 这啥? 算不来!");
+    },
+  });
+  return false;
+});
 ```
 
 可以发现有 `calc.php`，访问直接得到源码：
@@ -272,7 +272,7 @@ if(!isset($_GET['num'])){
 /calc.php?%20num=var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103)))
 ```
 
-## [强网杯 2019] 高明的黑客
+## [强网杯 2019]高明的黑客
 
 提供了 `www.tar.gz`，里面有 3000 + 个 php 文件，都含有类似一句话的部分，但是大多不能用。需要写脚本找到能用的一句话木马：
 

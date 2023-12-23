@@ -1,6 +1,6 @@
 ---
 title: 世外桃源：Hexo 踩坑记
-date: 2019-01-11 22:15:45
+date: 2019-01-11
 tags:
   - 实践记录
 categories:

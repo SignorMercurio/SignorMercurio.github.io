@@ -1,6 +1,6 @@
 ---
 title: 风谲云诡：云原生技术原理
-date: 2021-09-10 09:27:59
+date: 2021-09-10
 tags:
   - Docker
   - Kubernetes

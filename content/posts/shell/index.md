@@ -1,6 +1,6 @@
 ---
 title: "命令交互：Shell 备忘录"
-date: 2022-04-30T17:13:19+08:00
+date: 2022-04-30
 tags:
   - Linux
 categories:
@@ -12,12 +12,15 @@ categories:
 <!--more-->
 
 ## 常用快捷键
+
 - <kbd>Ctrl+A</kbd> 回到本行起始位置
 - <kbd>Ctrl+U</kbd> 清空本行
 - <kbd>Ctrl+L</kbd> 清屏并回到顶部
 
 ## 引号
+
 `"` 字符串会替换变量值，而 `'` 字符串不会：
+
 ```shell
 $ foo=bar
 $ echo "$foo"
@@ -27,35 +30,40 @@ $ echo '$foo'
 ```
 
 ## 特殊变量
--   `$0` - 脚本名
--   `$1` 到 `$9` - 脚本的参数， `$1` 是第一个参数，依此类推
--   `$@` - 所有参数
--   `$#` - 参数个数
--   `$?` - 上一个命令的返回值
--   `$$` - 当前进程 PID
--   `!!` - 完整的上一条命令（含参数）
-	- 常见应用：当因权限不足而执行命令失败时，可以使用 `sudo !!` 再尝试一次
--   `$_` - 上一条命令的最后一个参数
-	- 交互式 shell 中也可以通过按下 `Esc` 之后键入 `.` 来获取这个值
+
+- `$0` - 脚本名
+- `$1` 到 `$9` - 脚本的参数， `$1` 是第一个参数，依此类推
+- `$@` - 所有参数
+- `$#` - 参数个数
+- `$?` - 上一个命令的返回值
+- `$$` - 当前进程 PID
+- `!!` - 完整的上一条命令（含参数）
+  - 常见应用：当因权限不足而执行命令失败时，可以使用 `sudo !!` 再尝试一次
+- `$_` - 上一条命令的最后一个参数
+  - 交互式 shell 中也可以通过按下 `Esc` 之后键入 `.` 来获取这个值
 
 ## 通配符
+
 - `?` 只匹配单个字符，如 `foo?` 可以匹配 `foo1`，但不能匹配 `foo42`
 - `image.{jpg,png}` 扩展为 `image.jpg image.png`
 - `touch {foo,bar}/{a..j}` 扩展为 `foo/a foo/b ... foo/j bar/a bar/b ... bar/j`
 
 ## Shebang
+
 - `#!/bin/bash` 使用 bash 执行脚本
 - `#!/usr/local/bin/python` 使用 python 执行脚本，可以 `./script.py`
 - 推荐在 shebang 中使用 `env` 来解析环境变量，如 `#!/usr/bin/env python`
 - `source script.sh` 在当前 shell 进程中生效，`./script.sh` 则启动新进程
 
 ## 重定向
+
 - `<(CMD)` 会执行 `CMD` 并将结果输出到一个临时文件中，并用文件名替换 `<(CMD)` 本身
-	- 例如 `diff <(ls foo) <(ls bar)` 可以对比两个目录的区别
+  - 例如 `diff <(ls foo) <(ls bar)` 可以对比两个目录的区别
 - `>` 标准输出重定向（`1>`），`2>` 标准错误输出重定向，`&>` 标准输出和标准错误输出重定向
 - `nohup [cmd] >logs 2>&1 &`
 
 例：有如下脚本，需要一直运行直到出错并记录运行次数、输出日志：
+
 ```shell
 #!/usr/bin/env bash
 
@@ -71,6 +79,7 @@ echo "Everything went according to plan"
 ```
 
 解答：
+
 ```shell
 #!/usr/bin/env bash
 
@@ -89,6 +98,7 @@ done
 ```
 
 ## 查找
+
 ```shell
 # 查找所有名称为 src 的目录
 $ find . -name src -type d
@@ -119,32 +129,44 @@ $ find . -type f -name "*.html" | xargs -d '\n' tar -zcvf html.zip
 ```
 
 ## 数据处理
+
 查看非法 SSH 登录：
+
 ```shell
 $ ssh server 'journalctl | grep sshd | grep "Disconnected from"' > ssh.log
 $ less ssh.log
 ```
+
 提取用户名：
+
 ```shell
 $ cat ssh.log | sed -E 's/.*Disconnected from (invalid |authenticating )?user (.*) [^ ]+ port [0-9]+( \[preauth\])?$/\2/'
 ```
+
 [这一网站](https://regex101.com) 可以在线测试正则表达式。
 
 去除重复的用户名，注意使用 `uniq` 去重前需要先确保相同的行是相邻的。这里可以用 `sort` 做到：
+
 ```shell
 $ cat ssh.log | sed -E 's/.*Disconnected from (invalid |authenticating )?user (.*) [^ ]+ port [0-9]+( \[preauth\])?$/\2/' | sort | uniq -c
 ```
+
 随后对第一列（`-k1`），也就是出现次数再按数字序（`-n`）降序（`-r`）排序，打印前 10 位：
+
 ```shell
 $ cat ssh.log | sed -E 's/.*Disconnected from (invalid |authenticating )?user (.*) [^ ]+ port [0-9]+( \[preauth\])?$/\2/' | sort | uniq -c | sort -rnk1 | head -n10
 ```
+
 只打印用户名：
+
 ```shell
 $ cat ssh.log | sed -E 's/.*Disconnected from (invalid |authenticating )?user (.*) [^ ]+ port [0-9]+( \[preauth\])?$/\2/' | sort | uniq -c | sort -rnk1 | head -n10 | awk '{ print $2 }'
 ```
+
 awk 中，`$0` 表示整行内容，`$1` 到 `$n` 表示该行的第 n 个区域，分隔符通过 `-F` 指定，默认为空格。
 
 统计所有登录超过 1 次的登录次数之和：
+
 ```shell
 $ cat ssh.log | sed -E 's/.*Disconnected from (invalid |authenticating )?user (.*) [^ ]+ port [0-9]+( \[preauth\])?$/\2/' | sort | uniq -c | awk '$1 != 1 { print $1 }' | paste -sd+ | bc -l
 ```

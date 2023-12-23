@@ -1,6 +1,6 @@
 ---
 title: 算无遗策：socket 编程发送 RAW 数据包
-date: 2020-11-16 17:03:11
+date: 2020-11-16
 tags:
   - C/C++
   - 网络
@@ -198,7 +198,7 @@ int sendrawpacket(PacketRawHeader* pRawHeader, bool bTCP)
 这里需要对 IP 头部计算校验和，计算方法和之后 TCP / UDP 头部校验和计算方法相同，每 16 bit 进行反码求和：
 
 ```cpp
-unsigned short csum(unsigned short *ptr, int nbytes) 
+unsigned short csum(unsigned short *ptr, int nbytes)
 {
     register long sum;
     unsigned short oddbyte;

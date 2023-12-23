@@ -1,6 +1,6 @@
 ---
 title: 追本溯源：pwn.college 作业记录
-date: 2022-02-24 20:03:11
+date: 2022-02-24
 tags:
   - Linux
   - C/C++

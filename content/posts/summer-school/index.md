@@ -1,6 +1,6 @@
 ---
 title: ECNU X 启明星辰 网络安全暑期学校记录
-date: 2019-07-23 14:39:19
+date: 2019-07-23
 tags:
   - Kali
   - Hash
@@ -9,7 +9,7 @@ tags:
   - RSA
   - SQLi
 categories:
-  - Web 安全
+  - 比赛记录
 ---
 
 7.22-7.26，收获不大。
@@ -34,7 +34,7 @@ categories:
 
 获取脚本：[https://www.exploit-db.com/exploits/46946](https://www.exploit-db.com/exploits/46946)，命名为 `poc.py`。
 
-在 Win7 靶机上开启 3389 端口（` 计算机 `->` 属性 `->` 远程设置 `->`允许所有...`），并通过 `ipconfig` 查看 IP。
+在 Win7 靶机上开启 3389 端口（`计算机`->`属性`->`远程设置`->`允许所有...`），并通过 `ipconfig` 查看 IP。
 
 最后终端运行：
 
@@ -111,65 +111,69 @@ echo decode($_GET['str']);
 `check.js` 是 packer 加密，直接去掉 `eval` 放控制台跑一下得到 js 源码。
 
 ```js
-_f = function () {
+_f = (function () {
   var f = document.createElement("form");
-  document.getElementById('login').appendChild(f);
+  document.getElementById("login").appendChild(f);
   f.name = "login";
-  return f
-}();
-_uname = function () {
+  return f;
+})();
+_uname = (function () {
   var uname = document.createElement("input");
   uname.type = "text";
   uname.id = "uname";
-  uname.value = 'Input Username';
+  uname.value = "Input Username";
   uname.style.margin = "0px 0px 0px 60px";
   _f.appendChild(uname);
   uname.onfocus = function () {
-    if (this.value =='Input Username') this.value =''
+    if (this.value == "Input Username") this.value = "";
   };
   uname.onblur = function () {
-    if (this.value =='') this.value ='Input Username'
+    if (this.value == "") this.value = "Input Username";
   };
-  return uname
-}();
-_br = function () {
+  return uname;
+})();
+_br = (function () {
   var br = document.createElement("br");
   _f.appendChild(br);
   br = document.createElement("br");
   _f.appendChild(br);
-  return br
-}();
-_upass = function () {
+  return br;
+})();
+_upass = (function () {
   var upass = document.createElement("input");
   upass.type = "password";
   upass.id = "upass";
-  upass.value = 'Input Password';
+  upass.value = "Input Password";
   upass.style.margin = "0px 0px 0px 60px";
   _f.appendChild(upass);
   upass.onfocus = function () {
-    if (this.value =='Input Password') this.value =''
+    if (this.value == "Input Password") this.value = "";
   };
   upass.onblur = function () {
-    if (this.value =='') this.value ='Input Password'
+    if (this.value == "") this.value = "Input Password";
   };
-  return upass
-}();
-_btn = function () {
+  return upass;
+})();
+_btn = (function () {
   var btn = document.createElement("input");
   _f.appendChild(btn);
   btn.type = "button";
   btn.value = "login";
   btn.onclick = function () {
-    uname = document.getElementById('uname').value;
-    upass = document.getElementById('upass').value;
-    if (uname =="") alert('Please Input Username!');
-    else if (upass =="") alert('Please Input Password!');
+    uname = document.getElementById("uname").value;
+    upass = document.getElementById("upass").value;
+    if (uname == "") alert("Please Input Username!");
+    else if (upass == "") alert("Please Input Password!");
     else {
-      eval(unescape("var%20strKey1%20%3D%20%22JaVa3C41ptIsAGo0DStAff%22%3B%0Avar%20strKey2%20%3D%20%22CaNUknOWThIsK3y%22%3B%0Avar%20strKey3%20%3D%20String.fromCharCode%2871%2C%2048%2C%20111%2C%20100%2C%2033%29%3B%0Aif%20%28uname%20%3D%3D%20%28strKey3%20+%20%28%28%28strKey1.toLowerCase%28%29%29.substring%280%2C%20strKey1.indexOf%28%220%22%29%29%20+%20strKey2.substring%282%2C%206%29%29.toUpperCase%28%29%29.substring%280%2C%2015%29%29%29%20%7B%0A%20%20%20%20var%20strKey4%20%3D%20%27Java_Scr1pt_Pa4sW0rd_K3y_H3re%27%3B%0A%20%20%20%20if%20%28upass%20%3D%3D%20%28strKey4.substring%28strKey4.indexOf%28%271%27%2C%205%29%2C%20strKey4.length%20-%20strKey4.indexOf%28%27_%27%29%20+%205%29%29%29%20%7B%0A%20%20%20%20%20%20%20%20alert%28%27Login%20Success%21%27%29%3B%0A%20%20%20%20%20%20%20%20document.getElementById%28%27key%27%29.innerHTML%20%3D%20unescape%28%22%253Cfont%2520color%253D%2522%2523000%2522%253Ea2V5X0NoM2NrXy50eHQ%3D%253C/font%253E%22%29%3B%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%20%20alert%28%27Password%20Error%21%27%29%3B%0A%20%20%20%20%7D%0A%7D%20else%20%7B%0A%20%20%20%20alert%28%27Login%20Failed%21%27%29%3B%0A%7D"))
+      eval(
+        unescape(
+          "var%20strKey1%20%3D%20%22JaVa3C41ptIsAGo0DStAff%22%3B%0Avar%20strKey2%20%3D%20%22CaNUknOWThIsK3y%22%3B%0Avar%20strKey3%20%3D%20String.fromCharCode%2871%2C%2048%2C%20111%2C%20100%2C%2033%29%3B%0Aif%20%28uname%20%3D%3D%20%28strKey3%20+%20%28%28%28strKey1.toLowerCase%28%29%29.substring%280%2C%20strKey1.indexOf%28%220%22%29%29%20+%20strKey2.substring%282%2C%206%29%29.toUpperCase%28%29%29.substring%280%2C%2015%29%29%29%20%7B%0A%20%20%20%20var%20strKey4%20%3D%20%27Java_Scr1pt_Pa4sW0rd_K3y_H3re%27%3B%0A%20%20%20%20if%20%28upass%20%3D%3D%20%28strKey4.substring%28strKey4.indexOf%28%271%27%2C%205%29%2C%20strKey4.length%20-%20strKey4.indexOf%28%27_%27%29%20+%205%29%29%29%20%7B%0A%20%20%20%20%20%20%20%20alert%28%27Login%20Success%21%27%29%3B%0A%20%20%20%20%20%20%20%20document.getElementById%28%27key%27%29.innerHTML%20%3D%20unescape%28%22%253Cfont%2520color%253D%2522%2523000%2522%253Ea2V5X0NoM2NrXy50eHQ%3D%253C/font%253E%22%29%3B%0A%20%20%20%20%7D%20else%20%7B%0A%20%20%20%20%20%20%20%20alert%28%27Password%20Error%21%27%29%3B%0A%20%20%20%20%7D%0A%7D%20else%20%7B%0A%20%20%20%20alert%28%27Login%20Failed%21%27%29%3B%0A%7D"
+        )
+      );
     }
   };
-  return false
-}();
+  return false;
+})();
 ```
 
 只有最后一个 `else` 里的代码比较重要，去掉 `eval` 运行得：
@@ -178,39 +182,66 @@ _btn = function () {
 var strKey1 = "JaVa3C41ptIsAGo0DStAff";
 var strKey2 = "CaNUknOWThIsK3y";
 var strKey3 = String.fromCharCode(71, 48, 111, 100, 33);
-if (uname == (strKey3 + (((strKey1.toLowerCase()).substring(0, strKey1.indexOf("0")) + strKey2.substring(2, 6)).toUpperCase()).substring(0, 15))) {
-    var strKey4 = 'Java_Scr1pt_Pa4sW0rd_K3y_H3re';
-    if (upass == (strKey4.substring(strKey4.indexOf('1', 5), strKey4.length - strKey4.indexOf('_') + 5))) {
-        alert('Login Success!');
-        document.getElementById('key').innerHTML = unescape("%3Cfont%20color%3D%22%23000%22%3Ea2V5X0NoM2NrXy50eHQ=%3C/font%3E");
-    } else {
-        alert('Password Error!');
-    }
+if (
+  uname ==
+  strKey3 +
+    (
+      strKey1.toLowerCase().substring(0, strKey1.indexOf("0")) +
+      strKey2.substring(2, 6)
+    )
+      .toUpperCase()
+      .substring(0, 15)
+) {
+  var strKey4 = "Java_Scr1pt_Pa4sW0rd_K3y_H3re";
+  if (
+    upass ==
+    strKey4.substring(
+      strKey4.indexOf("1", 5),
+      strKey4.length - strKey4.indexOf("_") + 5
+    )
+  ) {
+    alert("Login Success!");
+    document.getElementById("key").innerHTML = unescape(
+      "%3Cfont%20color%3D%22%23000%22%3Ea2V5X0NoM2NrXy50eHQ=%3C/font%3E"
+    );
+  } else {
+    alert("Password Error!");
+  }
 } else {
-    alert('Login Failed!');
+  alert("Login Failed!");
 }
 ```
 
 依次运行：
+
 1.
 
 ```js
 var strKey1 = "JaVa3C41ptIsAGo0DStAff";
 var strKey2 = "CaNUknOWThIsK3y";
 var strKey3 = String.fromCharCode(71, 48, 111, 100, 33);
-var strKey4 = 'Java_Scr1pt_Pa4sW0rd_K3y_H3re';
+var strKey4 = "Java_Scr1pt_Pa4sW0rd_K3y_H3re";
 ```
 
 2.
 
 ```js
-strKey3 + (((strKey1.toLowerCase()).substring(0, strKey1.indexOf("0")) + strKey2.substring(2, 6)).toUpperCase()).substring(0, 15)
+strKey3 +
+  (
+    strKey1.toLowerCase().substring(0, strKey1.indexOf("0")) +
+    strKey2.substring(2, 6)
+  )
+    .toUpperCase()
+    .substring(0, 15);
 ```
 
 3.
 
 ```js
-strKey4.substring(strKey4.indexOf('1', 5), strKey4.length - strKey4.indexOf('_') + 5)
+strKey4.substring(
+  strKey4.indexOf("1", 5),
+  strKey4.length - strKey4.indexOf("_") + 5
+);
 ```
 
 得到用户名 `G0od!JAVA3C41PTISAGO` 和密码 `1pt_Pa4sW0rd_K3y_H3re`，不过不用登录，因为 `key` 也可以直接得到。运行 `unescape("%3Cfont%20color%3D%22%23000%22%3Ea2V5X0NoM2NrXy50eHQ=%3C/font%3E")`，得到：

@@ -1,6 +1,6 @@
 ---
 title: 实战 SSH 端口转发
-date: 2019-03-04 18:13:07
+date: 2019-03-04
 tags:
   - 网络
 categories:
@@ -63,7 +63,7 @@ ssh -L 7001:localhost:389 LdapServerHost
 
 1. SSH 端口转发是通过 SSH 连接建立起来的，我们必须保持这个 SSH 连接以使端口转发保持生效。一旦关闭了此连接，相应的端口转发也会随之关闭。
 2. 我们只能在建立 SSH 连接的同时创建端口转发，而不能给一个已经存在的 SSH 连接增加端口转发。
-3. 你可能会疑惑上面命令中的 `<remote host>` 为什么用 `localhost`，它指向的是哪台机器呢？在本例中，它指向 `LdapServertHost`。我们为什么用 `localhost` 而不是 IP 地址或者主机名呢？其实这个取决于我们之前是如何限制 LDAP 只有本机才能访问。如果只允许 `loopback` 接口访问的话，那么自然就只有  `localhost` 或者 IP 为 `127.0.0.1` 才能访问了，而不能用真实 IP 或者主机名。
+3. 你可能会疑惑上面命令中的 `<remote host>` 为什么用 `localhost`，它指向的是哪台机器呢？在本例中，它指向 `LdapServertHost`。我们为什么用 `localhost` 而不是 IP 地址或者主机名呢？其实这个取决于我们之前是如何限制 LDAP 只有本机才能访问。如果只允许 `loopback` 接口访问的话，那么自然就只有 `localhost` 或者 IP 为 `127.0.0.1` 才能访问了，而不能用真实 IP 或者主机名。
 4. 命令中的 `<remote host>` 和 `<SSH hostname>` 必须是同一台机器么？其实是不一定的，它们可以是两台不同的机器。我们在后面的例子里会详细阐述这点。
 5. 好了，我们已经在 `LdapClientHost` 建立了端口转发，那么这个端口转发可以被其他机器使用么？比如能否新增加一台 `LdapClientHost2` 来直接连接 `LdapClientHost` 的 7001 端口？答案是不行的，在主流 SSH 实现中，本地端口转发绑定的是 `loopback` 接口，这意味着只有 `localhost` 或者 `127.0.0.1` 才能使用本机的端口转发 , 其他机器发起的连接只会得到 `connection refused.`。好在 SSH 同时提供了 `GatewayPorts` 关键字，我们可以通过指定它与其他机器共享这个本地端口转发。
 

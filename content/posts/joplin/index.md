@@ -1,6 +1,6 @@
 ---
 title: 信手拈来：Joplin 使用小记
-date: 2021-07-17 21:00:31
+date: 2021-07-17
 tags:
   - 实践记录
 categories:
@@ -27,7 +27,7 @@ categories:
 - **专注笔记**：依赖 web-clipper；功能比较少。
 - **Cubox**：免费版 200 条剪藏有点不够用。
 - **Obisidian / Roam Research** 等：功能很强大但似乎确实用不上。
-- **Flomo / Google Keep / Pocket / Instapaper / Pinbox / 方片**等：感觉产品定位不太符合自己的需求。
+- **flomo / Google Keep / Pocket / Instapaper / Pinbox / 方片**等：感觉产品定位不太符合自己的需求。
 
 最后选择了开源的 Joplin，相比同样开源的蚂蚁笔记，使用体验明显要好很多。最重要的是，其剪藏效果我认为是仅次于、甚至部分情况下优于印象笔记剪藏的。
 
@@ -230,4 +230,4 @@ $ docker run -d --name joplin_server -v joplin:/home/joplin --env-file ~/joplin/
 
 > 更新：
 >
-> 到目前为止的笔记软件探索之路：印象笔记->Joplin->语雀+Obsidian->语雀+Notion
+> 到目前为止的笔记软件探索之路：印象笔记->Joplin->语雀+Obsidian->语雀+Notion->语雀+flomo+Obsidian
