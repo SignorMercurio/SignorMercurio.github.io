@@ -1479,6 +1479,10 @@ networks:
 
 根据 [官方文档](https://containrrr.dev/watchtower/arguments/#time_zone) 中的说明，我们可以挂载 `/etc/localtime` 来同步时区。
 
+### 已知问题
+
+自动升级的潜在风险就是：服务如果被升级到一个带有 Breaking Changes 的版本就会挂，这时只能手动去根据 Breaking Changes 的说明去调整配置再重新创建和启动容器。
+
 ### 备份
 
 - 在 `compose` 备份中完成
