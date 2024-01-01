@@ -101,6 +101,7 @@ mkdocs: # MkDocs 相关配置
 oss: # OSS 相关配置
   endpoint: https://oss-cn-hongkong.aliyuncs.com # OSS endpoint
   bucket: ir-transfer-station # OSS bucket
+  tools_dir: Tools # OSS 中安全工具存放路径
   ak: xxx # OSS AccessKeyId
   sk: xxx # OSS AccessKey Secret
 ```

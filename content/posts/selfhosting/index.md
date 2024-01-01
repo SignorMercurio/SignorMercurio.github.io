@@ -1448,6 +1448,75 @@ scrape_configs:
 > 5. [Loki/Promtail : parsing timestamp that are too old](https://community.grafana.com/t/loki-promtail-parsing-timestamp-that-are-too-old/41934)
 > 6. [Loki 官方文档](https://grafana.com/docs/loki/latest/)
 
+## 快速文件共享 - Pingvin Share
+
+### Docker Compose 部署
+
+```yaml
+version: "3.8"
+services:
+  pingvin-share:
+    image: stonith404/pingvin-share
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    volumes:
+      - "./data:/opt/app/backend/data"
+      - "./data/images:/opt/app/frontend/public/img"
+```
+
+### 备份
+
+- 在 `compose` 备份中完成
+
+### 同类服务
+
+- [GoSƐ](https://github.com/stv0g/gose)
+- [Gokapi](https://github.com/Forceu/gokapi)
+- [PicoShare](https://pico.rocks)
+
+## 自动化编排平台 - n8n
+
+### Docker Compose 部署
+
+由于 n8n 自身需要与许多国外服务集成，而我系统上的代理运行在宿主机上而非容器中，因此将网络模式设置为 `host` 并设置代理环境变量：
+
+```yaml
+version: "3"
+
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    restart: always
+    network_mode: host
+    environment:
+      - GENERIC_TIMEZONE=Asia/Shanghai
+      - TZ=Asia/Shanghai
+      - N8N_EXPRESSION_EVALUATOR=tmpl
+      - HTTP_PROXY=http://127.0.0.1:7890
+      - HTTPS_PROXY=http://127.0.0.1:7890
+      - ALL_PROXY=socks5://127.0.0.1:7890
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_data:
+```
+
+同时需要注意设置 `N8N_EXPRESSION_EVALUATOR=tmpl` 从而使得自部署的 n8n 能够正确解析表达式。
+
+### 备份
+
+- 可以自己编写一个 n8n workflow 来把所有 workflow 定期备份到指定位置，例如 GitHub 等。
+
+### 同类服务
+
+- [IFTTT](https://ifttt.com)
+- [Zapier](https://zapier.com)
+- [Make](https://www.make.com/en)
+- [Tines](https://www.tines.com)
+
 ## 容器镜像自动升级 - Watchtower
 
 由于许多容器镜像更新比较频繁，即使每次都使用一条简单的 `docker compose pull && docker compose up -d` 也是比较麻烦的操作，因此可以考虑部署一个容器镜像自动升级的服务。
