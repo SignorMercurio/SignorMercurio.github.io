@@ -11,7 +11,7 @@ title = "Lab on Mercury"
   description = "Lab on Mercury"
   # mainSections = ["section1", "section2"]
 
-[author]
+[params.author]
   name = "Mercury"
   image = "avatar.png"
   headline = "Security Engineer"

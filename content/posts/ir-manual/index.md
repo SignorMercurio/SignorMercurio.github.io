@@ -45,7 +45,7 @@ categories:
 
 ## 抑制止损
 
-在事件确认过程中，可以大致确定攻击者的入侵方式，据此参考 最新应急响应案例统计（内部文档） 选择止血方式（*斜体*表示可通过控制台代为操作、**加粗**表示需上机操作/通知客户操作）：
+在事件确认过程中，可以大致确定攻击者的入侵方式，据此参考 最新应急响应案例统计（内部文档） 选择止血方式（*斜体*表示可通过控制台/机器人代为操作、**加粗**表示需上机操作/通知客户操作）：
 
 - 攻击者通过互联网远程访问主机上的服务导致入侵
   - 如能通过云安全中心直接快速定位到攻击 IP，则进行 _IP 阻断_（安全组/CFW）
@@ -92,13 +92,15 @@ categories:
   - 列出针对某域名被拦截的访问记录：`host:域名 and status:405 | SELECT real_client_ip, final_plugin, final_rule_id, request_path, COUNT(*) as c group by real_client_ip, final_plugin, final_rule_id, request_path order by c desc`
   - 列出所有比较重要的字段用于攻击分析：`host:域名 | SELECT time, real_client_ip, querystring, request_body, request_method, request_path, status`
 - 定位 Web 日志路径
+  - 尝试直接 `locate`相关的服务，例如 `locate nginx`
+    - 如果没有 `locate` 命令，可以通过包管理器安装 `mlocate` 后运行 `updatedb`
   - Nginx 默认：`/var/log/nginx/access.log`
   - Apache 默认：`/var/log/httpd/access_log`, `/var/log/apache2/access.log`
   - 通过云安全中心-主机资产详情-资产指纹调查-Web 服务初步确定主机上运行的 Web 服务，有时可以定位到 Web 目录（其他资产指纹信息亦可以参考）
 - Web 日志排查
   - 通过星图可视化分析：登录星图日志分析平台，通过映射本地目录将日志文件放入桌面上的 `logs` 目录，随后运行 `xingtu` 目录下的 `start.bat`，结果位于 `xingtu` 目录下的 `results`中
   - 通过 SLS 查询分析：通过 irtk 或其他方式获取日志后上传到 OSS Bucket \[数据删除\] 下的 `/tmp/irtk_upload`，5 分钟内日志会被导入 `nginx-logs` Logstore，随后通过数据加工输出到 `nginx-logs-parsed` Logstore 供查询
-- 根据云安全中心告警时间缩小排查范围，例如告警时间为 `2006-01-02 15:04:05`，则可尝试 `more /path/to/access.log | grep 02/Jan/2006:15:04:` 缩小时间范围（时间格式与日志类型有关）；同理，查询特定 IP `12.34.56.78` 的访问记录也可通过类似方式：`grep 12.34.56.78`
+- 根据云安全中心告警时间缩小排查范围，例如告警时间为 `2006-01-02 15:04:05`，则可尝试 `more /path/to/access.log | grep 02/Jan/2006:15:04:` 缩小时间范围（时间格式与日志类型有关）；查询特定 IP `12.34.56.78` 的访问记录也可通过类似方式：`grep 12.34.56.78`；其他关键字同理
 - 如存在 Webshell，可通过 `stat webshell.php` 进一步确定攻击时间
 - 如存在弱口令，优先通知客户更改口令
 
@@ -324,6 +326,26 @@ systemctl list-units --type=service --state=running --no-pager | grep running | 
   - RDP 失败登录记录：`LogParser.exe -i:EVT -o:DATAGRID "SELECT TimeGenerated,EXTRACT_TOKEN(Strings,10,'|')as LoginType,EXTRACT_TOKEN(Strings,19,'|')as LoginIP,EXTRACT_TOKEN(Strings,5,'|')as Username FROM Security.evtx where EventID=4625 and EXTRACT_TOKEN(Strings,10,'|')='10'"`
   - 通过 Remote Connection Manager 日志查询 RDP 登录成功 IP：`LogParser.exe -i:EVT -o:DATAGRID "SELECT TimeGenerated,EventID,EXTRACT_TOKEN(Strings,2,'|') as LoginIP FROM Microsoft-Windows-TerminalServices-RemoteConnectionManager%4Operational.evtx where EventID=1149"`
   - 指定时间段安全日志：`LogParser.exe -i:EVT -o:DATAGRID "SELECT * FROM Security.evtx where TimeGenerated>'2023-07-26 10:00:00' and TimeGenerated<'2023-07-26 18:00:00'"`
+- 排查 SQLServer 执行的 SQL 命令历史：
+
+```sql
+SELECT TOP 1000
+QS.creation_time,
+SUBSTRING(ST.text,(QS.statement_start_offset/2)+1,
+((CASE QS.statement_end_offset WHEN -1 THEN DATALENGTH(st.text)
+ELSE QS.statement_end_offset END - QS.statement_start_offset)/2) + 1
+) AS statement_text,
+ST.text,
+FROM
+sys.dm_exec_query_stats QS
+CROSS APPLY
+sys.dm_exec_sql_text(QS.sql_handle) ST
+WHERE
+QS.creation_time BETWEEN '2023-12-29 14:00:00' AND '2023-12-29 16:00:00'
+ORDER BY
+QS.creation_time DESC
+```
+
 - 常见隐蔽攻击手段
   - 开机启动项、服务
   - DLL 注入系统关键进程（如 svchost）
