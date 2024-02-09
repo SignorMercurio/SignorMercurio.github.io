@@ -52,6 +52,78 @@ Host ninja
 > 1. [Use auth keys](https://tailscale.com/kb/1085/auth-keys/)
 > 1. [Mouse and Keyboard Isn't Working Correctly When Connected](https://support.parsec.app/hc/en-us/articles/115002623892-Mouse-and-Keyboard-Isn-t-Working-Correctly-When-Connected)
 
+### \[可选\] 自建 DERP Server
+
+由于国内大部分家宽设备都位于多层 NAT 后面，经常会出现内网穿透失败需要借助 DERP Server 连接的情况，但 Tailscale 官方提供的 DERP Server 中最快的也有上百毫秒的延迟，因此可以选择在内地服务器上自建 DERP Server。操作本身不复杂，但需要比较苛刻的条件：
+
+- 需要一台有公网 IP 的内地服务器（确保连接速度）
+- 需要一个已备案域名解析到该服务器公网 IP
+- 服务器需要开放 TCP/80、TCP/443、UDP/3478 端口（可通过修改 DERP 服务配置自定义端口）
+
+具备这些条件后，就可以开始搭建了，启动服务非常简单：
+
+```bash
+$ go install tailscale.com/cmd/derper@main
+$ sudo derper --hostname=<my_domain>
+```
+
+将 `<my_domain>` 替换为自己的域名即可。但由于 DERP Server 需要与 Tailscale 客户端版本匹配，因此需要设置一个计划任务来定期更新 DERP Server 版本：
+
+```
+0 4 * * * go install tailscale.com/cmd/derper@main
+```
+
+然后可以创建 `/etc/systemd/system/derp.service` 注册一个 systemd 服务避免手动启动：
+
+```toml
+[Unit]
+Description=Tailscale DERP Server
+After=network.target
+
+[Service]
+User=root
+Restart=always
+RestartSec=5
+ExecStart=/root/go/bin/derper --hostname=<my_domain> --verify-clients
+ExecStop=/bin/kill $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+```
+
+注意这里设置了 `--verify-clients` 参数对连接客户端进行验证，这个参数需要主机上的 tailscaled 保持运行才能生效。最后设置开机启动并运行服务：
+
+```bash
+$ systemctl daemon-reload
+$ systemctl enable derp.service
+$ systemctl start derp.service
+```
+
+最后，在 Tailscale 控制台编辑 ACL 规则，在 JSON 的第一层添加：
+
+```json
+"derpMap": {
+	"Regions": {
+		"900": {
+			"RegionID":   900,
+			"RegionCode": "shg",
+			"RegionName": "Shanghai",
+			"Nodes": [
+				{
+					"Name":     "900a",
+					"RegionID": 900,
+					"HostName": "<my_domain>",
+				},
+			],
+		},
+	},
+},
+```
+
+可以通过 `tailscale netcheck` 检查延迟情况：
+
+![图 1｜自建 DERP 服务器延迟情况](0.png)
+
 ### 初始化与备份
 
 samurai 的初始化没有太多可提的，可以运行一个 Clash 同时给自己和 ninja 使用（主要是给自己，因为 ninja 使用 wizard 上的代理也很方便），随后用系统还原备份。ninja 则可以使用 `dotfiles` 仓库自动初始化，并利用 VirtualBox 的系统快照功能备份。
@@ -252,7 +324,7 @@ ninja.tailnet-48a5.ts.net {
 
 此时的架构如下图：
 
-![图 1｜当前架构示意图](1.png)
+![图 2｜当前架构示意图](1.png)
 
 可以看到，流量从 ninja 的 443 端口进入后被反向代理到 `127.0.0.1:5244`，随后通过端口映射被转发到容器的 5244 端口。这样做能行得通，但也意味着每增加一个服务，宿主机 ninja 上除了 Caddy 监听的端口外就需要多监听至少一个端口，尽管是本地监听。这样多占用一个端口仅仅是为了让宿主机上的普通进程 Caddy 能访问容器开放的端口，没有任何实际的好处。
 
@@ -331,7 +403,7 @@ $ docker exec -w /etc/caddy caddy caddy reload
 
 这时的架构图就变成了：
 
-![图 2｜反向代理容器化后的架构示意图](2.png)
+![图 3｜反向代理容器化后的架构示意图](2.png)
 
 ### 备份
 
@@ -1177,7 +1249,7 @@ networks:
 
 配置完成后的 Immich 服务架构图：
 
-![图 3｜使用独立容器网络的 Immich 服务架构示意图](3.png)
+![图 4｜使用独立容器网络的 Immich 服务架构示意图](3.png)
 
 ### 已知问题
 
@@ -1427,6 +1499,10 @@ scrape_configs:
 ```
 
 之后就是配置 Grafana Dashboard 了。由于这一生态功能非常强大，其配置和查询语法也异常复杂，超出了本文讨论的范围。
+
+### 已知问题
+
+自动升级的潜在风险就是：服务如果被升级到一个带有 Breaking Changes 的版本就会挂，这时只能手动去根据 Breaking Changes 的说明去调整配置再重新创建和启动容器。
 
 ### 备份
 
