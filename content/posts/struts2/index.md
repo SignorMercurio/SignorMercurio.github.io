@@ -3,6 +3,7 @@ title: Struts2 漏洞学习
 date: 2020-08-04
 tags:
   - Java
+  - 反序列化
 categories:
   - Web 安全
 ---

