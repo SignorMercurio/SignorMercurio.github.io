@@ -422,6 +422,7 @@ Tips:
     - 简化输出结果技巧：`grep -v "not"`
   - [rkhunter](https://rkhunter.sourceforge.net)：扫描 rootkit，但运行较慢且需要手动确认继续排查流程
   - [upx](https://upx.github.io)：解压脱壳二进制文件，注意包管理器安装的版本较老
+  - [busybox](https://busybox.net/downloads/binaries/)：系统命令程序被篡改时，可以通过 busybox 运行系统命令，或从 busybox 下载单独的程序文件
   - [河马 Webshell](https://www.shellpub.com/)：支持 Linux/Windows/在线查杀 Webshell，注意误报率较高
   - [Everything](https://www.voidtools.com/zh-cn/)：Windows 下文件搜索
   - [D 盾](http://www.d99net.net)：Windows 下 Web 目录 Webshell 排查
@@ -430,9 +431,20 @@ Tips:
   - [htop](https://htop.dev/)：更好用一点的 top
   - [unhide](http://www.unhide-forensics.info/)：显示隐藏进程，需要 `epel-release` 依赖（有时需要 `yum reinstall -y epel-release`）
   - [ProcessExplorer](https://learn.microsoft.com/en-us/sysinternals/downloads/process-explorer)：Windows 下显示详细进程信息
+  - [Autoruns](https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns)：Windows 下检查启动项、注册表等系统关键位置
 - 流量分析
   - [tcpdump](https://www.tcpdump.org)
   - [Wireshark](https://www.wireshark.org)
+- 逆向分析
+  - [IDA](https://hex-rays.com/ida-free/)：反编译二进制文件
+  - [jd-gui](http://java-decompiler.github.io)：反编译 jar 包
+  - [dex2jar](https://github.com/pxb1988/dex2jar)：反编译 apk 包，配合 jd-gui 使用
+- 其他
+  - 子域名爆破工具：subfinder, gobuster, etc.
+  - 漏洞扫描工具：团队内部漏扫器, xpoc, etc.
+  - 日志分析工具：LogParser, Hayabusa, Timesketch, etc.
+  - 暗链检测工具：Libra, Hawkeye, etc.
+  - 其他攻击模拟工具：各类 Webshell, fscan, cf, etc.
 - 威胁情报
   - 通常尝试 2-3 个即可
   - [VirusTotal](https://www.virustotal.com/gui/home/upload)
@@ -447,11 +459,13 @@ Tips:
   - 威胁情报无结果时，Google 可能有奇效（如查询文件 MD5 等）
 - 编码解码：[CyberChef](https://gchq.github.io/CyberChef/) 足矣
 - 勒索解密
-  - 主要用于了解勒索病毒家族和攻击手段，解密希望不大
+  - 仅供尝试使用，主要用于识别和了解勒索病毒家族和攻击手段，通常较难成功解密
   - [安全卫士勒索病毒专题:文件恢复*安全卫士离线救灾版*文档卫士](https://lesuobingdu.360.cn)
   - [勒索病毒搜索](https://lesuobingdu.qianxin.com)
   - [勒索病毒拦截|文件恢复\_文档守护者保护文档安全 - 腾讯电脑管家](https://guanjia.qq.com/pr/ls/)
   - [腾讯哈勃分析系统](https://habo.qq.com/tool/index)
   - [VenusEye 勒索病毒搜索引擎](https://lesuo.venuseye.com.cn)
+  - [No Ransom: Free ransomware file decryption tools by Kaspersky](https://noransom.kaspersky.com)
   - [主页面 | The No More Ransom Project](https://www.nomoreransom.org/zh/index.html)
   - [GitHub - jiansiting/Decryption-Tools: Decryption-Tools](https://github.com/jiansiting/Decryption-Tools)
+  - [SecBooks/【工具文章】tools/勒索病毒识别、解密工具汇总（附部分工具下载地址）.md at main · SexyBeast233/SecBooks](https://github.com/SexyBeast233/SecBooks/blob/main/%E3%80%90%E5%B7%A5%E5%85%B7%E6%96%87%E7%AB%A0%E3%80%91tools/%E5%8B%92%E7%B4%A2%E7%97%85%E6%AF%92%E8%AF%86%E5%88%AB%E3%80%81%E8%A7%A3%E5%AF%86%E5%B7%A5%E5%85%B7%E6%B1%87%E6%80%BB%EF%BC%88%E9%99%84%E9%83%A8%E5%88%86%E5%B7%A5%E5%85%B7%E4%B8%8B%E8%BD%BD%E5%9C%B0%E5%9D%80%EF%BC%89.md)
