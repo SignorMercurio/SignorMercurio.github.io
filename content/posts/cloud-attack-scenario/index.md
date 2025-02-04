@@ -168,19 +168,7 @@ Ref: [https://www.c-csa.cn/u_file/photo/20220803/587b51c84a.pdf](https://www.c-c
 
 ### 通过实例元数据服务获取角色临时凭据
 
-前提：实例绑定了 RAM 角色（例如在 ACK 服务中会自动授权 Node 实例一个 `kubernetesworkerrole` 开头的 RAM 角色）
-
-![图 10｜授予/收回实例 RAM 角色](8.png)
-
-如果我们成功获取了实例或实例上的容器的命令执行权限（例如通过容器中的 Web 应用漏洞入侵容器），那么我们可以尝试访问元数据服务地址，绑定 RAM 角色的前提下元数据中会存在一个 `ram` 目录：
-
-![图 11｜访问实例元数据服务](9.png)
-
-然后访问 `ram/security-credentials/[对应的 RAM 角色名称]`，就可以获取到该角色的 STS Token：
-
-![图 12｜获取 RAM 角色凭证](10.png)
-
-可以设置实例元数据访问模式为加固模式，这样访问元数据服务也需要携带凭证（但有可能影响部分服务功能，例如 ACK）。
+详见 [Terraform Goat 初探：通过 ECS 实例元数据服务获取 RAM 角色临时凭据](/posts/terraform-goat-metadata-sts)
 
 ## 探测
 
@@ -188,11 +176,9 @@ Ref: [https://www.c-csa.cn/u_file/photo/20220803/587b51c84a.pdf](https://www.c-c
 1. 云上/云外网络扫描（e.g. fscan）
 1. 实例元数据获取子网信息等 -- 加固模式
 
-![图 13｜实例元数据获取子网信息](11.png)
-
 ## 横向移动
 
-![图 14｜横向移动](12.png)
+![图 10｜横向移动](8.png)
 
 1. 使用实例账号爆破（枚举资产名）
 1. 利用 AK/STS Token 等凭据访问其他云资源 -- 最小特权
@@ -212,7 +198,7 @@ Ref: [https://www.c-csa.cn/u_file/photo/20220803/587b51c84a.pdf](https://www.c-c
 
 ## 实际客户案例
 
-![图 15｜实际客户案例](13.png)
+![图 11｜实际客户案例](9.png)
 
 - 初始访问： 利用 Web 应用漏洞获取容器命令执行权限
 - 执行：

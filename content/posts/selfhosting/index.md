@@ -58,7 +58,7 @@ Host ninja
 
 - 需要一台有公网 IP 的内地服务器（确保连接速度）
 - 需要一个已备案域名解析到该服务器公网 IP
-- 服务器需要开放 TCP/80、TCP/443、UDP/3478 端口（可通过修改 DERP 服务配置自定义端口）
+- 服务器需要开放 TCP/80（可选）、TCP/443、UDP/3478 端口（可通过修改 DERP 服务配置自定义端口）
 
 具备这些条件后，就可以开始搭建了，启动服务非常简单：
 
@@ -91,7 +91,7 @@ ExecStop=/bin/kill $MAINPID
 WantedBy=multi-user.target
 ```
 
-注意这里设置了 `--verify-clients` 参数对连接客户端进行验证，这个参数需要主机上的 tailscaled 保持运行才能生效。最后设置开机启动并运行服务：
+注意这里设置了 `--verify-clients` 参数对连接客户端进行验证，这个参数需要主机上的 tailscaled 保持运行才能生效。如果不想开放 80 端口，可以设置 `--http-port=-1`。最后设置开机启动并运行服务：
 
 ```bash
 $ systemctl daemon-reload
@@ -1499,10 +1499,6 @@ scrape_configs:
 ```
 
 之后就是配置 Grafana Dashboard 了。由于这一生态功能非常强大，其配置和查询语法也异常复杂，超出了本文讨论的范围。
-
-### 已知问题
-
-自动升级的潜在风险就是：服务如果被升级到一个带有 Breaking Changes 的版本就会挂，这时只能手动去根据 Breaking Changes 的说明去调整配置再重新创建和启动容器。
 
 ### 备份
 
