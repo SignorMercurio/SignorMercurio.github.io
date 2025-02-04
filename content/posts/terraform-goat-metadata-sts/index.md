@@ -1,5 +1,5 @@
 ---
-title: "Terraform Goat 初探：通过 ECS 实例元数据服务获取 RAM 角色临时凭据"
+title: Terraform Goat 初探：通过 ECS 实例元数据服务获取 RAM 角色临时凭据
 date: 2025-02-04
 tags:
   - Terraform
