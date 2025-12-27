@@ -6,9 +6,11 @@ baseURL = "https://blog.sigmerc.top"
 defaultContentLanguage = "zh-cn"
 
 enableRobotsTXT = true
-paginate = 10
 summaryLength = 0
 enableGitInfo = true
+
+[pagination]
+  pagerSize = 10
 
 [outputs]
   home = ["HTML", "RSS", "JSON"]
