@@ -447,9 +447,9 @@ SIREN 的定位是轻量级的应急响应专项工具，专注于接到告警�
 
 ## 七、开始使用
 
-关于 SIREN 的部署安装、配置说明和详细使用步骤，请参考 [SIREN 官方文档](https://sirendocs.up.railway.app)。
+关于 SIREN 的部署安装、配置说明和详细使用步骤，请参考 [SIREN 官方文档](https://sirendocs.log0.top)。
 
-关于 SIREN 的最新功能、开发进展和问题修复进展，请参考 [SIREN 更新日志](#)。
+关于 SIREN 的最新功能、开发进展和问题修复进展，请参考 [SIREN 更新日志](https://sirendocs.log0.top/changelog)。
 
 ## 八、总结
 
